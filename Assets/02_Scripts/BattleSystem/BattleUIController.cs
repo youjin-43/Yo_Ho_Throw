@@ -74,7 +74,9 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     void UpdatePlayerScoreEntry(EventData photonEvent, RaiseEventCode raiseEventCode)
     {
-
+        // 예상한 범위의 
+        if ((int)raiseEventCode < (int)RaiseEventCode.UpdateKillCount &&
+            (int)raiseEventCode > (int)RaiseEventCode.UpdateScore) return;
     }
     void UpdateKillCount(EventData photonEvent)
     {
@@ -112,4 +114,6 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         return entry;
     }
+    private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
+    private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
 }
