@@ -18,6 +18,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private LayerMask targetLayer;
     private Animator anim;
+    private Vector3 targetPosition = Vector3.zero;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -50,12 +51,15 @@ public class PlayerManager : MonoBehaviour
         
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
+            //TODO : 풀매니저 
             GameObject projectile = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
+            
             if (rb != null)
             {
-                Vector3 throwDirection = cameraTransform.forward * bulletSpeed + Vector3.up * bulletArc;
-                rb.linearVelocity = throwDirection;
+                rb.useGravity = false;
+                Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized; //Vector3.up * bulletArc; 포물선일때
+                rb.linearVelocity = throwDirection*bulletSpeed;
             }
         }
     }
@@ -74,29 +78,27 @@ public class PlayerManager : MonoBehaviour
     {
         Transform camTransform = Camera.main.transform;
         RaycastHit hit;
-        Vector3 targetPosition = Vector3.zero;
+
         Vector3 targetAim;
         Vector3 aimDir = Vector3.zero;
 
         if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, Mathf.Infinity, targetLayer))
         {
-            targetPosition = hit.point;
-
-            targetAim = targetPosition;
-            targetAim.y = transform.position.y;
-            aimDir = (targetAim - transform.position).normalized;
-
             
+            targetPosition = hit.point;
         }
         else
         {
-            targetPosition = camTransform.position;
-            targetAim.y = transform.position.y;
-            aimDir = (transform.position - targetPosition).normalized;
+            
+            targetPosition = camTransform.position + camTransform.forward * 10f;
         }
-       
-        
 
+        
+        targetAim = targetPosition;
+        targetAim.y = transform.position.y;
+        aimDir = (targetAim - transform.position).normalized;
+
+       
         transform.forward = Vector3.Lerp(transform.forward, aimDir, Time.deltaTime * 30f);
     }
 }
