@@ -40,11 +40,9 @@ public class InGameUIManager : MonoBehaviour
         SingletonInitialize();
 
         // UI วาด็
-        Timer            = transform.GetChild(0).GetComponent<UI_Timer>();
-        GameStatus       = transform.GetChild(1).GetComponent<UI_GameStatus>();
-        SkillIndicator = transform.GetChild(2).GetComponent<UI_SkillIndicator>();
-
-
-        Minimap          = transform.GetChild(4).GetChild(0).GetComponent<UI_Minimap>();
+        Minimap        = transform.GetChild(0).GetComponent<UI_Minimap>();
+        Timer          = transform.GetChild(1).GetComponent<UI_Timer>();
+        GameStatus     = transform.GetChild(2).GetComponent<UI_GameStatus>();
+        SkillIndicator = transform.GetChild(3).GetComponent<UI_SkillIndicator>();
     }
 }
