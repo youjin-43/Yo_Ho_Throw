@@ -194,6 +194,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             Debug.Log("나는 클라이언트다!!");
         }
 
+
         Debug.Log($"룸 입장 여부 = {PhotonNetwork.InRoom}");
         Debug.Log($"현재 룸의 인원수 = {PhotonNetwork.CurrentRoom.PlayerCount}");
 
@@ -203,19 +204,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐
         }
-
-        // 네트워크를 통해 동기화된 GameReadyScene으로 이동
-        //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
-        //{
-        //    PhotonNetwork.LoadLevel("GameReadyScene"); // 모든 클라이언트가 이 씬으로 이동
-        //}
-
-        // TODO : 이렇게 모든 플레이어가 실행해야할지, 마스터만 실행해야 할지 테스트 필요 
+        
     }
 
     // 새로운 플레이어가 들어오면 OnPlayerEnteredRoom()이 호출됨
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.Log($"{newPlayer.NickName} 플레이어가 방에 들어옴!");
+        Debug.Log($"{newPlayer.NickName} 플레이어가 방에 들어옴! - LobbyManager");
     }
 }
