@@ -248,3 +248,4 @@ public class PlayerScoreEntryData
     public void SetAssist(int assist) => Assist = assist;
     public void SetScore(int score) => Score = score;
 }
+//

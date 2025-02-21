@@ -170,4 +170,5 @@ public struct SpawnPosition
     {
         return positions[Random.Range(0, positions.Length)];
     }
+    //
 }

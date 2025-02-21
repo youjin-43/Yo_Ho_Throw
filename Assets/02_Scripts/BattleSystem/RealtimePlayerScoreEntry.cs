@@ -27,3 +27,4 @@ public class RealtimePlayerScoreEntry : MonoBehaviour
         nickNameText.text = nickName.ToString();
     }
 }
+//
