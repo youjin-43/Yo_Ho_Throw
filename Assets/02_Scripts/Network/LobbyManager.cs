@@ -141,7 +141,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         // 방 옵션 설정
         RoomOptions options = new RoomOptions();
-        options.MaxPlayers = (byte)(maxPlayersDropdown.value + 2); // 최소 2명부터
+        options.MaxPlayers = maxPlayersDropdown.value + 2; // 최소 2명부터
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable()
         {
             {"password", roomPasswordInput.text}, // 방 비밀번호 설정

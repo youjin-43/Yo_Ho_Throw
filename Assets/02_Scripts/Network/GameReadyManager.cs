@@ -20,7 +20,7 @@ public class GameReadyManager : MonoBehaviourPunCallbacks
     // TODO : 언제 호출되는지 확인하기 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.Log($"{newPlayer.NickName} 플레이어가 방에 들어옴! - GameReadyManager");
+        Debug.Log($"{newPlayer.ActorNumber}.{newPlayer.NickName} 플레이어가 방에 들어옴! - GameReadyManager");
     }
 
     public override void OnJoinedRoom()
