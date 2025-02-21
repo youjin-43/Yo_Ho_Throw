@@ -6,6 +6,13 @@ using System.Collections.Generic;
 using TMPro;
 using System;
 
+public enum RoomProperties
+{
+    mode,
+    password,
+    teamCount
+}
+
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
 
@@ -178,20 +185,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                 return; // 방 생성 중단
             }
 
-            options.CustomRoomProperties.Add("password", roomPasswordInput.text);
+            options.CustomRoomProperties.Add(RoomProperties.password.ToString(), roomPasswordInput.text);
         }
 
         // 게임 모드 설정
         string selectedMode = modeDropdown.options[modeDropdown.value].text;
-        options.CustomRoomProperties.Add("mode", selectedMode);
+        options.CustomRoomProperties.Add(RoomProperties.mode.ToString(), selectedMode);
 
         // 최대 인원 수 설정 
-        if (selectedMode == "TeamMatch")
+        if (selectedMode == GameMode.TeamMatch.ToString())
         {
             options.MaxPlayers = MaxPlayerCountDropdown_TeamMatch.value + 2; // 최소 2명부터
             // 팀 모드일 경우 팀 개수 설정
             int selectedTeamCount = teamCountDropdown.value + 2; // 최소 2팀부터
-            options.CustomRoomProperties.Add("teamCount", selectedTeamCount);
+            options.CustomRoomProperties.Add(RoomProperties.teamCount.ToString(), selectedTeamCount);
         }
         else
         {
@@ -199,7 +206,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
 
         // 로비에서 표시할 커스텀 속성 설정
-        options.CustomRoomPropertiesForLobby = new string[] { "mode", "password", "teamCount" }; //로비에서 방 목록을 업데이트할 때 모드와 비밀번호 정보를 포함하게 됨 
+        options.CustomRoomPropertiesForLobby = new string[] {
+            RoomProperties.mode.ToString(),
+            RoomProperties.password.ToString(),
+            RoomProperties.teamCount.ToString() }
+        ; //로비에서 방 목록을 업데이트할 때 모드와 비밀번호 정보를 포함하게 됨 
         // TODO : 유진 - teamCount도 룸 리스트 정보에 포함 시켜야 할까? 
 
         // 방 생성 요청
@@ -231,7 +242,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         string selectedMode = modeDropdown.options[modeIndex].text;
 
-        if (selectedMode == "TeamMatch")
+        if (selectedMode == GameMode.TeamMatch.ToString())
         {
             TeamCountArea.SetActive(true);
             MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(false);
@@ -272,10 +283,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         selectedRoomName = room.Name; // 선택한 방 이름 저장
 
-        if (room.CustomProperties.ContainsKey("password"))
+        if (room.CustomProperties.ContainsKey(RoomProperties.password.ToString()))
         {
             Debug.Log("비밀번호가 설정된 방입니다");
-            roomPassword = (string)room.CustomProperties["password"];
+            roomPassword = (string)room.CustomProperties[RoomProperties.password.ToString()];
 
             // 비밀번호 입력 UI 활성화
             passwordPromptPanel.SetActive(true);
