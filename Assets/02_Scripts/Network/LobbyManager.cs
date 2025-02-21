@@ -4,9 +4,13 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
 using TMPro;
+using System;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
+    int minPlayers = 2; // 최소 2명부터 시작
+    int maxPlayers = 10; // 최대 10명 
+
     [Header("PlayerNameInput")]
     public GameObject PlayerNameInputArea; // 플레이어 이름을 받는 UI 영역 
     public TMP_InputField playerNameInput; // 플레이어 이름 입력 필드
@@ -28,12 +32,22 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [Header("CreatNewRoom")]
     public GameObject CreatNewRoomArea; // 새로운 방을 생셩하는 UI 영역 
     public TMP_InputField roomNameInput; // 방 이름 입력 필드
+
+    // 비밀번호 설정 
     public Toggle passwordToggle; // 비밀번호 사용 여부 체크박스
     public GameObject SetPasswordArea;
     public TMP_InputField roomPasswordInput; // 방 비밀번호 입력 필드
-    public TMP_Dropdown maxPlayersDropdown; // 최대 플레이어 수 선택 드롭다운
+
+    // 모드 선택
     public TMP_Dropdown modeDropdown; // 게임 모드 선택 드롭다운 (개인전/팀전)
+   
+    public TMP_Dropdown MaxPlayerCountDropdown_DeathMatch; 
+    public TMP_Dropdown MaxPlayerCountDropdown_TeamMatch; 
+    public TMP_Dropdown teamCountDropdown; // 팀 개수 선택 드롭다운
+    public GameObject TeamCountArea; // 팀 개수 설정 UI 영역
+
     public Button createRoomButton; // 방 생성 버튼
+    public Button createRoomCancelButton; // 방 생성 취소 버튼
 
     [Header("JoinRoom")]
     private string selectedRoomName = ""; // 선택된 방 이름 저장
@@ -45,23 +59,37 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        // PlayerNameInput
+        #region PlayerNameInput
         PlayerNameInputArea.SetActive(true);
         connectButton.onClick.AddListener(ConnectToPhoton); // 포톤에 연결
+        #endregion
 
-        // RoomList
+        #region RoomList
         roomPanel.SetActive(false);
         createNewRoomButton.onClick.AddListener(ShowCreatRoomUI);
+        #endregion
 
-        // CreatNewRoom
+        #region CreatNewRoom
         CreatNewRoomArea.SetActive(false);
-        SetPasswordArea.gameObject.SetActive(false); // 비밀번호 설정 영역 - 기본 : 비활성화
-        passwordToggle.onValueChanged.AddListener(TogglePasswordInput);
-        createRoomButton.onClick.AddListener(CreateRoom);
 
-        // JoinRoom
+        // 비밀번호 설정 영역 - 기본 : 비활성화
+        SetPasswordArea.gameObject.SetActive(false); 
+        passwordToggle.onValueChanged.AddListener(TogglePasswordInput);
+
+        // 모드
+        TeamCountArea.SetActive(false);
+        modeDropdown.onValueChanged.AddListener(UpdateMaxPlayerSelectUI);
+        MaxPlayerCountDropdown_TeamMatch.onValueChanged.AddListener(UpdateMaxTeamCount);
+
+        // 버튼
+        createRoomButton.onClick.AddListener(CreateRoom);
+        createRoomCancelButton.onClick.AddListener(CreateRoomCancel);
+        #endregion
+
+        #region JoinRoom
         passwordPromptPanel.SetActive(false);
         passwordSubmitButton.onClick.AddListener(JoinRoomWithPassword);
+        #endregion
     }
 
     #region PlayerNameInput + RoomList
@@ -141,7 +169,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         // 방 옵션 설정
         RoomOptions options = new RoomOptions();
-        options.MaxPlayers = maxPlayersDropdown.value + 2; // 최소 2명부터
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
 
         // 비밀번호가 설정된 경우 체크
@@ -157,19 +184,81 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
 
         // 게임 모드 설정
-        options.CustomRoomProperties.Add("mode", modeDropdown.options[modeDropdown.value].text);
+        string selectedMode = modeDropdown.options[modeDropdown.value].text;
+        options.CustomRoomProperties.Add("mode", selectedMode);
 
-        // 로비에서 룸의 프로퍼티를 볼 수 있도록
-        options.CustomRoomPropertiesForLobby = new string[] { "mode", "password" }; // 로비에서 표시할 커스텀 속성 - 로비에서 방 목록을 업데이트할 때 모드와 비밀번호 정보를 포함하게 됨 
+        // 최대 인원 수 설정 
+        if (selectedMode == "TeamMatch")
+        {
+            options.MaxPlayers = MaxPlayerCountDropdown_TeamMatch.value + 2; // 최소 2명부터
+            // 팀 모드일 경우 팀 개수 설정
+            int selectedTeamCount = teamCountDropdown.value + 2; // 최소 2팀부터
+            options.CustomRoomProperties.Add("teamCount", selectedTeamCount);
+        }
+        else
+        {
+            options.MaxPlayers = MaxPlayerCountDropdown_DeathMatch.value + 2; // 최소 2명부터
+        }
+
+
+        // 로비에서 표시할 커스텀 속성 설정
+        options.CustomRoomPropertiesForLobby = new string[] { "mode", "password", "teamCount" }; //로비에서 방 목록을 업데이트할 때 모드와 비밀번호 정보를 포함하게 됨 
+        // TODO : 유진 - teamCount도 룸 리스트 정보에 포함 시켜야 할까? 
 
         // 방 생성 요청
         PhotonNetwork.CreateRoom(roomNameInput.text, options);
+    }
+
+    public void CreateRoomCancel()
+    {
+        CreatNewRoomArea.SetActive(false);
+        roomPanel.SetActive(true);
     }
 
     void TogglePasswordInput(bool isOn)
     {
         roomPasswordInput.interactable = isOn;
         SetPasswordArea.gameObject.SetActive(isOn);
+    }
+
+    /// <summary>
+    /// 팀 모드 선택 시 팀 개수 UI 활성화
+    /// </summary>
+    void UpdateMaxPlayerSelectUI(int modeIndex)
+    {
+        string selectedMode = modeDropdown.options[modeIndex].text;
+
+        if (selectedMode == "TeamMatch")
+        {
+            TeamCountArea.SetActive(true);
+            MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(false);
+            MaxPlayerCountDropdown_TeamMatch.gameObject.SetActive(true);
+            UpdateMaxTeamCount(MaxPlayerCountDropdown_TeamMatch.value); // 팀 개수 업데이트
+        }
+        else
+        {
+            TeamCountArea.SetActive(false);
+            MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(true);
+            MaxPlayerCountDropdown_TeamMatch.gameObject.SetActive(false);
+        }
+    }
+
+    // 최대 플레이어 수 변경 시 팀 개수 드롭다운 업데이트
+    void UpdateMaxTeamCount(int maxPlayersIndex)
+    {
+        int maxPlayers = 4 + (int)Math.Pow(2,maxPlayersIndex); // 최소 4부터 시작
+        int maxTeams = maxPlayers / 2; // 최대 팀 개수는 (최대 플레이어 수 / 2)
+
+        // 팀 개수 드롭다운 옵션 업데이트
+        List<string> teamOptions = new List<string>();
+        for (int i = 2; i <= maxTeams; i++) // 최소 2팀부터
+        {
+            teamOptions.Add(i.ToString());
+        }
+
+        teamCountDropdown.ClearOptions();
+        teamCountDropdown.AddOptions(teamOptions);
+        teamCountDropdown.value = 0; // 기본값: 최소 팀 개수
     }
 
     #endregion
