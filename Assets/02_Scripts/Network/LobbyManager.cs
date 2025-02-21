@@ -18,6 +18,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public Transform roomListContent; // 방 목록이 추가될 부모 오브젝트
     public Button createNewRoomButton; // 새로운 방 생성하는 버튼
 
+    enum roomListItemPrefabChilds
+    {
+        RoomName,
+        PlayerCount,
+        JoinButton,
+        LockIcon
+    }
+
     [Header("CreatNewRoom")]
     public GameObject CreatNewRoomArea; // 새로운 방을 생셩하는 UI 영역 
     public TMP_InputField roomNameInput; // 방 이름 입력 필드
@@ -56,12 +64,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         passwordSubmitButton.onClick.AddListener(JoinRoomWithPassword);
     }
 
-    void TogglePasswordInput(bool isOn)
-    {
-        roomPasswordInput.interactable = isOn;
-        SetPasswordArea.gameObject.SetActive(isOn);
-    }
-
+    #region PlayerNameInput + RoomList
     void ConnectToPhoton()
     {
         //지역 kr로 고정.이 부분이 없으면 자동으로 지역을 찾는데,다른 지역에 걸릴 경우 네트워크를 통해 만날 수 없다.
@@ -95,17 +98,50 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         roomPanel.SetActive(true);
     }
 
+    /* OnRoomListUpdate(List<RoomInfo> roomList) 함수는 포톤(PUN)의 로비에서 방 목록이 갱신될 때 자동으로 호출
+
+  언제 실행되는가?
+  1.처음 로비에 입장할 때 (PhotonNetwork.JoinLobby() 실행 후)
+  2.새로운 방이 생성되었을 때
+  3.기존 방이 삭제되었을 때 (방장이 방을 나가거나, 모든 플레이어가 퇴장했을 때)
+  4.방 속성이 변경되었을 때 (최대 인원 변경, 비밀번호 추가/제거 등)
+  5. 다른 플레이어가 방을 만들거나 나가면 → OnRoomListUpdate() 자동 실행
+  */
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        Debug.Log("방 목록이 업데이트됨!");
+
+        // 기존 목록 제거
+        foreach (Transform child in roomListContent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // 새로운 방 목록 표시
+        foreach (RoomInfo room in roomList) // roomList 매개변수에는 현재 로비에 존재하는 모든 방 정보가 담겨 있음
+        {
+            GameObject roomItem = Instantiate(roomListItemPrefab, roomListContent);
+            roomItem.transform.GetChild((int)roomListItemPrefabChilds.RoomName).GetComponent<TMP_Text>().text = room.Name;
+            roomItem.transform.GetChild((int)roomListItemPrefabChilds.PlayerCount).GetComponent<TMP_Text>().text = $"{room.PlayerCount}/{room.MaxPlayers}";
+            roomItem.transform.GetChild((int)roomListItemPrefabChilds.JoinButton).GetComponent<Button>().onClick.AddListener(() => TryJoinRoom(room)); 
+        }
+    }
+
+    #endregion
+
     public void ShowCreatRoomUI()
     {
         roomPanel.SetActive(false);
         CreatNewRoomArea.SetActive(true);
     }
 
+    #region CreatNewRoom
+
     public void CreateRoom()
     {
         // 방 옵션 설정
         RoomOptions options = new RoomOptions();
-        options.MaxPlayers = (byte)(maxPlayersDropdown.value + 2); // 최소 2명부터 최대 10명까지 설정 가능
+        options.MaxPlayers = (byte)(maxPlayersDropdown.value + 2); // 최소 2명부터
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable()
         {
             {"password", roomPasswordInput.text}, // 방 비밀번호 설정
@@ -117,34 +153,15 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(roomNameInput.text, options);
     }
 
-    /* OnRoomListUpdate(List<RoomInfo> roomList) 함수는 포톤(PUN)의 로비에서 방 목록이 갱신될 때 자동으로 호출
-
-    언제 실행되는가?
-    1.처음 로비에 입장할 때 (PhotonNetwork.JoinLobby() 실행 후)
-	2.새로운 방이 생성되었을 때
-	3.기존 방이 삭제되었을 때 (방장이 방을 나가거나, 모든 플레이어가 퇴장했을 때)
-	4.방 속성이 변경되었을 때 (최대 인원 변경, 비밀번호 추가/제거 등)
-    5. 다른 플레이어가 방을 만들거나 나가면 → OnRoomListUpdate() 자동 실행
-    */
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    void TogglePasswordInput(bool isOn)
     {
-        Debug.Log("방 목록이 업데이트됨!");
-
-        // 기존 목록 제거
-        foreach (Transform child in roomListContent)
-        {
-            Destroy(child.gameObject);
-        }
-        
-        // 새로운 방 목록 표시
-        foreach (RoomInfo room in roomList) // roomList 매개변수에는 현재 로비에 존재하는 모든 방 정보가 담겨 있음
-        {
-            GameObject roomItem = Instantiate(roomListItemPrefab, roomListContent);
-            roomItem.transform.GetChild(0).GetComponent<TMP_Text>().text = room.Name; // RoomName
-            roomItem.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() => TryJoinRoom(room)); //JoinButton
-            // TODO : child 쓰는거 나중에 바꾸기. 지금은 임시로 우선 ㄱㄱ 
-        }
+        roomPasswordInput.interactable = isOn;
+        SetPasswordArea.gameObject.SetActive(isOn);
     }
+
+    #endregion
+
+    #region JoinRoom
 
     public void TryJoinRoom(RoomInfo room)
     {
@@ -205,4 +222,5 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         Debug.Log($"현재 룸의 인원수 = {PhotonNetwork.CurrentRoom.PlayerCount}");
         foreach (var player in PhotonNetwork.CurrentRoom.Players) Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐
     }
+    #endregion
 }
