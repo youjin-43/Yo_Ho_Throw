@@ -1,10 +1,22 @@
 using UnityEngine;
 using Photon.Pun; // Pun : 포톤 유니티 네트워크의 약자
 using Photon.Realtime; // 실시간 통신? 을 위해서
+using UnityEngine.UI;
 
 public class GameReadyManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] GameObject playerPrefab; // 인스펙터에서 할당
+
+    [Header("RoomList")]
+    [SerializeField] GameObject PlayerInfoItemPrefab; // 방 목록 아이템 프리팹
+    public Transform PlayerInfoListContent; // 방 목록이 추가될 부모 오브젝트
+
+    [SerializeField] public Button GameStartButton; // 게임 스타트 버튼 
+
+    private void Awake()
+    {
+        GameStartButton.onClick.AddListener(GameStart);
+    }
 
     // 마스터 클라이언트만 실행됨 
     void Start()
@@ -17,7 +29,6 @@ public class GameReadyManager : MonoBehaviourPunCallbacks
     }
 
     // 새로운 플레이어가 들어오면 OnPlayerEnteredRoom()이 호출됨
-    // TODO : 언제 호출되는지 확인하기 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Debug.Log($"{newPlayer.ActorNumber}.{newPlayer.NickName} 플레이어가 방에 들어옴! - GameReadyManager");
@@ -67,4 +78,8 @@ public class GameReadyManager : MonoBehaviourPunCallbacks
         return new Vector3(x, 10f, z);
     }
 
+    void GameStart()
+    {
+        PhotonNetwork.LoadLevel("Test_BattleSystem");
+    }
 }
