@@ -15,6 +15,8 @@ public enum RaiseEventCode
     RespawnPlayer = 41,
     ActivatePlayer = 42,
     DeactivatePlayer = 43,
+    ActivateBountyTarget = 44,
+    DeactivateBountyTarget = 45,
 
     #endregion
 
@@ -26,6 +28,7 @@ public enum RaiseEventCode
     UpdateRank = 53,
     UpdateRealtime = 54,
     ResetScoreboard = 55,
+    
 
     #endregion
 }
