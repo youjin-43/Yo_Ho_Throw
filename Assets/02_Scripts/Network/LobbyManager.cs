@@ -8,8 +8,6 @@ using System;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-    int minPlayers = 2; // 최소 2명부터 시작
-    int maxPlayers = 10; // 최대 10명 
 
     [Header("PlayerNameInput")]
     public GameObject PlayerNameInputArea; // 플레이어 이름을 받는 UI 영역 
@@ -56,7 +54,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public TMP_InputField passwordInput; // 비밀번호 입력 필드
     public Button passwordSubmitButton; // 비밀번호 확인 버튼
     
-
     void Start()
     {
         #region PlayerNameInput
@@ -151,19 +148,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             GameObject roomItem = Instantiate(roomListItemPrefab, roomListContent);
             roomItem.transform.GetChild((int)roomListItemPrefabChilds.RoomName).GetComponent<TMP_Text>().text = room.Name;
             roomItem.transform.GetChild((int)roomListItemPrefabChilds.PlayerCount).GetComponent<TMP_Text>().text = $"{room.PlayerCount}/{room.MaxPlayers}";
-            roomItem.transform.GetChild((int)roomListItemPrefabChilds.JoinButton).GetComponent<Button>().onClick.AddListener(() => TryJoinRoom(room)); 
+            roomItem.transform.GetChild((int)roomListItemPrefabChilds.JoinButton).GetComponent<Button>().onClick.AddListener(() => TryJoinRoom(room));
+            if (room.CustomProperties.ContainsKey("password"))roomItem.transform.GetChild((int)roomListItemPrefabChilds.LockIcon).gameObject.SetActive(true);
         }
     }
 
     #endregion
+
+    #region CreatNewRoom
 
     public void ShowCreatRoomUI()
     {
         roomPanel.SetActive(false);
         CreatNewRoomArea.SetActive(true);
     }
-
-    #region CreatNewRoom
 
     public void CreateRoom()
     {
@@ -200,12 +198,17 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             options.MaxPlayers = MaxPlayerCountDropdown_DeathMatch.value + 2; // 최소 2명부터
         }
 
-
         // 로비에서 표시할 커스텀 속성 설정
         options.CustomRoomPropertiesForLobby = new string[] { "mode", "password", "teamCount" }; //로비에서 방 목록을 업데이트할 때 모드와 비밀번호 정보를 포함하게 됨 
         // TODO : 유진 - teamCount도 룸 리스트 정보에 포함 시켜야 할까? 
 
         // 방 생성 요청
+        if (string.IsNullOrEmpty(roomNameInput.text))
+        {
+            Debug.LogWarning("룸 이름을 를 입력해야 합니다!");
+            return; // 방 생성 중단
+        }
+
         PhotonNetwork.CreateRoom(roomNameInput.text, options);
     }
 
