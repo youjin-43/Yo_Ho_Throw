@@ -18,4 +18,9 @@ public class UI_Minimap : MonoBehaviour
         MinimapCamera.rotation = Quaternion.Euler(90f, PlayerTransform.localEulerAngles.y, 0f);
         _minimapFrame.rotation = Quaternion.Euler(0f, 0f, PlayerTransform.localEulerAngles.y);
     }
+
+    public void ResetUI()
+    {
+
+    }
 }

@@ -20,8 +20,10 @@ public class UI_UITestScript : MonoBehaviour
         {
             Debug.Log("스킬창 할당 완료");
         }
-
-        InGameUIManager.Instance.StartTimer(180f);
+        if (InGameUIManager.Instance.HealthIndicator != null)
+        {
+            Debug.Log("체력창 할당 완료");
+        }
     }
 
     void Update()
@@ -39,9 +41,28 @@ public class UI_UITestScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             Debug.Log("Shift 스킬 발동");
-            InGameUIManager.Instance.UseSkill(KeyCode.LeftShift, 5);
+            InGameUIManager.Instance.UseSkill(2, 5);
+        }
 
-            InGameUIManager.Instance.AddDagger(1);
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            InGameUIManager.Instance.ResetUI();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            InGameUIManager.Instance.AddDagger();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            InGameUIManager.Instance.OnHealthChangedDebug(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            InGameUIManager.Instance.OnHealthChangedDebug(-1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            InGameUIManager.Instance.StartTimer(180f);
         }
     }
 }

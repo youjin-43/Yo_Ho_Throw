@@ -18,6 +18,8 @@ public class UI_SkillIndicator : MonoBehaviour
     // ´Ü°Ë °¹¼ö Ä«¿îÅÍ
     private List<GameObject> _daggerCounter = new List<GameObject>();
 
+    private int _numOfDagger = 5;
+
     void Awake()
     {
         // ÄðÅ¸ÀÓ ÀÌÆåÆ®
@@ -42,24 +44,48 @@ public class UI_SkillIndicator : MonoBehaviour
         }
     }
 
-    #region COOLDOWN
-    public void StartCooldownEffect(KeyCode key, float cooldownTime)
+    public void ResetUI()
     {
-        StartCoroutine(CooldownEffect(_skill_Shift_CooldownEffect, cooldownTime));
+        StopAllCoroutines();
+
+        AddDagger(5);
+
+        _skill_Shift_CooldownEffect.fillAmount  = 1f;
+        _skill_LClick_CooldownEffect.fillAmount = 1f;
+        _skill_RClick_CooldownEffect.fillAmount = 1f;
+
+        _skill_Shift_CooldownEffect.gameObject.SetActive(false);
+        _skill_LClick_CooldownEffect.gameObject.SetActive(false);
+        _skill_RClick_CooldownEffect.gameObject.SetActive(false);
+
+        _skillActivation.gameObject.SetActive(false);
     }
 
+
+
+
+
+    #region COOLDOWN
     public void StartCooldownEffect(int button, float cooldownTime)
     {
+        // Shift
+        if (button == 2)
+        {
+            StartCoroutine(CooldownEffect(_skill_Shift_CooldownEffect, cooldownTime));
+        }
         // ÁÂÅ¬¸¯
-        if (button == 0)
+        else if (button == 0)
         {
             StartCoroutine(CooldownEffect(_skill_LClick_CooldownEffect, cooldownTime));
         }
         // ¿ìÅ¬¸¯
         else if (button == 1)
         {
-            DaggerCountOff();
-            StartCoroutine(CooldownEffect(_skill_RClick_CooldownEffect, cooldownTime));
+            if(_numOfDagger != 0)
+            {
+                RemoveDagger();
+                StartCoroutine(CooldownEffect(_skill_RClick_CooldownEffect, cooldownTime));
+            }
         }
     }
 
@@ -81,29 +107,37 @@ public class UI_SkillIndicator : MonoBehaviour
     }
     #endregion
 
+
+
+
+
     #region DAGGERCOUNT
-    public void DaggerCountOn(int count)
+    public void AddDagger(int count)
     {
+        count = Mathf.Clamp(count, 1, 5);
+
         _skillActivation.gameObject.SetActive(false);
 
-        int tmp = 0;
+        int addCounter = 0;
 
         foreach(GameObject counter in _daggerCounter)
         {
-            if(tmp == count)
+            if(addCounter == count)
             {
                 break;
             }
 
             if(counter.activeSelf == false)
             {
+                _numOfDagger = Mathf.Clamp(_numOfDagger += 1, 0, 5);
+
                 counter.SetActive(true);
-                ++tmp;
+                ++addCounter;
             }
         }
     }
 
-    public void DaggerCountOff()
+    public void RemoveDagger()
     {
         for(int i = 4; i >= 0; --i)
         {
@@ -115,9 +149,9 @@ public class UI_SkillIndicator : MonoBehaviour
                 if(i == 0)
                 {
                     _skillActivation.gameObject.SetActive(true);
-                    //Color color = _skill_RClick_CooldownEffect.color;
-                    //_skill_RClick_CooldownEffect.color = new Color(color.r, color.g, color.b, 0f);
                 }
+
+                _numOfDagger = Mathf.Clamp(_numOfDagger -= 1, 0, 5);
 
                 _daggerCounter[i].SetActive(false);
                 return;

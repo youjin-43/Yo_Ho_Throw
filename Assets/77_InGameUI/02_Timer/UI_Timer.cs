@@ -8,7 +8,14 @@ public class UI_Timer : MonoBehaviour
 
     void Awake()
     {
-        _timerText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        _timerText = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+    }
+
+    public void ResetUI()
+    {
+        StopAllCoroutines();
+
+        _timerText.text = $"0 : 00";
     }
 
     public void StartTimer(float time)
