@@ -4,7 +4,6 @@ using Photon.Realtime;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class BattleUIController : MonoBehaviour, IOnEventCallback
@@ -204,4 +203,5 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
+    //
 }
