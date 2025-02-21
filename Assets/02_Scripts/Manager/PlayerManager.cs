@@ -1,25 +1,30 @@
 using Photon.Pun.Demo.Asteroids;
 using StarterAssets;
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : PlayerStatController
 {
     private StarterAssetsInputs input;
-    public GameObject bulletPrefab; // ´øÁú ÇÁ¸®ÆÕ
-    public Transform bulletSpawnPoint; // ÇÁ¸®ÆÕÀÌ »ı¼ºµÉ À§Ä¡
-    public float bulletSpeed = 10f; // ÇÁ¸®ÆÕ ÃÊ±â ¼Óµµ
-    public float bulletArc = 5f; // Æ÷¹°¼± °î·ü Á¶Á¤
+    public GameObject bulletPrefab; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public Transform bulletSpawnPoint; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+    public float bulletSpeed = 10f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½ ï¿½Óµï¿½
+    public float bulletArc = 5f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public Transform cameraTransform;
     [Header("Aim")]
     [SerializeField]
     private CinemachineVirtualCamera aimCam;
     [SerializeField]
     private LayerMask targetLayer;
+    private Animator anim;
+    private Vector3 targetPosition = Vector3.zero;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         input = GetComponent<StarterAssetsInputs>();
+        anim = GetComponent<Animator>();
+        anim.applyRootMotion = false;
     }
 
     // Update is called once per frame
@@ -35,43 +40,73 @@ public class PlayerManager : MonoBehaviour
         {
             aimCam.gameObject.SetActive(false);
         }
-        if (Input.GetKeyDown(KeyCode.F)) // ¹ß»ç ÀÔ·Â °¨Áö (Fire1 ¹öÆ°)
+        if (Input.GetKeyDown(KeyCode.F)) // ï¿½ß»ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ (Fire1 ï¿½ï¿½Æ°)
         {
-            ThrowProjectile();
+            anim.SetBool("Shoot", true);
+            StartCoroutine(EndShootCoroutine());
         }
     }
 
     void ThrowProjectile()
     {
+        
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
-            GameObject projectile = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
+            //TODO : Ç®ï¿½Å´ï¿½ï¿½ï¿½ 
+            GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
+            projectile.transform.position = transform.position;
+            //GameObject projectile = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
+            
             if (rb != null)
             {
-                Vector3 throwDirection = cameraTransform.forward * bulletSpeed + Vector3.up * bulletArc;
-                rb.linearVelocity = throwDirection;
+                rb.useGravity = false;
+
+                Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized; //Vector3.up * bulletArc;
+                Quaternion rotationOffset = Quaternion.Euler(90, 0, 0); // í•„ìš”ì— ë”°ë¼ ì¡°ì •
+                projectile.transform.rotation = Quaternion.LookRotation(throwDirection) * rotationOffset;
+                
+                rb.linearVelocity = throwDirection*bulletSpeed;
             }
+            
         }
     }
 
+    public void EndShoot()
+    {
+        anim.SetBool("Shoot", false);
+    }
+    IEnumerator EndShootCoroutine()
+    {
+        yield return new WaitForSeconds(0.24f);
+        anim.SetBool("Shoot", false);
+        
+    }
     void LookSameCameraDirection()
     {
         Transform camTransform = Camera.main.transform;
         RaycastHit hit;
-        Vector3 targetPosition = Vector3.zero;
-        
+
+        Vector3 targetAim;
+        Vector3 aimDir = Vector3.zero;
 
         if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, Mathf.Infinity, targetLayer))
         {
-            targetPosition = hit.point;
             
+            targetPosition = hit.point;
         }
-       
-        Vector3 targetAim = targetPosition;
-        targetAim.y = transform.position.y;
-        Vector3 aimDir = (targetAim - transform.position).normalized;
+        else
+        {
+            
+            targetPosition = camTransform.position + camTransform.forward * 10f;
+        }
 
+        
+        targetAim = targetPosition;
+        targetAim.y = transform.position.y;
+        aimDir = (targetAim - transform.position).normalized;
+
+       
         transform.forward = Vector3.Lerp(transform.forward, aimDir, Time.deltaTime * 30f);
     }
 }
