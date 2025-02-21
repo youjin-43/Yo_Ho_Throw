@@ -14,7 +14,7 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
 
     Dictionary<int, int> revengeTargetDict = new Dictionary<int, int>();
 
-    const int REVENGE_BONUS_REWARD = 1;
+    int revengeBonusReward = 1;
 
     private void Awake()
     {
@@ -65,7 +65,7 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
         {
             instance.revengeTargetDict[killerActorNumber] = -1;
 
-            ScoreManager.Instance.AddScore(killerActorNumber, victimActorNumber, REVENGE_BONUS_REWARD);
+            ScoreManager.Instance.AddScore(killerActorNumber, victimActorNumber, instance.revengeBonusReward);
         }
 
         // 복수 대상이 아닐 때
@@ -75,8 +75,11 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
         }
 
         // 죽은 플레이어 리스폰 요청
-        PlayerSpawnManager.Instance.ExecuteRPC(
-                    RaiseEventCode.RespawnPlayer.ToString(), victimActorNumber);
+        PhotonNetwork.RaiseEvent(
+            (byte)RaiseEventCode.RespawnPlayer,
+            null,
+            new RaiseEventOptions { TargetActors = new int[] { victimActorNumber } },
+            SendOptions.SendUnreliable);
 
         // 타살일 경우 죽인 자는 죽은 자의 복수 대상으로 갱신
         instance.revengeTargetDict[victimActorNumber] = victimActorNumber != killerActorNumber ? killerActorNumber : instance.revengeTargetDict[victimActorNumber];
@@ -112,6 +115,7 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
 
             BattleUIController.Instance.SetLimitTimeText(seconds);
         }
+
         EndGameByTimeout();
     }
     void CheckTime(int seconds)
@@ -123,10 +127,7 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
         
         if (seconds % 60 == 0 && seconds != 0) // TODO 찬규 : 1분마다 현상금 이벤트 발생
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                ScoreManager.Instance.SetBountyTarget();
-            }
+
         }
     }
     void EndGameByTimeout()

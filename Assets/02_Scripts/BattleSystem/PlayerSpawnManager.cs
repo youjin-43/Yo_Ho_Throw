@@ -8,7 +8,7 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
+public class PlayerSpawnManager : MonoBehaviour, IOnEventCallback
 {
     public static PlayerSpawnManager Instance { get; private set; } = null;
 
@@ -67,6 +67,15 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         {
             case RaiseEventCode.SpawnPlayer:
                 SpawnPlayer(photonEvent); break;
+
+            case RaiseEventCode.RespawnPlayer:
+                RespawnPlayer(); break;
+
+            case RaiseEventCode.ActivatePlayer:
+                ActivatePlayer(); break;
+
+            case RaiseEventCode.DeactivatePlayer:
+                DeactivatePlayer(); break;
         }
     }
     void SpawnPlayer(EventData photonEvent)
@@ -88,8 +97,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
         ActivatePlayer();
     }
-    [PunRPC]
-    public void RespawnPlayer()
+    void RespawnPlayer()
     {
         Transform spawnPosition = GetRandomTransform();
 
@@ -98,37 +106,19 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
         ActivatePlayer();
     }
-    [PunRPC]
-    public void ActivatePlayer()
+    void ActivatePlayer()
     {
         // TODO 찬규 : 플레이어 동작 활성화 (currPlayerPhotonView.RPC를 통해 수행해야할듯)
         //currPlayerPhotonView.RPC("")
     }
-    [PunRPC]
-    public void DeactivatePlayer()
+    void DeactivatePlayer()
     {
         // TODO 찬규 : 플레이어 동작 비활성화 (currPlayerPhotonView.RPC를 통해 수행해야할듯)
         
     }
-    public void ExecuteRPC(string functionName, int actorNumber)
-    {
-        photonView.RPC(functionName, PhotonNetwork.CurrentRoom.Players[actorNumber]);
-    }
     public void EndGame()
     {
         DeactivatePlayer();
-    }
-    [PunRPC]
-    public void ActivateBountyTarget()
-    {
-        // TODO 찬규 : 현상금 타겟 지정 이펙트 활성화
-
-    }
-    [PunRPC]
-    public void DeactivateBountyTarget()
-    {
-        // TODO 찬규 : 현상금 타겟 지정 이펙트 비활성화
-
     }
     Transform GetRandomTransform() => spawnPositions[Random.Range(0, spawnPositions.Length)].GetRandomTransform();
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
