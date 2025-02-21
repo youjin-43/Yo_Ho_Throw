@@ -1380,6 +1380,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d608b487600b49448b669005b18d140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerHp: 0
+  playerMaxHp: 0
   bulletPrefab: {fileID: 8430071279321725386, guid: 7ed4621ce93ddae43adba43f8795ebea, type: 3}
   bulletSpawnPoint: {fileID: 1980790552}
   bulletSpeed: 50
@@ -1389,6 +1391,7 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 4294967295
+  playerMeshRenderer: {fileID: 1429826847}
 --- !u!54 &9102701135844288395
 Rigidbody:
   m_ObjectHideFlags: 0
