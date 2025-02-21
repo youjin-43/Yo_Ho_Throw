@@ -1,26 +1,24 @@
 using UnityEngine;
 using Photon.Pun; // Pun : 포톤 유니티 네트워크의 약자
 using Photon.Realtime; // 실시간 통신? 을 위해서
-using UnityEngine.UI;
+using ExitGames.Client.Photon;
 
 public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
 {
+    GameReadyUIManager gameReadyUIManager;
     [SerializeField] GameObject playerPrefab; // 인스펙터에서 할당
 
     // 마스터 클라이언트만 실행됨 
     void Start()
     {
+        gameReadyUIManager = GetComponent<GameReadyUIManager>();
+        // TODO : 유진 -  UI 모든 클라이언트에게 갱신되는지 확인해야함 
+
         if (PhotonNetwork.InRoom)
         {
             // 네트워크를 통해 플레이어 생성 (모든 클라이언트에게 공유됨)
             PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity); 
         }
-    }
-
-    // 새로운 플레이어가 들어오면 OnPlayerEnteredRoom()이 호출됨
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        Debug.Log($"{newPlayer.ActorNumber}.{newPlayer.NickName} 플레이어가 방에 들어옴! - GameReadyManager");
     }
 
     public override void OnJoinedRoom()
@@ -39,9 +37,8 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         foreach (var player in PhotonNetwork.CurrentRoom.Players) Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐
 
         // 플레이어 프리팹을 생성
-        SpawnPlayer(); 
+        SpawnPlayer();
     }
-
 
     private void SpawnPlayer()
     {
@@ -58,7 +55,6 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
     }
 
-
     // 랜덤한 위치에서 스폰하도록 설정
     private Vector3 GetRandomSpawnPosition()
     {
@@ -72,11 +68,41 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel("Test_BattleSystem");
     }
 
-    /// <summary>
-    /// 현재 룸의 게임 모드를 가져옴 
-    /// </summary>
-    public string GetGameMode()
+    // 새로운 플레이어가 들어오면 OnPlayerEnteredRoom()이 호출됨
+    public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        return (string)PhotonNetwork.CurrentRoom.CustomProperties[RoomProperties.password.ToString()];
+        Debug.Log($"{newPlayer.ActorNumber}.{newPlayer.NickName} 플레이어가 방에 들어옴!");
+        gameReadyUIManager.UpdatePlayerListUI();
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log($"{otherPlayer.ActorNumber}.{otherPlayer.NickName} 플레이어가 방에서 나감!");
+        gameReadyUIManager.UpdatePlayerListUI();
+    }
+
+    public int SetMaxPlayers(int maxPlayers)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("SetMaxPlayers 실행됨");
+            Hashtable roomProperties = PhotonNetwork.CurrentRoom.CustomProperties;
+            roomProperties["MaxPlayers"] = (byte)maxPlayers; // 기존 값 유지하면서 추가 or 업데이트
+            PhotonNetwork.CurrentRoom.SetCustomProperties(roomProperties);
+            
+        }
+        return maxPlayers;
+    }
+
+    public string SetGameMode(string mode)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("SetGameMode 실행됨");
+            Hashtable roomProperties = PhotonNetwork.CurrentRoom.CustomProperties;
+            roomProperties["GameMode"] = mode; // 기존 값 유지하면서 추가 or 업데이트
+            PhotonNetwork.CurrentRoom.SetCustomProperties(roomProperties);
+        }
+        return mode;
     }
 }

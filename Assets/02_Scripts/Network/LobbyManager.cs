@@ -30,6 +30,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         RoomName,
         PlayerCount,
+        GameMode,
         JoinButton,
         LockIcon
     }
@@ -155,6 +156,18 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             GameObject roomItem = Instantiate(roomListItemPrefab, roomListContent);
             roomItem.transform.GetChild((int)roomListItemPrefabChilds.RoomName).GetComponent<TMP_Text>().text = room.Name;
             roomItem.transform.GetChild((int)roomListItemPrefabChilds.PlayerCount).GetComponent<TMP_Text>().text = $"{room.PlayerCount}/{room.MaxPlayers}";
+
+            if (room.CustomProperties.ContainsKey(RoomProperties.mode.ToString()))
+            {
+                string mode = (string)room.CustomProperties[RoomProperties.mode.ToString()];
+                Debug.Log($"방 목록 업데이트 - 모드: {mode}");
+                roomItem.transform.GetChild((int)roomListItemPrefabChilds.GameMode).GetComponent<TMP_Text>().text = mode;
+            }
+            else
+            {
+                Debug.LogWarning($"방 목록 업데이트 - 모드 정보 없음 (룸 이름: {room.Name})");
+            }
+
             roomItem.transform.GetChild((int)roomListItemPrefabChilds.JoinButton).GetComponent<Button>().onClick.AddListener(() => TryJoinRoom(room));
             if (room.CustomProperties.ContainsKey("password"))roomItem.transform.GetChild((int)roomListItemPrefabChilds.LockIcon).gameObject.SetActive(true);
         }
@@ -190,6 +203,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         // 게임 모드 설정
         string selectedMode = modeDropdown.options[modeDropdown.value].text;
+        Debug.Log($"방 생성 - 모드: {selectedMode}");
         options.CustomRoomProperties.Add(RoomProperties.mode.ToString(), selectedMode);
 
         // 최대 인원 수 설정 
