@@ -15,6 +15,8 @@ public enum RaiseEventCode
     RespawnPlayer = 41,
     ActivatePlayer = 42,
     DeactivatePlayer = 43,
+    ActivateBountyTarget = 44,
+    DeactivateBountyTarget = 45,
 
     #endregion
 
