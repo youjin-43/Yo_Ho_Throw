@@ -17,7 +17,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public GameObject roomListItemPrefab; // 방 목록 아이템 프리팹
     public Transform roomListContent; // 방 목록이 추가될 부모 오브젝트
     public Button createNewRoomButton; // 새로운 방 생성하는 버튼
-
     enum roomListItemPrefabChilds
     {
         RoomName,
@@ -38,10 +37,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     [Header("JoinRoom")]
     private string selectedRoomName = ""; // 선택된 방 이름 저장
+    private string roomPassword = ""; // 선택된 방의 비밀번호 저장 변수
     public GameObject passwordPromptPanel; // 비밀번호 입력 패널
     public TMP_InputField passwordInput; // 비밀번호 입력 필드
     public Button passwordSubmitButton; // 비밀번호 확인 버튼
-    private string roomPassword = ""; // 선택된 방의 비밀번호 저장 변수
+    
 
     void Start()
     {
@@ -142,13 +142,26 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         // 방 옵션 설정
         RoomOptions options = new RoomOptions();
         options.MaxPlayers = maxPlayersDropdown.value + 2; // 최소 2명부터
-        options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable()
+        options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+
+        // 비밀번호가 설정된 경우 체크
+        if (passwordToggle.isOn)
         {
-            {"password", roomPasswordInput.text}, // 방 비밀번호 설정
-            {"mode", modeDropdown.options[modeDropdown.value].text} // 게임 모드 설정
-        };
-        options.CustomRoomPropertiesForLobby = new string[] { "mode" }; // 로비에서 표시할 커스텀 속성
-        
+            if (string.IsNullOrEmpty(roomPasswordInput.text))
+            {
+                Debug.LogWarning("비밀번호를 입력해야 합니다!");
+                return; // 방 생성 중단
+            }
+
+            options.CustomRoomProperties.Add("password", roomPasswordInput.text);
+        }
+
+        // 게임 모드 설정
+        options.CustomRoomProperties.Add("mode", modeDropdown.options[modeDropdown.value].text);
+
+        // 로비에서 룸의 프로퍼티를 볼 수 있도록
+        options.CustomRoomPropertiesForLobby = new string[] { "mode", "password" }; // 로비에서 표시할 커스텀 속성 - 로비에서 방 목록을 업데이트할 때 모드와 비밀번호 정보를 포함하게 됨 
+
         // 방 생성 요청
         PhotonNetwork.CreateRoom(roomNameInput.text, options);
     }
@@ -165,16 +178,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void TryJoinRoom(RoomInfo room)
     {
-        // 방의 비밀번호 가져오기
-        roomPassword = (string)room.CustomProperties["password"];
         selectedRoomName = room.Name; // 선택한 방 이름 저장
-        if (!string.IsNullOrEmpty(roomPassword))
+
+        if (room.CustomProperties.ContainsKey("password"))
         {
-            // 비밀번호 입력창 활성화
+            Debug.Log("비밀번호가 설정된 방입니다");
+            roomPassword = (string)room.CustomProperties["password"];
+
+            // 비밀번호 입력 UI 활성화
             passwordPromptPanel.SetActive(true);
         }
         else
         {
+            Debug.Log("비밀번호가 설정되지 않은 방입니다. 바로 입장을 시도합니다");
+
             // 비밀번호가 없는 경우 바로 입장
             PhotonNetwork.JoinRoom(selectedRoomName);
 
