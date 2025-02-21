@@ -4,7 +4,6 @@ using Photon.Realtime;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class BattleUIController : MonoBehaviour, IOnEventCallback
