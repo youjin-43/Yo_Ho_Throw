@@ -19,9 +19,6 @@ public class PlayerManager : PlayerStatController
     private LayerMask targetLayer;
     private Animator anim;
     private Vector3 targetPosition = Vector3.zero;
-
-    [SerializeField] Transform playerMeshRenderer;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -103,11 +100,13 @@ public class PlayerManager : PlayerStatController
             
             targetPosition = camTransform.position + camTransform.forward * 10f;
         }
+
+        
         targetAim = targetPosition;
         targetAim.y = transform.position.y;
         aimDir = (targetAim - transform.position).normalized;
 
-        playerMeshRenderer.forward = Vector3.Lerp(playerMeshRenderer.forward, aimDir, Time.deltaTime * 30f);
-        //transform.forward = Vector3.Lerp(transform.forward, aimDir, Time.deltaTime * 30f);
+       
+        transform.forward = Vector3.Lerp(transform.forward, aimDir, Time.deltaTime * 30f);
     }
 }
