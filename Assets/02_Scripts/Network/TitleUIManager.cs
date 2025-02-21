@@ -10,4 +10,6 @@ public class TitleUIManager : MonoBehaviour
         GameManager.Instance.UserId = userID.text;
         Debug.Log("유저 아이디 셋팅 : " + GameManager.Instance.UserId);
     }
+
+    // TODO : 이제 안씀 
 }
