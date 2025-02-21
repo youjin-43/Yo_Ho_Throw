@@ -1,20 +1,28 @@
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerScoreEntry : MonoBehaviour
 {
     [SerializeField] TMP_Text nickNameText;
     [SerializeField] TMP_Text killCountText;
     [SerializeField] TMP_Text deathCountText;
-    [SerializeField] TMP_Text assistCountText;
+    [SerializeField] TMP_Text scoreText;
+
+    [SerializeField] Image iconImage;
     public void Init(Player player)
     {
         nickNameText.text = player.NickName;
 
+        ResetPlayerScoreEntry();
+    }
+    public void ResetPlayerScoreEntry()
+    {
         killCountText.text = "0";
         deathCountText.text = "0";
         assistCountText.text = "0";
+        scoreText.text = "0";
     }
     public void SetKillCount(int killCount)
     {
@@ -24,8 +32,14 @@ public class PlayerScoreEntry : MonoBehaviour
     {
         deathCountText.text = deathCount.ToString();
     }
-    public void SetAssistCount(int assistCount)
+    public void SetScore(int score)
     {
-        assistCountText.text = assistCount.ToString();
+        scoreText.text = score.ToString();
+    }
+    public void SetIconImage(Sprite sprite)
+    {
+        iconImage.gameObject.SetActive(true);
+
+        iconImage.sprite = sprite;
     }
 }

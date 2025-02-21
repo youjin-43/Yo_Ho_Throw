@@ -20,6 +20,10 @@ public class UI_UITestScript : MonoBehaviour
         {
             Debug.Log("스킬창 할당 완료");
         }
+        if (InGameUIManager.Instance.HealthIndicator != null)
+        {
+            Debug.Log("체력창 할당 완료");
+        }
     }
 
     void Update()
@@ -27,22 +31,38 @@ public class UI_UITestScript : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             Debug.Log("좌클릭 스킬 발동");
-            InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(0, 2);
+            InGameUIManager.Instance.UseSkill(0, 2);
         }
         if (Input.GetMouseButtonDown(1))
         {
             Debug.Log("우클릭 스킬 발동");
-            InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 3);
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("Space 스킬 발동");
-            InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(KeyCode.Space, 4);
+            InGameUIManager.Instance.UseSkill(1, 1f);
         }
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             Debug.Log("Shift 스킬 발동");
-            InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(KeyCode.LeftShift, 5);
+            InGameUIManager.Instance.UseSkill(2, 5);
+        }
+
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            InGameUIManager.Instance.ResetUI();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            InGameUIManager.Instance.AddDagger();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            InGameUIManager.Instance.OnHealthChangedDebug(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            InGameUIManager.Instance.OnHealthChangedDebug(-1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            InGameUIManager.Instance.StartTimer(180f);
         }
     }
 }
