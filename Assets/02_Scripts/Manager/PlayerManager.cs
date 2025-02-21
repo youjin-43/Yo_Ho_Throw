@@ -4,13 +4,13 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : PlayerStatController
 {
     private StarterAssetsInputs input;
-    public GameObject bulletPrefab; // ´øÁú ÇÁ¸®ÆÕ
-    public Transform bulletSpawnPoint; // ÇÁ¸®ÆÕÀÌ »ı¼ºµÉ À§Ä¡
-    public float bulletSpeed = 10f; // ÇÁ¸®ÆÕ ÃÊ±â ¼Óµµ
-    public float bulletArc = 5f; // Æ÷¹°¼± °î·ü Á¶Á¤
+    public GameObject bulletPrefab; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public Transform bulletSpawnPoint; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+    public float bulletSpeed = 10f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½ ï¿½Óµï¿½
+    public float bulletArc = 5f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public Transform cameraTransform;
     [Header("Aim")]
     [SerializeField]
@@ -40,7 +40,7 @@ public class PlayerManager : MonoBehaviour
         {
             aimCam.gameObject.SetActive(false);
         }
-        if (Input.GetKeyDown(KeyCode.F)) // ¹ß»ç ÀÔ·Â °¨Áö (Fire1 ¹öÆ°)
+        if (Input.GetKeyDown(KeyCode.F)) // ï¿½ß»ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ (Fire1 ï¿½ï¿½Æ°)
         {
             anim.SetBool("Shoot", true);
             StartCoroutine(EndShootCoroutine());
@@ -52,19 +52,23 @@ public class PlayerManager : MonoBehaviour
         
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
-            //TODO : Ç®¸Å´ÏÀú 
-            GameObject projectile = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
+            //TODO : Ç®ï¿½Å´ï¿½ï¿½ï¿½ 
+            GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
+            projectile.transform.position = transform.position;
+            //GameObject projectile = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
             
             if (rb != null)
             {
                 rb.useGravity = false;
 
-                Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized; //Vector3.up * bulletArc; Æ÷¹°¼±ÀÏ¶§
-                projectile.transform.rotation = Quaternion.LookRotation(throwDirection);
+                Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized; //Vector3.up * bulletArc;
+                Quaternion rotationOffset = Quaternion.Euler(90, 0, 0); // í•„ìš”ì— ë”°ë¼ ì¡°ì •
+                projectile.transform.rotation = Quaternion.LookRotation(throwDirection) * rotationOffset;
+                
                 rb.linearVelocity = throwDirection*bulletSpeed;
             }
-            projectile.transform.rotation = Quaternion.identity;
+            
         }
     }
 
