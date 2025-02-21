@@ -5,6 +5,7 @@ public enum RaiseEventCode
     #region BattleSystem 이벤트
 
     BattleStart = 30,
+    SaveData = 31,
 
     #endregion
 

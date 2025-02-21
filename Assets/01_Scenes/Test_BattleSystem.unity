@@ -436,7 +436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b65503b858c86f4fa3f98c579d3d44b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  realTimeScoreEntry:
+  realtimeScoreEntry:
   - {fileID: 5621911637574477974}
   - {fileID: 1250073312}
   - {fileID: 1979611673}
