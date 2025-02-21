@@ -1,8 +1,6 @@
-﻿using Codice.CM.Client.Differences;
-using UnityEngine;
+﻿﻿using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -14,7 +12,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
     [RequireComponent(typeof(PlayerInput))]
 #endif
-    public class ThirdPersonController : MonoBehaviour
+    public class OriginalTPS : MonoBehaviour
     {
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -111,9 +109,7 @@ namespace StarterAssets
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
-        private float damping = 0.05f; // 애니메이션 전환을 부드럽게 하는 값
-        private float currentHorizontal;
-        private float currentVertical;
+
         private bool IsCurrentDeviceMouse
         {
             get
@@ -139,7 +135,7 @@ namespace StarterAssets
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
@@ -154,8 +150,6 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
-
-
         }
 
         private void Update()
@@ -167,7 +161,7 @@ namespace StarterAssets
             Move();
         }
 
-        private void FixedUpdate()
+        private void LateUpdate()
         {
             CameraRotation();
         }
@@ -217,15 +211,11 @@ namespace StarterAssets
                 _cinemachineTargetYaw, 0.0f);
         }
 
-        
-
-        
         private void Move()
         {
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = MoveSpeed;
-            float horizontalInput = Input.GetAxis("Horizontal");
-            float verticalInput = Input.GetAxis("Vertical");
+            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
             // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
@@ -258,20 +248,29 @@ namespace StarterAssets
             _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
             if (_animationBlend < 0.01f) _animationBlend = 0f;
 
+            // normalise input direction
+            Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
 
-            // 움직임
-            
+            // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
+            // if there is a move input rotate player when the player is moving
+            if (_input.move != Vector2.zero)
+            {
+                _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
+                                  _mainCamera.transform.eulerAngles.y;
+                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
+                    RotationSmoothTime);
 
-            Vector3 movementDirection = transform.forward * verticalInput + transform.right * horizontalInput;
-            Vector3 finalMove = movementDirection * MoveSpeed;
-            _controller.Move(finalMove * Time.deltaTime);
-
-            currentHorizontal = Mathf.Lerp(currentHorizontal, horizontalInput, Time.deltaTime / damping);
-            currentVertical = Mathf.Lerp(currentVertical, verticalInput, Time.deltaTime / damping);
+                // rotate to face input direction relative to camera position
+                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            }
 
 
-            _animator.SetFloat("Horizontal", horizontalInput);
-            _animator.SetFloat("Vertical", verticalInput);
+            Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+
+            // move the player
+            _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
+                             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+
             // update animator if using character
             if (_hasAnimator)
             {
@@ -280,7 +279,6 @@ namespace StarterAssets
             }
         }
 
-        
         private void JumpAndGravity()
         {
             if (Grounded)
@@ -387,7 +385,7 @@ namespace StarterAssets
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                //AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
         }
     }

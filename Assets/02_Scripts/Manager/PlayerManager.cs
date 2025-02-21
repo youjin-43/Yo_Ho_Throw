@@ -24,6 +24,7 @@ public class PlayerManager : MonoBehaviour
     {
         input = GetComponent<StarterAssetsInputs>();
         anim = GetComponent<Animator>();
+        anim.applyRootMotion = false;
     }
 
     // Update is called once per frame
@@ -58,9 +59,12 @@ public class PlayerManager : MonoBehaviour
             if (rb != null)
             {
                 rb.useGravity = false;
+
                 Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized; //Vector3.up * bulletArc; 포물선일때
+                projectile.transform.rotation = Quaternion.LookRotation(throwDirection);
                 rb.linearVelocity = throwDirection*bulletSpeed;
             }
+            projectile.transform.rotation = Quaternion.identity;
         }
     }
 
