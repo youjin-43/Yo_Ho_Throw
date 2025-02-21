@@ -47,7 +47,7 @@ public class PlayerSpawnManager : MonoBehaviour, IOnEventCallback
             {
                 PhotonNetwork.RaiseEvent(
                     (byte)RaiseEventCode.SpawnPlayer,
-                    (Transform)spawnPosition,
+                    new object[] { spawnPosition.position, spawnPosition.rotation },
                     new RaiseEventOptions { TargetActors = new int[]{ actorNumber } },
                     SendOptions.SendReliable);
             }
@@ -55,7 +55,7 @@ public class PlayerSpawnManager : MonoBehaviour, IOnEventCallback
             // 호스트의 플레이어 오브젝트 생성 시
             else
             {
-                SpawnPlayer(spawnPosition);
+                SpawnPlayer(new object[] { spawnPosition.position, spawnPosition.rotation });
             }
         }
 
@@ -79,14 +79,15 @@ public class PlayerSpawnManager : MonoBehaviour, IOnEventCallback
     }
     void SpawnPlayer(EventData photonEvent)
     {
-        Transform spawnPosition = (Transform)photonEvent.CustomData;
-
-        SpawnPlayer(spawnPosition);
+        SpawnPlayer((object[])photonEvent.CustomData);
     }
-    void SpawnPlayer(Transform spawnPosition)
+    void SpawnPlayer(object[] spawnInfo)
     {
+        Vector3 position = (Vector3)spawnInfo[0];
+        Quaternion rotation = (Quaternion)spawnInfo[1];
+
         // 각자의 클라이언트에서 PhotonNetwork를 통한 Instantiate를 하기 때문에 별도의 RPC는 없어도 된다
-        currPlayer = PhotonNetwork.Instantiate(playerObject.name, spawnPosition.position, spawnPosition.rotation);
+        currPlayer = PhotonNetwork.Instantiate(playerObject.name, position, rotation);
 
         currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
 

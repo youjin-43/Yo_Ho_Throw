@@ -12,7 +12,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     public static BattleUIController Instance { get; private set; } = null;
 
     [Header("현재 등수 표시 점수 기록 오브젝트 배열")]
-    [SerializeField] RealtimePlayerScoreEntry[] realTimeScoreEntry;
+    [SerializeField] RealtimePlayerScoreEntry[] realtimeScoreEntry;
 
     [Header("플레이어 점수 기록 프리팹")]
     [SerializeField] PlayerScoreEntry playerScoreEntryPrefab;
@@ -55,13 +55,13 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
             playerScoreEntries[actorNumber] = InstantiatePlayerScoreEntry(PhotonNetwork.CurrentRoom.Players[actorNumber]);
 
             // 실시간 스코어 정보 오브젝트 초기화
-            if (i < 3) realTimeScoreEntry[i++].Init(PhotonNetwork.CurrentRoom.Players[actorNumber]);
+            if (i < 3) realtimeScoreEntry[i++].Init(PhotonNetwork.CurrentRoom.Players[actorNumber]);
         }
 
         for (; i < 3; i++) // 최소 실시간 스코어 정보 오브젝트(3)보다 현재 인원이 적을 때
         {
             // 표시되고 있던 실시간 스코어 정보 오브젝트를 비활성화 한다
-            realTimeScoreEntry[i].gameObject.SetActive(false);
+            realtimeScoreEntry[i].gameObject.SetActive(false);
         }
 
         //생성 테스트
@@ -119,29 +119,35 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     void UpdateRealtime(EventData photonEvent)
     {
-        (int, int)[] scoreList = ((int, int)[])photonEvent.CustomData;
+        int[][] scoreList = (int[][])photonEvent.CustomData;
 
         for (int i = 0; i < scoreList.Length; i++)
         {
+            realtimeScoreEntry[i].gameObject.SetActive(true);
 
+            realtimeScoreEntry[i].SetNickName(PhotonNetwork.CurrentRoom.Players[scoreList[i][0]].NickName);
+
+            realtimeScoreEntry[i].SetRank(scoreList[i][1]);
+
+            realtimeScoreEntry[i].SetScore(scoreList[i][2]);
         }
     }
     void UpdateRank(EventData photonEvent)
     {
-        (int, int)[] scoreList = ((int, int)[])photonEvent.CustomData;
+        int[][] scoreList = (int[][])photonEvent.CustomData;
 
         for (int i = 0; i < scoreList.Length; i++)
         {
-            playerScoreEntries[scoreList[i].Item1].transform.SetAsLastSibling();
+            playerScoreEntries[scoreList[i][0]].transform.SetAsLastSibling();
 
-            switch (scoreList[i].Item2)
+            switch (scoreList[i][1])
             {
                 case 1:
-                    playerScoreEntries[scoreList[i].Item1].SetIconImage(goldMedalSprite); break;
+                    playerScoreEntries[scoreList[i][0]].SetIconImage(goldMedalSprite); break;
                 case 2:
-                    playerScoreEntries[scoreList[i].Item1].SetIconImage(silverMedalSprite); break;
+                    playerScoreEntries[scoreList[i][0]].SetIconImage(silverMedalSprite); break;
                 case 3:
-                    playerScoreEntries[scoreList[i].Item1].SetIconImage(bronzeMedalSprite); break;
+                    playerScoreEntries[scoreList[i][0]].SetIconImage(bronzeMedalSprite); break;
             }
         }
 

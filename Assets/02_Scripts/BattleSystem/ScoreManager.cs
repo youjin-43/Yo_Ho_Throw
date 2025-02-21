@@ -1,7 +1,9 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
@@ -44,7 +46,7 @@ public class ScoreManager : MonoBehaviour
         // 피해자의 데스 카운트 갱신
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.UpdateDeathCount, // 데스 카운트 갱신 코드로써 전달
-            new int[] { victimActorNumber, playerScoreEntryDict[victimActorNumber].Death },
+            new object[] { victimActorNumber, playerScoreEntryDict[victimActorNumber].Death },
             new RaiseEventOptions { Receivers = ReceiverGroup.All },
             SendOptions.SendReliable);
 
@@ -64,14 +66,14 @@ public class ScoreManager : MonoBehaviour
         // 킬러의 점수 갱신
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.UpdateScore, // 점수 갱신 코드로써 전달
-            new int[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Score },
+            new object[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Score },
             new RaiseEventOptions { Receivers = ReceiverGroup.All },
             SendOptions.SendReliable);
 
         // 킬러의 킬 카운트 갱신
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.UpdateKillCount, // 킬 카운트 갱신 코드로써 전달
-            new int[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Kill },
+            new object[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Kill },
             new RaiseEventOptions { Receivers = ReceiverGroup.All },
             SendOptions.SendReliable);
 
@@ -87,23 +89,19 @@ public class ScoreManager : MonoBehaviour
 
         if (rank < 4)
         {
-            List<(int, int)> scoreList = new List<(int, int)>();
+            List<int[]> scoreList = new List<int[]>();
 
             rank = 1;
 
-            scoreList.Add((sortedScores[0].Key, rank));
+            scoreList.Add(new int[3] { sortedScores[0].Key, rank, sortedScores[0].Value.Score });
 
             for (int i = 1; i < Mathf.Min(2, PhotonNetwork.CurrentRoom.PlayerCount); i++)
             {
                 if (sortedScores[i].Value.Score == sortedScores[i - 1].Value.Score)
                 {
-                    scoreList.Add((sortedScores[i].Key, rank));
-                }
-                else
-                {
                     rank = i + 1;
-                    scoreList.Add((sortedScores[i].Key, rank));
                 }
+                scoreList.Add(new int[3] { sortedScores[i].Key, rank, sortedScores[i].Value.Score });
             }
 
             PhotonNetwork.RaiseEvent(
@@ -124,7 +122,7 @@ public class ScoreManager : MonoBehaviour
         if (!PhotonNetwork.IsMasterClient) return;
 
         PhotonNetwork.RaiseEvent(
-            (byte)RaiseEventCode.UpdateScore,
+            (byte)RaiseEventCode.UpdateRank,
             GetScoreList(),
             new RaiseEventOptions { Receivers = ReceiverGroup.All },
             SendOptions.SendReliable);
@@ -158,6 +156,7 @@ public class ScoreManager : MonoBehaviour
     }
 }
 
+[Serializable]
 public struct PlayerScoreEntryData
 {
     public int Kill { get; private set; }
