@@ -4,25 +4,20 @@ using Photon.Realtime; // 실시간 통신? 을 위해서
 
 public class GameReadyManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] GameObject playerPrefab; // 인스펙터에서 할당 
+    [SerializeField] GameObject playerPrefab; // 인스펙터에서 할당
+
+    // 마스터 클라이언트만 실행됨 
     void Start()
     {
         if (PhotonNetwork.InRoom)
         {
             // 네트워크를 통해 플레이어 생성 (모든 클라이언트에게 공유됨)
-            PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
+            PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity); 
         }
     }
 
-    // 랜덤한 위치에서 스폰하도록 설정
-    private Vector3 GetRandomSpawnPosition()
-    {
-        float x = Random.Range(-10f, 10f);
-        float z = Random.Range(-10f, 10f);
-        return new Vector3(x, 10f, z);
-    }
-
     // 새로운 플레이어가 들어오면 OnPlayerEnteredRoom()이 호출됨
+    // TODO : 언제 호출되는지 확인하기 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Debug.Log($"{newPlayer.NickName} 플레이어가 방에 들어옴! - GameReadyManager");
@@ -32,22 +27,44 @@ public class GameReadyManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
 
-        // 씬 이동 후, 다시 한번 플레이어 프리팹을 생성
-        if (PhotonNetwork.InRoom)
-        {
-            SpawnPlayer();
-        }
+        Debug.Log("방 입장 성공!");
+
+        //내가 방장인지 확인
+        if (PhotonNetwork.IsMasterClient) Debug.Log("내가 방장이다!!!");
+        else Debug.Log("나는 클라이언트다!!");
+
+        // 디버그
+        Debug.Log($"룸 입장 여부 = {PhotonNetwork.InRoom}");
+        Debug.Log($"현재 룸의 인원수 = {PhotonNetwork.CurrentRoom.PlayerCount}");
+        foreach (var player in PhotonNetwork.CurrentRoom.Players) Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐
+
+        // 플레이어 프리팹을 생성
+        SpawnPlayer(); 
     }
 
 
     private void SpawnPlayer()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("spawned") == false)
-        {
-            PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
+        // TODO : 중복 처리가 필요할까? 
+        //if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("spawned") == false)
+        //{
+        //    PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
 
-            // 중복 생성을 방지하기 위해, 로컬 플레이어에 "spawned" 값을 저장
-            PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "spawned", true } });
-        }
+        //    // 중복 생성을 방지하기 위해, 로컬 플레이어에 "spawned" 값을 저장
+        //    PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "spawned", true } });
+        //    Debug.Log($"SpawnPlayer - {PhotonNetwork.LocalPlayer.ActorNumber}");
+        //}
+
+        PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
     }
+
+
+    // 랜덤한 위치에서 스폰하도록 설정
+    private Vector3 GetRandomSpawnPosition()
+    {
+        float x = Random.Range(-10f, 10f);
+        float z = Random.Range(-10f, 10f);
+        return new Vector3(x, 10f, z);
+    }
+
 }

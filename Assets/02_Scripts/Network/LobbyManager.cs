@@ -117,7 +117,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(roomNameInput.text, options);
     }
 
-
     /* OnRoomListUpdate(List<RoomInfo> roomList) 함수는 포톤(PUN)의 로비에서 방 목록이 갱신될 때 자동으로 호출
 
     언제 실행되는가?
@@ -161,6 +160,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             // 비밀번호가 없는 경우 바로 입장
             PhotonNetwork.JoinRoom(selectedRoomName);
+
+            /*
+            일반 클라이언트의 흐름
+            1. 마스터 클라이언트가 씬을 변경했기 때문에 JoinRoom()을 하게 되면 자동으로 GameReadyScene으로 이동
+            2. GameReadyManager.OnJoinedRoom() 실행
+            3. SpawnPlayer() 실행 
+             */
         }
     }
 
@@ -186,30 +192,17 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("내가 방장이다!!!");
-            PhotonNetwork.LoadLevel("GameReadyScene"); 
-            // PhotonNetwork.LoadLevel(“GameReadyScene”)를 방장이 실행하면 이후 들어오는 플레이어도 자동으로 같은 씬으로 이동
+            PhotonNetwork.LoadLevel("GameReadyScene");
+            // 전에 PhotonNetwork.AutomaticallySyncScene를 true로 설정했기 때문에 방장이 이동한 씬(GameReadyScene)으로 새로운 플레이어도 자동 이동됨!
+
         }
         else
         {
             Debug.Log("나는 클라이언트다!!");
         }
 
-
         Debug.Log($"룸 입장 여부 = {PhotonNetwork.InRoom}");
         Debug.Log($"현재 룸의 인원수 = {PhotonNetwork.CurrentRoom.PlayerCount}");
-
-
-        //for 문 처럼 Player 마다 실행 
-        foreach (var player in PhotonNetwork.CurrentRoom.Players)
-        {
-            Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐
-        }
-        
-    }
-
-    // 새로운 플레이어가 들어오면 OnPlayerEnteredRoom()이 호출됨
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        Debug.Log($"{newPlayer.NickName} 플레이어가 방에 들어옴! - LobbyManager");
+        foreach (var player in PhotonNetwork.CurrentRoom.Players) Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐
     }
 }
