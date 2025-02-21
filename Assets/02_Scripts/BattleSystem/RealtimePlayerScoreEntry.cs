@@ -1,7 +1,6 @@
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class RealtimePlayerScoreEntry : MonoBehaviour
 {
@@ -28,3 +27,4 @@ public class RealtimePlayerScoreEntry : MonoBehaviour
         nickNameText.text = nickName.ToString();
     }
 }
+//
