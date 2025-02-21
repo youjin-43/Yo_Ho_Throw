@@ -1,13 +1,10 @@
 ﻿using ExitGames.Client.Photon;
-using ExitGames.Client.Photon.StructWrapping;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
-using VInspector.Libs;
 
 public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -15,7 +12,9 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     Dictionary<int, PlayerScoreEntryData> playerScoreEntryDict = new Dictionary<int, PlayerScoreEntryData>();
 
-    int killScoreReward = 1;
+    const int KILL_SCORE_REWARD = 1;
+
+    int bountyTargetActorNumber = -1;
 
     bool isFinalMinute = false;
     bool isGameRunning = true;
@@ -38,7 +37,6 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         isFinalMinute = false;
         isGameRunning = true;
-        killScoreReward = 1;
     }
     public void AddScore(int killerActorNumber, int victimActorNumber, int bonusReward = 0)
     {
@@ -56,9 +54,21 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         // 자살이 아닌 경우
         if (killerActorNumber != victimActorNumber)
         {
+            if (victimActorNumber == bountyTargetActorNumber)
+            {
+                bonusReward += 3;
+
+                PlayerSpawnManager.Instance.ExecuteRPC(
+                    RaiseEventCode.DeactivateBountyTarget.ToString(), bountyTargetActorNumber);
+
+                bountyTargetActorNumber = -1;
+
+                photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, bountyTargetActorNumber);
+            }
+
             playerScoreEntryDict[killerActorNumber].SetScore(
             playerScoreEntryDict[killerActorNumber].Score +
-            (killScoreReward + bonusReward) *
+            (KILL_SCORE_REWARD + bonusReward) *
             (isFinalMinute ? 2 : 1)
             );
 
@@ -87,6 +97,11 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
             playerScoreEntryDict.Values.ToArray(),
             new RaiseEventOptions { Receivers = ReceiverGroup.Others },
             SendOptions.SendReliable);
+    }
+    [PunRPC]
+    public void SetBountyTargetActorNumber(int actorNumber)
+    {
+        bountyTargetActorNumber = actorNumber;
     }
     void HasRankingChanged(int actorNumber)
     {
@@ -164,6 +179,14 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         return scoreList.ToArray();
     }
+    int GetTopScorerActorNumber()
+    {
+        var sortedScores = new List<KeyValuePair<int, PlayerScoreEntryData>>(playerScoreEntryDict);
+
+        sortedScores.Sort((x, y) => y.Value.Score.CompareTo(x.Value.Score));
+
+        return sortedScores[0].Key;
+    }
     public void OnEvent(EventData photonEvent)
     {
         switch ((RaiseEventCode)photonEvent.Code)
@@ -171,6 +194,15 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
             case RaiseEventCode.SaveData:
                 SaveData(photonEvent); break;
         }
+    }
+    public void SetBountyTarget()
+    {
+        bountyTargetActorNumber = GetTopScorerActorNumber();
+
+        photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, bountyTargetActorNumber);
+
+        PlayerSpawnManager.Instance.ExecuteRPC(
+            RaiseEventCode.ActivateBountyTarget.ToString(), bountyTargetActorNumber);
     }
     void SaveData(EventData photonEvent)
     {
@@ -180,6 +212,19 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
             playerScoreEntryDict[playerScoreEntryData.ActorNumber] = playerScoreEntryData;
     }
+
+    //public override void OnEnable()
+    //{
+    //    base.OnEnable();
+
+    //    PhotonNetwork.AddCallbackTarget(this);
+    //}
+    //public override void OnDisable()
+    //{
+    //    base.OnDisable();
+
+    //    PhotonNetwork.AddCallbackTarget(this);
+    //}
 }
 
 [Serializable]
@@ -190,7 +235,6 @@ public class PlayerScoreEntryData
     public int Assist { get; private set; }
     public int Score { get; private set; }
     public int ActorNumber { get; private set; }
-
     public PlayerScoreEntryData(int kill, int death, int assist, int score, int actorNumber)
     {
         Kill = kill;
@@ -204,3 +248,4 @@ public class PlayerScoreEntryData
     public void SetAssist(int assist) => Assist = assist;
     public void SetScore(int score) => Score = score;
 }
+//

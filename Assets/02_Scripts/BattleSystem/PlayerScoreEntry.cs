@@ -41,4 +41,5 @@ public class PlayerScoreEntry : MonoBehaviour
 
         iconImage.sprite = sprite;
     }
+    //
 }
