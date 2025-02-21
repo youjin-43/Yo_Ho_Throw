@@ -13,7 +13,7 @@ public class ScoreManager : MonoBehaviour
     int killScoreReward = 1;
 
     bool isFinalMinute = false;
-    bool isGameEnded = false;
+    bool isGameRunning = true;
 
     private void Awake()
     {
@@ -32,12 +32,12 @@ public class ScoreManager : MonoBehaviour
             playerScoreEntryDict[actorNumber] = new PlayerScoreEntryData(0, 0, 0, 0);
         }
         isFinalMinute = false;
-        isGameEnded = false;
+        isGameRunning = true;
         killScoreReward = 1;
     }
     public void AddScore(int killerActorNumber, int victimActorNumber, int bonusReward = 0)
     {
-        if (isGameEnded) return;
+        if (!isGameRunning) return;
 
         playerScoreEntryDict[victimActorNumber].SetDeath(playerScoreEntryDict[victimActorNumber].Death + 1);
 
@@ -51,11 +51,13 @@ public class ScoreManager : MonoBehaviour
         // 자살일 경우 여기서 반환 (데스 카운트에 대한 처리까지만 진행)
         if (killerActorNumber == victimActorNumber) return;
 
+
         playerScoreEntryDict[killerActorNumber].SetScore(
             playerScoreEntryDict[killerActorNumber].Score +
             (killScoreReward + bonusReward) *
             (isFinalMinute ? 2 : 1)
             );
+
 
         playerScoreEntryDict[killerActorNumber].SetKill(playerScoreEntryDict[killerActorNumber].Kill + 1);
 
@@ -72,6 +74,44 @@ public class ScoreManager : MonoBehaviour
             new int[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Kill },
             new RaiseEventOptions { Receivers = ReceiverGroup.All },
             SendOptions.SendReliable);
+
+        HasRankingChanged(killerActorNumber);
+    }
+    void HasRankingChanged(int actorNumber)
+    {
+        var sortedScores = new List<KeyValuePair<int, PlayerScoreEntryData>>(playerScoreEntryDict);
+
+        sortedScores.Sort((x, y) => y.Value.Score.CompareTo(x.Value.Score));
+
+        int rank = sortedScores.FindIndex(entry => entry.Key == actorNumber) + 1;
+
+        if (rank < 4)
+        {
+            List<(int, int)> scoreList = new List<(int, int)>();
+
+            rank = 1;
+
+            scoreList.Add((sortedScores[0].Key, rank));
+
+            for (int i = 1; i < Mathf.Min(2, PhotonNetwork.CurrentRoom.PlayerCount); i++)
+            {
+                if (sortedScores[i].Value.Score == sortedScores[i - 1].Value.Score)
+                {
+                    scoreList.Add((sortedScores[i].Key, rank));
+                }
+                else
+                {
+                    rank = i + 1;
+                    scoreList.Add((sortedScores[i].Key, rank));
+                }
+            }
+
+            PhotonNetwork.RaiseEvent(
+                (byte)RaiseEventCode.UpdateRealtime,
+                scoreList.ToArray(),
+                new RaiseEventOptions { Receivers = ReceiverGroup.All },
+                SendOptions.SendReliable);
+        }
     }
     public void SetIsFinalMinute(bool state)
     {
@@ -79,7 +119,7 @@ public class ScoreManager : MonoBehaviour
     }
     public void EndGame()
     {
-        isGameEnded = true;
+        isGameRunning = false;
 
         if (!PhotonNetwork.IsMasterClient) return;
 
