@@ -1,15 +1,18 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayerSpawnManager : MonoBehaviour, IOnEventCallback
 {
     public static PlayerSpawnManager Instance { get; private set; } = null;
 
-    [SerializeField] List<Transform> spawnPositions;
+    [SerializeField] SpawnPosition[] spawnPositions;
 
     [SerializeField] GameObject playerObject;
 
@@ -32,15 +35,14 @@ public class PlayerSpawnManager : MonoBehaviour, IOnEventCallback
             yield return null;
         }*/
 
-        List<Transform> spawnPositions = GetRandomTransforms();
+        List<Transform> spawnPositions =
+            this.spawnPositions[PhotonNetwork.CurrentRoom.PlayerCount-1].GetRandomTransforms();
 
         foreach (int actorNumber in PhotonNetwork.CurrentRoom.Players.Keys)
         {
-            int index = Random.Range(0, spawnPositions.Count);
+            Transform spawnPosition = spawnPositions[0];
 
-            Transform spawnPosition = spawnPositions[index];
-
-            spawnPositions.RemoveAt(index);
+            spawnPositions.RemoveAt(0);
 
             // 타 플레이어의 플레이어 오브젝트 생성 시
             if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber)
@@ -58,7 +60,6 @@ public class PlayerSpawnManager : MonoBehaviour, IOnEventCallback
                 SpawnPlayer(new object[] { spawnPosition.position, spawnPosition.rotation });
             }
         }
-
     }
     public void OnEvent(EventData photonEvent)
     {
@@ -85,6 +86,9 @@ public class PlayerSpawnManager : MonoBehaviour, IOnEventCallback
     {
         Vector3 position = (Vector3)spawnInfo[0];
         Quaternion rotation = (Quaternion)spawnInfo[1];
+
+        // TODO 찬규 : 확실한 테스트를 위한 Pivot 조정 (제거 or 수정 바람)
+        position += Vector3.up;
 
         // 각자의 클라이언트에서 PhotonNetwork를 통한 Instantiate를 하기 때문에 별도의 RPC는 없어도 된다
         currPlayer = PhotonNetwork.Instantiate(playerObject.name, position, rotation);
@@ -116,25 +120,44 @@ public class PlayerSpawnManager : MonoBehaviour, IOnEventCallback
     {
         DeactivatePlayer();
     }
-    List<Transform> GetRandomTransforms()
+    Transform GetRandomTransform() => spawnPositions[Random.Range(0, spawnPositions.Length)].GetRandomTransform();
+    private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
+    private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
+}
+
+[Serializable]
+public struct SpawnPosition
+{
+    public Transform[] positions;
+    public List<Transform> GetRandomTransforms()
     {
-        if (this.spawnPositions.Count < PhotonNetwork.CurrentRoom.Players.Count)
+        int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+
+        if (playerCount > this.positions.Length)
         {
-            Debug.LogWarning($"스폰 가능한 위치보다 플레이어 수가 더 많음 ! ({this.spawnPositions.Count} < {PhotonNetwork.CurrentRoom.Players.Count})");
+            Debug.LogWarning("PlayerSpawnManager에 등록되어 있는 포지션의 수보다 현재 플레이어 수가 더 많습니다");
 
             return null;
         }
 
-        List<Transform> spawnPositions = this.spawnPositions;
+        List<Transform> positions = this.positions.ToList();
 
-        while (spawnPositions.Count > PhotonNetwork.CurrentRoom.Players.Count)
+        while (positions.Count > playerCount)
         {
-            spawnPositions.RemoveAt(Random.Range(0, spawnPositions.Count));
+            positions.RemoveAt(Random.Range(0, positions.Count));
         }
 
-        return spawnPositions;
+        for (int i = 0; i < positions.Count; i++)
+        {
+            int randomIndex = Random.Range(0, positions.Count - 1);
+
+            (positions[i], positions[randomIndex]) = (positions[randomIndex], positions[i]);
+        }
+
+        return positions;
     }
-    Transform GetRandomTransform() => spawnPositions[Random.Range(0, spawnPositions.Count)];
-    private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
-    private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
+    public Transform GetRandomTransform()
+    {
+        return positions[Random.Range(0, positions.Length)];
+    }
 }
