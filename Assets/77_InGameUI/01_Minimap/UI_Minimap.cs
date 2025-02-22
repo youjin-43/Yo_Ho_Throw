@@ -52,6 +52,8 @@ public class UI_Minimap : MonoBehaviour
         }
     }
 
+    public float angle = 0.5f;
+
     private void AdjustIndicator()
     {
         if(_playerIndicator.Item1 == null)
@@ -59,19 +61,37 @@ public class UI_Minimap : MonoBehaviour
             return;
         }
 
+
+
+
         foreach(var indicator in _otherIndicator)
         {
-            if(Vector3.Distance(_playerIndicator.Item1.position, indicator.Item1.position) >= 9.9f)
+            // Look
+            Vector3 look = (indicator.Item1.position - _playerIndicator.Item1.position).normalized;
+
+            Vector3 playerLook = PlayerTransform.transform.forward.normalized;
+
+            if (Vector3.Distance(_playerIndicator.Item1.position, indicator.Item1.position) >= 9.9f)
             {
-                // Look
-                Vector3 look = (indicator.Item1.position - _playerIndicator.Item1.position).normalized;
 
                 // Adjust
                 indicator.Item2.position = _playerIndicator.Item2.position + (look * 9.9f);
+
+                
+
             }
             else
             {
                 indicator.Item2.position = new Vector3(indicator.Item1.position.x, 50f, indicator.Item1.position.z);
+            }
+
+            if (Vector3.Dot(look, playerLook) >= 0.7f)
+            {
+                indicator.Item2.gameObject.SetActive(true);
+            }
+            else
+            {
+                indicator.Item2.gameObject.SetActive(false);
             }
         }
     }
