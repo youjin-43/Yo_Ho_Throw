@@ -175,7 +175,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 8426293921125628142, guid: b9a1f7ea8e0e640ecabe91c1a81f1274, type: 3}
+  bullet: {fileID: 0}
   speed: 5
+  jumpForce: 5
 --- !u!114 &9062965229019528443
 MonoBehaviour:
   m_ObjectHideFlags: 0

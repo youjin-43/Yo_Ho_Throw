@@ -4,6 +4,12 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 
+public enum GameMode
+{
+    Deathmatch,
+    TeamMatch
+}
+
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
@@ -40,11 +46,5 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
     }
-
-    public void LoadLobbyScene()
-    {
-        SceneManager.LoadScene("LobbyScene");
-    }
-
 
 }
