@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerManager : PlayerStatController
 {
     private StarterAssetsInputs input;
-    public GameObject bulletPrefab; // 
+    public GameObject bulletPrefab; // 주석체크
     public Transform bulletSpawnPoint; // 
     public float bulletSpeed = 10f; // 
     public float bulletArc = 5f; // 
