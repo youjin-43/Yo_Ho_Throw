@@ -7,10 +7,10 @@ using UnityEngine;
 public class PlayerManager : PlayerStatController
 {
     private StarterAssetsInputs input;
-    public GameObject bulletPrefab; // 주석체크
-    public Transform bulletSpawnPoint; // 
-    public float bulletSpeed = 10f; // 
-    public float bulletArc = 5f; // 
+    public GameObject bulletPrefab; // 투사체 프리펩
+    public Transform bulletSpawnPoint; // 투사체 생성 위치
+    public float bulletSpeed = 10f; // 투사체 속도
+    public float bulletArc = 5f; // 투사체가 포물선을 그릴 때 사용 하는 값
     public Transform cameraTransform;
     [Header("Aim")]
     [SerializeField]
@@ -32,6 +32,7 @@ public class PlayerManager : PlayerStatController
     {
         LookSameCameraDirection();
 
+        //줌 할때의 카메라를 활성화 시킴
         if (input.aim)
         {
             aimCam.gameObject.SetActive(true);
@@ -40,35 +41,38 @@ public class PlayerManager : PlayerStatController
         {
             aimCam.gameObject.SetActive(false);
         }
-        if (Input.GetKeyDown(KeyCode.F)) // 
+        //F키가 투척
+        if (Input.GetKeyDown(KeyCode.F))
         {
             anim.SetBool("Shoot", true);
             StartCoroutine(EndShootCoroutine());
         }
     }
-
+    /// <summary>
+    /// 투사체를 생성하여 던지는 함수 
+    /// 플레이어 애니메이션의 throw attack에서 호출됨
+    /// </summary>
     void ThrowProjectile()
     {
         
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
            
-            
             GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
             if(projectile == null)
             {
                 Debug.Log("dd");
             }
             projectile.transform.position = bulletSpawnPoint.position;
-            //GameObject projectile = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
+            
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
             
             if (rb != null)
             {
                 rb.useGravity = false;
 
-                Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized; //Vector3.up * bulletArc;
-                Quaternion rotationOffset = Quaternion.Euler(90, 0, 0); // 필요에 따라 조정
+                Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized; //포물선 일때 Vector3.up * bulletArc;
+                Quaternion rotationOffset = Quaternion.Euler(90, 0, 0); 
                 projectile.transform.rotation = Quaternion.LookRotation(throwDirection) * rotationOffset;
                 
                 rb.linearVelocity = throwDirection*bulletSpeed;
@@ -84,6 +88,9 @@ public class PlayerManager : PlayerStatController
         anim.SetBool("Shoot", false);
         
     }
+    /// <summary>
+    /// 캐릭터가 카메라가 바라보는 곳을 레이케스트 힛 된 곳으로 바꾸는 함수
+    /// </summary>
     void LookSameCameraDirection()
     {
         Transform camTransform = Camera.main.transform;
@@ -93,13 +100,12 @@ public class PlayerManager : PlayerStatController
         Vector3 aimDir = Vector3.zero;
 
         if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, Mathf.Infinity, targetLayer))
-        {
-            
+        { 
             targetPosition = hit.point;
         }
         else
         {
-            
+            //힛 안됐을 때 카메라앞 10미터를 바라봄
             targetPosition = camTransform.position + camTransform.forward * 10f;
         }
 

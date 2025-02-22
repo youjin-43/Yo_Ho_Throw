@@ -294,25 +294,14 @@ namespace StarterAssets
                     _animator.SetBool(_animIDFreeFall, false);
                 }
 
-                // stop our velocity dropping infinitely when grounded
-                /*
-                if (_verticalVelocity < 0.0f)
-                {
-                    _verticalVelocity = -2f;
-                }
-                */
+                
                 
                 if (_verticalVelocity < 0.0f)
                 {
                     _verticalVelocity = -2f;
                 }
                 _jumpTimeoutDelta = 0f;
-                /*
-                if (Grounded && Mathf.Abs(_verticalVelocity) < 0.1f)
-                {
-                    _verticalVelocity = 0f; // ✅ 미세한 공중 상태 방지
-                }
-                */
+                
                 // Jump
                 if (Input.GetAxis("Jump")>0 && _jumpTimeoutDelta <= 0.0f)
                 {
