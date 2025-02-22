@@ -4,32 +4,40 @@ using Photon.Realtime;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class BattleUIController : MonoBehaviour, IOnEventCallback
 {
     public static BattleUIController Instance { get; private set; } = null;
-    
+
+    [Header("현재 등수 표시 점수 기록 오브젝트 배열")]
+    [SerializeField] RealtimePlayerScoreEntry[] realtimeScoreEntry;
+
+    [Header("플레이어 점수 기록 프리팹")]
     [SerializeField] PlayerScoreEntry playerScoreEntryPrefab;
 
+    [Header("플레이어의 점수 기록 패널 부모 GameObject")]
     [SerializeField] GameObject scoreboardPanel;
 
+    [Header("플레이어의 점수 기록 패널 부모 Transform")]
     [SerializeField] Transform scoreEntryParent;
 
+    [Header("게임 종료 시 표시할 버튼들")]
     [SerializeField] Button titleButton;
     [SerializeField] Button endGameButton;
     [SerializeField] Button lobbyButton;
 
+    [Header("LimitTime")]
     [SerializeField] TMP_Text limitTimeText;
 
+    [Header("순위에 따른 이미지들")]
     [SerializeField] Sprite goldMedalSprite;
     [SerializeField] Sprite silverMedalSprite;
     [SerializeField] Sprite bronzeMedalSprite;
 
     Dictionary<int, PlayerScoreEntry> playerScoreEntries = new Dictionary<int, PlayerScoreEntry>();
 
-    bool isGameEnded = false;
+    bool isGameRunning = true;
 
     private void Awake()
     {
@@ -37,16 +45,28 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         scoreboardPanel.SetActive(false);
 
+        int i = 0;
+
         // 모든 플레이어의 ActorNumber를 가져온다
         foreach (int actorNumber in PhotonNetwork.CurrentRoom.Players.Keys)
         {
             // 비어있는 UI에 PlayerScoreEntry를 추가하고 Dictionary로 actorNumber와 매칭한다
             playerScoreEntries[actorNumber] = InstantiatePlayerScoreEntry(PhotonNetwork.CurrentRoom.Players[actorNumber]);
-        }
-        //생성 테스트
-        //for (int i = 0; i < 6; i++) Instantiate(playerScoreEntryPrefab, scoreEntryParent);
 
-        isGameEnded = false;
+            // 실시간 스코어 정보 오브젝트 초기화
+            if (i < 3) realtimeScoreEntry[i++].Init(PhotonNetwork.CurrentRoom.Players[actorNumber]);
+        }
+
+        for (; i < 3; i++) // 최소 실시간 스코어 정보 오브젝트(3)보다 현재 인원이 적을 때
+        {
+            // 표시되고 있던 실시간 스코어 정보 오브젝트를 비활성화 한다
+            realtimeScoreEntry[i].gameObject.SetActive(false);
+        }
+
+        //생성 테스트
+        //for (int j = 0; j < 6; j++) Instantiate(playerScoreEntryPrefab, scoreEntryParent);
+
+        isGameRunning = true;
 
         // 버튼 비활성화
         titleButton.gameObject.SetActive(false);
@@ -55,7 +75,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     private void Update()
     {
-        if (isGameEnded) return;
+        if (!isGameRunning) return;
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -91,24 +111,42 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
             case RaiseEventCode.UpdateRank:
                 UpdateRank(photonEvent); break;
+
+            case RaiseEventCode.UpdateRealtime:
+                UpdateRealtime(photonEvent); break;
+        }
+    }
+    void UpdateRealtime(EventData photonEvent)
+    {
+        int[][] scoreList = (int[][])photonEvent.CustomData;
+
+        for (int i = 0; i < scoreList.Length; i++)
+        {
+            realtimeScoreEntry[i].gameObject.SetActive(true);
+
+            realtimeScoreEntry[i].SetNickName(PhotonNetwork.CurrentRoom.Players[scoreList[i][0]].NickName);
+
+            realtimeScoreEntry[i].SetRank(scoreList[i][1]);
+
+            realtimeScoreEntry[i].SetScore(scoreList[i][2]);
         }
     }
     void UpdateRank(EventData photonEvent)
     {
-        (int, int)[] scoreList = ((int, int)[])photonEvent.CustomData;
+        int[][] scoreList = (int[][])photonEvent.CustomData;
 
         for (int i = 0; i < scoreList.Length; i++)
         {
-            playerScoreEntries[scoreList[i].Item1].transform.SetAsLastSibling();
+            playerScoreEntries[scoreList[i][0]].transform.SetAsLastSibling();
 
-            switch (scoreList[i].Item2)
+            switch (scoreList[i][1])
             {
                 case 1:
-                    playerScoreEntries[scoreList[i].Item1].SetIconImage(goldMedalSprite); break;
+                    playerScoreEntries[scoreList[i][0]].SetIconImage(goldMedalSprite); break;
                 case 2:
-                    playerScoreEntries[scoreList[i].Item1].SetIconImage(silverMedalSprite); break;
+                    playerScoreEntries[scoreList[i][0]].SetIconImage(silverMedalSprite); break;
                 case 3:
-                    playerScoreEntries[scoreList[i].Item1].SetIconImage(bronzeMedalSprite); break;
+                    playerScoreEntries[scoreList[i][0]].SetIconImage(bronzeMedalSprite); break;
             }
         }
 
@@ -123,19 +161,19 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         switch (raiseEventCode)
         {
-            case RaiseEventCode.UpdateKillCount:
-                playerScoreEntries[actorNumber].SetKillCount(value); break;
-
             case RaiseEventCode.UpdateDeathCount:
                 playerScoreEntries[actorNumber].SetDeathCount(value); break;
 
             case RaiseEventCode.UpdateScore:
                 playerScoreEntries[actorNumber].SetScore(value); break;
+
+            case RaiseEventCode.UpdateKillCount:
+                playerScoreEntries[actorNumber].SetKillCount(value); break;
         }
     }
     public void EndGame()
     {
-        isGameEnded = true;
+        isGameRunning = false;
 
         ShowScoreboard();
 
@@ -165,4 +203,5 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
+    //
 }
