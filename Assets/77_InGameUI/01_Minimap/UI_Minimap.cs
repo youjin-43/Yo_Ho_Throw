@@ -14,10 +14,12 @@ public class UI_Minimap : MonoBehaviour
     ValueTuple<Transform, Transform> _playerIndicator;
     List<ValueTuple<Transform, Transform>> _otherIndicator = new List<(Transform, Transform)>();
 
+    private Transform _playerAngle;
 
     void Awake()
     {
         _minimapFrame = transform.GetChild(0);
+        _playerAngle  = MinimapCamera.transform.GetChild(1);
     }
 
     void Update()
@@ -28,8 +30,9 @@ public class UI_Minimap : MonoBehaviour
     void LateUpdate()
     {
         MinimapCamera.transform.position = new Vector3(PlayerTransform.position.x, 100f, PlayerTransform.position.z);
-        MinimapCamera.transform.rotation = Quaternion.Euler(90f, PlayerTransform.localEulerAngles.y, 0f);
-        _minimapFrame.rotation = Quaternion.Euler(0f, 0f, PlayerTransform.localEulerAngles.y);
+        //MinimapCamera.transform.rotation = Quaternion.Euler(90f, PlayerTransform.localEulerAngles.y, 0f);
+        _minimapFrame.rotation = Quaternion.Euler(0f, 0f, -PlayerTransform.localEulerAngles.y);
+        _playerAngle.localRotation = Quaternion.Euler(0f, 0f, -PlayerTransform.localEulerAngles.y);
     }
 
     public void ResetUI()
