@@ -1,19 +1,23 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class ScoreManager : MonoBehaviour
+public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public static ScoreManager Instance { get; private set; } = null;
 
     Dictionary<int, PlayerScoreEntryData> playerScoreEntryDict = new Dictionary<int, PlayerScoreEntryData>();
 
-    int killScoreReward = 1;
+    const int KILL_SCORE_REWARD = 1;
+
+    int bountyTargetActorNumber = -1;
 
     bool isFinalMinute = false;
-    bool isGameEnded = false;
+    bool isGameRunning = true;
 
     private void Awake()
     {
@@ -29,49 +33,107 @@ public class ScoreManager : MonoBehaviour
         foreach (int actorNumber in PhotonNetwork.CurrentRoom.Players.Keys)
         {
             // ActorNumber와 매칭해서 플레이어의 기록 초기화
-            playerScoreEntryDict[actorNumber] = new PlayerScoreEntryData(0, 0, 0, 0);
+            playerScoreEntryDict[actorNumber] = new PlayerScoreEntryData(0, 0, 0, 0, actorNumber);
         }
         isFinalMinute = false;
-        isGameEnded = false;
-        killScoreReward = 1;
+        isGameRunning = true;
     }
     public void AddScore(int killerActorNumber, int victimActorNumber, int bonusReward = 0)
     {
-        if (isGameEnded) return;
+        if (!isGameRunning) return;
 
         playerScoreEntryDict[victimActorNumber].SetDeath(playerScoreEntryDict[victimActorNumber].Death + 1);
 
         // 피해자의 데스 카운트 갱신
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.UpdateDeathCount, // 데스 카운트 갱신 코드로써 전달
-            new int[] { victimActorNumber, playerScoreEntryDict[victimActorNumber].Death },
+            new object[] { victimActorNumber, playerScoreEntryDict[victimActorNumber].Death },
             new RaiseEventOptions { Receivers = ReceiverGroup.All },
             SendOptions.SendReliable);
 
-        // 자살일 경우 여기서 반환 (데스 카운트에 대한 처리까지만 진행)
-        if (killerActorNumber == victimActorNumber) return;
+        // 자살이 아닌 경우
+        if (killerActorNumber != victimActorNumber)
+        {
+            if (victimActorNumber == bountyTargetActorNumber)
+            {
+                bonusReward += 3;
 
-        playerScoreEntryDict[killerActorNumber].SetScore(
+                PlayerSpawnManager.Instance.ExecuteRPC(
+                    RaiseEventCode.DeactivateBountyTarget.ToString(), bountyTargetActorNumber);
+
+                bountyTargetActorNumber = -1;
+
+                photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, bountyTargetActorNumber);
+            }
+
+            playerScoreEntryDict[killerActorNumber].SetScore(
             playerScoreEntryDict[killerActorNumber].Score +
-            (killScoreReward + bonusReward) *
+            (KILL_SCORE_REWARD + bonusReward) *
             (isFinalMinute ? 2 : 1)
             );
 
-        playerScoreEntryDict[killerActorNumber].SetKill(playerScoreEntryDict[killerActorNumber].Kill + 1);
 
-        // 킬러의 점수 갱신
-        PhotonNetwork.RaiseEvent(
-            (byte)RaiseEventCode.UpdateScore, // 점수 갱신 코드로써 전달
-            new int[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Score },
-            new RaiseEventOptions { Receivers = ReceiverGroup.All },
-            SendOptions.SendReliable);
+            playerScoreEntryDict[killerActorNumber].SetKill(playerScoreEntryDict[killerActorNumber].Kill + 1);
 
-        // 킬러의 킬 카운트 갱신
+            // 킬러의 점수 갱신
+            PhotonNetwork.RaiseEvent(
+                (byte)RaiseEventCode.UpdateScore, // 점수 갱신 코드로써 전달
+                new object[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Score },
+                new RaiseEventOptions { Receivers = ReceiverGroup.All },
+                SendOptions.SendReliable);
+
+            // 킬러의 킬 카운트 갱신
+            PhotonNetwork.RaiseEvent(
+                (byte)RaiseEventCode.UpdateKillCount, // 킬 카운트 갱신 코드로써 전달
+                new object[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Kill },
+                new RaiseEventOptions { Receivers = ReceiverGroup.All },
+                SendOptions.SendReliable);
+
+            HasRankingChanged(killerActorNumber);
+        }
+
         PhotonNetwork.RaiseEvent(
-            (byte)RaiseEventCode.UpdateKillCount, // 킬 카운트 갱신 코드로써 전달
-            new int[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Kill },
-            new RaiseEventOptions { Receivers = ReceiverGroup.All },
+            (byte)RaiseEventCode.SaveData,
+            playerScoreEntryDict.Values.ToArray(),
+            new RaiseEventOptions { Receivers = ReceiverGroup.Others },
             SendOptions.SendReliable);
+    }
+    [PunRPC]
+    public void SetBountyTargetActorNumber(int actorNumber)
+    {
+        bountyTargetActorNumber = actorNumber;
+    }
+    void HasRankingChanged(int actorNumber)
+    {
+        var sortedScores = new List<KeyValuePair<int, PlayerScoreEntryData>>(playerScoreEntryDict);
+
+        sortedScores.Sort((x, y) => y.Value.Score.CompareTo(x.Value.Score));
+
+        int rank = sortedScores.FindIndex(entry => entry.Key == actorNumber) + 1;
+
+        if (rank < 4)
+        {
+            List<int[]> scoreList = new List<int[]>();
+
+            rank = 1;
+
+            scoreList.Add(new int[3] { sortedScores[0].Key, rank, sortedScores[0].Value.Score });
+
+            for (int i = 1; i < Mathf.Min(2, PhotonNetwork.CurrentRoom.PlayerCount); i++)
+            {
+                if (sortedScores[i].Value.Score == sortedScores[i - 1].Value.Score)
+                {
+                    rank = i + 1;
+                }
+                scoreList.Add(new int[3] { sortedScores[i].Key, rank, sortedScores[i].Value.Score });
+            }
+
+            PhotonNetwork.RaiseEvent(
+                (byte)RaiseEventCode.UpdateRealtime,
+                scoreList.ToArray(),
+                new RaiseEventOptions { Receivers = ReceiverGroup.All },
+                SendOptions.SendReliable);
+        }
     }
     public void SetIsFinalMinute(bool state)
     {
@@ -79,58 +141,107 @@ public class ScoreManager : MonoBehaviour
     }
     public void EndGame()
     {
-        isGameEnded = true;
+        isGameRunning = false;
 
         if (!PhotonNetwork.IsMasterClient) return;
 
         PhotonNetwork.RaiseEvent(
-            (byte)RaiseEventCode.UpdateScore,
+            (byte)RaiseEventCode.UpdateRank,
             GetScoreList(),
             new RaiseEventOptions { Receivers = ReceiverGroup.All },
             SendOptions.SendReliable);
     }
-    (int, int)[] GetScoreList()
-    { 
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        
+    }
+    int[][] GetScoreList()
+    {
         var sortedScores = new List<KeyValuePair<int, PlayerScoreEntryData>>(playerScoreEntryDict);
 
         sortedScores.Sort((x, y) => y.Value.Score.CompareTo(x.Value.Score));
 
-        List<(int, int)> scoreList = new List<(int, int)>();
+        List<int[]> scoreList = new List<int[]>();
 
         int rank = 1;
 
-        scoreList.Add((sortedScores[0].Key, rank));
+        scoreList.Add(new int[2]{sortedScores[0].Key, rank});
 
         for (int i = 1; i < sortedScores.Count; i++)
         {
-            if (sortedScores[i].Value.Score == sortedScores[i - 1].Value.Score)
+            if (sortedScores[i].Value.Score != sortedScores[i - 1].Value.Score)
             {
-                scoreList.Add((sortedScores[i].Key, rank));
+                rank = i + 1;
             }
-            else
-            {
-                rank = i + 1; 
-                scoreList.Add((sortedScores[i].Key, rank));
-            }
+
+            scoreList.Add(new int[2] { sortedScores[i].Key, rank });
         }
 
         return scoreList.ToArray();
     }
+    int GetTopScorerActorNumber()
+    {
+        var sortedScores = new List<KeyValuePair<int, PlayerScoreEntryData>>(playerScoreEntryDict);
+
+        sortedScores.Sort((x, y) => y.Value.Score.CompareTo(x.Value.Score));
+
+        return sortedScores[0].Key;
+    }
+    public void OnEvent(EventData photonEvent)
+    {
+        switch ((RaiseEventCode)photonEvent.Code)
+        {
+            case RaiseEventCode.SaveData:
+                SaveData(photonEvent); break;
+        }
+    }
+    public void SetBountyTarget()
+    {
+        bountyTargetActorNumber = GetTopScorerActorNumber();
+
+        photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, bountyTargetActorNumber);
+
+        PlayerSpawnManager.Instance.ExecuteRPC(
+            RaiseEventCode.ActivateBountyTarget.ToString(), bountyTargetActorNumber);
+    }
+    void SaveData(EventData photonEvent)
+    {
+        PlayerScoreEntryData[] playerScoreEntryDatas = (PlayerScoreEntryData[])photonEvent.CustomData;
+
+        foreach (PlayerScoreEntryData playerScoreEntryData in  playerScoreEntryDatas)
+
+            playerScoreEntryDict[playerScoreEntryData.ActorNumber] = playerScoreEntryData;
+    }
+
+    //public override void OnEnable()
+    //{
+    //    base.OnEnable();
+
+    //    PhotonNetwork.AddCallbackTarget(this);
+    //}
+    //public override void OnDisable()
+    //{
+    //    base.OnDisable();
+
+    //    PhotonNetwork.AddCallbackTarget(this);
+    //}
 }
 
-public struct PlayerScoreEntryData
+[Serializable]
+public class PlayerScoreEntryData
 {
     public int Kill { get; private set; }
     public int Death { get; private set; }
     public int Assist { get; private set; }
     public int Score { get; private set; }
-
-    public PlayerScoreEntryData(int kill, int death, int assist, int score)
+    public int ActorNumber { get; private set; }
+    public PlayerScoreEntryData(int kill, int death, int assist, int score, int actorNumber)
     {
         Kill = kill;
         Death = death;
         Assist = assist;
         Score = score;
+        ActorNumber = actorNumber;
     }
     public void SetKill(int kill) => Kill = kill;
     public void SetDeath(int death) => Death = death;

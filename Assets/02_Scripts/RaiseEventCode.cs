@@ -5,6 +5,7 @@ public enum RaiseEventCode
     #region BattleSystem 이벤트
 
     BattleStart = 30,
+    SaveData = 31,
 
     #endregion
 
@@ -14,6 +15,8 @@ public enum RaiseEventCode
     RespawnPlayer = 41,
     ActivatePlayer = 42,
     DeactivatePlayer = 43,
+    ActivateBountyTarget = 44,
+    DeactivateBountyTarget = 45,
 
     #endregion
 
@@ -23,7 +26,8 @@ public enum RaiseEventCode
     UpdateDeathCount = 51,
     UpdateScore = 52,
     UpdateRank = 53,
-    ResetScoreboard = 54,
+    UpdateRealtime = 54,
+    ResetScoreboard = 55,
 
     #endregion
 }

@@ -21,7 +21,6 @@ public class PlayerScoreEntry : MonoBehaviour
     {
         killCountText.text = "0";
         deathCountText.text = "0";
-        assistCountText.text = "0";
         scoreText.text = "0";
     }
     public void SetKillCount(int killCount)
@@ -42,4 +41,5 @@ public class PlayerScoreEntry : MonoBehaviour
 
         iconImage.sprite = sprite;
     }
+    //
 }
