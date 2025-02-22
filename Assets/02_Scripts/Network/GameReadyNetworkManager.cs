@@ -1,7 +1,6 @@
 using UnityEngine;
 using Photon.Pun; // Pun : 포톤 유니티 네트워크의 약자
 using Photon.Realtime; // 실시간 통신? 을 위해서
-using ExitGames.Client.Photon;
 
 public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
 {
@@ -80,31 +79,4 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         Debug.Log($"{otherPlayer.ActorNumber}.{otherPlayer.NickName} 플레이어가 방에서 나감!");
         gameReadyUIManager.UpdatePlayerListUI();
     }
-
-    //public int SetMaxPlayers(int maxPlayers)
-    //{
-    //    if (PhotonNetwork.IsMasterClient)
-    //    {
-    //        Debug.Log("SetMaxPlayers 실행됨");
-    //        Hashtable roomProperties = PhotonNetwork.CurrentRoom.CustomProperties;
-    //        roomProperties["MaxPlayers"] = (byte)maxPlayers; // 기존 값 유지하면서 추가 or 업데이트
-    //        PhotonNetwork.CurrentRoom.SetCustomProperties(roomProperties);
-    //        Debug.Log(PhotonNetwork.CurrentRoom.MaxPlayers + "로 최대 플레이어 수 변경 ");
-    //    }
-    //    return maxPlayers;
-    //}
-
-    //public string SetGameMode(string mode)
-    //{
-    //    if (PhotonNetwork.IsMasterClient)
-    //    {
-    //        Debug.Log("SetGameMode 실행됨");
-    //        Hashtable roomProperties = PhotonNetwork.CurrentRoom.CustomProperties;
-    //        roomProperties["GameMode"] = mode; // 기존 값 유지하면서 추가 or 업데이트
-    //        PhotonNetwork.CurrentRoom.SetCustomProperties(roomProperties);
-
-    //        Debug.Log((string)PhotonNetwork.CurrentRoom.CustomProperties[RoomProperties.mode.ToString()] + "로 모드 변경 ");
-    //    }
-    //    return mode;
-    //}
 }

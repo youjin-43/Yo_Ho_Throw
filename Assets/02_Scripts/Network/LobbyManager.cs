@@ -217,14 +217,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         // 최대 인원 수 설정 
         if (selectedMode == GameMode.TeamMatch.ToString())
         {
-            options.MaxPlayers = MaxPlayerCountDropdown_TeamMatch.value + 2; // 최소 2명부터
-            // 팀 모드일 경우 팀 개수 설정
-            int selectedTeamCount = teamCountDropdown.value + 2; // 최소 2팀부터
+            options.MaxPlayers = int.Parse(MaxPlayerCountDropdown_TeamMatch.options[MaxPlayerCountDropdown_TeamMatch.value].text); // 최대 플레이어 설정 
+            int selectedTeamCount = int.Parse(teamCountDropdown.options[teamCountDropdown.value].text); // 팀 모드일 경우 팀 개수 설정
             options.CustomRoomProperties.Add(RoomProperties.teamCount.ToString(), selectedTeamCount);
         }
         else
         {
-            options.MaxPlayers = MaxPlayerCountDropdown_DeathMatch.value + 2; // 최소 2명부터
+            options.MaxPlayers = MaxPlayerCountDropdown_DeathMatch.value + 2; 
         }
 
         // 로비에서 표시할 커스텀 속성 설정
