@@ -41,6 +41,12 @@ MonoBehaviour:
   - RespawnSpaceship
   - FireBullet_RPC
   - ApplyUpwardForce_RPC
+  - ActivateBountyTarget
+  - ActivatePlayer
+  - DeactivateBountyTarget
+  - DeactivatePlayer
+  - RespawnPlayer
+  - SetBountyTargetActorNumber
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
