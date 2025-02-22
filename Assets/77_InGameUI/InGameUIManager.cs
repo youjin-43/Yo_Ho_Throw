@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InGameUIManager : MonoBehaviour
 {
@@ -71,7 +73,15 @@ public class InGameUIManager : MonoBehaviour
 
 
     #region MINIMAP
-
+    /// <summary>
+    /// 미니맵 아이콘 조절용 함수
+    /// </summary>
+    /// <param name="indicator">원래 부모, 인디케이터 페어</param>
+    /// <param name="isPlayer"></param>
+    public void BindIndicator(ValueTuple<Transform, Transform> pair, bool isPlayer = false)
+    {
+        Minimap.BindIndicator(pair, isPlayer);
+    }
     #endregion
 
 
