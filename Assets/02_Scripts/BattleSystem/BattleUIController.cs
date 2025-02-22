@@ -35,6 +35,12 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     [SerializeField] Sprite silverMedalSprite;
     [SerializeField] Sprite bronzeMedalSprite;
 
+    [Header("부활까지 남은 시간")]
+    [SerializeField] TMP_Text respawnRemainingText;
+
+    [Header("연속 처치 텍스트")]
+    [SerializeField] TMP_Text comboKillText;
+
     Dictionary<int, PlayerScoreEntry> playerScoreEntries = new Dictionary<int, PlayerScoreEntry>();
 
     bool isGameRunning = true;
@@ -72,6 +78,8 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
         titleButton.gameObject.SetActive(false);
         endGameButton.gameObject.SetActive(false);
         lobbyButton.gameObject.SetActive(false);
+
+        comboKillText.text = string.Empty;
     }
     private void Update()
     {
@@ -201,7 +209,21 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         return entry;
     }
+    public void SetRespawnTimer(int timer)
+    {
+        if (timer == 0)
+        {
+            respawnRemainingText.text = string.Empty;
+
+            return;
+        }
+
+        respawnRemainingText.text = timer.ToString();
+    }
+    public void SetComboKill(int combo)
+    {
+        comboKillText.text = combo == 0 ? string.Empty : combo.ToString() + " Combo";
+    }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
-    //
 }
