@@ -7,10 +7,10 @@ using UnityEngine;
 public class PlayerManager : PlayerStatController
 {
     private StarterAssetsInputs input;
-    public GameObject bulletPrefab; // ���� ������
-    public Transform bulletSpawnPoint; // �������� ������ ��ġ
-    public float bulletSpeed = 10f; // ������ �ʱ� �ӵ�
-    public float bulletArc = 5f; // ������ ��� ����
+    public GameObject bulletPrefab; // 
+    public Transform bulletSpawnPoint; // 
+    public float bulletSpeed = 10f; // 
+    public float bulletArc = 5f; // 
     public Transform cameraTransform;
     [Header("Aim")]
     [SerializeField]
