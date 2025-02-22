@@ -5,11 +5,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class GameReadyUIManager : MonoBehaviour
+public class GameReadyUIManager : MonoBehaviourPunCallbacks
 {
+    [SerializeField] GameMode gameMode; // TODO : 게임 매니저로 옮기기!! 
+
     GameReadyNetworkManager gameReadyNetworkManager;
 
     [Header("RoomSetting")]
+    public GameObject RoomSettingArea; // 게임 설정관련 UI 영역 
     public TMP_Dropdown modeDropdown; // 게임 모드 선택 드롭다운 (개인전/팀전)
     public TMP_Dropdown MaxPlayerCountDropdown_DeathMatch;
     public TMP_Dropdown MaxPlayerCountDropdown_TeamMatch;
@@ -31,24 +34,47 @@ public class GameReadyUIManager : MonoBehaviour
     {
         gameReadyNetworkManager = GetComponent<GameReadyNetworkManager>();
 
-        modeDropdown.onValueChanged.AddListener(UpdateMaxPlayerSelectUI);
-        modeDropdown.onValueChanged.AddListener((int modeIndex) =>
-        {
-            string selectedMode = modeDropdown.options[modeIndex].text;
-            gameReadyNetworkManager.SetGameMode(selectedMode);
-        });
+         InitUI();
 
-        MaxPlayerCountDropdown_TeamMatch.onValueChanged.AddListener(UpdateMaxTeamCount);
-        MaxPlayerCountDropdown_TeamMatch.onValueChanged.AddListener((int maxPlayersIndex) =>
+        // 현재 모드 셋팅 
+        if (PhotonNetwork.CurrentRoom.CustomProperties[RoomProperties.mode.ToString()] == GameMode.DeathMatch.ToString())
         {
-            int maxPlayers = 4 + (int)Math.Pow(2, maxPlayersIndex); // 최소 4부터 시작
-            gameReadyNetworkManager.SetMaxPlayers(maxPlayers);
-        });
+            gameMode = GameMode.DeathMatch;
+        }
+        else
+        {
+            gameMode = GameMode.TeamMatch;
+        }
 
-        GameStartButton.onClick.AddListener(gameReadyNetworkManager.GameStart);
 
         UpdatePlayerListUI();
-        GameStartButton.interactable = false;
+    }
+
+    void InitUI()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // 마스터 클라이언트에게만 룸 셋팅 UI 와 게임 스타트 버튼이 보임 
+            RoomSettingArea.SetActive(true);
+            GameStartButton.gameObject.SetActive(true);
+            GameStartButton.interactable = false;
+
+            // 모드 드롭 다운에 버튼 클릭 리스너 추가 
+            modeDropdown.onValueChanged.AddListener(UpdateMaxPlayerSelectUI); // 팀 모드로 선택 할 시 팀 갯수를 선택할 수 있는 드롭 다운 활성화 
+            modeDropdown.onValueChanged.AddListener(OnModeDropdownChanged); // 선택된 모드로 포톤 룸 설정 
+
+            MaxPlayerCountDropdown_DeathMatch.onValueChanged.AddListener(OnMaxPlayersChanged);
+            MaxPlayerCountDropdown_TeamMatch.onValueChanged.AddListener(OnMaxPlayersChanged);
+
+            GameStartButton.onClick.AddListener(gameReadyNetworkManager.GameStart);
+
+        }
+        else {
+            // 일반 클라이언트에게는 룸 셋팅 UI 와 게임 스타트 버튼이 보이지 않도록 
+            RoomSettingArea.SetActive(false);
+            GameStartButton.gameObject.SetActive(false);
+        }
+
     }
 
     public void UpdatePlayerListUI()
@@ -60,11 +86,13 @@ public class GameReadyUIManager : MonoBehaviour
 
         playerUIObjects.Clear();
 
-        foreach (var player in PhotonNetwork.CurrentRoom.Players.Values)
+
+        foreach (var player in PhotonNetwork.CurrentRoom.Players)
         {
+            Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}");
             GameObject playerItem = Instantiate(PlayerInfoItemPrefab, PlayerInfoListContent);
-            playerItem.GetComponentInChildren<TMP_Text>().text = player.NickName;
-            playerUIObjects[player.ActorNumber] = playerItem;
+            playerItem.GetComponentInChildren<TMP_Text>().text = player.Value.NickName;
+            playerUIObjects[player.Value.ActorNumber] = playerItem;
         }
 
         GameStartButton.interactable = PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers; //현재 인원이 MaxPlayers에 도달해야 GameStartButton 활성화
@@ -81,7 +109,6 @@ public class GameReadyUIManager : MonoBehaviour
         {
             MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(false);
             MaxPlayerCountDropdown_TeamMatch.gameObject.SetActive(true);
-            UpdateMaxTeamCount(MaxPlayerCountDropdown_TeamMatch.value); // 팀 개수 업데이트
             TeamCountArea.SetActive(true);
         }
         else
@@ -92,11 +119,68 @@ public class GameReadyUIManager : MonoBehaviour
         }
     }
 
-    // 최대 플레이어 수 변경 시 팀 개수 드롭다운 업데이트
-    void UpdateMaxTeamCount(int maxPlayersIndex)
+    /// <summary>
+    /// 선택된 모드로 포톤 룸 설정 변경 
+    /// </summary>
+    private void OnModeDropdownChanged(int index)
     {
-        int maxPlayers = 4 + (int)Math.Pow(2, maxPlayersIndex); // 최소 4부터 시작
-        int maxTeams = maxPlayers / 2; // 최대 팀 개수는 (최대 플레이어 수 / 2)
+        if (PhotonNetwork.IsMasterClient)
+        {
+            string selectedMode = modeDropdown.options[index].text;
+            ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
+            props[RoomProperties.mode.ToString()] = selectedMode;
+            PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+            Debug.Log($"게임 모드가 {selectedMode}로 변경됨");
+            //Debug.Log($"게임 모드가 {(string)PhotonNetwork.CurrentRoom.CustomProperties[RoomProperties.mode.ToString()]}로 변경됨"); // 이게 반영되는게 시간이 좀 걸리는것 같음
+
+            if (selectedMode == GameMode.DeathMatch.ToString())
+            {
+                gameMode = GameMode.DeathMatch;
+                Debug.Log($"{GameMode.DeathMatch} 으로 변경됨");
+            }
+            else
+            {
+                gameMode = GameMode.TeamMatch;
+                Debug.Log($"{GameMode.TeamMatch} 으로 변경됨");
+            }
+
+            OnMaxPlayersChanged(0); // 최대 플레이어 초기화 
+        }
+    }
+
+    private void OnMaxPlayersChanged(int index)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            //string selectedMode = (string)PhotonNetwork.CurrentRoom.CustomProperties[RoomProperties.mode.ToString()];
+            string selectedMode = gameMode.ToString();
+            Debug.Log($"현재 모드 : {selectedMode}");
+
+            // 모드에 따라 최대 인원 수 설정
+            int maxPlayers;
+            if (selectedMode == GameMode.TeamMatch.ToString())
+            {
+                maxPlayers = int.Parse(MaxPlayerCountDropdown_TeamMatch.options[index].text);
+                UpdateMaxTeamCount(maxPlayers);
+            }
+            else
+            {
+                maxPlayers = int.Parse(MaxPlayerCountDropdown_DeathMatch.options[index].text);
+            }
+
+            PhotonNetwork.CurrentRoom.MaxPlayers = (byte)maxPlayers;
+            Debug.Log($"최대 플레이어 수가 {maxPlayers}로 변경됨");
+        }
+    }
+
+    /// <summary>
+    /// 최대 플레이어 수 변경 시 팀 개수 드롭다운 업데이트
+    /// </summary>
+    void UpdateMaxTeamCount(int maxPlayer)
+    {
+        Debug.Log(maxPlayer);
+
+        int maxTeams = maxPlayer / 2; // 최대 팀 개수는 (최대 플레이어 수 / 2)
 
         // 팀 개수 드롭다운 옵션 업데이트
         List<string> teamOptions = new List<string>();

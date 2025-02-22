@@ -100,6 +100,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     #region PlayerNameInput + RoomList
     void ConnectToPhoton()
     {
+        // 이름 입력란이 비었는지 화인 
+        if (string.IsNullOrEmpty(playerNameInput.text))
+        {
+            Debug.LogWarning("이름을 입력해야 합니다!");
+            return; // 연결 중단
+        }
+
         //지역 kr로 고정.이 부분이 없으면 자동으로 지역을 찾는데,다른 지역에 걸릴 경우 네트워크를 통해 만날 수 없다.
         PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "kr";
 
@@ -154,9 +161,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         foreach (RoomInfo room in roomList) // roomList 매개변수에는 현재 로비에 존재하는 모든 방 정보가 담겨 있음
         {
             GameObject roomItem = Instantiate(roomListItemPrefab, roomListContent);
-            roomItem.transform.GetChild((int)roomListItemPrefabChilds.RoomName).GetComponent<TMP_Text>().text = room.Name;
-            roomItem.transform.GetChild((int)roomListItemPrefabChilds.PlayerCount).GetComponent<TMP_Text>().text = $"{room.PlayerCount}/{room.MaxPlayers}";
+            roomItem.transform.GetChild((int)roomListItemPrefabChilds.RoomName).GetComponent<TMP_Text>().text = room.Name; // 룸 이름
+            roomItem.transform.GetChild((int)roomListItemPrefabChilds.PlayerCount).GetComponent<TMP_Text>().text = $"{room.PlayerCount}/{room.MaxPlayers}"; // 최대 플레이어 수 
 
+            // 모드 정보 표시 
             if (room.CustomProperties.ContainsKey(RoomProperties.mode.ToString()))
             {
                 string mode = (string)room.CustomProperties[RoomProperties.mode.ToString()];
