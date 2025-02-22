@@ -1,4 +1,4 @@
-﻿using Codice.CM.Client.Differences;
+﻿//using Codice.CM.Client.Differences;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -189,7 +189,7 @@ namespace StarterAssets
             Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
             //Grounded = true;
             // update animator if using character
-            if (true)
+            if (_hasAnimator)
             {
                 _animator.SetBool(_animIDGrounded, Grounded);
             }
@@ -263,12 +263,12 @@ namespace StarterAssets
 
             Vector3 movementDirection = transform.forward * verticalInput + transform.right * horizontalInput;
             Vector3 finalMove = movementDirection * MoveSpeed;
-            _controller.Move(finalMove * Time.deltaTime);
-
+            _controller.Move(finalMove * Time.deltaTime + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            
             currentHorizontal = Mathf.Lerp(currentHorizontal, horizontalInput, Time.deltaTime / damping);
             currentVertical = Mathf.Lerp(currentVertical, verticalInput, Time.deltaTime / damping);
 
-
+            
             _animator.SetFloat("Horizontal", horizontalInput);
             _animator.SetFloat("Vertical", verticalInput);
             // update animator if using character
@@ -301,11 +301,18 @@ namespace StarterAssets
                     _verticalVelocity = -2f;
                 }
                 */
+                
+                if (_verticalVelocity < 0.0f)
+                {
+                    _verticalVelocity = -2f;
+                }
+                _jumpTimeoutDelta = 0f;
+                /*
                 if (Grounded && Mathf.Abs(_verticalVelocity) < 0.1f)
                 {
                     _verticalVelocity = 0f; // ✅ 미세한 공중 상태 방지
                 }
-
+                */
                 // Jump
                 if (Input.GetAxis("Jump")>0 && _jumpTimeoutDelta <= 0.0f)
                 {

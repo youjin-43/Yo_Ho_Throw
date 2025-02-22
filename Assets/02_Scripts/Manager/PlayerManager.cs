@@ -7,10 +7,10 @@ using UnityEngine;
 public class PlayerManager : PlayerStatController
 {
     private StarterAssetsInputs input;
-    public GameObject bulletPrefab; // ���� ������
-    public Transform bulletSpawnPoint; // �������� ������ ��ġ
-    public float bulletSpeed = 10f; // ������ �ʱ� �ӵ�
-    public float bulletArc = 5f; // ������ ��� ����
+    public GameObject bulletPrefab; // 주석체크
+    public Transform bulletSpawnPoint; // 
+    public float bulletSpeed = 10f; // 
+    public float bulletArc = 5f; // 
     public Transform cameraTransform;
     [Header("Aim")]
     [SerializeField]
@@ -24,7 +24,7 @@ public class PlayerManager : PlayerStatController
     {
         input = GetComponent<StarterAssetsInputs>();
         anim = GetComponent<Animator>();
-        anim.applyRootMotion = false;
+        //anim.applyRootMotion = false;
     }
 
     // Update is called once per frame
@@ -40,7 +40,7 @@ public class PlayerManager : PlayerStatController
         {
             aimCam.gameObject.SetActive(false);
         }
-        if (Input.GetKeyDown(KeyCode.F)) // �߻� �Է� ���� (Fire1 ��ư)
+        if (Input.GetKeyDown(KeyCode.F)) // 
         {
             anim.SetBool("Shoot", true);
             StartCoroutine(EndShootCoroutine());
@@ -52,9 +52,14 @@ public class PlayerManager : PlayerStatController
         
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
-            //TODO : Ǯ�Ŵ��� 
+           
+            
             GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
-            projectile.transform.position = transform.position;
+            if(projectile == null)
+            {
+                Debug.Log("dd");
+            }
+            projectile.transform.position = bulletSpawnPoint.position;
             //GameObject projectile = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
             
@@ -72,10 +77,7 @@ public class PlayerManager : PlayerStatController
         }
     }
 
-    public void EndShoot()
-    {
-        anim.SetBool("Shoot", false);
-    }
+    
     IEnumerator EndShootCoroutine()
     {
         yield return new WaitForSeconds(0.24f);
