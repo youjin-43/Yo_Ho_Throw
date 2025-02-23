@@ -2138,6 +2138,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1519459834}
   - {fileID: 856215066}
   - {fileID: 99522259}
   - {fileID: 344009778}
@@ -4202,6 +4203,57 @@ RectTransform:
   m_AnchoredPosition: {x: 186.56, y: -0.000041962}
   m_SizeDelta: {x: 196.877, y: 27.1}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1519459833
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1519459834}
+  - component: {fileID: 1519459835}
+  m_Layer: 5
+  m_Name: KillLogPanelController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1519459834
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519459833}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 672492380}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -677, y: -198}
+  m_SizeDelta: {x: 533.6, y: 48}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1519459835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519459833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1c09ff59be3e6e4fb8fb8b45c08cc67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  killLogPanelPrefab: {fileID: 2017045677203350615, guid: 5e6dc346663bff94c80eab0e32124f55, type: 3}
+  killLogPanelParent: {fileID: 1519459834}
+  padding: 30
 --- !u!1 &1573331113
 GameObject:
   m_ObjectHideFlags: 0
@@ -5507,8 +5559,8 @@ SceneRoots:
   - {fileID: 1966051148}
   - {fileID: 1655864026}
   - {fileID: 672492380}
+  - {fileID: 1707804671}
   - {fileID: 220023721}
   - {fileID: 1291360007}
   - {fileID: 1281882608}
   - {fileID: 484005147}
-  - {fileID: 1707804671}
