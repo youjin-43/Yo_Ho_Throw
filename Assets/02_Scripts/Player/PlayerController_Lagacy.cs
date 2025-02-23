@@ -1,6 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
-public class PlayerController : MonoBehaviour
+public class PlayerController_Lagacy : MonoBehaviour
 {
     PhotonView pv;
     [SerializeField] GameObject bulletPrefab;
