@@ -91,6 +91,23 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     [PunRPC]
     public void RespawnPlayer()
     {
+        StartCoroutine(RespawnPlayerCoroutine());
+    }
+    IEnumerator RespawnPlayerCoroutine()
+    {
+        // TODO 찬규 : 리스폰 수정
+
+        int remainSpawnTimer = 3;
+
+        while (remainSpawnTimer-- > 0)
+        {
+            yield return new WaitForSeconds(1f);
+
+            BattleUIController.Instance.SetRespawnTimer(remainSpawnTimer);
+        }
+
+        BattleUIController.Instance.SetRespawnTimer(remainSpawnTimer);
+
         Transform spawnPosition = GetRandomTransform();
 
         currPlayer.transform.position = spawnPosition.position;
