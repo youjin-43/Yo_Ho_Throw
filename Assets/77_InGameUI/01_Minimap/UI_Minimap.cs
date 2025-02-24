@@ -14,10 +14,12 @@ public class UI_Minimap : MonoBehaviour
     ValueTuple<Transform, Transform> _playerIndicator;
     List<ValueTuple<Transform, Transform>> _otherIndicator = new List<(Transform, Transform)>();
 
+    private Transform _playerAngle;
 
     void Awake()
     {
         _minimapFrame = transform.GetChild(0);
+        _playerAngle  = MinimapCamera.transform.GetChild(1);
     }
 
     void Update()
@@ -28,8 +30,9 @@ public class UI_Minimap : MonoBehaviour
     void LateUpdate()
     {
         MinimapCamera.transform.position = new Vector3(PlayerTransform.position.x, 100f, PlayerTransform.position.z);
-        MinimapCamera.transform.rotation = Quaternion.Euler(90f, PlayerTransform.localEulerAngles.y, 0f);
-        _minimapFrame.rotation = Quaternion.Euler(0f, 0f, PlayerTransform.localEulerAngles.y);
+        //MinimapCamera.transform.rotation = Quaternion.Euler(90f, PlayerTransform.localEulerAngles.y, 0f);
+        _minimapFrame.rotation = Quaternion.Euler(0f, 0f, -PlayerTransform.localEulerAngles.y);
+        _playerAngle.localRotation = Quaternion.Euler(0f, 0f, -PlayerTransform.localEulerAngles.y);
     }
 
     public void ResetUI()
@@ -49,6 +52,8 @@ public class UI_Minimap : MonoBehaviour
         }
     }
 
+    public float angle = 0.5f;
+
     private void AdjustIndicator()
     {
         if(_playerIndicator.Item1 == null)
@@ -56,19 +61,37 @@ public class UI_Minimap : MonoBehaviour
             return;
         }
 
+
+
+
         foreach(var indicator in _otherIndicator)
         {
-            if(Vector3.Distance(_playerIndicator.Item1.position, indicator.Item1.position) >= 9.9f)
+            // Look
+            Vector3 look = (indicator.Item1.position - _playerIndicator.Item1.position).normalized;
+
+            Vector3 playerLook = PlayerTransform.transform.forward.normalized;
+
+            if (Vector3.Distance(_playerIndicator.Item1.position, indicator.Item1.position) >= 9.9f)
             {
-                // Look
-                Vector3 look = (indicator.Item1.position - _playerIndicator.Item1.position).normalized;
 
                 // Adjust
                 indicator.Item2.position = _playerIndicator.Item2.position + (look * 9.9f);
+
+                
+
             }
             else
             {
                 indicator.Item2.position = new Vector3(indicator.Item1.position.x, 50f, indicator.Item1.position.z);
+            }
+
+            if (Vector3.Dot(look, playerLook) >= 0.7f)
+            {
+                indicator.Item2.gameObject.SetActive(true);
+            }
+            else
+            {
+                indicator.Item2.gameObject.SetActive(false);
             }
         }
     }
