@@ -45,8 +45,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     // 모드 선택
     public TMP_Dropdown modeDropdown; // 게임 모드 선택 드롭다운 (개인전/팀전)
-   
-    public TMP_Dropdown MaxPlayerCountDropdown_DeathMatch; 
+
+    //public TMP_Dropdown MaxPlayerCountDropdown_DeathMatch; 
+    public TMP_Text MaxPlayerCount; // 인원 수
+    public Button decreaseButton;
+    public Button increaseButton;
+
+    private int currentPlayerCount = 2; // 기본 인원 수
+
     public TMP_Dropdown MaxPlayerCountDropdown_TeamMatch; 
     public TMP_Dropdown teamCountDropdown; // 팀 개수 선택 드롭다운
     public GameObject TeamCountArea; // 팀 개수 설정 UI 영역
@@ -86,6 +92,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         MaxPlayerCountDropdown_TeamMatch.onValueChanged.AddListener(UpdateMaxTeamCount);
 
         // 버튼
+        decreaseButton.onClick.AddListener(DecreasePlayerCount);
+        increaseButton.onClick.AddListener(IncreasePlayerCount);
         createRoomButton.onClick.AddListener(CreateRoom);
         createRoomCancelButton.onClick.AddListener(CreateRoomCancel);
         #endregion
@@ -168,6 +176,29 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         roomPanel.SetActive(false);
         CreatNewRoomArea.SetActive(true);
+        UpdatePlayerCountDisplay(); // 초기 인원 수 표시
+    }
+    private void DecreasePlayerCount()
+    {
+        if (currentPlayerCount > 2) // 최소 인원 수 제한
+        {
+            currentPlayerCount--;
+            UpdatePlayerCountDisplay();
+        }
+    }
+
+    private void IncreasePlayerCount()
+    {
+        if (currentPlayerCount < 8) // 최대 인원 수 제한
+        {
+            currentPlayerCount++;
+            UpdatePlayerCountDisplay();
+        }
+    }
+
+    private void UpdatePlayerCountDisplay()
+    {
+        MaxPlayerCount.text = currentPlayerCount.ToString();
     }
 
     public void CreateRoom()
@@ -193,7 +224,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         options.CustomRoomProperties.Add(RoomProperties.mode.ToString(), selectedMode);
 
         // 최대 인원 수 설정 
-        if (selectedMode == GameMode.TeamMatch.ToString())
+        options.MaxPlayers = (byte)currentPlayerCount;
+        /*if (selectedMode == GameMode.TeamMatch.ToString())
         {
             options.MaxPlayers = MaxPlayerCountDropdown_TeamMatch.value + 2; // 최소 2명부터
             // 팀 모드일 경우 팀 개수 설정
@@ -203,7 +235,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         else
         {
             options.MaxPlayers = MaxPlayerCountDropdown_DeathMatch.value + 2; // 최소 2명부터
-        }
+        }*/
+
 
         // 로비에서 표시할 커스텀 속성 설정
         options.CustomRoomPropertiesForLobby = new string[] {
@@ -245,14 +278,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (selectedMode == GameMode.TeamMatch.ToString())
         {
             TeamCountArea.SetActive(true);
-            MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(false);
+            //MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(false);
             MaxPlayerCountDropdown_TeamMatch.gameObject.SetActive(true);
             UpdateMaxTeamCount(MaxPlayerCountDropdown_TeamMatch.value); // 팀 개수 업데이트
         }
         else
         {
             TeamCountArea.SetActive(false);
-            MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(true);
+            //MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(true);
             MaxPlayerCountDropdown_TeamMatch.gameObject.SetActive(false);
         }
     }
