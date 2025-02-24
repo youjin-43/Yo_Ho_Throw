@@ -2424,6 +2424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6b55a36234449cc826481ea9ad6773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameMode: 0
   RoomSettingArea: {fileID: 421470999}
   modeDropdown: {fileID: 1808047899}
   MaxPlayerCountDropdown_DeathMatch: {fileID: 246382199}
