@@ -1196,7 +1196,7 @@ MonoBehaviour:
     - {fileID: 882178636}
     - {fileID: 2100970709}
     - {fileID: 1938053949}
-  playerObject: {fileID: 5897515838875935530, guid: dd100fb0758274c3eb07e0459177fb7d, type: 3}
+  playerObject: {fileID: 5897515838875935530, guid: 2ddb2d29471e3cc46b4de6498c9ad0fe, type: 3}
 --- !u!4 &484005147
 Transform:
   m_ObjectHideFlags: 0
