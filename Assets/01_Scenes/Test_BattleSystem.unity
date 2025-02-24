@@ -5182,10 +5182,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2026881331}
   - {fileID: 1573331116}
-  - {fileID: 314592432}
   - {fileID: 487896843}
+  - {fileID: 314592432}
+  - {fileID: 2026881331}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1967440868
@@ -5555,12 +5555,12 @@ RectTransform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 2119639460}
-  - {fileID: 1966051148}
   - {fileID: 1655864026}
+  - {fileID: 1966051148}
   - {fileID: 672492380}
   - {fileID: 1707804671}
   - {fileID: 220023721}
   - {fileID: 1291360007}
   - {fileID: 1281882608}
   - {fileID: 484005147}
+  - {fileID: 2119639460}

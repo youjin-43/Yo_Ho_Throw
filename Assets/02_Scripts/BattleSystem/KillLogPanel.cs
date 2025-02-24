@@ -32,8 +32,9 @@ public class KillLogPanel : MonoBehaviour
         killerNicknameText.text = killerNickname;
         victimNicknameText.text = victimNickname;
 
-        killerNicknameText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, killerNicknameText.preferredWidth);
-        victimNicknameText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, victimNicknameText.preferredWidth);
+        //TMP 크기 조절 (하지만 제거)
+        //killerNicknameText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, killerNicknameText.preferredWidth);
+        //victimNicknameText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, victimNicknameText.preferredWidth);
 
         canvasGroup.alpha = 0;
 
