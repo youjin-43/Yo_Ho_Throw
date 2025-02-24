@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public enum GameMode
 {
-    Deathmatch,
+    DeathMatch,
     TeamMatch
 }
 

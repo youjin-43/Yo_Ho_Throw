@@ -1,10 +1,10 @@
 using UnityEngine;
 using Photon.Pun;
-public class PlayerController : MonoBehaviour
+public class PlayerController_Lagacy : MonoBehaviour
 {
     PhotonView pv;
-    [SerializeField] GameObject bulletPrefab;
-    public GameObject bullet;   
+    //[SerializeField] GameObject bulletPrefab;
+    //public GameObject bullet;   
     private void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -38,9 +38,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Fire()
+    void Fire() 
     {
-        PhotonNetwork.Instantiate("Bullet", transform.position + new Vector3(0,2,0), transform.rotation);
+        PhotonNetwork.Instantiate("Bullet", transform.position + new Vector3(2,0,0), transform.rotation);
         Debug.Log(" 총알 발사!!!");
     }
 

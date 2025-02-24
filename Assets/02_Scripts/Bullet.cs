@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviourPun
     {
         if (photonView.IsMine) // 내 총알만 속도 적용
         {
-            GetComponent<Rigidbody>().linearVelocity = transform.up * speed;
+            GetComponent<Rigidbody>().linearVelocity = transform.forward * speed;
         }
 
         // 1초 뒤에 네트워크에서 삭제
