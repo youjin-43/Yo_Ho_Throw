@@ -2,9 +2,11 @@
 using Photon.Pun;
 using Photon.Realtime;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -33,7 +35,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         foreach (int actorNumber in PhotonNetwork.CurrentRoom.Players.Keys)
         {
             // ActorNumber와 매칭해서 플레이어의 기록 초기화
-            playerScoreEntryDict[actorNumber] = new PlayerScoreEntryData(0, 0, 0, 0, actorNumber);
+            playerScoreEntryDict[actorNumber] = new PlayerScoreEntryData(0, 0, 0, actorNumber);
         }
         isFinalMinute = false;
         isGameRunning = true;
@@ -47,7 +49,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         // 피해자의 데스 카운트 갱신
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.UpdateDeathCount, // 데스 카운트 갱신 코드로써 전달
-            new object[] { victimActorNumber, playerScoreEntryDict[victimActorNumber].Death },
+            new int[] { victimActorNumber, playerScoreEntryDict[victimActorNumber].Death },
             new RaiseEventOptions { Receivers = ReceiverGroup.All },
             SendOptions.SendReliable);
 
@@ -78,14 +80,14 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
             // 킬러의 점수 갱신
             PhotonNetwork.RaiseEvent(
                 (byte)RaiseEventCode.UpdateScore, // 점수 갱신 코드로써 전달
-                new object[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Score },
+                new int[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Score },
                 new RaiseEventOptions { Receivers = ReceiverGroup.All },
                 SendOptions.SendReliable);
 
             // 킬러의 킬 카운트 갱신
             PhotonNetwork.RaiseEvent(
                 (byte)RaiseEventCode.UpdateKillCount, // 킬 카운트 갱신 코드로써 전달
-                new object[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Kill },
+                new int[] { killerActorNumber, playerScoreEntryDict[killerActorNumber].Kill },
                 new RaiseEventOptions { Receivers = ReceiverGroup.All },
                 SendOptions.SendReliable);
 
@@ -94,7 +96,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.SaveData,
-            playerScoreEntryDict.Values.ToArray(),
+            PlayerScoreEntryData.ToHashtable(playerScoreEntryDict),
             new RaiseEventOptions { Receivers = ReceiverGroup.Others },
             SendOptions.SendReliable);
     }
@@ -206,45 +208,103 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
     }
     void SaveData(EventData photonEvent)
     {
-        PlayerScoreEntryData[] playerScoreEntryDatas = (PlayerScoreEntryData[])photonEvent.CustomData;
+        Hashtable eventContent = (Hashtable)photonEvent.CustomData;
 
-        foreach (PlayerScoreEntryData playerScoreEntryData in  playerScoreEntryDatas)
+        if (playerScoreEntryDict == null)
+        {
+            // 기존 Dictionary가 null이면 새로 생성
+            playerScoreEntryDict = PlayerScoreEntryData.FromHashtable(eventContent);
+        }
+        else
+        {
+            // 기존 Dictionary를 재사용하여 업데이트
+            playerScoreEntryDict.Clear(); // 기존 데이터 제거
 
-            playerScoreEntryDict[playerScoreEntryData.ActorNumber] = playerScoreEntryData;
+            foreach (DictionaryEntry entry in eventContent)
+            {
+                int key = (int)entry.Key;
+                Hashtable data = (Hashtable)entry.Value;
+
+                // 기존 객체를 재사용하기 위해 값만 변경
+                if (playerScoreEntryDict.TryGetValue(key, out PlayerScoreEntryData existingData))
+                {
+                    existingData.SetKill((int)data["kill"]);
+                    existingData.SetDeath((int)data["death"]);
+                    existingData.SetScore((int)data["score"]);
+                }
+                else
+                {
+                    // 새로운 데이터라면 새 객체 추가
+                    playerScoreEntryDict[key] = new PlayerScoreEntryData(
+                        (int)data["kill"],
+                        (int)data["death"],
+                        (int)data["score"],
+                        (int)data["actorNumber"]
+                    );
+                }
+            }
+        }
     }
-
-    //public override void OnEnable()
-    //{
-    //    base.OnEnable();
-
-    //    PhotonNetwork.AddCallbackTarget(this);
-    //}
-    //public override void OnDisable()
-    //{
-    //    base.OnDisable();
-
-    //    PhotonNetwork.AddCallbackTarget(this);
-    //}
 }
 
 [Serializable]
 public class PlayerScoreEntryData
 {
-    public int Kill { get; private set; }
-    public int Death { get; private set; }
-    public int Assist { get; private set; }
-    public int Score { get; private set; }
-    public int ActorNumber { get; private set; }
-    public PlayerScoreEntryData(int kill, int death, int assist, int score, int actorNumber)
+    int kill;
+    int death;
+    int score;
+    int actorNumber;
+    public int Kill { get => kill; }
+    public int Death { get => death; }
+    public int Score { get => score; }
+    public int ActorNumber { get => actorNumber; }
+    public PlayerScoreEntryData(int kill, int death, int score, int actorNumber)
     {
-        Kill = kill;
-        Death = death;
-        Assist = assist;
-        Score = score;
-        ActorNumber = actorNumber;
+        this.kill = kill;
+        this.death = death;
+        this.score = score;
+        this.actorNumber = actorNumber;
     }
-    public void SetKill(int kill) => Kill = kill;
-    public void SetDeath(int death) => Death = death;
-    public void SetAssist(int assist) => Assist = assist;
-    public void SetScore(int score) => Score = score;
+    public void SetKill(int kill) => this.kill = kill;
+    public void SetDeath(int death) => this.death = death;
+    public void SetScore(int score) => this.score = score;
+    public static Hashtable ToHashtable(Dictionary<int, PlayerScoreEntryData> dict)
+    {
+        Hashtable hashtable = new Hashtable();
+
+        foreach (var kvp in dict)
+        {
+            Hashtable entryData = new Hashtable {
+            { "kill", kvp.Value.Kill },
+            { "death", kvp.Value.Death },
+            { "score", kvp.Value.Score },
+            { "actorNumber", kvp.Value.ActorNumber }
+        };
+
+            hashtable[kvp.Key] = entryData; // key(int) - value(Hashtable) 형태로 저장
+        }
+
+        return hashtable;
+    }
+    public static Dictionary<int, PlayerScoreEntryData> FromHashtable(Hashtable hashtable)
+    {
+        Dictionary<int, PlayerScoreEntryData> dict = new Dictionary<int, PlayerScoreEntryData>();
+
+        foreach (DictionaryEntry entry in hashtable)
+        {
+            int key = (int)entry.Key; // Key를 int로 변환
+            Hashtable data = (Hashtable)entry.Value; // Value를 Hashtable로 변환
+
+            PlayerScoreEntryData playerData = new PlayerScoreEntryData(
+                (int)data["kill"],
+                (int)data["death"],
+                (int)data["score"],
+                (int)data["actorNumber"]
+            );
+
+            dict[key] = playerData;
+        }
+
+        return dict;
+    }
 }

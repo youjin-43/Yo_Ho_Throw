@@ -163,9 +163,15 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     void UpdatePlayerScoreEntry(EventData photonEvent, RaiseEventCode raiseEventCode)
     {
+        Debug.Log($"CustomData Type: {photonEvent.CustomData.GetType()}");
+
+        Debug.Log("이벤트 종류 : " + raiseEventCode.ToString());
+
+        int[] data = (int[])photonEvent.CustomData;
+
         // 수정할 대상의 ActorNumber와 변경 값 가져오기
-        int actorNumber = ((int[])photonEvent.CustomData)[0];
-        int value = ((int[])photonEvent.CustomData)[1];
+        int actorNumber = data[0];
+        int value = data[1];
 
         switch (raiseEventCode)
         {
@@ -199,7 +205,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     public void SetLimitTimeText(int seconds)
     {
-        limitTimeText.text = string.Format("{0}:{1:00}", seconds % 60, seconds);
+        limitTimeText.text = $"{(seconds / 60).ToString()} : {(seconds % 60).ToString("00")}";
     }
     PlayerScoreEntry InstantiatePlayerScoreEntry(Player player)
     {
@@ -211,14 +217,16 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     public void SetRespawnTimer(int timer)
     {
-        if (timer == 0)
+        if (timer > 0)
         {
-            respawnRemainingText.text = string.Empty;
-
-            return;
+            Debug.Log("Timer > 0");
+            respawnRemainingText.text = timer.ToString();
         }
-
-        respawnRemainingText.text = timer.ToString();
+        else
+        {
+            Debug.Log("Else");
+            respawnRemainingText.text = string.Empty;
+        }
     }
     public void SetComboKill(int combo)
     {
