@@ -11,7 +11,7 @@ public class KillLogPanelController : MonoBehaviour
 
     [SerializeField] float padding = 30f;
 
-    Queue<KillLogPanel> queue;
+    Queue<KillLogPanel> queue = new Queue<KillLogPanel>();
 
     KillLogPanel back = null;
 
