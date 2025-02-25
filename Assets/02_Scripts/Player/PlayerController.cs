@@ -3,8 +3,9 @@ using StarterAssets;
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Android;
 
-public class PlayerManager : PlayerStatController
+public class PlayerController : ThirdPersonController
 {
     private StarterAssetsInputs input;
     public GameObject bulletPrefab; // 투사체 프리펩
@@ -22,6 +23,7 @@ public class PlayerManager : PlayerStatController
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        base.Start();
         input = GetComponent<StarterAssetsInputs>();
         anim = GetComponent<Animator>();
         //anim.applyRootMotion = false;
@@ -30,6 +32,7 @@ public class PlayerManager : PlayerStatController
     // Update is called once per frame
     void Update()
     {
+        base.Update();
         LookSameCameraDirection();
 
         //줌 할때의 카메라를 활성화 시킴
@@ -44,9 +47,18 @@ public class PlayerManager : PlayerStatController
         //F키가 투척
         if (Input.GetKeyDown(KeyCode.F))
         {
-            anim.SetBool("Shoot", true);
-            StartCoroutine(EndShootCoroutine());
+            anim.SetTrigger("Shoot");
+            
         }
+        if (Input.GetKeyDown(KeyCode.LeftShift)) 
+        {
+            anim.SetTrigger("Dash");
+        }
+
+    }
+    public void FixedUpdate()
+    {
+        base.FixedUpdate();
     }
     /// <summary>
     /// 투사체를 생성하여 던지는 함수 
@@ -54,7 +66,8 @@ public class PlayerManager : PlayerStatController
     /// </summary>
     void ThrowProjectile()
     {
-        
+        StartCoroutine(StartAnimationCoroutine("Shoot", 0.24f));
+
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
            
@@ -81,12 +94,29 @@ public class PlayerManager : PlayerStatController
         }
     }
 
-    
-    IEnumerator EndShootCoroutine()
+    /// <summary>
+    /// 트리거이름과 애니메이션 길이를 넣어 재생. 다른 레이어의 가중치를 없애고 싶을때 3,4번째 
+    /// </summary>
+    /// <param name="animName"></param> 
+    /// <param name="frame"></param>
+    /// <param name="layerWeight"></param>
+    /// <param name="targetLayer"></param>
+    /// <returns></returns>
+    IEnumerator StartAnimationCoroutine(string animName , float frame , int layerIndex = 0 , float layerWeight = 1 )
+    {   
+        anim.SetTrigger(animName);  
+        anim.SetLayerWeight(layerIndex, layerWeight);
+        yield return new WaitForSeconds(frame);
+        anim.SetTrigger(animName);
+        LayerReset();
+
+
+    }
+
+    public void LayerReset()
     {
-        yield return new WaitForSeconds(0.24f);
-        anim.SetBool("Shoot", false);
-        
+        anim.SetLayerWeight(1, 1);
+        anim.SetLayerWeight(0, 1);
     }
     /// <summary>
     /// 캐릭터가 카메라가 바라보는 곳을 레이케스트 힛 된 곳으로 바꾸는 함수
@@ -117,4 +147,10 @@ public class PlayerManager : PlayerStatController
        
         transform.forward = Vector3.Lerp(transform.forward, aimDir, Time.deltaTime * 30f);
     }
+
+    public void Dash()
+    {
+        StartCoroutine(StartAnimationCoroutine("Dash", 0.333f , 1, 0f));
+        
+    } 
 }

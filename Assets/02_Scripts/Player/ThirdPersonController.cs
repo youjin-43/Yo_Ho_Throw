@@ -14,7 +14,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
     [RequireComponent(typeof(PlayerInput))]
 #endif
-    public class ThirdPersonController : MonoBehaviour
+    public class ThirdPersonController : PlayerStatController
     {
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -136,7 +136,7 @@ namespace StarterAssets
             }
         }
 
-        private void Start()
+        public void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
@@ -158,7 +158,7 @@ namespace StarterAssets
 
         }
 
-        private void Update()
+        public void Update()
         {
             _hasAnimator = TryGetComponent(out _animator);
 
@@ -167,7 +167,7 @@ namespace StarterAssets
             Move();
         }
 
-        private void FixedUpdate()
+        public void FixedUpdate()
         {
             CameraRotation();
         }

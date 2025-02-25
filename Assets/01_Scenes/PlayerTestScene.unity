@@ -248,6 +248,14 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 766fe3fa232071d4981d8f499b7158f7, type: 2}
+    - target: {fileID: 4948272203632139213, guid: 786e1af1b4d550740aacfd0d8558e33e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.0000009077691
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948272203632139213, guid: 786e1af1b4d550740aacfd0d8558e33e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.013120901
+      objectReference: {fileID: 0}
     - target: {fileID: 7322395446200142770, guid: 786e1af1b4d550740aacfd0d8558e33e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -295,6 +303,14 @@ PrefabInstance:
     - target: {fileID: 7986447226635473160, guid: 786e1af1b4d550740aacfd0d8558e33e, type: 3}
       propertyPath: m_TagString
       value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 8995932417404109841, guid: 786e1af1b4d550740aacfd0d8558e33e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.00000090664105
+      objectReference: {fileID: 0}
+    - target: {fileID: 8995932417404109841, guid: 786e1af1b4d550740aacfd0d8558e33e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.013120901
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3076826465755003458, guid: 786e1af1b4d550740aacfd0d8558e33e, type: 3}
@@ -1371,10 +1387,9 @@ GameObject:
   - component: {fileID: 1342552457263789046}
   - component: {fileID: 3319130334009749382}
   - component: {fileID: 8332810551219613517}
-  - component: {fileID: 8332810551219613518}
   - component: {fileID: 8332810551219613516}
   m_Layer: 8
-  m_Name: PlayerArmature
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1438,7 +1453,7 @@ Animator:
   m_GameObject: {fileID: 3319130334009749386}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 674246fbec675934d8f420259dccabd2, type: 3}
-  m_Controller: {fileID: 9100000, guid: 40db3173a05ae3242b1c182a09b0a183, type: 2}
+  m_Controller: {fileID: 9100000, guid: d2c5f01c6512c5f418943751225acb78, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1462,8 +1477,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d608b487600b49448b669005b18d140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHp: 0
-  playerMaxHp: 0
+  playerHp: 3
+  playerMaxHp: 3
+  MoveSpeed: 2
+  SprintSpeed: 5.335
+  RotationSmoothTime: 0.12
+  SpeedChangeRate: 10
+  LandingAudioClip: {fileID: 0}
+  FootstepAudioClips: []
+  FootstepAudioVolume: 0.5
+  JumpHeight: 1.2
+  Gravity: -15
+  JumpTimeout: 0.5
+  FallTimeout: 0.15
+  Grounded: 1
+  GroundedOffset: -0.14
+  GroundedRadius: 0.28
+  GroundLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  CinemachineCameraTarget: {fileID: 6987880462478350033}
+  TopClamp: 30
+  BottomClamp: -30
+  CameraAngleOverride: 0
+  LockCameraPosition: 0
   bulletPrefab: {fileID: 8430071279321725386, guid: 7ed4621ce93ddae43adba43f8795ebea, type: 3}
   bulletSpawnPoint: {fileID: 1980790552}
   bulletSpeed: 50
@@ -1493,51 +1530,17 @@ MonoBehaviour:
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
---- !u!114 &8332810551219613518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3319130334009749386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a33016639251784a877513fd51604fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MoveSpeed: 2
-  SprintSpeed: 5.335
-  RotationSmoothTime: 0.12
-  SpeedChangeRate: 10
-  LandingAudioClip: {fileID: 0}
-  FootstepAudioClips: []
-  FootstepAudioVolume: 0.5
-  JumpHeight: 1.2
-  Gravity: -15
-  JumpTimeout: 0.5
-  FallTimeout: 0.15
-  Grounded: 1
-  GroundedOffset: -0.14
-  GroundedRadius: 0.28
-  GroundLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  CinemachineCameraTarget: {fileID: 6987880462478350033}
-  TopClamp: 30
-  BottomClamp: -30
-  CameraAngleOverride: 0
-  LockCameraPosition: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 287784817}
   - {fileID: 1200791011}
   - {fileID: 1410314801}
   - {fileID: 1816730038}
+  - {fileID: 988889962}
+  - {fileID: 287784817}
   - {fileID: 2080816152}
   - {fileID: 1547344935604161426}
   - {fileID: 1939066321}
-  - {fileID: 988889962}
   - {fileID: 2685337079192204592}
   - {fileID: 703594436}
