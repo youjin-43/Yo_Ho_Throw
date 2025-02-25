@@ -5,10 +5,9 @@ using UnityEngine.UI;
 
 public class UI_Minimap : MonoBehaviour
 {
-    [SerializeField] Transform PlayerTransform;
-    [SerializeField] Camera    MinimapCamera;
-
+    private Transform _playerTransform;
     private Transform _minimapFrame;
+    private Camera    _minimapCamera;
 
     // 원래 부모, 인디케이터
     ValueTuple<Transform, Transform> _playerIndicator;
@@ -19,7 +18,14 @@ public class UI_Minimap : MonoBehaviour
     void Awake()
     {
         _minimapFrame = transform.GetChild(0);
-        _playerAngle  = MinimapCamera.transform.GetChild(1);
+    }
+
+    void Start()
+    {
+        _playerTransform = InGameUIManager.Instance.PlayerTransform;
+        _minimapCamera   = InGameUIManager.Instance.MinimapCamera;
+
+        _playerAngle = _minimapCamera.transform.GetChild(1);
     }
 
     void Update()
@@ -29,10 +35,10 @@ public class UI_Minimap : MonoBehaviour
 
     void LateUpdate()
     {
-        MinimapCamera.transform.position = new Vector3(PlayerTransform.position.x, 100f, PlayerTransform.position.z);
+        _minimapCamera.transform.position = new Vector3(_playerTransform.position.x, 100f, _playerTransform.position.z);
         //MinimapCamera.transform.rotation = Quaternion.Euler(90f, PlayerTransform.localEulerAngles.y, 0f);
-        _minimapFrame.rotation = Quaternion.Euler(0f, 0f, -PlayerTransform.localEulerAngles.y);
-        _playerAngle.localRotation = Quaternion.Euler(0f, 0f, -PlayerTransform.localEulerAngles.y);
+        _minimapFrame.rotation     = Quaternion.Euler(0f, 0f, -_playerTransform.localEulerAngles.y);
+        _playerAngle.localRotation = Quaternion.Euler(0f, 0f, -_playerTransform.localEulerAngles.y);
     }
 
     public void ResetUI()
@@ -52,8 +58,6 @@ public class UI_Minimap : MonoBehaviour
         }
     }
 
-    public float angle = 0.5f;
-
     private void AdjustIndicator()
     {
         if(_playerIndicator.Item1 == null)
@@ -61,24 +65,17 @@ public class UI_Minimap : MonoBehaviour
             return;
         }
 
-
-
-
         foreach(var indicator in _otherIndicator)
         {
             // Look
             Vector3 look = (indicator.Item1.position - _playerIndicator.Item1.position).normalized;
 
-            Vector3 playerLook = PlayerTransform.transform.forward.normalized;
+            Vector3 playerLook = _playerTransform.transform.forward.normalized;
 
             if (Vector3.Distance(_playerIndicator.Item1.position, indicator.Item1.position) >= 9.9f)
             {
-
                 // Adjust
                 indicator.Item2.position = _playerIndicator.Item2.position + (look * 9.9f);
-
-                
-
             }
             else
             {
