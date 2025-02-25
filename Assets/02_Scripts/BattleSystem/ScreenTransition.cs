@@ -16,7 +16,7 @@ public class ScreenTransition : MonoBehaviour
         else
         {
             Destroy(gameObject);
-        }
+        }//
     }
     public static void FadeIn() => instance.alphaMaskController.SetTrigger("FadeIn");
     public static void FadeOut() => instance.alphaMaskController.SetTrigger("FadeOut");
