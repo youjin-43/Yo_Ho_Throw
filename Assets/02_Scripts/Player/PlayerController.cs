@@ -22,6 +22,7 @@ public class PlayerController : ThirdPersonController
     private Animator anim;
     private Vector3 targetPosition = Vector3.zero;
 
+   
     public bool lookCamera= true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -38,6 +39,7 @@ public class PlayerController : ThirdPersonController
     {
         
         base.Update();
+        
        // LookSameCameraDirection();
 
         //줌 할때의 카메라를 활성화 시킴
@@ -69,11 +71,11 @@ public class PlayerController : ThirdPersonController
 
     public void LateUpdate()
     {
-        if (lookCamera)
-        {
+        
+        
             LookSameCameraDirection();
 
-        }  
+        
     }
 
     /// <summary>
@@ -170,8 +172,11 @@ public class PlayerController : ThirdPersonController
         targetAim.y = transform.position.y;
         aimDir = (targetAim - transform.position).normalized;
 
-        
-        transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
+        if (lookCamera)
+        {
+            transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
+
+        }
     }
 
     public void Dash()
@@ -201,21 +206,25 @@ public class PlayerController : ThirdPersonController
 
     private IEnumerator DashMovement(Vector3 direction)
     {
-        float dashDistance = 3f;  
+        float dashDistance = 3f; 
         float dashTime = 0.2f;  
         float elapsedTime = 0f;
-        Vector3 startPosition = transform.position;
-        Vector3 targetPosition = startPosition + direction * dashDistance;
 
+        Vector3 velocity = direction * (dashDistance / dashTime);
+        
         while (elapsedTime < dashTime)
         {
-            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / dashTime);
+            _controller.Move(velocity * Time.deltaTime); 
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        transform.position = targetPosition; 
 
+        StartCoroutine(EnableLookCameraAfterDelay(0.2f));
+    }
+    IEnumerator EnableLookCameraAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         lookCamera = true; 
     }
-
+    
 }
