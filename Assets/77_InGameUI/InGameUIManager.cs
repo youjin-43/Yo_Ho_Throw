@@ -113,6 +113,14 @@ public class InGameUIManager : MonoBehaviour
     {
         Minimap.BindIndicator(pair, isPlayer);
     }
+    public static void ShowPlayerIcon(int targetActorNumber)
+    {
+        instance.Minimap.ShowPlayerIcon(targetActorNumber);
+    }
+    public static void HidePlayerIcon(int targetActorNumber)
+    {
+        instance.Minimap.HidePlayerIcon(targetActorNumber);
+    }
     #endregion
 
 

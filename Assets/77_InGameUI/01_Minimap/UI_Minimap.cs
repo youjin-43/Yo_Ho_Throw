@@ -9,6 +9,8 @@ public class UI_Minimap : MonoBehaviour
     private Transform _minimapFrame;
     private Camera    _minimapCamera;
 
+    Dictionary<int, Transform> playerIndicatorDict;
+
     // 원래 부모, 인디케이터
     ValueTuple<Transform, Transform> _playerIndicator;
     List<ValueTuple<Transform, Transform>> _otherIndicator = new List<(Transform, Transform)>();
@@ -58,6 +60,17 @@ public class UI_Minimap : MonoBehaviour
         }
     }
 
+    public void ShowPlayerIcon(int targetActorNumber)
+    {
+        // ActorNumber를 통해 Icon 오브젝트 활성화
+        playerIndicatorDict[targetActorNumber].gameObject.SetActive(true);
+    }
+    public void HidePlayerIcon(int targetActorNumber)
+    {
+        // ActorNumber를 통해 Icon 오브젝트 비활성화
+        playerIndicatorDict[targetActorNumber].gameObject.SetActive(true);
+    }
+
     private void AdjustIndicator()
     {
         if(_playerIndicator.Item1 == null)
@@ -92,4 +105,5 @@ public class UI_Minimap : MonoBehaviour
             }
         }
     }
+
 }
