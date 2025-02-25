@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class UI_ScorePanel : MonoBehaviour
 {
-    // int : player 키값
+    // int : player 키값(ActorNumber)
     Dictionary<int, PlayerScoreEntry> _playerScoreEntries = new Dictionary<int, PlayerScoreEntry>();
 
     public void ResetUI()
@@ -21,8 +21,12 @@ public class UI_ScorePanel : MonoBehaviour
         gameObject.SetActive(isVisible);
     }
 
-    public void CreateScorePanelList(int actorNumber, PlayerScoreEntry entry)
+    public void InitScorePanel(PlayerScoreEntry playerScoreEntryPrefab, int actorNumber, string nickName)
     {
-        //_playerScoreEntries[actorNumber] = ins
+        PlayerScoreEntry entry = Instantiate(playerScoreEntryPrefab, transform.GetChild(0));
+
+        entry.Init(nickName);
+
+        _playerScoreEntries[actorNumber] = entry;
     }
 }

@@ -18,7 +18,19 @@ public class UI_ScoreHUD : MonoBehaviour
 
     }
 
-    public void SetScoreHUDData(int order, string nickName, int rank, int score)
+    public void ToggleScorePanelUI()
+    {
+        gameObject.SetActive(!gameObject.activeSelf);
+    }
+
+    public void InitScoreHUD(int order, string nickName)
+    {
+        order = Mathf.Clamp(order, 0, 2);
+
+        _scoreEntries[order].Init(nickName);
+    }
+
+    public void UpdateScoreHUDData(int order, string nickName, int rank, int score)
     {
         _scoreEntries[order].SetNickName(nickName);
         _scoreEntries[order].SetRank    (rank);

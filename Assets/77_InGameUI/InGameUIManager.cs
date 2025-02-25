@@ -41,7 +41,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] public Camera    MinimapCamera;
 
     [Header("ScorePanel")]
-    [SerializeField] public PlayerScoreEntry PlayerScoreEntry;
+    [SerializeField] public PlayerScoreEntry playerScoreEntryPrefab;
     #endregion
 
     public UI_Minimap         Minimap         { get; private set; }
@@ -149,23 +149,31 @@ public class InGameUIManager : MonoBehaviour
 
     #region SCORE HUD
     /// <summary>
-    /// 점수 HUD를 초기화 하는곳에서 호출해 주세요
+    /// 점수 HUD 온오프 함수입니다
     /// </summary>
-    public void InitScoreHUD()
+    public void ToggleScoreHUD()
     {
-
+        ScoreHUD.ToggleScorePanelUI();
     }
 
     /// <summary>
-    /// 실시간 스코어보드 데이터를 갱신하는 곳에서 호출해 주세요
+    /// 점수 HUD를 초기화 하는곳에서 호출해 주세요
+    /// </summary>
+    public void InitScoreHUD(int order, string nickName)
+    {
+        ScoreHUD.InitScoreHUD(order, nickName);
+    }
+
+    /// <summary>
+    /// 점수 HUD 데이터를 갱신하는 곳에서 호출해 주세요
     /// </summary>
     /// <param name="order"></param>
     /// <param name="nickName"></param>
     /// <param name="rank"></param>
     /// <param name="score"></param>
-    public void SetScoreHUDData(int order, string nickName, int rank, int score)
+    public void UpdateScoreHUDData(int order, string nickName, int rank, int score)
     {
-        ScoreHUD.SetScoreHUDData(order, nickName, rank, score);
+        ScoreHUD.UpdateScoreHUDData(order, nickName, rank, score);
     }
     #endregion
 
@@ -183,13 +191,20 @@ public class InGameUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 플레이어의 수가 정해진 후 라운드 시작시에 호출해 주세요
+    /// 점수 패널을 초기화 하는곳에서 호출해 주세요
     /// </summary>
-    /// <param name="actorNumber">PhotonNetwork.CurrentRoom.Players.Keys</param>
-    public void CreateScorePanelList(int actorNumber)
+    /// <param name="actorNumber"></param>
+    /// <param name="nickName"></param>
+    public void InitScorePanel(int actorNumber, string nickName)
     {
-        ScorePanel.CreateScorePanelList(actorNumber, PlayerScoreEntry);
+        ScorePanel.InitScorePanel(playerScoreEntryPrefab, actorNumber, nickName);
     }
+
+    public void UpdateScorePanelData()
+    {
+
+    }
+
     #endregion
 
 
