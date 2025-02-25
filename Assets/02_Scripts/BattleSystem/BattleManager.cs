@@ -23,6 +23,9 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
     }
     private void Start()
     {
+        // TODO 찬규 : UI부분에서 추후 리셋을 구현하셨을 경우 호출
+        //InGameUIManager.Instance.ResetUI();
+
         BattleSetting();
     }
     public void BattleSetting()
