@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +11,7 @@ public class UI_Minimap : MonoBehaviour
 
     Dictionary<int, Transform> playerIndicatorDict;
 
-    // ¿ø·¡ ºÎ¸ğ, ÀÎµğÄÉÀÌÅÍ
+    // ì›ë˜ ë¶€ëª¨, ì¸ë””ì¼€ì´í„°
     ValueTuple<Transform, Transform> _playerIndicator;
     List<ValueTuple<Transform, Transform>> _otherIndicator = new List<(Transform, Transform)>();
 
@@ -62,12 +62,12 @@ public class UI_Minimap : MonoBehaviour
 
     public void ShowPlayerIcon(int targetActorNumber)
     {
-        // ActorNumber¸¦ ÅëÇØ Icon ¿ÀºêÁ§Æ® È°¼ºÈ­
+        // ActorNumberë¥¼ í†µí•´ Icon ì˜¤ë¸Œì íŠ¸ í™œì„±í™”
         playerIndicatorDict[targetActorNumber].gameObject.SetActive(true);
     }
     public void HidePlayerIcon(int targetActorNumber)
     {
-        // ActorNumber¸¦ ÅëÇØ Icon ¿ÀºêÁ§Æ® ºñÈ°¼ºÈ­
+        // ActorNumberë¥¼ í†µí•´ Icon ì˜¤ë¸Œì íŠ¸ ë¹„í™œì„±í™”
         playerIndicatorDict[targetActorNumber].gameObject.SetActive(true);
     }
 
