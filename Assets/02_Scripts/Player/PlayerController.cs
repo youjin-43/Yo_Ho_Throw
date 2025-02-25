@@ -5,6 +5,7 @@ using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Android;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerController : ThirdPersonController
 {
@@ -17,6 +18,8 @@ public class PlayerController : ThirdPersonController
     [Header("Aim")]
     [SerializeField]
     private CinemachineVirtualCamera aimCam;
+    
+    
     [SerializeField]
     private LayerMask targetLayer;
     private Animator anim;
@@ -40,7 +43,7 @@ public class PlayerController : ThirdPersonController
         
         base.Update();
         
-       // LookSameCameraDirection();
+        LookSameCameraDirection();
 
         //줌 할때의 카메라를 활성화 시킴
         if (input.aim)
@@ -60,6 +63,7 @@ public class PlayerController : ThirdPersonController
         if (Input.GetKeyDown(KeyCode.LeftShift)) 
         {
             anim.SetTrigger("Dash");
+            Dash();
         }
 
     }
@@ -71,11 +75,12 @@ public class PlayerController : ThirdPersonController
 
     public void LateUpdate()
     {
-        
-        
-            LookSameCameraDirection();
 
-        
+        if (lookCamera)
+        {
+           // LookSameCameraDirection();
+
+        }
     }
 
     /// <summary>
@@ -126,6 +131,8 @@ public class PlayerController : ThirdPersonController
         if(_lookCamera == false)
         {
             lookCamera = false;
+            
+            
         }
         anim.SetTrigger(_animName);  
         anim.SetLayerWeight(_layerIndex, _layerWeight);
@@ -133,6 +140,7 @@ public class PlayerController : ThirdPersonController
         anim.SetTrigger(_animName);
         LayerReset();
         lookCamera = true;
+       
 
     }
 
@@ -172,59 +180,45 @@ public class PlayerController : ThirdPersonController
         targetAim.y = transform.position.y;
         aimDir = (targetAim - transform.position).normalized;
 
-        if (lookCamera)
-        {
-            transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
+        
+        transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
 
-        }
+        
     }
 
     public void Dash()
     {
-        StartCoroutine(StartAnimationCoroutine("Dash", 0.333f, 1, 0f, false));
+        StartCoroutine(StartAnimationCoroutine("Dash", 0.4915f, 1,0.1f));
 
-        lookCamera = false; 
 
-        
-        Vector3 moveDirection = new Vector3(input.move.x, 0, input.move.y).normalized;
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
 
-        // 이동 입력이 없으면 플레이어가 바라보는 방향으로 대시
-        if (moveDirection.magnitude == 0)
-        {
-            moveDirection = transform.forward;
-        }
-        else
-        {
-            // 현재 플레이어가 바라보는 방향 기준으로 이동 방향 변환
-            moveDirection = transform.TransformDirection(moveDirection);
-        }
+        Vector3 dashDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+        dashDirection.Normalize();
 
-        moveDirection.y = 0; // 수직 이동 방지
-        transform.rotation = Quaternion.LookRotation(moveDirection);  // 대시 방향을 바라보게 설정
-        StartCoroutine(DashMovement(moveDirection)); // 대시 이동 실행
+        anim.SetFloat("HorizontalRaw", Mathf.Round(horizontalInput));
+        anim.SetFloat("VerticalRaw", Mathf.Round(verticalInput));
+        StartCoroutine(DashMovement(dashDirection));
     }
 
     private IEnumerator DashMovement(Vector3 direction)
     {
-        float dashDistance = 3f; 
-        float dashTime = 0.2f;  
+        float dashDistance = 3f;   // 대시 거리
+        float dashTime = 0.4915f;   // 대시 지속 시간
         float elapsedTime = 0f;
 
+        // 플레이어가 바라보는 방향으로 대시하는 속도 계산
         Vector3 velocity = direction * (dashDistance / dashTime);
-        
+
         while (elapsedTime < dashTime)
         {
-            _controller.Move(velocity * Time.deltaTime); 
+            _controller.Move(velocity * Time.deltaTime);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        StartCoroutine(EnableLookCameraAfterDelay(0.2f));
     }
-    IEnumerator EnableLookCameraAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        lookCamera = true; 
-    }
+    
     
 }

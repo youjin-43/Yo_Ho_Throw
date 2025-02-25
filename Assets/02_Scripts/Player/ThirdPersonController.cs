@@ -263,6 +263,7 @@ namespace StarterAssets
 
             Vector3 movementDirection = transform.forward * verticalInput + transform.right * horizontalInput;
             Vector3 finalMove = movementDirection * MoveSpeed;
+
             _controller.Move(finalMove * Time.deltaTime + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
             
             currentHorizontal = Mathf.Lerp(currentHorizontal, horizontalInput, Time.deltaTime / damping);
