@@ -30,6 +30,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         RoomName,
         PlayerCount,
+        GameMode,
         JoinButton,
         LockIcon
     }
@@ -45,8 +46,15 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     // 모드 선택
     public TMP_Dropdown modeDropdown; // 게임 모드 선택 드롭다운 (개인전/팀전)
-   
-    public TMP_Dropdown MaxPlayerCountDropdown_DeathMatch; 
+
+    //public TMP_Dropdown MaxPlayerCountDropdown_DeathMatch;
+    public TMP_Text MaxPlayerCount; // 인원 수
+    public Button decreaseButton;
+    public Button increaseButton;
+
+    private int currentPlayerCount = 2; // 기본 인원 수
+
+
     public TMP_Dropdown MaxPlayerCountDropdown_TeamMatch; 
     public TMP_Dropdown teamCountDropdown; // 팀 개수 선택 드롭다운
     public GameObject TeamCountArea; // 팀 개수 설정 UI 영역
@@ -86,6 +94,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         MaxPlayerCountDropdown_TeamMatch.onValueChanged.AddListener(UpdateMaxTeamCount);
 
         // 버튼
+        decreaseButton.onClick.AddListener(DecreasePlayerCount);
+        increaseButton.onClick.AddListener(IncreasePlayerCount);
         createRoomButton.onClick.AddListener(CreateRoom);
         createRoomCancelButton.onClick.AddListener(CreateRoomCancel);
         #endregion
@@ -99,6 +109,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     #region PlayerNameInput + RoomList
     void ConnectToPhoton()
     {
+        // 이름 입력란이 비었는지 화인 
+        if (string.IsNullOrEmpty(playerNameInput.text))
+        {
+            Debug.LogWarning("이름을 입력해야 합니다!");
+            return; // 연결 중단
+        }
+
         //지역 kr로 고정.이 부분이 없으면 자동으로 지역을 찾는데,다른 지역에 걸릴 경우 네트워크를 통해 만날 수 없다.
         PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "kr";
 
@@ -153,8 +170,21 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         foreach (RoomInfo room in roomList) // roomList 매개변수에는 현재 로비에 존재하는 모든 방 정보가 담겨 있음
         {
             GameObject roomItem = Instantiate(roomListItemPrefab, roomListContent);
-            roomItem.transform.GetChild((int)roomListItemPrefabChilds.RoomName).GetComponent<TMP_Text>().text = room.Name;
-            roomItem.transform.GetChild((int)roomListItemPrefabChilds.PlayerCount).GetComponent<TMP_Text>().text = $"{room.PlayerCount}/{room.MaxPlayers}";
+            roomItem.transform.GetChild((int)roomListItemPrefabChilds.RoomName).GetComponent<TMP_Text>().text = room.Name; // 룸 이름
+            roomItem.transform.GetChild((int)roomListItemPrefabChilds.PlayerCount).GetComponent<TMP_Text>().text = $"{room.PlayerCount}/{room.MaxPlayers}"; // 최대 플레이어 수 
+
+            // 모드 정보 표시 
+            if (room.CustomProperties.ContainsKey(RoomProperties.mode.ToString()))
+            {
+                string mode = (string)room.CustomProperties[RoomProperties.mode.ToString()];
+                Debug.Log($"방 목록 업데이트 - 모드: {mode}");
+                roomItem.transform.GetChild((int)roomListItemPrefabChilds.GameMode).GetComponent<TMP_Text>().text = mode;
+            }
+            else
+            {
+                Debug.LogWarning($"방 목록 업데이트 - 모드 정보 없음 (룸 이름: {room.Name})");
+            }
+
             roomItem.transform.GetChild((int)roomListItemPrefabChilds.JoinButton).GetComponent<Button>().onClick.AddListener(() => TryJoinRoom(room));
             if (room.CustomProperties.ContainsKey("password"))roomItem.transform.GetChild((int)roomListItemPrefabChilds.LockIcon).gameObject.SetActive(true);
         }
@@ -168,7 +198,31 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         roomPanel.SetActive(false);
         CreatNewRoomArea.SetActive(true);
+        UpdatePlayerCountDisplay(); // 초기 인원 수 표시
     }
+    private void DecreasePlayerCount()
+    {
+        if (currentPlayerCount > 2) // 최소 인원 수 제한
+        {
+            currentPlayerCount--;
+            UpdatePlayerCountDisplay();
+        }
+    }
+
+    private void IncreasePlayerCount()
+    {
+        if (currentPlayerCount < 8) // 최대 인원 수 제한
+        {
+            currentPlayerCount++;
+            UpdatePlayerCountDisplay();
+        }
+    }
+
+    private void UpdatePlayerCountDisplay()
+    {
+        MaxPlayerCount.text = currentPlayerCount.ToString();
+    }
+
 
     public void CreateRoom()
     {
@@ -190,20 +244,21 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         // 게임 모드 설정
         string selectedMode = modeDropdown.options[modeDropdown.value].text;
+        Debug.Log($"방 생성 - 모드: {selectedMode}");
         options.CustomRoomProperties.Add(RoomProperties.mode.ToString(), selectedMode);
 
         // 최대 인원 수 설정 
-        if (selectedMode == GameMode.TeamMatch.ToString())
+        options.MaxPlayers = (byte)currentPlayerCount;
+        /*if (selectedMode == GameMode.TeamMatch.ToString())
         {
-            options.MaxPlayers = MaxPlayerCountDropdown_TeamMatch.value + 2; // 최소 2명부터
-            // 팀 모드일 경우 팀 개수 설정
-            int selectedTeamCount = teamCountDropdown.value + 2; // 최소 2팀부터
+            options.MaxPlayers = int.Parse(MaxPlayerCountDropdown_TeamMatch.options[MaxPlayerCountDropdown_TeamMatch.value].text); // 최대 플레이어 설정 
+            int selectedTeamCount = int.Parse(teamCountDropdown.options[teamCountDropdown.value].text); // 팀 모드일 경우 팀 개수 설정
             options.CustomRoomProperties.Add(RoomProperties.teamCount.ToString(), selectedTeamCount);
         }
         else
         {
-            options.MaxPlayers = MaxPlayerCountDropdown_DeathMatch.value + 2; // 최소 2명부터
-        }
+            options.MaxPlayers = MaxPlayerCountDropdown_DeathMatch.value + 2; 
+        }*/
 
         // 로비에서 표시할 커스텀 속성 설정
         options.CustomRoomPropertiesForLobby = new string[] {
@@ -245,14 +300,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (selectedMode == GameMode.TeamMatch.ToString())
         {
             TeamCountArea.SetActive(true);
-            MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(false);
+            //MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(false);
             MaxPlayerCountDropdown_TeamMatch.gameObject.SetActive(true);
             UpdateMaxTeamCount(MaxPlayerCountDropdown_TeamMatch.value); // 팀 개수 업데이트
         }
         else
         {
             TeamCountArea.SetActive(false);
-            MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(true);
+            //MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(true);
             MaxPlayerCountDropdown_TeamMatch.gameObject.SetActive(false);
         }
     }

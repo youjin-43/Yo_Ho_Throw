@@ -16,6 +16,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
     [SerializeField] GameObject playerObject;
 
+    [SerializeField] float offsetY = 0.5f;
+
     GameObject currPlayer = null;
     PhotonView currPlayerPhotonView = null;
 
@@ -82,7 +84,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         position += Vector3.up;
 
         // 각자의 클라이언트에서 PhotonNetwork를 통한 Instantiate를 하기 때문에 별도의 RPC는 없어도 된다
-        currPlayer = PhotonNetwork.Instantiate(playerObject.name, position, rotation);
+        currPlayer = PhotonNetwork.Instantiate(playerObject.name, position + Vector3.up * offsetY, rotation);
 
         currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
 
@@ -91,9 +93,26 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     [PunRPC]
     public void RespawnPlayer()
     {
+        StartCoroutine(RespawnPlayerCoroutine());
+    }
+    IEnumerator RespawnPlayerCoroutine()
+    {
+        int remainSpawnTimer = 3;
+
+        while (remainSpawnTimer > 0)
+        {
+            BattleUIController.Instance.SetRespawnTimer(remainSpawnTimer);
+
+            yield return new WaitForSeconds(1.5f);
+
+            remainSpawnTimer--;
+        }
+
+        BattleUIController.Instance.SetRespawnTimer(remainSpawnTimer);
+
         Transform spawnPosition = GetRandomTransform();
 
-        currPlayer.transform.position = spawnPosition.position;
+        currPlayer.transform.position = spawnPosition.position + Vector3.up * offsetY;
         currPlayer.transform.rotation = spawnPosition.rotation;
 
         ActivatePlayer();

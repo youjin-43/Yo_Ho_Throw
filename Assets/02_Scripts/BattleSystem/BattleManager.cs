@@ -16,6 +16,7 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
 
     const int REVENGE_BONUS_REWARD = 1;
 
+    int comboKill = 0;
     private void Awake()
     {
         instance = this;
@@ -57,6 +58,19 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
     /// <param name="victimActorNumber"> 죽은 사람 </param>
     public static void RegisterKill(int killerActorNumber, int victimActorNumber)
     {
+        if (killerActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+        {
+            instance.comboKill++;
+
+            BattleUIController.Instance.SetComboKill(instance.comboKill);
+        }
+        else if (victimActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+        {
+            instance.comboKill = 0;
+
+            BattleUIController.Instance.SetComboKill(instance.comboKill);
+        }
+
         // 호스트가 아닌 경우 반환시킴
         if (!PhotonNetwork.IsMasterClient) return;
 

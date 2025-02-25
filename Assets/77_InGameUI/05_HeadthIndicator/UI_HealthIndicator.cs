@@ -13,6 +13,7 @@ public class UI_HealthIndicator : MonoBehaviour
     public void ResetUI()
     {
         _gaugeImage.fillAmount = 1f;
+        currentHealth = 3;
     }
 
     public void OnHealthChanged(int currentHealth)

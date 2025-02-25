@@ -24,6 +24,10 @@ public class UI_UITestScript : MonoBehaviour
         {
             Debug.Log("체력창 할당 완료");
         }
+        if (InGameUIManager.Instance.Menu != null)
+        {
+            Debug.Log("메뉴창 할당 완료");
+        }
     }
 
     void Update()
@@ -63,6 +67,10 @@ public class UI_UITestScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             InGameUIManager.Instance.StartTimer(180f);
+        }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            InGameUIManager.Instance.ToggleMenuUI();
         }
     }
 }

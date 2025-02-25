@@ -40,7 +40,10 @@ public class TestScript : MonoBehaviour
 
     void Update()
     {
-        Moving();
+        if(InGameUIManager.Instance.IsPopupUIOpen() == false)
+        {
+            Moving();
+        }
     }
 
     #region MOVING
