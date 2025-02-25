@@ -169,7 +169,7 @@ namespace StarterAssets
 
         public void FixedUpdate()
         {
-            CameraRotation();
+           CameraRotation();
         }
 
         private void AssignAnimationIDs()

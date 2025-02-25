@@ -2,6 +2,7 @@ using Photon.Pun.Demo.Asteroids;
 using StarterAssets;
 using System.Collections;
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Android;
 
@@ -20,6 +21,8 @@ public class PlayerController : ThirdPersonController
     private LayerMask targetLayer;
     private Animator anim;
     private Vector3 targetPosition = Vector3.zero;
+
+    public bool lookCamera= true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -29,11 +32,13 @@ public class PlayerController : ThirdPersonController
         //anim.applyRootMotion = false;
     }
 
+    
     // Update is called once per frame
     void Update()
     {
+        
         base.Update();
-        LookSameCameraDirection();
+       // LookSameCameraDirection();
 
         //줌 할때의 카메라를 활성화 시킴
         if (input.aim)
@@ -59,7 +64,18 @@ public class PlayerController : ThirdPersonController
     public void FixedUpdate()
     {
         base.FixedUpdate();
+        
     }
+
+    public void LateUpdate()
+    {
+        if (lookCamera)
+        {
+            LookSameCameraDirection();
+
+        }  
+    }
+
     /// <summary>
     /// 투사체를 생성하여 던지는 함수 
     /// 플레이어 애니메이션의 throw attack에서 호출됨
@@ -95,21 +111,26 @@ public class PlayerController : ThirdPersonController
     }
 
     /// <summary>
-    /// 트리거이름과 애니메이션 길이를 넣어 재생. 다른 레이어의 가중치를 없애고 싶을때 3,4번째 
+    /// 트리거이름과 애니메이션 길이를 넣어 재생. 다른 레이어의 가중치를 없애고 싶을때 3,4번째
+    /// 해당 애니메이션이 실행 될 때 카메라를 따라가지 않는다면 5번째 인자에 false
     /// </summary>
     /// <param name="animName"></param> 
     /// <param name="frame"></param>
     /// <param name="layerWeight"></param>
     /// <param name="targetLayer"></param>
     /// <returns></returns>
-    IEnumerator StartAnimationCoroutine(string animName , float frame , int layerIndex = 0 , float layerWeight = 1 )
+    IEnumerator StartAnimationCoroutine(string _animName , float _frame , int _layerIndex = 0 , float _layerWeight = 1 ,bool _lookCamera = true)
     {   
-        anim.SetTrigger(animName);  
-        anim.SetLayerWeight(layerIndex, layerWeight);
-        yield return new WaitForSeconds(frame);
-        anim.SetTrigger(animName);
+        if(_lookCamera == false)
+        {
+            lookCamera = false;
+        }
+        anim.SetTrigger(_animName);  
+        anim.SetLayerWeight(_layerIndex, _layerWeight);
+        yield return new WaitForSeconds(_frame);
+        anim.SetTrigger(_animName);
         LayerReset();
-
+        lookCamera = true;
 
     }
 
@@ -128,15 +149,20 @@ public class PlayerController : ThirdPersonController
 
         Vector3 targetAim;
         Vector3 aimDir = Vector3.zero;
+        Vector3 previousTargetPosition = targetPosition;
 
-        if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, Mathf.Infinity, targetLayer))
-        { 
-            targetPosition = hit.point;
+        if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, 100f, targetLayer))
+        {
+            if (Vector3.Distance(previousTargetPosition, hit.point) > 0.1f)
+            {
+                targetPosition = Vector3.Lerp(previousTargetPosition, hit.point, Time.deltaTime * 100f);
+            }
         }
         else
         {
-            //힛 안됐을 때 카메라앞 10미터를 바라봄
-            targetPosition = camTransform.position + camTransform.forward * 10f;
+            Vector3 newTargetPosition = camTransform.position + camTransform.forward * 100f;
+
+            targetPosition = Vector3.Lerp(previousTargetPosition, newTargetPosition, Time.deltaTime * 100f);
         }
 
         
@@ -144,13 +170,52 @@ public class PlayerController : ThirdPersonController
         targetAim.y = transform.position.y;
         aimDir = (targetAim - transform.position).normalized;
 
-       
-        transform.forward = Vector3.Lerp(transform.forward, aimDir, Time.deltaTime * 30f);
+        
+        transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
     }
 
     public void Dash()
     {
-        StartCoroutine(StartAnimationCoroutine("Dash", 0.333f , 1, 0f));
+        StartCoroutine(StartAnimationCoroutine("Dash", 0.333f, 1, 0f, false));
+
+        lookCamera = false; 
+
         
-    } 
+        Vector3 moveDirection = new Vector3(input.move.x, 0, input.move.y).normalized;
+
+        // 이동 입력이 없으면 플레이어가 바라보는 방향으로 대시
+        if (moveDirection.magnitude == 0)
+        {
+            moveDirection = transform.forward;
+        }
+        else
+        {
+            // 현재 플레이어가 바라보는 방향 기준으로 이동 방향 변환
+            moveDirection = transform.TransformDirection(moveDirection);
+        }
+
+        moveDirection.y = 0; // 수직 이동 방지
+        transform.rotation = Quaternion.LookRotation(moveDirection);  // 대시 방향을 바라보게 설정
+        StartCoroutine(DashMovement(moveDirection)); // 대시 이동 실행
+    }
+
+    private IEnumerator DashMovement(Vector3 direction)
+    {
+        float dashDistance = 3f;  
+        float dashTime = 0.2f;  
+        float elapsedTime = 0f;
+        Vector3 startPosition = transform.position;
+        Vector3 targetPosition = startPosition + direction * dashDistance;
+
+        while (elapsedTime < dashTime)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / dashTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = targetPosition; 
+
+        lookCamera = true; 
+    }
+
 }
