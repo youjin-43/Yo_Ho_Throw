@@ -88,6 +88,12 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
         currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
 
+        // 1번 방법 : 값 변경
+        InGameUIManager.Instance.PlayerTransform = currPlayer.transform;
+
+        // 2번 방법 : 함수 호출
+        // InGameUIManager.Instance.RegisterPlayerTransform(currPlayer.transform); 미구현이므로 주석처리
+
         ActivatePlayer();
     }
     [PunRPC]

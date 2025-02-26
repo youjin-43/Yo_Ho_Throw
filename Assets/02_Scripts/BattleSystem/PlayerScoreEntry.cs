@@ -11,9 +11,9 @@ public class PlayerScoreEntry : MonoBehaviour
     [SerializeField] TMP_Text scoreText;
 
     [SerializeField] Image iconImage;
-    public void Init(Player player)
+    public void Init(string nickName)
     {
-        nickNameText.text = player.NickName;
+        nickNameText.text = nickName;
 
         ResetPlayerScoreEntry();
     }
