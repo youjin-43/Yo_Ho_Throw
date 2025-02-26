@@ -48,6 +48,8 @@ MonoBehaviour:
   - RespawnPlayer
   - SetBountyTargetActorNumber
   - ThrowProjectile_RPC
+  - FadeIn
+  - FadeOut
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
