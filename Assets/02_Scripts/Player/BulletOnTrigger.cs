@@ -9,9 +9,9 @@ public class BulletOnTrigger : MonoBehaviour
         //TODO 팀 구분 해야함 
         if (other.CompareTag("Player"))
         {
-
-            PlayerController pc;
-            if (pc = other.GetComponent<PlayerController>()){
+            
+            PlayerManager pc;
+            if (pc = other.GetComponent<PlayerManager>()){
                 pc.OnDamaged(1);
 
             }

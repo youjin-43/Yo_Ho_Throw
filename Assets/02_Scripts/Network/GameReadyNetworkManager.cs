@@ -1,19 +1,11 @@
 using UnityEngine;
 using Photon.Pun; // Pun : 포톤 유니티 네트워크의 약자
 using Photon.Realtime; // 실시간 통신? 을 위해서
-using Unity.Cinemachine;
 
 public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
 {
     GameReadyUIManager gameReadyUIManager;
     [SerializeField] GameObject playerPrefab; // 인스펙터에서 할당
-
-    [SerializeField] Transform mainCamera;
-    [SerializeField] CinemachineVirtualCamera world_followCam;
-    [SerializeField] CinemachineVirtualCamera world_aimCam;
-
-    [SerializeField] GameObject player;
-    [SerializeField] Transform camaraRoot;
 
     // 마스터 클라이언트만 실행됨 
     void Start()
@@ -24,7 +16,7 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.InRoom)
         {
             // 네트워크를 통해 플레이어 생성 (모든 클라이언트에게 공유됨)
-            SpawnPlayer();
+            PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity); 
         }
     }
 
@@ -59,21 +51,7 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         //    Debug.Log($"SpawnPlayer - {PhotonNetwork.LocalPlayer.ActorNumber}");
         //}
 
-        player = PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
-        Debug.Log($"Spawned Player: {player}");
-
-        // 카메라에 루트 셋팅
-        camaraRoot = player.transform.GetChild(1);
-        world_followCam.Follow = camaraRoot;
-        world_aimCam.Follow = camaraRoot;
-
-        // 플레이어에 카메라 셋팅
-        player.GetComponent<PlayerController>().aimCam = world_aimCam;
-        player.GetComponent<PlayerController>().cameraTransform = mainCamera.transform;
-
-        
-       
-
+        PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
     }
 
     // 랜덤한 위치에서 스폰하도록 설정

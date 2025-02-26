@@ -14,7 +14,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
     [RequireComponent(typeof(PlayerInput))]
 #endif
-    public class ThirdPersonController : PlayerStatController
+    public class ThirdPersonController : MonoBehaviour
     {
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -104,7 +104,7 @@ namespace StarterAssets
         private PlayerInput _playerInput;
 #endif
         private Animator _animator;
-        public CharacterController _controller;
+        private CharacterController _controller;
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
 
@@ -136,7 +136,7 @@ namespace StarterAssets
             }
         }
 
-        public void Start()
+        private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
@@ -158,7 +158,7 @@ namespace StarterAssets
 
         }
 
-        public void Update()
+        private void Update()
         {
             _hasAnimator = TryGetComponent(out _animator);
 
@@ -167,9 +167,9 @@ namespace StarterAssets
             Move();
         }
 
-        public void FixedUpdate()
+        private void FixedUpdate()
         {
-           CameraRotation();
+            CameraRotation();
         }
 
         private void AssignAnimationIDs()
@@ -263,7 +263,6 @@ namespace StarterAssets
 
             Vector3 movementDirection = transform.forward * verticalInput + transform.right * horizontalInput;
             Vector3 finalMove = movementDirection * MoveSpeed;
-
             _controller.Move(finalMove * Time.deltaTime + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
             
             currentHorizontal = Mathf.Lerp(currentHorizontal, horizontalInput, Time.deltaTime / damping);
@@ -295,14 +294,25 @@ namespace StarterAssets
                     _animator.SetBool(_animIDFreeFall, false);
                 }
 
-                
+                // stop our velocity dropping infinitely when grounded
+                /*
+                if (_verticalVelocity < 0.0f)
+                {
+                    _verticalVelocity = -2f;
+                }
+                */
                 
                 if (_verticalVelocity < 0.0f)
                 {
                     _verticalVelocity = -2f;
                 }
                 _jumpTimeoutDelta = 0f;
-                
+                /*
+                if (Grounded && Mathf.Abs(_verticalVelocity) < 0.1f)
+                {
+                    _verticalVelocity = 0f; // ✅ 미세한 공중 상태 방지
+                }
+                */
                 // Jump
                 if (Input.GetAxis("Jump")>0 && _jumpTimeoutDelta <= 0.0f)
                 {

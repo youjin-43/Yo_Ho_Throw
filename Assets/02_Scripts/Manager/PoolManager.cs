@@ -2,9 +2,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using System.Collections.Generic;
 
-/// <summary>
-/// 프리펩이 생성될 때 프리펩 이름+Root 오브젝트에 해당 프리펩을 생성함
-/// </summary>
+//프리펩 마다 풀을 가져감
 class Pool
 {
     GameObject _prefab;
