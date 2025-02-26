@@ -112,12 +112,13 @@ public class InGameUIManager : MonoBehaviour
     /// <summary>
     /// 미니맵 아이콘 조절용 함수
     /// </summary>
-    /// <param name="indicator">원래 부모, 인디케이터 페어</param>
+    /// <param name="indicatorDesc"></param>
     /// <param name="isPlayer"></param>
-    public void BindIndicator(ValueTuple<Transform, Transform> pair, bool isPlayer = false)
+    public void BindIndicator(int actorNumber, MinimapIndicator minimapIndicatorDesc, bool isPlayer = false)
     {
-        Minimap.BindIndicator(pair, isPlayer);
+        Minimap.BindIndicator(actorNumber, minimapIndicatorDesc, isPlayer);
     }
+
     public static void ShowPlayerIcon(int targetActorNumber)
     {
         instance.Minimap.ShowPlayerIcon(targetActorNumber);
