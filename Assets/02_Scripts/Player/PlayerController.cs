@@ -1,3 +1,4 @@
+using Photon.Pun;
 using Photon.Pun.Demo.Asteroids;
 using StarterAssets;
 using System.Collections;
@@ -9,6 +10,8 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerController : ThirdPersonController
 {
+    PhotonView pv;
+
     private StarterAssetsInputs input;
     public GameObject bulletPrefab; // 투사체 프리펩
     public Transform bulletSpawnPoint; // 투사체 생성 위치
@@ -16,8 +19,7 @@ public class PlayerController : ThirdPersonController
     public float bulletArc = 5f; // 투사체가 포물선을 그릴 때 사용 하는 값
     public Transform cameraTransform;
     [Header("Aim")]
-    [SerializeField]
-    private CinemachineVirtualCamera aimCam;
+    public CinemachineVirtualCamera aimCam;
     
     
     [SerializeField]
@@ -37,6 +39,8 @@ public class PlayerController : ThirdPersonController
         anim = GetComponent<Animator>();
         maxBulletCount = 10;
         bulletCount = maxBulletCount;
+
+        pv = GetComponent<PhotonView>();
     }
 
     
@@ -57,6 +61,7 @@ public class PlayerController : ThirdPersonController
         {
             aimCam.gameObject.SetActive(false);
         }
+
         //F키가 투척
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -91,7 +96,8 @@ public class PlayerController : ThirdPersonController
     /// 투사체를 생성하여 던지는 함수 
     /// 플레이어 애니메이션의 throw attack에서 호출됨
     /// </summary>
-    void ThrowProjectile()
+    [PunRPC]
+    void ThrowProjectile_RPC()
     {
         if (bulletCount == 0)
             return;
@@ -122,6 +128,11 @@ public class PlayerController : ThirdPersonController
             }
             
         }
+    }
+
+    public void ThrowProjectile()
+    {
+        pv.RPC("ThrowProjectile_RPC", RpcTarget.All);
     }
 
     /// <summary>
