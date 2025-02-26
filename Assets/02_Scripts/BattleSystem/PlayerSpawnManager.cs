@@ -94,7 +94,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         // 2번 방법 : 함수 호출
         // InGameUIManager.Instance.RegisterPlayerTransform(currPlayer.transform); 미구현이므로 주석처리
 
-        BattleManager.SpawnCheck();
+        BattleSystem.SpawnCheck();
 
         ActivatePlayer();
     }
