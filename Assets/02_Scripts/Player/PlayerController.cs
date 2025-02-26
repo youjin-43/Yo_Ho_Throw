@@ -24,7 +24,9 @@ public class PlayerController : ThirdPersonController
     private LayerMask targetLayer;
     private Animator anim;
     private Vector3 targetPosition = Vector3.zero;
-
+    private int maxBulletCount;
+    [SerializeField]
+    private int bulletCount;
    
     public bool lookCamera= true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -33,7 +35,8 @@ public class PlayerController : ThirdPersonController
         base.Start();
         input = GetComponent<StarterAssetsInputs>();
         anim = GetComponent<Animator>();
-        //anim.applyRootMotion = false;
+        maxBulletCount = 10;
+        bulletCount = maxBulletCount;
     }
 
     
@@ -57,7 +60,8 @@ public class PlayerController : ThirdPersonController
         //F키가 투척
         if (Input.GetKeyDown(KeyCode.F))
         {
-            anim.SetTrigger("Shoot");
+            if(bulletCount != 0)
+                anim.SetTrigger("Shoot");
             
         }
         if (Input.GetKeyDown(KeyCode.LeftShift)) 
@@ -89,11 +93,14 @@ public class PlayerController : ThirdPersonController
     /// </summary>
     void ThrowProjectile()
     {
+        if (bulletCount == 0)
+            return;
+
         StartCoroutine(StartAnimationCoroutine("Shoot", 0.24f));
 
-        if (bulletPrefab != null && bulletSpawnPoint != null)
+        if (bulletPrefab != null && bulletSpawnPoint != null )
         {
-           
+            bulletCount -= 1;
             GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
             if(projectile == null)
             {
