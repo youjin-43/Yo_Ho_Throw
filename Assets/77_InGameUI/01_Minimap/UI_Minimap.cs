@@ -9,7 +9,7 @@ public class UI_Minimap : MonoBehaviour
     private Transform _minimapFrame;
     private Camera    _minimapCamera;
 
-    Dictionary<int, MinimapIndicator> playerIndicatorDict;
+    Dictionary<int, MinimapIndicator> playerIndicatorDict = new Dictionary<int, MinimapIndicator>();
 
     // 원래 부모, 인디케이터
     ValueTuple<Transform, Transform> _playerIndicator;
