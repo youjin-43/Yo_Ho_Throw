@@ -47,33 +47,38 @@ public class PlayerController : ThirdPersonController
     // Update is called once per frame
     void Update()
     {
-        
-        base.Update();
-        
-        LookSameCameraDirection();
+        if (pv.IsMine) {
 
-        //줌 할때의 카메라를 활성화 시킴
-        if (input.aim)
-        {
-            aimCam.gameObject.SetActive(true);
-        }
-        else
-        {
-            aimCam.gameObject.SetActive(false);
+            base.Update();
+
+            LookSameCameraDirection();
+
+            //줌 할때의 카메라를 활성화 시킴
+            if (input.aim)
+            {
+                aimCam.gameObject.SetActive(true);
+            }
+            else
+            {
+                aimCam.gameObject.SetActive(false);
+            }
+
+            //F키가 투척
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                if (bulletCount != 0)
+                    anim.SetTrigger("Shoot");
+
+            }
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                anim.SetTrigger("Dash");
+                Dash();
+            }
+
         }
 
-        //F키가 투척
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if(bulletCount != 0)
-                anim.SetTrigger("Shoot");
-            
-        }
-        if (Input.GetKeyDown(KeyCode.LeftShift)) 
-        {
-            anim.SetTrigger("Dash");
-            Dash();
-        }
+
 
     }
     public void FixedUpdate()
