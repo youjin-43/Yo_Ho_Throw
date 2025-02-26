@@ -83,8 +83,10 @@ public class PlayerController : ThirdPersonController
     }
     public void FixedUpdate()
     {
-        base.FixedUpdate();
-        
+        if (pv.IsMine)
+        {
+            base.FixedUpdate();
+        }
     }
 
     public void LateUpdate()
