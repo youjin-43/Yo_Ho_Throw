@@ -58,7 +58,9 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             if (victimActorNumber == bountyTargetActorNumber)
             {
-                bonusReward += 3;
+                bonusReward += 2;
+
+                InGameUIManager.HidePlayerIcon(victimActorNumber);
 
                 PlayerSpawnManager.Instance.ExecuteRPC(
                     RaiseEventCode.DeactivateBountyTarget.ToString(), bountyTargetActorNumber);

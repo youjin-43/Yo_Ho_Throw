@@ -8,9 +8,9 @@ public class RealtimePlayerScoreEntry : MonoBehaviour
     public TMP_Text scoreText;
     public TMP_Text rankText;
 
-    public void Init(Player player)
+    public void Init(string nickName)
     {
-        nickNameText.text = player.NickName;
+        nickNameText.text = nickName;
         scoreText.text = "0";
         rankText.text = "1";
     }

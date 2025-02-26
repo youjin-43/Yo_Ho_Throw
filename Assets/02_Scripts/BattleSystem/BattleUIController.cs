@@ -56,17 +56,41 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
         // 모든 플레이어의 ActorNumber를 가져온다
         foreach (int actorNumber in PhotonNetwork.CurrentRoom.Players.Keys)
         {
-            // 비어있는 UI에 PlayerScoreEntry를 추가하고 Dictionary로 actorNumber와 매칭한다
-            playerScoreEntries[actorNumber] = InstantiatePlayerScoreEntry(PhotonNetwork.CurrentRoom.Players[actorNumber]);
+            // 탭 누르면 나오는 스코어보드
+            {
+                // 1. 기존 로직
+                // 비어있는 UI에 PlayerScoreEntry를 추가하고 Dictionary로 actorNumber와 매칭한다
+                playerScoreEntries[actorNumber] = InstantiatePlayerScoreEntry(PhotonNetwork.CurrentRoom.Players[actorNumber]);
 
-            // 실시간 스코어 정보 오브젝트 초기화
-            if (i < 3) realtimeScoreEntry[i++].Init(PhotonNetwork.CurrentRoom.Players[actorNumber]);
+                // 2. InGameUI 연동
+                //InGameUIManager.Instance.InitScorePanel(actorNumber, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
+            }
+
+
+            // 우상단에 상시 표시되는 스코어보드
+            {
+                // 1. 기존 로직
+                // 실시간 스코어 정보 오브젝트 초기화
+                if (i < 3) realtimeScoreEntry[i++].Init(PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
+
+                // 2. InGameUI 연동
+                //if (i < 3)
+                //{
+                //    i++;
+
+                //    InGameUIManager.Instance.InitScoreHUD(i, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
+                //}
+
+            }
         }
 
         for (; i < 3; i++) // 최소 실시간 스코어 정보 오브젝트(3)보다 현재 인원이 적을 때
         {
             // 표시되고 있던 실시간 스코어 정보 오브젝트를 비활성화 한다
             realtimeScoreEntry[i].gameObject.SetActive(false);
+
+            // 2. InGameUI 연동
+            // InGameUIManager.Instance.ToggleScoreHUD();
         }
 
         //생성 테스트
@@ -130,13 +154,19 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         for (int i = 0; i < scoreList.Length; i++)
         {
-            realtimeScoreEntry[i].gameObject.SetActive(true);
+            // 1. 기존 로직
+            {
+                realtimeScoreEntry[i].gameObject.SetActive(true);
 
-            realtimeScoreEntry[i].SetNickName(PhotonNetwork.CurrentRoom.Players[scoreList[i][0]].NickName);
+                realtimeScoreEntry[i].SetNickName(PhotonNetwork.CurrentRoom.Players[scoreList[i][0]].NickName);
 
-            realtimeScoreEntry[i].SetRank(scoreList[i][1]);
+                realtimeScoreEntry[i].SetRank(scoreList[i][1]);
 
-            realtimeScoreEntry[i].SetScore(scoreList[i][2]);
+                realtimeScoreEntry[i].SetScore(scoreList[i][2]);
+            }
+
+            // 2. InGameUI 연동
+            // InGameUIManager.Instance.UpdateScoreHUDData(i, PhotonNetwork.CurrentRoom.Players[scoreList[i][0]].NickName, scoreList[i][1], scoreList[i][2]);
         }
     }
     void UpdateRank(EventData photonEvent)
@@ -211,7 +241,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     {
         PlayerScoreEntry entry = Instantiate(playerScoreEntryPrefab, scoreEntryParent);
 
-        entry.Init(player);
+        entry.Init(player.NickName);
 
         return entry;
     }

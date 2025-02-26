@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +9,9 @@ public class UI_Minimap : MonoBehaviour
     private Transform _minimapFrame;
     private Camera    _minimapCamera;
 
-    // ���� �θ�, �ε�������
+    Dictionary<int, MinimapIndicator> playerIndicatorDict = new Dictionary<int, MinimapIndicator>();
+
+    // 원래 부모, 인디케이터
     ValueTuple<Transform, Transform> _playerIndicator;
     List<ValueTuple<Transform, Transform>> _otherIndicator = new List<(Transform, Transform)>();
 
@@ -46,16 +48,35 @@ public class UI_Minimap : MonoBehaviour
 
     }
 
-    public void BindIndicator(ValueTuple<Transform, Transform> pair, bool isPlayer)
+    public void BindIndicator(int actorNumber, MinimapIndicator minimapIndicator, bool isPlayer)
     {
         if(isPlayer == true)
         {
-            _playerIndicator = pair;
+            _playerIndicator.Item1 = minimapIndicator.transform;
+            _playerIndicator.Item2 = minimapIndicator.indicator.transform;
+
+            playerIndicatorDict[actorNumber] = minimapIndicator;
         }
         else
         {
-            _otherIndicator.Add(pair);
+            ValueTuple<Transform, Transform> otherIndicator;
+            {
+                otherIndicator.Item1 = minimapIndicator.transform;
+                otherIndicator.Item2 = minimapIndicator.indicator.transform;
+            }
+            _otherIndicator.Add(otherIndicator);
         }
+    }
+
+    public void ShowPlayerIcon(int targetActorNumber)
+    {
+        // ActorNumber를 통해 Icon 오브젝트 활성화
+        playerIndicatorDict[targetActorNumber].gameObject.SetActive(true);
+    }
+    public void HidePlayerIcon(int targetActorNumber)
+    {
+        // ActorNumber를 통해 Icon 오브젝트 비활성화
+        playerIndicatorDict[targetActorNumber].gameObject.SetActive(false);
     }
 
     private void AdjustIndicator()
@@ -92,4 +113,5 @@ public class UI_Minimap : MonoBehaviour
             }
         }
     }
+
 }

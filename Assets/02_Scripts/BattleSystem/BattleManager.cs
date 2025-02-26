@@ -23,6 +23,9 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
     }
     private void Start()
     {
+        // TODO 찬규 : UI부분에서 추후 리셋을 구현하셨을 경우 호출
+        //InGameUIManager.Instance.ResetUI();
+
         BattleSetting();
     }
     public void BattleSetting()
@@ -58,6 +61,10 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
     /// <param name="victimActorNumber"> 죽은 사람 </param>
     public static void RegisterKill(int killerActorNumber, int victimActorNumber)
     {
+        KillLogPanelController.AddKillLog(
+            PhotonNetwork.CurrentRoom.Players[killerActorNumber].NickName,
+            PhotonNetwork.CurrentRoom.Players[victimActorNumber].NickName);
+
         if (killerActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
         {
             instance.comboKill++;
@@ -78,6 +85,8 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
         if (instance.revengeTargetDict[killerActorNumber] == victimActorNumber)
         {
             instance.revengeTargetDict[killerActorNumber] = -1;
+
+            InGameUIManager.HidePlayerIcon(victimActorNumber);
 
             ScoreManager.Instance.AddScore(killerActorNumber, victimActorNumber, REVENGE_BONUS_REWARD);
         }
