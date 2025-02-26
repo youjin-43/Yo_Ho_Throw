@@ -76,6 +76,10 @@ public class UI_UITestScript : MonoBehaviour
         {
             InGameUIManager.Instance.StartTimer(180f);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            InGameUIManager.Instance.ToggleMenuUI();
+        }
         if (Input.GetKey(KeyCode.Tab))
         {
             InGameUIManager.Instance.ShowScorePanelUI(true);
