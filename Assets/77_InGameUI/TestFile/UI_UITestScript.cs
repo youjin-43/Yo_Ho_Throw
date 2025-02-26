@@ -12,9 +12,13 @@ public class UI_UITestScript : MonoBehaviour
         {
             Debug.Log("타이머 할당 완료");
         }
-        if (InGameUIManager.Instance.GameStatus != null)
+        if (InGameUIManager.Instance.ScoreHUD != null)
         {
-            Debug.Log("게임상태 할당 완료");
+            Debug.Log("스코어 HUD 할당 완료");
+        }
+        if (InGameUIManager.Instance.ScorePanel != null)
+        {
+            Debug.Log("스코어 패널 할당 완료");
         }
         if (InGameUIManager.Instance.SkillIndicator != null)
         {
@@ -27,6 +31,10 @@ public class UI_UITestScript : MonoBehaviour
         if (InGameUIManager.Instance.Menu != null)
         {
             Debug.Log("메뉴창 할당 완료");
+        }
+        if (InGameUIManager.Instance.Setting != null)
+        {
+            Debug.Log("설정창 할당 완료");
         }
     }
 
@@ -68,9 +76,13 @@ public class UI_UITestScript : MonoBehaviour
         {
             InGameUIManager.Instance.StartTimer(180f);
         }
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKey(KeyCode.Tab))
         {
-            InGameUIManager.Instance.ToggleMenuUI();
+            InGameUIManager.Instance.ShowScorePanelUI(true);
+        }
+        else
+        {
+            InGameUIManager.Instance.ShowScorePanelUI(false);
         }
     }
 }

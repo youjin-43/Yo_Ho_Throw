@@ -39,11 +39,15 @@ public class InGameUIManager : MonoBehaviour
     [Header("Minimap")]
     [SerializeField] public Transform PlayerTransform;
     [SerializeField] public Camera    MinimapCamera;
+
+    [Header("ScorePanel")]
+    [SerializeField] public PlayerScoreEntry playerScoreEntryPrefab;
     #endregion
 
     public UI_Minimap         Minimap         { get; private set; }
     public UI_Timer           Timer           { get; private set; }
-    public UI_GameStatus      GameStatus      { get; private set; }
+    public UI_ScoreHUD        ScoreHUD        { get; private set; }
+    public UI_ScorePanel      ScorePanel      { get; private set; }
     public UI_SkillIndicator  SkillIndicator  { get; private set; }
     public UI_HealthIndicator HealthIndicator { get; private set; }
     public UI_Menu            Menu            { get; private set; }
@@ -56,11 +60,12 @@ public class InGameUIManager : MonoBehaviour
         // UI 할당
         Minimap         = transform.GetChild(0).GetComponent<UI_Minimap>();
         Timer           = transform.GetChild(1).GetComponent<UI_Timer>();
-        GameStatus      = transform.GetChild(2).GetComponent<UI_GameStatus>();
-        SkillIndicator  = transform.GetChild(3).GetComponent<UI_SkillIndicator>();
-        HealthIndicator = transform.GetChild(4).GetComponent<UI_HealthIndicator>();
-        Menu            = transform.GetChild(5).GetComponent<UI_Menu>();
-        Setting         = transform.GetChild(6).GetComponent<UI_Setting>();
+        ScoreHUD        = transform.GetChild(2).GetComponent<UI_ScoreHUD>();
+        ScorePanel      = transform.GetChild(3).GetComponent<UI_ScorePanel>();
+        SkillIndicator  = transform.GetChild(4).GetComponent<UI_SkillIndicator>();
+        HealthIndicator = transform.GetChild(5).GetComponent<UI_HealthIndicator>();
+        Menu            = transform.GetChild(6).GetComponent<UI_Menu>();
+        Setting         = transform.GetChild(7).GetComponent<UI_Setting>();
     }
 
 
@@ -75,7 +80,7 @@ public class InGameUIManager : MonoBehaviour
     {
         Minimap        .ResetUI();
         Timer          .ResetUI();
-        GameStatus     .ResetUI();
+        ScoreHUD       .ResetUI();
         SkillIndicator .ResetUI();
         HealthIndicator.ResetUI();
         Menu           .ResetUI();
@@ -142,7 +147,63 @@ public class InGameUIManager : MonoBehaviour
 
 
 
-    #region GAME STATUS
+    #region SCORE HUD
+    /// <summary>
+    /// 점수 HUD 온오프 함수입니다
+    /// </summary>
+    public void ToggleScoreHUD()
+    {
+        ScoreHUD.ToggleScorePanelUI();
+    }
+
+    /// <summary>
+    /// 점수 HUD를 초기화 하는곳에서 호출해 주세요
+    /// </summary>
+    public void InitScoreHUD(int order, string nickName)
+    {
+        ScoreHUD.InitScoreHUD(order, nickName);
+    }
+
+    /// <summary>
+    /// 점수 HUD 데이터를 갱신하는 곳에서 호출해 주세요
+    /// </summary>
+    /// <param name="order"></param>
+    /// <param name="nickName"></param>
+    /// <param name="rank"></param>
+    /// <param name="score"></param>
+    public void UpdateScoreHUDData(int order, string nickName, int rank, int score)
+    {
+        ScoreHUD.UpdateScoreHUDData(order, nickName, rank, score);
+    }
+    #endregion
+
+
+
+
+
+    #region SCORE PANEL
+    /// <summary>
+    /// 점수 패널 UI 온오프 함수입니다
+    /// </summary>
+    public void ShowScorePanelUI(bool isVisible)
+    {
+        ScorePanel.ShowScorePanelUI(isVisible);
+    }
+
+    /// <summary>
+    /// 점수 패널을 초기화 하는곳에서 호출해 주세요
+    /// </summary>
+    /// <param name="actorNumber"></param>
+    /// <param name="nickName"></param>
+    public void InitScorePanel(int actorNumber, string nickName)
+    {
+        ScorePanel.InitScorePanel(playerScoreEntryPrefab, actorNumber, nickName);
+    }
+
+    public void UpdateScorePanelData()
+    {
+
+    }
 
     #endregion
 
@@ -169,6 +230,7 @@ public class InGameUIManager : MonoBehaviour
         SkillIndicator.AddDagger(count);
     }
     #endregion
+
 
 
 
