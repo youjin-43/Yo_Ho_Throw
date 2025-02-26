@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,7 +20,6 @@ public class MinimapIndicator : MonoBehaviour
         indicator.transform.SetParent(transform);
         indicator.transform.localPosition = Vector3.zero;
 
-
         indicator.AddComponent<SpriteRenderer>();
 
         if(Icon != null)
@@ -38,7 +38,14 @@ public class MinimapIndicator : MonoBehaviour
         // ValueTuple<Transform, Transform> pair = new ValueTuple<Transform, Transform>(transform, indicator.transform);
         // InGameUIManager.Instance.BindIndicator(pair, IsPlayer);
 
+        int actorNumber = 0;
+
+        if (IsPlayer == true)
+        {
+            actorNumber = GetComponent<PhotonView>().OwnerActorNr;
+        }
+
         // ÅëÂ°·Î ³Ñ±è
-        InGameUIManager.Instance.BindIndicator(1, this, IsPlayer);
+        InGameUIManager.Instance.BindIndicator(actorNumber, this, IsPlayer);
     }
 }
