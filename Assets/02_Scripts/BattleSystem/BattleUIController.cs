@@ -1,6 +1,7 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -40,6 +41,9 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
     [Header("연속 처치 텍스트")]
     [SerializeField] TMP_Text comboKillText;
+
+    [Header("전투 시작 텍스트")]
+    [SerializeField] TMP_Text battleStartText;
 
     Dictionary<int, PlayerScoreEntry> playerScoreEntries = new Dictionary<int, PlayerScoreEntry>();
 
@@ -260,7 +264,24 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     public void SetComboKill(int combo)
     {
-        comboKillText.text = combo == 0 ? string.Empty : combo.ToString() + " Combo";
+        comboKillText.text = combo > 1 ? combo.ToString() + " Combo" : string.Empty;
+    }
+    public void SetBattleStartText(int count)
+    {
+        switch (count)
+        {
+            case 2: battleStartText.text = "Ready"; break;
+
+            case 1: battleStartText.text = "Go"; break;
+
+            case 0: StartCoroutine(HideTextAfterTimeCoroutine(battleStartText, 1f)); break;
+        }
+    }
+    IEnumerator HideTextAfterTimeCoroutine(TMP_Text targetTextUI, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        targetTextUI.text = string.Empty;
     }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);

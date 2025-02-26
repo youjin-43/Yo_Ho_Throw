@@ -47,6 +47,8 @@ MonoBehaviour:
   - DeactivatePlayer
   - RespawnPlayer
   - SetBountyTargetActorNumber
+  - FadeIn
+  - FadeOut
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
