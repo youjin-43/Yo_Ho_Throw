@@ -1,32 +1,23 @@
-using Photon.Pun;
 using UnityEngine;
 
-[RequireComponent(typeof(PhotonView))]
-public class ScreenTransition : MonoBehaviourPun
+public class ScreenTransition : MonoBehaviour
 {
     static ScreenTransition instance = null;
 
     [SerializeField] Animator alphaMaskController;
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }//
     }
-    public static void FadeInRPC()
-    {
-        instance.photonView.RPC("FadeIn", RpcTarget.All);
-    }
-    public static void FadeOutRPC()
-    {
-        instance.photonView.RPC("FadeOut", RpcTarget.All);
-    }
-    [PunRPC]
-    public void FadeIn()
-    {
-        alphaMaskController.SetTrigger("FadeIn");
-    }
-    [PunRPC]
-    public void FadeOut()
-    {
-        alphaMaskController.SetTrigger("FadeOut");
-    }
+    public static void FadeIn() => instance.alphaMaskController.SetTrigger("FadeIn");
+    public static void FadeOut() => instance.alphaMaskController.SetTrigger("FadeOut");
 }

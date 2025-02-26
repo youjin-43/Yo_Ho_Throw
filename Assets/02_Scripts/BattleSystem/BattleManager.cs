@@ -17,9 +17,6 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
     const int REVENGE_BONUS_REWARD = 1;
 
     int comboKill = 0;
-
-    int spawnedPlayerCount = 0;
-
     private void Awake()
     {
         instance = this;
@@ -46,34 +43,8 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
     }
     IEnumerator BattleSettingCoroutine()
     {
-        Debug.Log("BattleSettingCoroutine Test AAA");
-        // 플레이어 스폰
+        // 플레이어 스폰 대기
         yield return PlayerSpawnManager.Instance.SpawnCoroutine();
-
-        Debug.Log("BattleSettingCoroutine Test BBB");
-        // 모든 플레이어가 스폰되어 준비가 될 때까지 대기
-        while (PhotonNetwork.CountOfPlayersInRooms != spawnedPlayerCount)
-        {
-            Debug.Log("PhotonNetwork.CountOfPlayers : " + PhotonNetwork.CountOfPlayers.ToString());
-            Debug.Log("PhotonNetwork.CountOfPlayersOnMaster : " + PhotonNetwork.CountOfPlayersOnMaster.ToString());
-            Debug.Log("PhotonNetwork.CountOfPlayersInRooms : " + PhotonNetwork.CountOfPlayersInRooms.ToString());
-
-            Debug.Log("spawnedPlayerCount : " + spawnedPlayerCount.ToString());
-
-            yield return new WaitForSeconds(1f);
-        }
-
-        Debug.Log("BattleSettingCoroutine Test CCC");
-
-        // 화면을 활성화 함
-        ScreenTransition.FadeOutRPC();
-
-        Debug.Log("BattleSettingCoroutine Test DDD");
-
-        // 1초 대기
-        yield return new WaitForSeconds(1f);
-
-        Debug.Log("BattleSettingCoroutine Test EEE");
 
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.BattleStart,
@@ -148,29 +119,12 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
     }
     IEnumerator BattleCoroutine()
     {
-        Debug.Log("BattleCoroutine Test AAA");
-
         int seconds = timeLimit;
-
-        int startDelay = 2;
 
         WaitForSeconds wait = new WaitForSeconds(1f);
 
         BattleUIController.Instance.SetLimitTimeText(seconds);
 
-
-        while (startDelay > 0)
-        {
-            BattleUIController.Instance.SetBattleStartText(startDelay--);
-            Debug.Log("BattleCoroutine Test BBB");
-
-            yield return wait;
-        }
-        Debug.Log("BattleCoroutine Test CCC");
-        BattleUIController.Instance.SetBattleStartText(startDelay);
-
-
-        Debug.Log("BattleCoroutine Test DDD");
         while (seconds > 0)
         {
             yield return wait;
@@ -180,7 +134,6 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
             CheckTime(seconds);
 
             BattleUIController.Instance.SetLimitTimeText(seconds);
-            Debug.Log("BattleCoroutine Test EEE");
         }
         EndGameByTimeout();
     }
@@ -215,14 +168,6 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
         //    new RaiseEventOptions { Receivers = ReceiverGroup.All },
         //    SendOptions.SendUnreliable);
     }
-    public static void SpawnCheck()
-    {
-        Debug.Log("before spawnedPlayerCount : " + instance.spawnedPlayerCount.ToString());
-
-        instance.spawnedPlayerCount++;
-
-        Debug.Log("after spawnedPlayerCount : " + instance.spawnedPlayerCount.ToString());
-    }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
 
@@ -235,3 +180,4 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
     //    base.OnPlayerLeftRoom(otherPlayer);
     //}
 }
+//

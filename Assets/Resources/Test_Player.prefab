@@ -47,7 +47,6 @@ GameObject:
   - component: {fileID: 9113425871341196840}
   - component: {fileID: 9062965229019528443}
   - component: {fileID: 8612001811832609621}
-  - component: {fileID: 5562596085410037769}
   m_Layer: 0
   m_Name: Test_Player
   m_TagString: Player
@@ -226,19 +225,3 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8426293921125628142, guid: 3bfaec0b5616fe442a5ab29186f9516f, type: 3}
   firePosition: {fileID: 5557301292359972583}
   speed: 5
---- !u!114 &5562596085410037769
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5897515838875935530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ff7127a590623449b93b8b26e033cf8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsPlayer: 1
-  Icon: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  Color: {r: 0, g: 1, b: 0, a: 1}
-  indicator: {fileID: 0}
