@@ -2,10 +2,18 @@ using UnityEngine;
 
 public class MeleeAttackOnTrigger : MonoBehaviour
 {
+    private void Awake()
+    {
+        Rigidbody rb1 = GetComponent<Rigidbody>();
+        rb1.isKinematic = true; // 물리 영향 X
+        rb1.detectCollisions = true; // 충돌 감지 활성화
+    }
     private void OnTriggerEnter(Collider other)
     {
+
         if (other.CompareTag("Bullet"))
         {
+            Debug.Log("패링 성공");
             Rigidbody rb = other.GetComponent<Rigidbody>();
 
             if (rb != null)

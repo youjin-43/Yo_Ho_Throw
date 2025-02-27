@@ -1,5 +1,6 @@
 using Photon.Pun;
 using Photon.Pun.Demo.Asteroids;
+using Photon.Pun.Demo.Cockpit;
 using StarterAssets;
 using System.Collections;
 using Unity.Cinemachine;
@@ -11,6 +12,9 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 public class PlayerController : ThirdPersonController
 {
     PhotonView pv;
+    [Header("Online")]
+    public bool online = true;
+
     [Header("Bullet")]
     private StarterAssetsInputs input;
     public GameObject bulletPrefab; // 투사체 프리펩
@@ -51,8 +55,12 @@ public class PlayerController : ThirdPersonController
     // Update is called once per frame
     void Update()
     {   //커밋전삭제
-        if (!pv.IsMine) 
-            return;
+
+        if (online)
+        {
+            if (!pv.IsMine) 
+              return;
+        }
 
         base.Update();
 
@@ -92,9 +100,11 @@ public class PlayerController : ThirdPersonController
     }
     public void FixedUpdate()
     {
-        //커밋전삭제
-        if (!pv.IsMine)
-            return;
+        if (online)
+        {
+            if (!pv.IsMine)
+                return;
+        }
 
         base.FixedUpdate();
         
@@ -142,8 +152,15 @@ public class PlayerController : ThirdPersonController
 
     public void ThrowProjectile()
     {   //커밋전삭제
-        pv.RPC("ThrowProjectile_RPC", RpcTarget.All);
-        //ThrowProjectile_RPC();
+        if (online)
+        {
+            pv.RPC("ThrowProjectile_RPC", RpcTarget.All);
+        }
+        else
+        {
+            ThrowProjectile_RPC();
+
+        }
     }
 
     /// <summary>
@@ -274,7 +291,7 @@ public class PlayerController : ThirdPersonController
     }
     public void EnableMeleeAttackCollider()
     {
-        Debug.Log("EnableMeleeAttackCollider");
+        
         StartCoroutine(EnableCollider(meleeAttackColliderObject, 0.4f));
     }
 
