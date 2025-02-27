@@ -160,9 +160,6 @@ public class PlayerController : ThirdPersonController
         yield return new WaitForSeconds(_frame);
         anim.SetTrigger(_animName);
         LayerReset();
-        
-       
-
     }
 
     public void LayerReset()
@@ -209,7 +206,7 @@ public class PlayerController : ThirdPersonController
 
     public void Dash()
     {
-        StartCoroutine(StartAnimationCoroutine("Dash", 0.4915f, 1,0.1f));
+        StartCoroutine(StartAnimationCoroutine("Dash", 0.467f, 1,0.1f));
 
 
         float horizontalInput = Input.GetAxisRaw("Horizontal");
