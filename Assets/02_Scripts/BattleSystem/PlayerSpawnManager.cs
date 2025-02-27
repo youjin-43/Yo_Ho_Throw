@@ -38,7 +38,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         }*/
 
         List<Transform> spawnPositions =
-            this.spawnPositions[PhotonNetwork.CurrentRoom.PlayerCount-1].GetRandomTransforms();
+            this.spawnPositions[PhotonNetwork.CurrentRoom.PlayerCount - 1].GetRandomTransforms();
 
         foreach (int actorNumber in PhotonNetwork.CurrentRoom.Players.Keys)
         {
@@ -52,7 +52,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
                 PhotonNetwork.RaiseEvent(
                     (byte)RaiseEventCode.SpawnPlayer,
                     new object[] { spawnPosition.position, spawnPosition.rotation },
-                    new RaiseEventOptions { TargetActors = new int[]{ actorNumber } },
+                    new RaiseEventOptions { TargetActors = new int[] { actorNumber } },
                     SendOptions.SendReliable);
             }
 
@@ -94,6 +94,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         // 2번 방법 : 함수 호출
         // InGameUIManager.Instance.RegisterPlayerTransform(currPlayer.transform); 미구현이므로 주석처리
 
+        BattleManager.SpawnCheck();
+
         ActivatePlayer();
     }
     [PunRPC]
@@ -133,7 +135,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     public void DeactivatePlayer()
     {
         // TODO 찬규 : 플레이어 동작 비활성화 (currPlayerPhotonView.RPC를 통해 수행해야할듯)
-        
+
     }
     public void ExecuteRPC(string functionName, int actorNumber)
     {
