@@ -88,11 +88,10 @@ public class UI_Minimap : MonoBehaviour
 
         foreach(var indicator in _otherIndicator)
         {
-            // Look
+            // 물체를 바라보는 Look
             Vector3 look = (indicator.Item1.position - _playerIndicator.Item1.position).normalized;
 
-            Vector3 playerLook = _playerTransform.transform.forward.normalized;
-
+            // 먼 거리에 있는 물체를 미니맵 가장자리에 그리게 하는 부분
             if (Vector3.Distance(_playerIndicator.Item1.position, indicator.Item1.position) >= 9.9f)
             {
                 // Adjust
@@ -103,6 +102,10 @@ public class UI_Minimap : MonoBehaviour
                 indicator.Item2.position = new Vector3(indicator.Item1.position.x, 50f, indicator.Item1.position.z);
             }
 
+            // 플레이어의 Look
+            Vector3 playerLook = _playerTransform.transform.forward.normalized;
+
+            // 플레이어 시야각에만 그려지도록 하는 부분
             if (Vector3.Dot(look, playerLook) >= 0.7f)
             {
                 indicator.Item2.gameObject.SetActive(true);
@@ -110,6 +113,16 @@ public class UI_Minimap : MonoBehaviour
             else
             {
                 indicator.Item2.gameObject.SetActive(false);
+            }
+
+            // 근데 전부 그려져도 되나?
+            // 벽 뒤에 숨은건?
+
+            Ray ray = new Ray(_playerTransform.position, playerLook);
+
+            if(Physics.Raycast(ray, out RaycastHit hit, 100f, LayerMask.GetMask("Water")))
+            {
+                Debug.Log("Test");
             }
         }
     }
