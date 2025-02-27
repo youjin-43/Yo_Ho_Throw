@@ -22,11 +22,13 @@ public class ScreenTransition : MonoBehaviourPun
     [PunRPC]
     public void FadeIn()
     {
+        Debug.Log("FadeIn");
         alphaMaskController.SetTrigger("FadeIn");
     }
     [PunRPC]
     public void FadeOut()
     {
+        Debug.Log("FadeOut");
         alphaMaskController.SetTrigger("FadeOut");
     }
 }

@@ -1,9 +1,10 @@
+using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class KillLogPanelController : MonoBehaviour
 {
-    static KillLogPanelController instance = null;
+    public static KillLogPanelController Instance { get; private set; } = null;
 
     [SerializeField] KillLogPanel killLogPanelPrefab;
 
@@ -17,45 +18,45 @@ public class KillLogPanelController : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
-    public static void AddKillLog(string killerNickname, string victimNickname)
+    public void AddKillLog(int killerActorNr, int victimActorNr)
     {
         KillLogPanel killLogPanel = null;
 
-        if (instance.queue.Count > 0) 
+        if (queue.Count > 0) 
         {
-            killLogPanel = instance.queue.Dequeue();
+            killLogPanel = queue.Dequeue();
 
             killLogPanel.gameObject.SetActive(true);
         }
 
-        else killLogPanel = Instantiate(instance.killLogPanelPrefab, instance.killLogPanelParent);
+        else killLogPanel = Instantiate(killLogPanelPrefab, killLogPanelParent);
 
         killLogPanel.transform.localPosition = Vector3.zero;
 
-        killLogPanel.SetText(killerNickname, victimNickname);
+        killLogPanel.SetText(PhotonNetwork.CurrentRoom.Players[killerActorNr].NickName, PhotonNetwork.CurrentRoom.Players[victimActorNr].NickName);
 
-        killLogPanel.SetBack(instance.back);
+        killLogPanel.SetBack(back);
 
-        instance.back?.SetFront(killLogPanel);
+        back?.SetFront(killLogPanel);
 
-        instance.back?.MoveUp(killLogPanel.transform.position.y + instance.padding, instance.padding);
+        back?.MoveUp(killLogPanel.transform.position.y + padding, padding);
 
-        instance.back = killLogPanel;
+        back = killLogPanel;
     }
-    public static void ReturnPanel(KillLogPanel panel)
+    public void ReturnPanel(KillLogPanel panel)
     {
         panel.ClearFrontBack();
 
-        if (instance.back != null)
+        if (back != null)
         {
-            if (instance.back.Equals(panel))
+            if (back.Equals(panel))
             {
-                instance.back = null;
+                back = null;
             }
         }
-        instance.queue.Enqueue(panel);
+        queue.Enqueue(panel);
 
         panel.gameObject.SetActive(false);
     }

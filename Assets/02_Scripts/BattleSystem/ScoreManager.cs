@@ -105,6 +105,8 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     public void SetBountyTargetActorNumber(int actorNumber)
     {
+        InGameUIManager.ShowPlayerIcon(actorNumber);
+
         bountyTargetActorNumber = actorNumber;
     }
     void HasRankingChanged(int actorNumber)
