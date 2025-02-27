@@ -11,7 +11,7 @@ public class MinimapIndicator : MonoBehaviour
     [SerializeField] public  Sprite Icon     = null;
     [SerializeField] public  Color  Color    = new Color(0, 1, 0, 1);
 
-    public GameObject indicator;
+    public GameObject indicator {  get; private set; }
 
     void Start()
     {
