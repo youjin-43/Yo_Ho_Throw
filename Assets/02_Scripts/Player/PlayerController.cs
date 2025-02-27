@@ -24,32 +24,34 @@ public class PlayerController : ThirdPersonController
     
     [SerializeField]
     private LayerMask targetLayer;
-    private Animator anim;
+    
     private Vector3 targetPosition = Vector3.zero;
     private int maxBulletCount;
     [SerializeField]
     private int bulletCount;
-   
-    public bool lookCamera= true;
+
+    private Animator anim;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         base.Start();
         input = GetComponent<StarterAssetsInputs>();
-        anim = GetComponent<Animator>();
+        
         maxBulletCount = 10;
         bulletCount = maxBulletCount;
-
+        anim = GetComponent<Animator>();
         pv = GetComponent<PhotonView>();
     }
 
     
     // Update is called once per frame
     void Update()
-    {
-        if (pv.IsMine) {
+    {   //커밋전삭제
+        if (!pv.IsMine) 
+            return;
 
-            base.Update();
+        base.Update();
 
             LookSameCameraDirection();
 
@@ -75,29 +77,27 @@ public class PlayerController : ThirdPersonController
                 anim.SetTrigger("Dash");
                 Dash();
             }
-
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            //anim.SetTrigger("Melee Attack");
+            MeleeAttack();
         }
+        
 
 
 
     }
     public void FixedUpdate()
     {
-        if (pv.IsMine)
-        {
-            base.FixedUpdate();
-        }
+        //커밋전삭제
+        if (!pv.IsMine)
+            return;
+
+        base.FixedUpdate();
+        
     }
 
-    public void LateUpdate()
-    {
-
-        if (lookCamera)
-        {
-           // LookSameCameraDirection();
-
-        }
-    }
+    
 
     /// <summary>
     /// 투사체를 생성하여 던지는 함수 
@@ -138,8 +138,9 @@ public class PlayerController : ThirdPersonController
     }
 
     public void ThrowProjectile()
-    {
+    {   //커밋전삭제
         pv.RPC("ThrowProjectile_RPC", RpcTarget.All);
+        //ThrowProjectile_RPC();
     }
 
     /// <summary>
@@ -151,20 +152,15 @@ public class PlayerController : ThirdPersonController
     /// <param name="layerWeight"></param>
     /// <param name="targetLayer"></param>
     /// <returns></returns>
-    IEnumerator StartAnimationCoroutine(string _animName , float _frame , int _layerIndex = 0 , float _layerWeight = 1 ,bool _lookCamera = true)
+    IEnumerator StartAnimationCoroutine(string _animName , float _frame , int _layerIndex = 0 , float _layerWeight = 1)
     {   
-        if(_lookCamera == false)
-        {
-            lookCamera = false;
-            
-            
-        }
+        
         anim.SetTrigger(_animName);  
         anim.SetLayerWeight(_layerIndex, _layerWeight);
         yield return new WaitForSeconds(_frame);
         anim.SetTrigger(_animName);
         LayerReset();
-        lookCamera = true;
+        
        
 
     }
@@ -244,6 +240,16 @@ public class PlayerController : ThirdPersonController
         }
 
     }
-    
+
+    public void MeleeAttack()
+    {
+        StartCoroutine(StartAnimationCoroutine("Melee Attack", 0.833f));
+    }
+
+    public override void OnDamaged(float damage)
+    {
+        base.OnDamaged(damage);
+        StartCoroutine(StartAnimationCoroutine("Hit",0.667f));
+    }
     
 }
