@@ -70,6 +70,6 @@ public class KillLogPanel : MonoBehaviour
 
             yield return null;
         }
-        KillLogPanelController.ReturnPanel(this);
+        KillLogPanelController.Instance.ReturnPanel(this);
     }
 }

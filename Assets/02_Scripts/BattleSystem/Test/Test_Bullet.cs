@@ -32,7 +32,7 @@ public class Test_Bullet : MonoBehaviourPun
 
         if (this.photonView.OwnerActorNr != photonView.OwnerActorNr)
         {
-            BattleSystem.RegisterKill(this.photonView.OwnerActorNr, photonView.OwnerActorNr);
+            BattleSystem.Instance.RegisterKill(this.photonView.OwnerActorNr, photonView.OwnerActorNr);
         }
     }
 }

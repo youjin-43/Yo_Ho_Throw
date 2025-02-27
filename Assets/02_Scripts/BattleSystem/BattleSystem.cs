@@ -6,148 +6,83 @@ using ExitGames.Client.Photon;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public abstract class BattleSystem : MonoBehaviour, IOnEventCallback
+[RequireComponent(typeof(PhotonView))]
+public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 {
-    static BattleSystem instance = null;
+    public static BattleSystem Instance { get; private set; } = null;
 
     [SerializeField] int timeLimit = 300;
-
-    Dictionary<int, int> revengeTargetDict = new Dictionary<int, int>();
-
-    const int REVENGE_BONUS_REWARD = 1;
-
-    int comboKill = 0;
 
     int spawnedPlayerCount = 0;
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
     private void Start()
     {
         // TODO 찬규 : UI부분에서 추후 리셋을 구현하셨을 경우 호출
         //InGameUIManager.Instance.ResetUI();
 
+        Debug.Log("현재 방 마스터 클라이언트 ID : " + PhotonNetwork.CurrentRoom.masterClientId.ToString());
+        Debug.Log("현재 클라이언트 ID : " + PhotonNetwork.LocalPlayer.ActorNumber.ToString());
+
+        // 호스트가 아니라면 반환
+        if (!PhotonNetwork.IsMasterClient) return;
+
         BattleSetting();
     }
-    public void BattleSetting()
+    protected abstract IEnumerator BattleCoroutine();
+    public virtual void BattleSetting()
     {
-        revengeTargetDict.Clear();
-
-        // 모든 플레이어의 ActorNumber를 가져온다
-        foreach (int actorNumber in PhotonNetwork.CurrentRoom.Players.Keys)
-        {
-            // ID 별 초기 값 -1을 할당한다
-            revengeTargetDict[actorNumber] = -1;
-        }
-
         StartCoroutine(BattleSettingCoroutine());
     }
-    IEnumerator BattleSettingCoroutine()
+    protected virtual IEnumerator BattleSettingCoroutine()
     {
         // 플레이어 스폰
         yield return PlayerSpawnManager.Instance.SpawnCoroutine();
 
         // 모든 플레이어가 스폰되어 준비가 될 때까지 대기
-        while (PhotonNetwork.CountOfPlayersInRooms != spawnedPlayerCount)
+        while (PhotonNetwork.CurrentRoom.PlayerCount != spawnedPlayerCount)
         {
-            //Debug.Log("PhotonNetwork.CountOfPlayers : " + PhotonNetwork.CountOfPlayers.ToString());
-            //Debug.Log("PhotonNetwork.CountOfPlayersOnMaster : " + PhotonNetwork.CountOfPlayersOnMaster.ToString());
-            //Debug.Log("PhotonNetwork.CountOfPlayersInRooms : " + PhotonNetwork.CountOfPlayersInRooms.ToString());
-
-            //Debug.Log("spawnedPlayerCount : " + spawnedPlayerCount.ToString());
-
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
         }
 
         // 화면을 활성화 함
         ScreenTransition.FadeOutRPC();
 
-        // 1초 대기
-        yield return new WaitForSeconds(1f);
-
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.BattleStart,
-            null,
+            Time.unscaledTime,
             new RaiseEventOptions { Receivers = ReceiverGroup.All },
-            SendOptions.SendUnreliable);
+            SendOptions.SendReliable);
     }
-
     /// <summary>
     /// 플레이어 간의 킬이 발생했을 때 호출하는 함수
     /// 자살이 일어났을 경우에는 죽은 사람의 ActorNumber를 killerActorNumber 및 victimActorNumber로 전달하면 된다
     /// </summary>
     /// <param name="killerActorNumber"> 죽인 사람 </param>
     /// <param name="victimActorNumber"> 죽은 사람 </param>
-    public static void RegisterKill(int killerActorNumber, int victimActorNumber)
+    public virtual void RegisterKill(int killerActorNumber, int victimActorNumber)
     {
-        KillLogPanelController.AddKillLog(
-            PhotonNetwork.CurrentRoom.Players[killerActorNumber].NickName,
-            PhotonNetwork.CurrentRoom.Players[victimActorNumber].NickName);
+        // 킬로그 발생
+        KillLogPanelController.Instance.AddKillLog(killerActorNumber, victimActorNumber);
 
-        if (killerActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
-        {
-            instance.comboKill++;
-
-            BattleUIController.Instance.SetComboKill(instance.comboKill);
-        }
-        else if (victimActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
-        {
-            instance.comboKill = 0;
-
-            BattleUIController.Instance.SetComboKill(instance.comboKill);
-        }
-
-        // 호스트가 아닌 경우 반환시킴
+        // 마스터 클라이언트가 아닐 때는 반환
         if (!PhotonNetwork.IsMasterClient) return;
 
-        // 복수 대상일 때
-        if (instance.revengeTargetDict[killerActorNumber] == victimActorNumber)
-        {
-            instance.revengeTargetDict[killerActorNumber] = -1;
-
-            InGameUIManager.HidePlayerIcon(victimActorNumber);
-
-            ScoreManager.Instance.AddScore(killerActorNumber, victimActorNumber, REVENGE_BONUS_REWARD);
-        }
-
-        // 복수 대상이 아닐 때
-        else
-        {
-            ScoreManager.Instance.AddScore(killerActorNumber, victimActorNumber);
-        }
-
-        // 죽은 플레이어 리스폰 요청
-        PlayerSpawnManager.Instance.ExecuteRPC(
-                    RaiseEventCode.RespawnPlayer.ToString(), victimActorNumber);
-
-        // 타살일 경우 죽인 자는 죽은 자의 복수 대상으로 갱신
-        instance.revengeTargetDict[victimActorNumber] = victimActorNumber != killerActorNumber ? killerActorNumber : instance.revengeTargetDict[victimActorNumber];
+        // 리스폰 시킴 ( 물론 내부적으로 필요할 때만 리스폰 시킴 )
+        PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.RespawnPlayer.ToString(), victimActorNumber);
     }
-
-    public void OnEvent(EventData photonEvent)
-    {
-        switch ((RaiseEventCode)photonEvent.Code)
-        {
-            case RaiseEventCode.BattleStart:
-                BattleStart(); break;
-        }
-    }
-    abstract protected void BattleStart();
-    virtual protected void CheckTime(int seconds)
+    protected virtual void CheckTime(int seconds)
     {
         return;
     }
-    protected virtual void StartLimitedTimer(float timeLimit)
+    protected virtual void StartLimitedTimer()
     {
-        StartCoroutine(LimitedTimerCoroutine(timeLimit));
+        StartCoroutine(LimitedTimerCoroutine());
     }
-    IEnumerator LimitedTimerCoroutine(float timeLimit)
-    {
-        yield return null;
-    }
-    virtual protected void EndGameByTimeout()
+    protected virtual void EndGameByTimeout()
     {
         BattleUIController.Instance.EndGame();
 
@@ -155,9 +90,52 @@ public abstract class BattleSystem : MonoBehaviour, IOnEventCallback
 
         PlayerSpawnManager.Instance.EndGame();
     }
+    private IEnumerator LimitedTimerCoroutine()
+    {
+        int seconds = timeLimit;
+        float startTime = Time.time + 1;
+
+        while (seconds > 0)
+        {
+            yield return null;
+
+            if (startTime <= Time.time)
+            {
+                int value = (int)((Time.time - startTime) % 1);
+
+                startTime += value + 1;
+
+                seconds -= value + 1;
+
+                BattleUIController.Instance.SetLimitTimeText(seconds);
+
+                CheckTime(seconds);
+            }
+        }
+
+        EndGameByTimeout();
+    }
+    public void OnEvent(EventData photonEvent)
+    {
+        switch ((RaiseEventCode)photonEvent.Code)
+        {
+            case RaiseEventCode.BattleStart: BattleStart(); break;
+        }
+    }
+    private void BattleStart()
+    {
+        Debug.Log("로그 위치 확인 !");
+
+        StartCoroutine(BattleCoroutine());
+    }
     public static void SpawnCheck()
     {
-        instance.spawnedPlayerCount++;
+        Instance.photonView.RPC("SpawnCheckRPC", RpcTarget.All);
+    }
+    [PunRPC]
+    public void SpawnCheckRPC()
+    {
+        spawnedPlayerCount++;
     }
     virtual protected void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     virtual protected void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
