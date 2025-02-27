@@ -6,13 +6,13 @@ public class AudioManager : MonoBehaviour
 
     [Header("BGM")]
     public AudioClip bgmClip;
-    public float bgmVolume;
+    public float bgmVolume = 1.0f; // 기본값 설정
     AudioSource bgmPlayer;
     AudioHighPassFilter bgmEffect;
 
     [Header("SFX")]
     public AudioClip[] sfxClips;
-    public float sfxVolume;
+    public float sfxVolume = 1.0f; // 기본값 설정
     public int channels;//동시 다발적으로 많은 사운드를 내기 위해
     AudioSource[] sfxPlayers;
     int channelIndex;//현재 재생중인 채널 인덱스
@@ -94,7 +94,6 @@ public class AudioManager : MonoBehaviour
     }
 
 
-
     public void PlaySfx(Sfx sfx)
     {
         for (int index = 0; index < sfxPlayers.Length; index++)
@@ -115,6 +114,22 @@ public class AudioManager : MonoBehaviour
             sfxPlayers[loopIndex].Play();
             break;
         }
+    }
 
+    // BGM 볼륨 설정
+    public void SetBgmVolume(float volume)
+    {
+        bgmVolume = volume;
+        bgmPlayer.volume = bgmVolume; // BGM의 볼륨을 설정
+    }
+
+    // SFX 볼륨 설정
+    public void SetSfxVolume(float volume)
+    {
+        sfxVolume = volume;
+        foreach (var sfxPlayer in sfxPlayers)
+        {
+            sfxPlayer.volume = sfxVolume; // 모든 SFX의 볼륨을 설정
+        }
     }
 }

@@ -5,7 +5,7 @@ public class CommonButtonManager : MonoBehaviour
 {
     // 공용 버튼
 
-    [SerializeField] GameObject settingPanel;
+    public GameObject settingPanel; // 설정 패널
 
     public void OnCloseButtonClick() // X버튼 클릭 시
      {
@@ -17,7 +17,7 @@ public class CommonButtonManager : MonoBehaviour
 
     public void OnSettingButtonClick() // 세팅 버튼 클릭 시
     {
-        if (settingPanel != null) settingPanel.SetActive(true);
+        if (settingPanel != null) settingPanel.SetActive(true); // 설정 패널 활성화
     }
 
     public void OnSceneChangeButtonClick(string sceneName) // 씬 변경하는 버튼(ex.나가기or시작) 클릭 시
