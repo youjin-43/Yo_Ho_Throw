@@ -11,14 +11,17 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 public class PlayerController : ThirdPersonController
 {
     PhotonView pv;
-
+    [Header("Bullet")]
     private StarterAssetsInputs input;
     public GameObject bulletPrefab; // 투사체 프리펩
     public Transform bulletSpawnPoint; // 투사체 생성 위치
     public float bulletSpeed = 10f; // 투사체 속도
     public float bulletArc = 5f; // 투사체가 포물선을 그릴 때 사용 하는 값
-    public Transform cameraTransform;
+    [Header("Melee Attack")]
+    public GameObject meleeAttackColliderObject;
+
     [Header("Aim")]
+    public Transform cameraTransform;
     public CinemachineVirtualCamera aimCam;
     
     
@@ -269,7 +272,18 @@ public class PlayerController : ThirdPersonController
     {
         StartCoroutine(StartAnimationCoroutine("Melee Attack", 0.833f));
     }
+    public void EnableMeleeAttackCollider()
+    {
+        Debug.Log("EnableMeleeAttackCollider");
+        StartCoroutine(EnableCollider(meleeAttackColliderObject, 0.4f));
+    }
 
+    private IEnumerator EnableCollider(GameObject _meleeAttackColliderObject,float time)
+    {
+        _meleeAttackColliderObject.SetActive(true);
+        yield return new WaitForSeconds(time);
+        _meleeAttackColliderObject.SetActive(false);
+    }
     public override void OnDamaged(float damage)
     {
         base.OnDamaged(damage);
