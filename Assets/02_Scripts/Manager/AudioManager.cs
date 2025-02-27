@@ -42,7 +42,7 @@ public class AudioManager : MonoBehaviour
         {
             //Destroy(gameObject);
         }
-
+        PlayBgm(true);
     }
 
     void Init()
@@ -76,7 +76,7 @@ public class AudioManager : MonoBehaviour
     {
         if (isPlay)
         {
-            Debug.Log("켜짐");
+            Debug.Log("BGM켜짐");
             bgmPlayer.Play();
 
         }
@@ -119,17 +119,15 @@ public class AudioManager : MonoBehaviour
     // BGM 볼륨 설정
     public void SetBgmVolume(float volume)
     {
-        bgmVolume = volume;
-        bgmPlayer.volume = bgmVolume; // BGM의 볼륨을 설정
+        bgmPlayer.volume = volume; // BGM의 볼륨을 설정
     }
 
     // SFX 볼륨 설정
     public void SetSfxVolume(float volume)
     {
-        sfxVolume = volume;
         foreach (var sfxPlayer in sfxPlayers)
         {
-            sfxPlayer.volume = sfxVolume; // 모든 SFX의 볼륨을 설정
+            sfxPlayer.volume = volume; // 모든 SFX의 볼륨을 설정
         }
     }
 }
