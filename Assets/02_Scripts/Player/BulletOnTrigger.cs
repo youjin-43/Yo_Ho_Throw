@@ -27,7 +27,7 @@ public class BulletOnTrigger : MonoBehaviour
                 pc.OnDamaged(1);
 
             }
-            
+            PoolManager.Instance.Push(gameObject);
         }
         
         if (other.CompareTag("Ground"))
