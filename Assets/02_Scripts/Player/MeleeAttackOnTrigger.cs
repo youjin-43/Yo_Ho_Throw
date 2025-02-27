@@ -10,9 +10,8 @@ public class MeleeAttackOnTrigger : MonoBehaviour
 
             if (rb != null)
             {
-                // 중력 활성화
                 rb.useGravity = true;
-                rb.isKinematic = false; // 만약 Kinematic이 켜져 있다면 비활성화
+                rb.isKinematic = false; 
 
                 // 랜덤한 방향으로 튕겨나가게 함
                 Vector3 randomDirection = new Vector3(
@@ -34,12 +33,13 @@ public class MeleeAttackOnTrigger : MonoBehaviour
                 rb.AddTorque(randomTorque, ForceMode.Impulse);
             }
 
-            // TODO : 패링 성공 사운드 추가
+            // TODO 패링 성공 사운드 추가
             Debug.Log("패링 성공");
         }
 
         if (other.CompareTag("Player"))
         {
+            //TODO 근접공격 성공 사운드
             PlayerController pc = other.GetComponent<PlayerController>();
             if (pc != null)
             {
