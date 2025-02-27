@@ -90,9 +90,17 @@ public class BattleManager : MonoBehaviour, IOnEventCallback
     /// <param name="victimActorNumber"> 죽은 사람 </param>
     public static void RegisterKill(int killerActorNumber, int victimActorNumber)
     {
+        // 1. 기존 킬 팝업
         KillLogPanelController.AddKillLog(
             PhotonNetwork.CurrentRoom.Players[killerActorNumber].NickName,
             PhotonNetwork.CurrentRoom.Players[victimActorNumber].NickName);
+
+        // 2. InGameUI 연동
+        //InGameUIManager.Instance.AddKillLog
+        //    (
+        //        PhotonNetwork.CurrentRoom.Players[killerActorNumber].NickName,
+        //        PhotonNetwork.CurrentRoom.Players[victimActorNumber].NickName
+        //    );
 
         if (killerActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
         {

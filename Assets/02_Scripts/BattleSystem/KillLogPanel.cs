@@ -70,6 +70,11 @@ public class KillLogPanel : MonoBehaviour
 
             yield return null;
         }
-        KillLogPanelController.ReturnPanel(this);
+
+        // 1. 기존 구현
+        // KillLogPanelController.ReturnPanel(this);
+
+        // 2. InGameUI 연동
+        InGameUIManager.Instance.ReturnPanel(this);
     }
 }

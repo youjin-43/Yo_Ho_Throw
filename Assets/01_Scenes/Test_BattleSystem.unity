@@ -11779,6 +11779,7 @@ MonoBehaviour:
   PlayerTransform: {fileID: 1604253877}
   MinimapCamera: {fileID: 2098489493}
   playerScoreEntryPrefab: {fileID: 0}
+  KillLogPanelPrefab: {fileID: 0}
 --- !u!114 &1604253874
 MonoBehaviour:
   m_ObjectHideFlags: 0

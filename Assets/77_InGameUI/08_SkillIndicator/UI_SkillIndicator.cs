@@ -5,8 +5,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class UI_SkillIndicator : MonoBehaviour
+public class UI_SkillIndicator : UI_Base
 {
+    #region VARIABLES
     // Ω∫≈≥ ƒ≈∏¿” ¿Ã∆Â∆Æ
     private Image _skill_Shift_CooldownEffect;
     private Image _skill_LClick_CooldownEffect;
@@ -19,9 +20,56 @@ public class UI_SkillIndicator : MonoBehaviour
     private List<GameObject> _daggerCounter = new List<GameObject>();
 
     private int _numOfDagger = 5;
+    #endregion
 
+
+
+
+
+    #region OVERRIDE
+    public override void Init()
+    {
+        _name = name;
+    }
+
+    public override void On()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public override void Off()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public override void ResetUI()
+    {
+        StopAllCoroutines();
+
+        AddDagger(5);
+
+        _skill_Shift_CooldownEffect.fillAmount  = 1f;
+        _skill_LClick_CooldownEffect.fillAmount = 1f;
+        _skill_RClick_CooldownEffect.fillAmount = 1f;
+
+        _skill_Shift_CooldownEffect .gameObject.SetActive(false);
+        _skill_LClick_CooldownEffect.gameObject.SetActive(false);
+        _skill_RClick_CooldownEffect.gameObject.SetActive(false);
+
+        _skillActivation.gameObject.SetActive(false);
+    }
+    #endregion
+
+
+
+
+
+    #region MONOBEHAVIOUR
     void Awake()
     {
+        _name = name;
+        _isAlwaysVisible = true;
+
         // ƒ≈∏¿” ¿Ã∆Â∆Æ
         _skill_Shift_CooldownEffect  = transform.GetChild(0).transform.GetChild(1).GetComponent<Image>();
         _skill_LClick_CooldownEffect = transform.GetChild(1).transform.GetChild(1).GetComponent<Image>();
@@ -43,28 +91,13 @@ public class UI_SkillIndicator : MonoBehaviour
             _daggerCounter.Add(daggerCounter.GetChild(i).GetChild(0).gameObject);
         }
     }
-
-    public void ResetUI()
-    {
-        StopAllCoroutines();
-
-        AddDagger(5);
-
-        _skill_Shift_CooldownEffect.fillAmount  = 1f;
-        _skill_LClick_CooldownEffect.fillAmount = 1f;
-        _skill_RClick_CooldownEffect.fillAmount = 1f;
-
-        _skill_Shift_CooldownEffect.gameObject.SetActive(false);
-        _skill_LClick_CooldownEffect.gameObject.SetActive(false);
-        _skill_RClick_CooldownEffect.gameObject.SetActive(false);
-
-        _skillActivation.gameObject.SetActive(false);
-    }
+    #endregion
 
 
 
 
 
+    #region FUNCTION
     #region COOLDOWN
     public void StartCooldownEffect(int button, float cooldownTime)
     {
@@ -106,10 +139,6 @@ public class UI_SkillIndicator : MonoBehaviour
         coolDownImage.gameObject.SetActive(false);
     }
     #endregion
-
-
-
-
 
     #region DAGGERCOUNT
     public void AddDagger(int count)
@@ -158,5 +187,6 @@ public class UI_SkillIndicator : MonoBehaviour
             }
         }
     }
+    #endregion
     #endregion
 }

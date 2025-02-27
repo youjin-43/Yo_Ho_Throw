@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,13 +7,13 @@ public class InGameUIManager : MonoBehaviour
 {
     #region SINGLETON
     private static InGameUIManager instance;
-    public  static InGameUIManager Instance
+    public static InGameUIManager Instance
     {
         get
         {
             return instance;
         }
-        private set 
+        private set
         {
             // 왜 접근하려 함? 돌아버린거냐
         }
@@ -42,49 +43,84 @@ public class InGameUIManager : MonoBehaviour
 
     [Header("ScorePanel")]
     [SerializeField] public PlayerScoreEntry playerScoreEntryPrefab;
+
+    [Header("KillLog")]
+    [SerializeField] public KillLogPanel KillLogPanelPrefab;
     #endregion
 
-    public UI_Minimap         Minimap         { get; private set; }
-    public UI_Timer           Timer           { get; private set; }
-    public UI_ScoreHUD        ScoreHUD        { get; private set; }
-    public UI_ScorePanel      ScorePanel      { get; private set; }
-    public UI_SkillIndicator  SkillIndicator  { get; private set; }
-    public UI_HealthIndicator HealthIndicator { get; private set; }
-    public UI_Menu            Menu            { get; private set; }
-    public UI_Setting         Setting         { get; private set; }
+    public UI_DeathPopup         DeathPopup         { get; private set; }
+    public UI_Minimap            Minimap            { get; private set; }
+    public UI_Timer              Timer              { get; private set; }
+    public UI_RealtimeScoreboard RealtimeScoreboard { get; private set; }
+    public UI_Scoreboard         ScoreBoard         { get; private set; }
+    public UI_SkillIndicator     SkillIndicator     { get; private set; }
+    public UI_HealthIndicator    HealthIndicator    { get; private set; }
+    public UI_Menu               Menu               { get; private set; }
+    public UI_Setting            Setting            { get; private set; }
+    public UI_KillLog            KillLog            { get; private set; }
+
+    private Dictionary<string, UI_Base> UIs = new Dictionary<string, UI_Base>();
 
     void Awake()
     {
         SingletonInitialize();
 
         // UI 할당
-        Minimap         = transform.GetChild(0).GetComponent<UI_Minimap>();
-        Timer           = transform.GetChild(1).GetComponent<UI_Timer>();
-        ScoreHUD        = transform.GetChild(2).GetComponent<UI_ScoreHUD>();
-        ScorePanel      = transform.GetChild(3).GetComponent<UI_ScorePanel>();
-        SkillIndicator  = transform.GetChild(4).GetComponent<UI_SkillIndicator>();
-        HealthIndicator = transform.GetChild(5).GetComponent<UI_HealthIndicator>();
-        Menu            = transform.GetChild(6).GetComponent<UI_Menu>();
-        Setting         = transform.GetChild(7).GetComponent<UI_Setting>();
+        UIs["DeathPopup"]         =  DeathPopup         = transform.GetChild(0).GetComponent<UI_DeathPopup>();
+        UIs["Minimap"]            =  Minimap            = transform.GetChild(1).GetComponent<UI_Minimap>();
+        UIs["Timer"]              =  Timer              = transform.GetChild(2).GetComponent<UI_Timer>();
+        UIs["RealtimeScoreboard"] =  RealtimeScoreboard = transform.GetChild(3).GetComponent<UI_RealtimeScoreboard>();
+        UIs["Scoreboard"]         =  ScoreBoard         = transform.GetChild(4).GetComponent<UI_Scoreboard>();
+        UIs["SkillIndicator"]     =  SkillIndicator     = transform.GetChild(5).GetComponent<UI_SkillIndicator>();
+        UIs["HealthIndicator"]    =  HealthIndicator    = transform.GetChild(6).GetComponent<UI_HealthIndicator>();
+        UIs["Menu"]               =  Menu               = transform.GetChild(7).GetComponent<UI_Menu>();
+        UIs["Setting"]            =  Setting            = transform.GetChild(8).GetComponent<UI_Setting>();
+        UIs["KillLog"]            =  KillLog            = transform.GetChild(9).GetComponent<UI_KillLog>();
+
+        foreach (var ui in UIs)
+        {
+            ui.Value.Init();
+        }
     }
-
-
-
-
 
     #region COMMON
     /// <summary>
     /// 라운드가 종료되거나, 다시 시작될 때 호출해 주세요
     /// </summary>
-    public void ResetUI()
+    public void ResetAllUI()
     {
-        Minimap        .ResetUI();
-        Timer          .ResetUI();
-        ScoreHUD       .ResetUI();
-        SkillIndicator .ResetUI();
-        HealthIndicator.ResetUI();
-        Menu           .ResetUI();
-        Setting        .ResetUI();
+        foreach (var ui in UIs)
+        {
+            ui.Value.ResetUI();
+        }
+    }
+
+    /// <summary>
+    /// 항상 켜져있어야 하는 UI를 On하는 함수입니다.
+    /// </summary>
+    public void OnAllUI()
+    {
+        foreach (var ui in UIs)
+        {
+            if(ui.Value._isAlwaysVisible == true)
+            {
+                ui.Value.On();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 모든 UI를 Off하는 함수입니다.
+    /// </summary>
+    public void OffAllUI(string exception = "")
+    {
+        foreach (var ui in UIs)
+        {
+            if(ui.Key != exception)
+            {
+                ui.Value.Off();
+            }
+        }
     }
 
     /// <summary>
@@ -93,7 +129,7 @@ public class InGameUIManager : MonoBehaviour
     /// <returns></returns>
     public bool IsPopupUIOpen()
     {
-        if(Menu.gameObject.activeSelf == true || Setting.gameObject.activeSelf == true)
+        if (Menu.gameObject.activeSelf == true || Setting.gameObject.activeSelf == true)
         {
             return true;
         }
@@ -123,6 +159,7 @@ public class InGameUIManager : MonoBehaviour
     {
         instance.Minimap.ShowPlayerIcon(targetActorNumber);
     }
+
     public static void HidePlayerIcon(int targetActorNumber)
     {
         instance.Minimap.HidePlayerIcon(targetActorNumber);
@@ -148,33 +185,33 @@ public class InGameUIManager : MonoBehaviour
 
 
 
-    #region SCORE HUD
+    #region REALTIME SCOREBOARD
     /// <summary>
-    /// 점수 HUD 온오프 함수입니다
+    /// 실시간 점수보드 UI 온오프 함수입니다
     /// </summary>
-    public void ToggleScoreHUD()
+    public void ToggleRealtimeScoreboard()
     {
-        ScoreHUD.ToggleScorePanelUI();
+        RealtimeScoreboard.ToggleUI();
     }
 
     /// <summary>
-    /// 점수 HUD를 초기화 하는곳에서 호출해 주세요
+    /// 실시간 점수보드 UI를 초기화 하는곳에서 호출해 주세요
     /// </summary>
-    public void InitScoreHUD(int order, string nickName)
+    public void InitRealtimeScoreboard(int order, string nickName)
     {
-        ScoreHUD.InitScoreHUD(order, nickName);
+        RealtimeScoreboard.InitRealtimeScoreboard(order, nickName);
     }
 
     /// <summary>
-    /// 점수 HUD 데이터를 갱신하는 곳에서 호출해 주세요
+    /// 실시간 점수보드 UI 데이터를 갱신하는 곳에서 호출해 주세요
     /// </summary>
     /// <param name="order"></param>
     /// <param name="nickName"></param>
     /// <param name="rank"></param>
     /// <param name="score"></param>
-    public void UpdateScoreHUDData(int order, string nickName, int rank, int score)
+    public void UpdateRealtimeScoreboardData(int order, string nickName, int rank, int score)
     {
-        ScoreHUD.UpdateScoreHUDData(order, nickName, rank, score);
+        RealtimeScoreboard.UpdateRealtimeScoreboardData(order, nickName, rank, score);
     }
     #endregion
 
@@ -182,30 +219,44 @@ public class InGameUIManager : MonoBehaviour
 
 
 
-    #region SCORE PANEL
+    #region SCOREBOARD
     /// <summary>
-    /// 점수 패널 UI 온오프 함수입니다
+    /// 점수 보드 UI 온오프 함수입니다
     /// </summary>
-    public void ShowScorePanelUI(bool isVisible)
+    public void ShowScoreboardUI(bool isVisible)
     {
-        ScorePanel.ShowScorePanelUI(isVisible);
+        ScoreBoard.ShowScoreboardUI(isVisible);
     }
 
     /// <summary>
-    /// 점수 패널을 초기화 하는곳에서 호출해 주세요
+    /// 점수 보드를 초기화 하는곳에서 호출해 주세요
     /// </summary>
     /// <param name="actorNumber"></param>
     /// <param name="nickName"></param>
-    public void InitScorePanel(int actorNumber, string nickName)
+    public void InitScoreboard(int actorNumber, string nickName)
     {
-        ScorePanel.InitScorePanel(playerScoreEntryPrefab, actorNumber, nickName);
+        ScoreBoard.InitScoreboard(playerScoreEntryPrefab, actorNumber, nickName);
     }
 
-    public void UpdateScorePanelData()
+    public void UpdateScoreboardData_DeathCount(int actorNumber, int deathCount)
     {
-
+        ScoreBoard.UpdateScoreboardData_DeathCount(actorNumber, deathCount);
     }
 
+    public void UpdateScoreboardData_Score(int actorNumber, int score)
+    {
+        ScoreBoard.UpdateScoreboardData_Score(actorNumber, score);
+    }
+
+    public void UpdateScoreboardData_KillCount(int actorNumber, int killCount)
+    {
+        ScoreBoard.UpdateScoreboardData_KillCount(actorNumber, killCount);
+    }
+
+    public void ResetScoreboard()
+    {
+        ScoreBoard.ResetScoreboard();
+    }
     #endregion
 
 
@@ -262,9 +313,9 @@ public class InGameUIManager : MonoBehaviour
     /// </summary>
     public void ToggleMenuUI()
     {
-        if(Setting.gameObject.activeSelf == false)
+        if (Setting.gameObject.activeSelf == false)
         {
-            Menu.ToggleMenuUI();
+            Menu.ToggleUI();
         }
 
         Cursor.visible = IsPopupUIOpen();
@@ -290,12 +341,12 @@ public class InGameUIManager : MonoBehaviour
     /// </summary>
     public void ToggleSettingUI()
     {
-        if(Setting.gameObject.activeSelf == true)
+        if (Setting.gameObject.activeSelf == true)
         {
-            Menu.ToggleMenuUI();
+            Menu.ToggleUI();
         }
 
-        Setting.ToggleSettingUI();
+        Setting.ToggleUI();
 
         Cursor.visible = IsPopupUIOpen();
 
@@ -307,6 +358,42 @@ public class InGameUIManager : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
+    }
+    #endregion
+
+
+
+
+
+    #region KILLLOG
+    /// <summary>
+    /// 킬 판정하는 곳에서 호출해 주세요
+    /// </summary>
+    /// <param name="killerNickname"></param>
+    /// <param name="victimNickname"></param>
+    public void AddKillLog(string killerNickname, string victimNickname)
+    {
+        KillLog.AddKillLog(KillLogPanelPrefab, killerNickname, victimNickname);
+    }
+
+    public void ReturnPanel(KillLogPanel killLogPanel)
+    {
+        KillLog.ReturnPanel(killLogPanel);
+    }
+    #endregion
+
+
+
+
+
+    #region DEATH POPUP
+    /// <summary>
+    /// 플레이어가 사망할 때 호출해 주세요
+    /// </summary>
+    /// <param name="respawnTime">리스폰 시간</param>
+    public void Death(float respawnTime)
+    {
+        DeathPopup.Death(respawnTime);
     }
     #endregion
 }

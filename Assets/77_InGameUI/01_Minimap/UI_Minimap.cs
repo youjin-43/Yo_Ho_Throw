@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_Minimap : MonoBehaviour
+public class UI_Minimap : UI_Base
 {
+    #region VARIABLES
     private Transform _playerTransform;
     private Transform _minimapFrame;
     private Camera    _minimapCamera;
@@ -16,7 +17,38 @@ public class UI_Minimap : MonoBehaviour
     List<ValueTuple<Transform, Transform>> _otherIndicator = new List<(Transform, Transform)>();
 
     private Transform _playerAngle;
+    #endregion
 
+
+
+
+
+    #region OVERRIDE
+    public override void Init()
+    {
+        _name = name;
+    }
+
+    public override void On()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public override void Off()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public override void ResetUI()
+    {
+    }
+    #endregion
+
+
+
+
+
+    #region MONOBEHAVIOUR
     void Awake()
     {
         _minimapFrame = transform.GetChild(0);
@@ -42,12 +74,13 @@ public class UI_Minimap : MonoBehaviour
         _minimapFrame.rotation     = Quaternion.Euler(0f, 0f, -_playerTransform.localEulerAngles.y);
         _playerAngle.localRotation = Quaternion.Euler(0f, 0f, -_playerTransform.localEulerAngles.y);
     }
+    #endregion
 
-    public void ResetUI()
-    {
 
-    }
 
+
+
+    #region FUNCTION
     public void BindIndicator(int actorNumber, MinimapIndicator minimapIndicator, bool isPlayer)
     {
         if(isPlayer == true)
@@ -126,5 +159,5 @@ public class UI_Minimap : MonoBehaviour
             }
         }
     }
-
+    #endregion
 }
