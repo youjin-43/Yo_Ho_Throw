@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem.Processors;
 
@@ -25,12 +26,13 @@ public class PlayerStatController : MonoBehaviour
         if(playerHp <= 0)
         {
             OnDead();
-            Debug.Log("Dead");
+            
         }
+        
     }
-
+    
     public virtual void OnDead()
     {
-
+        Debug.Log("Dead");
     }
 }

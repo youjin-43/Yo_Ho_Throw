@@ -1,3 +1,4 @@
+using Photon.Pun;
 using Photon.Pun.Demo.Asteroids;
 using StarterAssets;
 using System.Collections;
@@ -9,6 +10,8 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerController : ThirdPersonController
 {
+    PhotonView pv;
+
     private StarterAssetsInputs input;
     public GameObject bulletPrefab; // 투사체 프리펩
     public Transform bulletSpawnPoint; // 투사체 생성 위치
@@ -16,82 +19,92 @@ public class PlayerController : ThirdPersonController
     public float bulletArc = 5f; // 투사체가 포물선을 그릴 때 사용 하는 값
     public Transform cameraTransform;
     [Header("Aim")]
-    [SerializeField]
-    private CinemachineVirtualCamera aimCam;
+    public CinemachineVirtualCamera aimCam;
     
     
     [SerializeField]
     private LayerMask targetLayer;
-    private Animator anim;
+    
     private Vector3 targetPosition = Vector3.zero;
     private int maxBulletCount;
     [SerializeField]
     private int bulletCount;
-   
-    public bool lookCamera= true;
+
+    private Animator anim;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         base.Start();
         input = GetComponent<StarterAssetsInputs>();
-        anim = GetComponent<Animator>();
+        
         maxBulletCount = 10;
         bulletCount = maxBulletCount;
+        anim = GetComponent<Animator>();
+        pv = GetComponent<PhotonView>();
     }
 
     
     // Update is called once per frame
     void Update()
-    {
-        
-        base.Update();
-        
-        LookSameCameraDirection();
+    {   //커밋전삭제
+        if (!pv.IsMine) 
+            return;
 
-        //줌 할때의 카메라를 활성화 시킴
-        if (input.aim)
+        base.Update();
+
+            LookSameCameraDirection();
+
+            //줌 할때의 카메라를 활성화 시킴
+            if (input.aim)
+            {
+                aimCam.gameObject.SetActive(true);
+            }
+            else
+            {
+                aimCam.gameObject.SetActive(false);
+            }
+
+            //F키가 투척
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                if (bulletCount != 0)
+                    anim.SetTrigger("Shoot");
+
+            }
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                anim.SetTrigger("Dash");
+                Dash();
+            }
+        if (Input.GetKeyDown(KeyCode.C))
         {
-            aimCam.gameObject.SetActive(true);
+            //anim.SetTrigger("Melee Attack");
+            MeleeAttack();
         }
-        else
-        {
-            aimCam.gameObject.SetActive(false);
-        }
-        //F키가 투척
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if(bulletCount != 0)
-                anim.SetTrigger("Shoot");
-            
-        }
-        if (Input.GetKeyDown(KeyCode.LeftShift)) 
-        {
-            anim.SetTrigger("Dash");
-            Dash();
-        }
+        
+
+
 
     }
     public void FixedUpdate()
     {
+        //커밋전삭제
+        if (!pv.IsMine)
+            return;
+
         base.FixedUpdate();
         
     }
 
-    public void LateUpdate()
-    {
-
-        if (lookCamera)
-        {
-           // LookSameCameraDirection();
-
-        }
-    }
+    
 
     /// <summary>
     /// 투사체를 생성하여 던지는 함수 
     /// 플레이어 애니메이션의 throw attack에서 호출됨
     /// </summary>
-    void ThrowProjectile()
+    [PunRPC]
+    void ThrowProjectile_RPC()
     {
         if (bulletCount == 0)
             return;
@@ -124,6 +137,12 @@ public class PlayerController : ThirdPersonController
         }
     }
 
+    public void ThrowProjectile()
+    {   //커밋전삭제
+        pv.RPC("ThrowProjectile_RPC", RpcTarget.All);
+        //ThrowProjectile_RPC();
+    }
+
     /// <summary>
     /// 트리거이름과 애니메이션 길이를 넣어 재생. 다른 레이어의 가중치를 없애고 싶을때 3,4번째
     /// 해당 애니메이션이 실행 될 때 카메라를 따라가지 않는다면 5번째 인자에 false
@@ -133,20 +152,15 @@ public class PlayerController : ThirdPersonController
     /// <param name="layerWeight"></param>
     /// <param name="targetLayer"></param>
     /// <returns></returns>
-    IEnumerator StartAnimationCoroutine(string _animName , float _frame , int _layerIndex = 0 , float _layerWeight = 1 ,bool _lookCamera = true)
+    IEnumerator StartAnimationCoroutine(string _animName , float _frame , int _layerIndex = 0 , float _layerWeight = 1)
     {   
-        if(_lookCamera == false)
-        {
-            lookCamera = false;
-            
-            
-        }
+        
         anim.SetTrigger(_animName);  
         anim.SetLayerWeight(_layerIndex, _layerWeight);
         yield return new WaitForSeconds(_frame);
         anim.SetTrigger(_animName);
         LayerReset();
-        lookCamera = true;
+        
        
 
     }
@@ -226,6 +240,16 @@ public class PlayerController : ThirdPersonController
         }
 
     }
-    
+
+    public void MeleeAttack()
+    {
+        StartCoroutine(StartAnimationCoroutine("Melee Attack", 0.833f));
+    }
+
+    public override void OnDamaged(float damage)
+    {
+        base.OnDamaged(damage);
+        StartCoroutine(StartAnimationCoroutine("Hit",0.667f));
+    }
     
 }
