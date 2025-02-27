@@ -144,29 +144,56 @@ public class PlayerController : ThirdPersonController
     }
 
     /// <summary>
-    /// 트리거이름과 애니메이션 길이를 넣어 재생. 다른 레이어의 가중치를 없애고 싶을때 3,4번째
-    /// 해당 애니메이션이 실행 될 때 카메라를 따라가지 않는다면 5번째 인자에 false
+    /// 트리거이름과 애니메이션 길이를 넣어 재생. 다른 레이어의 가중치를 없애고 싶을때 4,5번째
+    /// 레이어 가중치를 부드럽게 하고 싶을때 3번째 인자 true
     /// </summary>
     /// <param name="animName"></param> 
     /// <param name="frame"></param>
     /// <param name="layerWeight"></param>
     /// <param name="targetLayer"></param>
     /// <returns></returns>
-    IEnumerator StartAnimationCoroutine(string _animName , float _frame , int _layerIndex = 0 , float _layerWeight = 1)
+    IEnumerator StartAnimationCoroutine(string _animName , float _frame , bool _layerLerp=false,int _layerIndex = 0 , float _layerWeight = 1)
     {   
         
         anim.SetTrigger(_animName);  
         anim.SetLayerWeight(_layerIndex, _layerWeight);
         yield return new WaitForSeconds(_frame);
         anim.SetTrigger(_animName);
-        LayerReset();
+        
+        if( _layerLerp)
+        {
+            StartCoroutine(SmoothLayerReset(_layerIndex));
+        }
+        else
+        {
+            LayerReset();   
+        }
     }
 
     public void LayerReset()
     {
-        anim.SetLayerWeight(1, 1);
         anim.SetLayerWeight(0, 1);
+        anim.SetLayerWeight(1, 1);
     }
+
+    private IEnumerator SmoothLayerReset(int _layerIndex)
+    {
+        float elapsedTime = 0f;
+        float blendTime = 0.3f; // 0.3초 동안 서서히 변화
+        float currentWeight = anim.GetLayerWeight(_layerIndex);
+
+        while (elapsedTime < blendTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float newWeight = Mathf.Lerp(currentWeight, 1, elapsedTime / blendTime); // 0 → 1로 보간
+            anim.SetLayerWeight(1, newWeight);
+
+            yield return null;
+        }
+
+        anim.SetLayerWeight(1, 1); // 최종적으로 정확히 1로 설정
+    }
+
     /// <summary>
     /// 캐릭터가 카메라가 바라보는 곳을 레이케스트 힛 된 곳으로 바꾸는 함수
     /// </summary>
@@ -206,7 +233,7 @@ public class PlayerController : ThirdPersonController
 
     public void Dash()
     {
-        StartCoroutine(StartAnimationCoroutine("Dash", 0.467f, 1,0.1f));
+        StartCoroutine(StartAnimationCoroutine("Dash", 0.467f,true, 1,0.1f));
 
 
         float horizontalInput = Input.GetAxisRaw("Horizontal");
