@@ -58,11 +58,13 @@ public class UI_RealtimeScoreboard : UI_Base
 
 
     #region FUNCTION
-    public void InitRealtimeScoreboard(int order, string nickName)
+    public RealtimePlayerScoreEntry InitRealtimeScoreboard(int order, string nickName)
     {
         order = Mathf.Clamp(order, 0, 2);
 
         _scoreEntries[order].Init(nickName);
+
+        return _scoreEntries[order];
     }
 
     public void UpdateRealtimeScoreboardData(int order, string nickName, int rank, int score)

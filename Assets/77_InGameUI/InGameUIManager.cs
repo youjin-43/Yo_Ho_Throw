@@ -197,9 +197,9 @@ public class InGameUIManager : MonoBehaviour
     /// <summary>
     /// 실시간 점수보드 UI를 초기화 하는곳에서 호출해 주세요
     /// </summary>
-    public void InitRealtimeScoreboard(int order, string nickName)
+    public RealtimePlayerScoreEntry InitRealtimeScoreboard(int order, string nickName)
     {
-        RealtimeScoreboard.InitRealtimeScoreboard(order, nickName);
+        return RealtimeScoreboard.InitRealtimeScoreboard(order, nickName);
     }
 
     /// <summary>
@@ -233,9 +233,9 @@ public class InGameUIManager : MonoBehaviour
     /// </summary>
     /// <param name="actorNumber"></param>
     /// <param name="nickName"></param>
-    public void InitScoreboard(int actorNumber, string nickName)
+    public PlayerScoreEntry InitScoreboard(int actorNumber, string nickName)
     {
-        ScoreBoard.InitScoreboard(playerScoreEntryPrefab, actorNumber, nickName);
+        return ScoreBoard.InitScoreboard(playerScoreEntryPrefab, actorNumber, nickName);
     }
 
     public void UpdateScoreboardData_DeathCount(int actorNumber, int deathCount)

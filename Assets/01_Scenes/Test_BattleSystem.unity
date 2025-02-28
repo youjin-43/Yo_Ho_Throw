@@ -2405,15 +2405,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b65503b858c86f4fa3f98c579d3d44b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  realtimeScoreEntry:
-  - {fileID: 222597179}
-  - {fileID: 321038583}
-  - {fileID: 1178006855}
   playerScoreEntryPrefab: {fileID: 4162192195215474804, guid: 51372d6cefeca5d4787eff23a1024d9a, type: 3}
   scoreboardPanel: {fileID: 928620355}
   scoreEntryParent: {fileID: 928620356}
   titleButton: {fileID: 1250391991}
-  endGameButton: {fileID: 504247994}
   lobbyButton: {fileID: 626642490}
   limitTimeText: {fileID: 546507998}
   goldMedalSprite: {fileID: 21300000, guid: d52185aabb0ab0b499375444a73fd435, type: 3}
@@ -5108,6 +5103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b11ba9105ad79488347d55b0828199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAlwaysVisible: 0
 --- !u!114 &402860476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5238,6 +5234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 460bbf969a5ec0049b350196157a1c1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAlwaysVisible: 0
 --- !u!114 &422028546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11459,6 +11456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42f10aa551a72df478a582d9ce20d660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAlwaysVisible: 0
 --- !u!114 &949759243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11623,6 +11621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cc1f2965a209ea47a27c516631f218d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAlwaysVisible: 0
 --- !u!114 &997234673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12775,6 +12774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db93dbedd3e58774e9b7a5a1328dfd7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAlwaysVisible: 0
 --- !u!114 &1126235012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19010,6 +19010,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef1cc34b7d018ee4da51270a6156042a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAlwaysVisible: 0
 --- !u!114 &1644793624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19961,7 +19962,7 @@ GameObject:
   - component: {fileID: 1681138493}
   - component: {fileID: 1681138492}
   m_Layer: 5
-  m_Name: Canvas_BattleSystem (1)
+  m_Name: Canvas_BattleSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20851,6 +20852,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00bbd22b4beb6794d999ffe1572f7bbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAlwaysVisible: 0
 --- !u!114 &1726556110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21243,9 +21245,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c09ff59be3e6e4fb8fb8b45c08cc67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  killLogPanelPrefab: {fileID: 2017045677203350615, guid: 5e6dc346663bff94c80eab0e32124f55, type: 3}
+  killLogPanelPrefab: {fileID: 2017045677203350615, guid: 589f8b51f9ca02f468dae0421193f76e, type: 3}
   killLogPanelParent: {fileID: 1783490134}
-  padding: 30
+  padding: 60
 --- !u!1 &1800045545
 GameObject:
   m_ObjectHideFlags: 0
@@ -22811,6 +22813,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37fa9431e35cee8408c1b96f74dae900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAlwaysVisible: 0
 --- !u!114 &2003482656
 MonoBehaviour:
   m_ObjectHideFlags: 0

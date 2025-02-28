@@ -11,9 +11,6 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 {
     public static BattleUIController Instance { get; private set; } = null;
 
-    [Header("현재 등수 표시 점수 기록 오브젝트 배열")]
-    [SerializeField] RealtimePlayerScoreEntry[] realtimeScoreEntry;
-
     [Header("플레이어 점수 기록 프리팹")]
     [SerializeField] PlayerScoreEntry playerScoreEntryPrefab;
 
@@ -25,7 +22,6 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
     [Header("게임 종료 시 표시할 버튼들")]
     [SerializeField] Button titleButton;
-    [SerializeField] Button endGameButton;
     [SerializeField] Button lobbyButton;
 
     [Header("LimitTime")]
@@ -47,6 +43,8 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
     Dictionary<int, PlayerScoreEntry> playerScoreEntries = new Dictionary<int, PlayerScoreEntry>();
 
+    RealtimePlayerScoreEntry[] realtimeScoreEntry = new RealtimePlayerScoreEntry[3];
+
     bool isGameRunning = true;
 
     private void Awake()
@@ -62,12 +60,8 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
         {
             // 탭 누르면 나오는 스코어보드
             {
-                // 1. 기존 로직
-                // 비어있는 UI에 PlayerScoreEntry를 추가하고 Dictionary로 actorNumber와 매칭한다
-                playerScoreEntries[actorNumber] = InstantiatePlayerScoreEntry(PhotonNetwork.CurrentRoom.Players[actorNumber]);
-
-                // 2. InGameUI 연동
-                // InGameUIManager.Instance.InitScoreboard(actorNumber, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
+                playerScoreEntries[actorNumber] =
+                    InGameUIManager.Instance.InitScoreboard(actorNumber, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
             }
 
 
@@ -78,12 +72,13 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
                 if (i < 3) realtimeScoreEntry[i++].Init(PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
 
                 // 2. InGameUI 연동
-                //if (i < 3)
-                //{
-                //    i++;
+                if (i < 3)
+                {
+                    realtimeScoreEntry[i] =
+                        InGameUIManager.Instance.InitRealtimeScoreboard(i, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
 
-                    InGameUIManager.Instance.InitRealtimeScoreboard(i, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
-                //}
+                    i++;
+                }
 
             }
         }
@@ -92,19 +87,12 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
         {
             // 표시되고 있던 실시간 스코어 정보 오브젝트를 비활성화 한다
             realtimeScoreEntry[i].gameObject.SetActive(false);
-
-            // 2. InGameUI 연동
-            // InGameUIManager.Instance.ToggleRealtimeScoreboard();
         }
-
-        //생성 테스트
-        //for (int j = 0; j < 6; j++) Instantiate(playerScoreEntryPrefab, scoreEntryParent);
 
         isGameRunning = true;
 
         // 버튼 비활성화
         titleButton.gameObject.SetActive(false);
-        endGameButton.gameObject.SetActive(false);
         lobbyButton.gameObject.SetActive(false);
 
         comboKillText.text = string.Empty;
@@ -239,7 +227,6 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         // 버튼 활성화
         titleButton.gameObject.SetActive(true);
-        endGameButton.gameObject.SetActive(true);
         lobbyButton.gameObject.SetActive(true);
     }
     void ResetScoreboard()
