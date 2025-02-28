@@ -1,18 +1,34 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class UI_Menu : MonoBehaviour
+public class UI_Menu : UI_Base
 {
-    public void ResetUI()
+    #region OVERRIDE
+    public override void Init()
     {
-
+        _name = name;
     }
 
-    public void ToggleMenuUI()
+    public override void On()
     {
-        gameObject.SetActive(!gameObject.activeSelf);
+        gameObject.SetActive(true);
     }
 
+    public override void Off()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public override void ResetUI()
+    {
+    }
+    #endregion
+
+
+
+
+
+    #region FUNCTION
     public void Resume()
     {
         InGameUIManager.Instance.ToggleMenuUI();
@@ -29,4 +45,5 @@ public class UI_Menu : MonoBehaviour
     {
         // SceneManager.LoadSceneAsync()
     }
+    #endregion
 }

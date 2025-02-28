@@ -2,22 +2,62 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class UI_Timer : MonoBehaviour
+public class UI_Timer : UI_Base
 {
+    #region VARIABLES
     private TextMeshProUGUI _timerText;
+    #endregion
 
-    void Awake()
+
+
+
+
+    #region OVERRIDE
+    public override void Init()
     {
-        _timerText = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+        _name = name;
     }
 
-    public void ResetUI()
+    public override void On()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(true);
+        }
+    }
+
+    public override void Off()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+    }
+
+    public override void ResetUI()
     {
         StopAllCoroutines();
 
         _timerText.text = $"0 : 00";
     }
+    #endregion
 
+
+
+
+
+    #region MONOBEHAVIOUR
+    void Awake()
+    {
+        _timerText = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+    }
+    #endregion
+
+
+
+
+
+    #region FUNCTION
     public void StartTimer(float time)
     {
         StartCoroutine(SetTimer(time));
@@ -35,4 +75,5 @@ public class UI_Timer : MonoBehaviour
             _timerText.text = $"{(int)(timer / 60)} : {(int)(timer % 60):D2}";
         }
     }
+    #endregion
 }

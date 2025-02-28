@@ -4,37 +4,45 @@ public class UI_UITestScript : MonoBehaviour
 {
     private void Start()
     {
-        if (InGameUIManager.Instance.Minimap != null)
+        if (InGameUIManager.Instance.Minimap == null)
         {
-            Debug.Log("미니맵 할당 완료");
+            Debug.LogError("미니맵 할당 안됨");
         }
-        if (InGameUIManager.Instance.Timer != null)
+        if (InGameUIManager.Instance.Timer == null)
         {
-            Debug.Log("타이머 할당 완료");
+            Debug.LogError("타이머 할당 안됨");
         }
-        if (InGameUIManager.Instance.ScoreHUD != null)
+        if (InGameUIManager.Instance.RealtimeScoreboard == null)
         {
-            Debug.Log("스코어 HUD 할당 완료");
+            Debug.LogError("스코어 HUD 할당 안됨");
         }
-        if (InGameUIManager.Instance.ScorePanel != null)
+        if (InGameUIManager.Instance.ScoreBoard == null)
         {
-            Debug.Log("스코어 패널 할당 완료");
+            Debug.LogError("스코어 패널 할당 안됨");
         }
-        if (InGameUIManager.Instance.SkillIndicator != null)
+        if (InGameUIManager.Instance.SkillIndicator == null)
         {
-            Debug.Log("스킬창 할당 완료");
+            Debug.LogError("스킬창 할당 안됨");
         }
-        if (InGameUIManager.Instance.HealthIndicator != null)
+        if (InGameUIManager.Instance.HealthIndicator == null)
         {
-            Debug.Log("체력창 할당 완료");
+            Debug.LogError("체력창 할당 안됨");
         }
-        if (InGameUIManager.Instance.Menu != null)
+        if (InGameUIManager.Instance.Menu == null)
         {
-            Debug.Log("메뉴창 할당 완료");
+            Debug.LogError("메뉴창 할당 안됨");
         }
-        if (InGameUIManager.Instance.Setting != null)
+        if (InGameUIManager.Instance.Setting == null)
         {
-            Debug.Log("설정창 할당 완료");
+            Debug.LogError("설정창 할당 안됨");
+        }
+        if (InGameUIManager.Instance.KillLog == null)
+        {
+            Debug.LogError("킬 팝업창 할당 안됨");
+        }
+        if (InGameUIManager.Instance.DeathPopup == null)
+        {
+            Debug.LogError("사망 팝업창 할당 안됨");
         }
     }
 
@@ -58,7 +66,7 @@ public class UI_UITestScript : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
-            InGameUIManager.Instance.ResetUI();
+            InGameUIManager.Instance.ResetAllUI();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
@@ -80,13 +88,21 @@ public class UI_UITestScript : MonoBehaviour
         {
             InGameUIManager.Instance.ToggleMenuUI();
         }
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            InGameUIManager.Instance.AddKillLog("죽인사람", "죽은사람");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            InGameUIManager.Instance.Death(5f);
+        }
         if (Input.GetKey(KeyCode.Tab))
         {
-            InGameUIManager.Instance.ShowScorePanelUI(true);
+            InGameUIManager.Instance.ShowScoreboardUI(true);
         }
         else
         {
-            InGameUIManager.Instance.ShowScorePanelUI(false);
+            InGameUIManager.Instance.ShowScoreboardUI(false);
         }
     }
 }

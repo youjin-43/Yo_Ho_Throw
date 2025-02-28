@@ -5,8 +5,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class UI_SkillIndicator : MonoBehaviour
+public class UI_SkillIndicator : UI_Base
 {
+    #region VARIABLES
     // 스킬 쿨타임 이펙트
     private Image _skill_Shift_CooldownEffect;
     private Image _skill_LClick_CooldownEffect;
@@ -19,32 +20,29 @@ public class UI_SkillIndicator : MonoBehaviour
     private List<GameObject> _daggerCounter = new List<GameObject>();
 
     private int _numOfDagger = 5;
+    #endregion
 
-    void Awake()
+
+
+
+
+    #region OVERRIDE
+    public override void Init()
     {
-        // 쿨타임 이펙트
-        _skill_Shift_CooldownEffect  = transform.GetChild(0).transform.GetChild(1).GetComponent<Image>();
-        _skill_LClick_CooldownEffect = transform.GetChild(1).transform.GetChild(1).GetComponent<Image>();
-        _skill_RClick_CooldownEffect = transform.GetChild(2).transform.GetChild(1).GetComponent<Image>();
-
-        _skill_Shift_CooldownEffect.gameObject.SetActive(false);
-        _skill_LClick_CooldownEffect.gameObject.SetActive(false);
-        _skill_RClick_CooldownEffect.gameObject.SetActive(false);
-
-        // 스킬 비활성화 이펙트(우클릭(단검 던지기) 전용)
-        _skillActivation = transform.GetChild(2).GetChild(2).GetComponent<Image>();
-        _skillActivation.gameObject.SetActive(false);
-
-        // 단검 갯수 카운트
-        Transform daggerCounter = transform.GetChild(2).GetChild(4).transform;
-
-        for(int i = 0; i < 5; ++i)
-        {
-            _daggerCounter.Add(daggerCounter.GetChild(i).GetChild(0).gameObject);
-        }
+        _name = name;
     }
 
-    public void ResetUI()
+    public override void On()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public override void Off()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public override void ResetUI()
     {
         StopAllCoroutines();
 
@@ -54,17 +52,52 @@ public class UI_SkillIndicator : MonoBehaviour
         _skill_LClick_CooldownEffect.fillAmount = 1f;
         _skill_RClick_CooldownEffect.fillAmount = 1f;
 
-        _skill_Shift_CooldownEffect.gameObject.SetActive(false);
+        _skill_Shift_CooldownEffect .gameObject.SetActive(false);
         _skill_LClick_CooldownEffect.gameObject.SetActive(false);
         _skill_RClick_CooldownEffect.gameObject.SetActive(false);
 
         _skillActivation.gameObject.SetActive(false);
     }
+    #endregion
 
 
 
 
 
+    #region MONOBEHAVIOUR
+    void Awake()
+    {
+        _name = name;
+        _isAlwaysVisible = true;
+
+        // 쿨타임 이펙트
+        _skill_Shift_CooldownEffect  = transform.GetChild(4).transform.GetChild(1).GetComponent<Image>();
+        _skill_LClick_CooldownEffect = transform.GetChild(5).transform.GetChild(1).GetComponent<Image>();
+        _skill_RClick_CooldownEffect = transform.GetChild(6).transform.GetChild(1).GetComponent<Image>();
+
+        _skill_Shift_CooldownEffect.gameObject.SetActive(false);
+        _skill_LClick_CooldownEffect.gameObject.SetActive(false);
+        _skill_RClick_CooldownEffect.gameObject.SetActive(false);
+
+        // 스킬 비활성화 이펙트(우클릭(단검 던지기) 전용)
+        _skillActivation = transform.GetChild(6).GetChild(2).GetComponent<Image>();
+        _skillActivation.gameObject.SetActive(false);
+
+        // 단검 갯수 카운트
+        Transform daggerCounter = transform.GetChild(6).GetChild(4).transform;
+
+        for(int i = 0; i < 5; ++i)
+        {
+            _daggerCounter.Add(daggerCounter.GetChild(i).GetChild(0).gameObject);
+        }
+    }
+    #endregion
+
+
+
+
+
+    #region FUNCTION
     #region COOLDOWN
     public void StartCooldownEffect(int button, float cooldownTime)
     {
@@ -106,10 +139,6 @@ public class UI_SkillIndicator : MonoBehaviour
         coolDownImage.gameObject.SetActive(false);
     }
     #endregion
-
-
-
-
 
     #region DAGGERCOUNT
     public void AddDagger(int count)
@@ -158,5 +187,6 @@ public class UI_SkillIndicator : MonoBehaviour
             }
         }
     }
+    #endregion
     #endregion
 }
