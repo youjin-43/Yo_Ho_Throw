@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerController : ThirdPersonController
 {
     PhotonView pv;
+    private PhotonTransformView photonTransformView;
 
     [Header("Online")]
     public bool online = true;
@@ -37,7 +38,7 @@ public class PlayerController : ThirdPersonController
     {
         base.Start();
         input = GetComponent<StarterAssetsInputs>();
-
+        photonTransformView = GetComponent<PhotonTransformView>();
         maxBulletCount = 10;
         bulletCount = maxBulletCount;
         anim = GetComponent<Animator>();
@@ -178,6 +179,11 @@ public class PlayerController : ThirdPersonController
     // 🔥 [대시 기능] - 네트워크 적용
     public void Dash()
     {
+        if (photonTransformView != null)
+        {
+            photonTransformView.enabled = false;
+        }
+
         if (online && pv.IsMine)
             pv.RPC("Dash_RPC", RpcTarget.All);
         else
@@ -214,6 +220,10 @@ public class PlayerController : ThirdPersonController
             _controller.Move(velocity * Time.deltaTime);
             elapsedTime += Time.deltaTime;
             yield return null;
+        }
+        if (photonTransformView != null)
+        {
+            photonTransformView.enabled = true; // ✅ 보간 다시 활성화
         }
     }
 
