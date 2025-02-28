@@ -91,8 +91,8 @@ public class PlayerController : ThirdPersonController
         {
             bulletCount--;
             Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized;
-
-            pv.RPC("Throw_RPC", RpcTarget.All, throwDirection);
+            if (online && pv.IsMine)
+                pv.RPC("Throw_RPC", RpcTarget.All, throwDirection);
         }
     }
 
@@ -124,7 +124,7 @@ public class PlayerController : ThirdPersonController
     //        ThrowProjectile_RPC();
     //}
 
-    // 🔥 [애니메이션 실행] - 네트워크 동기화
+    //
     IEnumerator StartAnimationCoroutine(string _animName, float _frame, bool _layerLerp = false, int _layerIndex = 0, float _layerWeight = 1)
     {
        // anim.SetTrigger(_animName);
