@@ -81,32 +81,39 @@ public class PlayerController : ThirdPersonController
         base.FixedUpdate();
     }
 
-    // 🔥 [투사체 공격] - 네트워크 RPC 적용
-    [PunRPC]
+
+
     void ThrowProjectile_RPC()
     {
        
-
         StartCoroutine(StartAnimationCoroutine("Shoot", 0.24f));
 
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
-            //bulletCount--;
-            
-            GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
-            if (projectile == null) return;
-            projectile.transform.position = bulletSpawnPoint.position;
+            bulletCount--;
+            Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized;
 
-            Rigidbody rb = projectile.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.useGravity = false;
-                Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized;
-                Debug.Log($"throwDir : {throwDirection}");
-                Quaternion rotationOffset = Quaternion.Euler(90, 0, 0);
-                projectile.transform.rotation = Quaternion.LookRotation(throwDirection) * rotationOffset;
-                rb.linearVelocity = throwDirection * bulletSpeed;
-            }
+            pv.RPC("Throw_RPC", RpcTarget.All, throwDirection);
+        }
+    }
+
+    [PunRPC]
+    void Throw_RPC(Vector3 throwDirection)
+    {
+        // 칼 오브젝트 생성 
+        GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
+        if (projectile == null) return;
+        projectile.transform.position = bulletSpawnPoint.position;
+
+        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.useGravity = false;
+            Debug.Log($"throwDir : {throwDirection}");
+
+            Quaternion rotationOffset = Quaternion.Euler(90, 0, 0);
+            projectile.transform.rotation = Quaternion.LookRotation(throwDirection) * rotationOffset;
+            rb.linearVelocity = throwDirection * bulletSpeed;
         }
     }
     
