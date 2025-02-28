@@ -71,20 +71,20 @@ public class UI_SkillIndicator : UI_Base
         _isAlwaysVisible = true;
 
         // 쿨타임 이펙트
-        _skill_Shift_CooldownEffect  = transform.GetChild(0).transform.GetChild(1).GetComponent<Image>();
-        _skill_LClick_CooldownEffect = transform.GetChild(1).transform.GetChild(1).GetComponent<Image>();
-        _skill_RClick_CooldownEffect = transform.GetChild(2).transform.GetChild(1).GetComponent<Image>();
+        _skill_Shift_CooldownEffect  = transform.GetChild(4).transform.GetChild(1).GetComponent<Image>();
+        _skill_LClick_CooldownEffect = transform.GetChild(5).transform.GetChild(1).GetComponent<Image>();
+        _skill_RClick_CooldownEffect = transform.GetChild(6).transform.GetChild(1).GetComponent<Image>();
 
         _skill_Shift_CooldownEffect.gameObject.SetActive(false);
         _skill_LClick_CooldownEffect.gameObject.SetActive(false);
         _skill_RClick_CooldownEffect.gameObject.SetActive(false);
 
         // 스킬 비활성화 이펙트(우클릭(단검 던지기) 전용)
-        _skillActivation = transform.GetChild(2).GetChild(2).GetComponent<Image>();
+        _skillActivation = transform.GetChild(6).GetChild(2).GetComponent<Image>();
         _skillActivation.gameObject.SetActive(false);
 
         // 단검 갯수 카운트
-        Transform daggerCounter = transform.GetChild(2).GetChild(4).transform;
+        Transform daggerCounter = transform.GetChild(6).GetChild(4).transform;
 
         for(int i = 0; i < 5; ++i)
         {
