@@ -67,7 +67,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
                 playerScoreEntries[actorNumber] = InstantiatePlayerScoreEntry(PhotonNetwork.CurrentRoom.Players[actorNumber]);
 
                 // 2. InGameUI 연동
-                //InGameUIManager.Instance.InitScorePanel(actorNumber, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
+                // InGameUIManager.Instance.InitScoreboard(actorNumber, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
             }
 
 
@@ -82,7 +82,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
                 //{
                 //    i++;
 
-                //    InGameUIManager.Instance.InitScoreHUD(i, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
+                    InGameUIManager.Instance.InitRealtimeScoreboard(i, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
                 //}
 
             }
@@ -94,7 +94,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
             realtimeScoreEntry[i].gameObject.SetActive(false);
 
             // 2. InGameUI 연동
-            // InGameUIManager.Instance.ToggleScoreHUD();
+            // InGameUIManager.Instance.ToggleRealtimeScoreboard();
         }
 
         //생성 테스트
@@ -210,13 +210,25 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
         switch (raiseEventCode)
         {
             case RaiseEventCode.UpdateDeathCount:
+                // 1. 기존 로직
                 playerScoreEntries[actorNumber].SetDeathCount(value); break;
 
+                // 2. InGameUI 연동
+                // InGameUIManager.Instance.UpdateScoreboardData_DeathCount(actorNumber, value);
+
             case RaiseEventCode.UpdateScore:
+                // 1. 기존 로직
                 playerScoreEntries[actorNumber].SetScore(value); break;
 
+                // 2. InGameUI 연동
+                // InGameUIManager.Instance.UpdateScoreboardData_Score(actorNumber, value);
+
             case RaiseEventCode.UpdateKillCount:
+                // 1. 기존 로직
                 playerScoreEntries[actorNumber].SetKillCount(value); break;
+
+                // 2. InGameUI 연동
+                // InGameUIManager.Instance.UpdateScoreboardData_KillCount(actorNumber, value);
         }
     }
     public void EndGame()

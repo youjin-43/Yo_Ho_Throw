@@ -90,8 +90,11 @@ public class PoolManager : MonoBehaviour
         }
     }
 
-    //¿©±â µÑÀ» ÁÖ·Î ¾¸
-    //ÇÁ¸®Æé »ý¼º È¤Àº ÀçÈ°¿ë
+    /// <summary>
+    /// ÇÁ¸®Æé »ý¼º
+    /// </summary>
+    /// <param name="prefab"></param>
+    /// <returns></returns>
     public GameObject Pop(GameObject prefab)
     {
         if (_pools.ContainsKey(prefab.name) == false)
@@ -102,7 +105,11 @@ public class PoolManager : MonoBehaviour
         return _pools[prefab.name].Pop();
     }
 
-    //ÇÁ¸®Æé ¹Ý³³
+    /// <summary>
+    /// ÇÁ¸®Æé ¹Ý³³
+    /// </summary>
+    /// <param name="go"></param>
+    /// <returns></returns>
     public bool Push(GameObject go)
     {
         if (_pools.ContainsKey(go.name) == false)

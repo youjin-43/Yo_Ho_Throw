@@ -1,12 +1,44 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_Setting : MonoBehaviour
+public class UI_Setting : UI_Base
 {
+    #region VARIABLES
     private Slider _bgm_Slider;
     private Slider _effect_Slider;
     private Slider _sensitivity_Slider;
+    #endregion
 
+
+
+
+
+    #region OVERRIDE
+    public override void Init()
+    {
+        _name = name;
+    }
+
+    public override void On()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public override void Off()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public override void ResetUI()
+    {
+    }
+    #endregion
+
+
+
+
+
+    #region MONOBEHAVIOUR
     void Awake()
     {
         Transform soundOption   = transform.GetChild(0).GetChild(2);
@@ -21,18 +53,9 @@ public class UI_Setting : MonoBehaviour
         _sensitivity_Slider.value = 0.5f;
     }
 
-    public void ResetUI()
-    {
-
-    }
-    
-    public void ToggleSettingUI()
-    {
-        gameObject.SetActive(!gameObject.activeSelf);
-    }
-
     public void Save()
     {
         InGameUIManager.Instance.ToggleSettingUI();
     }
+    #endregion
 }
