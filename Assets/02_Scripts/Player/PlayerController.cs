@@ -262,6 +262,5 @@ public class PlayerController : ThirdPersonController
     {
         base.OnDamaged(damage);
         anim.SetTrigger("Hit");
-        StartCoroutine(StartAnimationCoroutine("Hit", 0.667f));
     }
 }
