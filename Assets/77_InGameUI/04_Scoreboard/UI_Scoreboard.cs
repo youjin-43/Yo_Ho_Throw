@@ -45,7 +45,7 @@ public class UI_Scoreboard : UI_Base
 
     public PlayerScoreEntry InitScoreboard(PlayerScoreEntry playerScoreEntryPrefab, int actorNumber, string nickName)
     {
-        PlayerScoreEntry entry = Instantiate(playerScoreEntryPrefab, transform.GetChild(0));
+        PlayerScoreEntry entry = Instantiate(playerScoreEntryPrefab, transform);
 
         entry.Init(nickName);
 

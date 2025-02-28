@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -391,9 +391,9 @@ public class InGameUIManager : MonoBehaviour
     /// 플레이어가 사망할 때 호출해 주세요
     /// </summary>
     /// <param name="respawnTime">리스폰 시간</param>
-    public void Death(float respawnTime)
+    public IEnumerator Death(float respawnTime)
     {
-        DeathPopup.Death(respawnTime);
+        yield return DeathPopup.Death(respawnTime);
     }
     #endregion
 }

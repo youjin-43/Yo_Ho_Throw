@@ -18,6 +18,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
     [SerializeField] float offsetY = 0.5f;
 
+    [SerializeField] float respawnTime;
+
     GameObject currPlayer = null;
     PhotonView currPlayerPhotonView = null;
 
@@ -88,11 +90,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
         currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
 
-        // 1번 방법 : 값 변경
-        InGameUIManager.Instance.PlayerTransform = currPlayer.transform;
-
-        // 2번 방법 : 함수 호출
-        // InGameUIManager.Instance.RegisterPlayerTransform(currPlayer.transform); 미구현이므로 주석처리
+        InGameUIManager.Instance.Minimap.SetPlayerTransform(currPlayer.transform);
 
         BattleSystem.SpawnCheck();
 
@@ -105,29 +103,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     }
     IEnumerator RespawnPlayerCoroutine()
     {
-        /* 기존 부활까지 남은 시간 표시
-        int remainSpawnTimer = 3;
-
-        while (remainSpawnTimer > 0)
-        {
-            BattleUIController.Instance.SetRespawnTimer(remainSpawnTimer);
-
-            yield return new WaitForSeconds(1.5f);
-
-            remainSpawnTimer--;
-        }
-        BattleUIController.Instance.SetRespawnTimer(remainSpawnTimer);*/
-
-        float t = 0;
-
-        while (t < 3f)
-        {
-            t += Time.deltaTime;
-
-            // TODO 찬규 : 남은 부활 게이지 및 시간 텍스트 표시
-            // 연결 함수 or 값
-            yield return null;
-        }
+        yield return InGameUIManager.Instance.Death(respawnTime);
 
         Transform spawnPosition = GetRandomTransform();
 

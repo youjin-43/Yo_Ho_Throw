@@ -42,6 +42,11 @@ public class UI_Minimap : UI_Base
     public override void ResetUI()
     {
     }
+
+    public void SetPlayerTransform(Transform playerTransform)
+    {
+        _playerTransform = playerTransform;
+    }
     #endregion
 
 
@@ -56,7 +61,8 @@ public class UI_Minimap : UI_Base
 
     void Start()
     {
-        _playerTransform = InGameUIManager.Instance.PlayerTransform;
+        //_playerTransform = InGameUIManager.Instance.PlayerTransform;
+
         _minimapCamera   = InGameUIManager.Instance.MinimapCamera;
 
         _playerAngle = _minimapCamera.transform.GetChild(1);
