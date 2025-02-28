@@ -261,6 +261,7 @@ public class PlayerController : ThirdPersonController
     public override void OnDamaged(float damage)
     {
         base.OnDamaged(damage);
+        if (online && !pv.IsMine) return;
         anim.SetTrigger("Hit");
     }
 }
