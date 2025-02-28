@@ -6,7 +6,8 @@ public class PlayerStatController : MonoBehaviour
 {
     public float playerHp;
     public float playerMaxHp;
-    
+    public bool isAlive=true;
+    public bool isInRobby=true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -22,6 +23,8 @@ public class PlayerStatController : MonoBehaviour
     //ÆÀ ½Äº°
     public virtual void OnDamaged(float damage)
     {
+        if (isInRobby) return;
+        
         playerHp -= damage;
         if(playerHp <= 0)
         {
