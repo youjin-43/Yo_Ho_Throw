@@ -102,6 +102,7 @@ public class PlayerController : ThirdPersonController
             {
                 rb.useGravity = false;
                 Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized;
+                Debug.Log($"throwDir : {throwDirection}");
                 Quaternion rotationOffset = Quaternion.Euler(90, 0, 0);
                 projectile.transform.rotation = Quaternion.LookRotation(throwDirection) * rotationOffset;
                 rb.linearVelocity = throwDirection * bulletSpeed;
