@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class SettingManager : MonoBehaviour
@@ -20,6 +21,11 @@ public class SettingManager : MonoBehaviour
     public Toggle effectVolumeToggle; // 이펙트 볼륨 체크박스
     public Slider effectVolumeSlider; // 이펙트 볼륨 슬라이더
 
+    public Slider sensitivitySlider; // 마우스 감도 슬라이더
+    public TMP_Text sensitivityText; // 감도 표시 텍스트
+
+    [SerializeField] ButtonSound buttonSound;
+
 
     private void Awake()
     {
@@ -35,8 +41,17 @@ public class SettingManager : MonoBehaviour
         masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeSliderChanged);
         effectVolumeSlider.onValueChanged.AddListener(OnEffectVolumeSliderChanged);
 
+        // 감도 슬라이더의 초기값 설정 (예: 1.0)
+        sensitivitySlider.value = 1.0f;
+        sensitivitySlider.onValueChanged.AddListener(OnSensitivitySliderChanged);
+        sensitivityText.text = sensitivitySlider.value.ToString();
+
         masterVolume = AudioManager.Instance.bgmVolume;
         effectVolume = AudioManager.Instance.sfxVolume;
+
+        // 버튼&토글에 소리 연결
+        buttonSound.RegisterButtonSounds();
+        buttonSound.RegisterToggleSounds();
     }
 
     public void OnSoundButtonClick()
@@ -95,12 +110,23 @@ public class SettingManager : MonoBehaviour
         AudioManager.Instance.SetSfxVolume(value); // 슬라이더 값으로 변화
     }
 
+    private void OnSensitivitySliderChanged(float value)
+    {
+        // 감도 값을 0.1에서 10 사이로 제한
+        float clampedValue = Mathf.Clamp(value, 0.1f, 10f);
+
+        // TODO: 플레이어 마우스 감도 설정 
+
+        sensitivityText.text = clampedValue.ToString("F1"); // 소수점 한자리까지 표시
+    }
+
     public void OnSaveButtonClick()
     {
         // 설정 저장 처리
         AudioManager.Instance.bgmVolume = masterVolumeToggle.isOn ? masterVolumeSlider.value : 0;
         AudioManager.Instance.sfxVolume = effectVolumeToggle.isOn ? effectVolumeSlider.value : 0;
 
+        // TODO : 감도 저장
         Debug.Log("Settings Saved");
     }
 
@@ -110,5 +136,7 @@ public class SettingManager : MonoBehaviour
         // 소리 & 키 정상화
         AudioManager.Instance.SetBgmVolume(AudioManager.Instance.bgmVolume);
         AudioManager.Instance.SetSfxVolume(AudioManager.Instance.sfxVolume);
+
+        gameObject.SetActive(false); // 패널 비활성화
     }
 }
