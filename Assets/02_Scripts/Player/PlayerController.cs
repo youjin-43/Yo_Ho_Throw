@@ -116,15 +116,7 @@ public class PlayerController : ThirdPersonController
         }
     }
     
-    //public void ThrowProjectile()
-    //{
-    //    if (online && pv.IsMine)
-    //        pv.RPC("ThrowProjectile_RPC", RpcTarget.All);
-    //    else
-    //        ThrowProjectile_RPC();
-    //}
-
-    //
+    
     IEnumerator StartAnimationCoroutine(string _animName, float _frame, bool _layerLerp = false, int _layerIndex = 0, float _layerWeight = 1)
     {
        // anim.SetTrigger(_animName);
@@ -269,6 +261,7 @@ public class PlayerController : ThirdPersonController
     public override void OnDamaged(float damage)
     {
         base.OnDamaged(damage);
+        anim.SetTrigger("Hit");
         StartCoroutine(StartAnimationCoroutine("Hit", 0.667f));
     }
 }
