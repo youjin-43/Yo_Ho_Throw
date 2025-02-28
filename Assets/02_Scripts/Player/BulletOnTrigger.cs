@@ -10,7 +10,13 @@ public class BulletOnTrigger : MonoBehaviour
 
     private void OnEnable()
     {
-
+        Rigidbody rb = GetComponent<Rigidbody>();   
+        if (rb != null)
+        {
+            rb.useGravity = false;
+            rb.angularVelocity = Vector3.zero; 
+            rb.linearVelocity = Vector3.zero; 
+        }
         lifeTimeCoroutine = StartCoroutine(AutoDisable());
     }
 
@@ -18,10 +24,10 @@ public class BulletOnTrigger : MonoBehaviour
     {
 
         
-        //TODO 팀 구분 해야함 
+        
         if (other.CompareTag("Player"))
         {
-            //TODO 플레이어 맞춘 사운드 이펙트
+            
             PlayerController pc;
             if (pc = other.GetComponent<PlayerController>()){
                 pc.OnDamaged(1);
@@ -32,7 +38,7 @@ public class BulletOnTrigger : MonoBehaviour
         
         if (other.CompareTag("Ground"))
         {
-            //TODO 땅 맞춘 사운드 이펙트
+            
             PoolManager.Instance.Push(gameObject);
 
         }
@@ -47,7 +53,7 @@ public class BulletOnTrigger : MonoBehaviour
     }
     private void DeactivateBullet()
     {
-        // 실행 중인 코루틴이 있으면 정지
+        
         if (lifeTimeCoroutine != null)
         {
             StopCoroutine(lifeTimeCoroutine);
@@ -60,7 +66,7 @@ public class BulletOnTrigger : MonoBehaviour
 
     private void OnDisable()
     {
-        // 비활성화될 때 실행 중인 코루틴 정리
+        
         if (lifeTimeCoroutine != null)
         {
             StopCoroutine(lifeTimeCoroutine);
