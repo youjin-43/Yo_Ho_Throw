@@ -81,6 +81,7 @@ public class PlayerController : ThirdPersonController
         base.FixedUpdate();
     }
 
+    
     public void ThrowProjectile()
     {
        // TODO 애니메이션 되는지 확인 
@@ -126,7 +127,7 @@ public class PlayerController : ThirdPersonController
     // 🔥 [애니메이션 실행] - 네트워크 동기화
     IEnumerator StartAnimationCoroutine(string _animName, float _frame, bool _layerLerp = false, int _layerIndex = 0, float _layerWeight = 1)
     {
-        anim.SetTrigger(_animName);
+       // anim.SetTrigger(_animName);
         anim.SetLayerWeight(_layerIndex, _layerWeight);
         yield return new WaitForSeconds(_frame);
         anim.SetTrigger(_animName);
