@@ -105,6 +105,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     }
     IEnumerator RespawnPlayerCoroutine()
     {
+        /* 기존 부활까지 남은 시간 표시
         int remainSpawnTimer = 3;
 
         while (remainSpawnTimer > 0)
@@ -115,8 +116,18 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
             remainSpawnTimer--;
         }
+        BattleUIController.Instance.SetRespawnTimer(remainSpawnTimer);*/
 
-        BattleUIController.Instance.SetRespawnTimer(remainSpawnTimer);
+        float t = 0;
+
+        while (t < 3f)
+        {
+            t += Time.deltaTime;
+
+            // TODO 찬규 : 남은 부활 게이지 및 시간 텍스트 표시
+            // 연결 함수 or 값
+            yield return null;
+        }
 
         Transform spawnPosition = GetRandomTransform();
 
@@ -139,6 +150,9 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     }
     public void ExecuteRPC(string functionName, int actorNumber)
     {
+        Debug.Log("호출 ActorNumber : " + PhotonNetwork.LocalPlayer.ActorNumber + " / " +
+            "수신 ActorNumber : " + actorNumber.ToString() + " / 함수 : " + functionName);
+
         photonView.RPC(functionName, PhotonNetwork.CurrentRoom.Players[actorNumber]);
     }
     public void ExecutePlayerRPC(string functionName)
