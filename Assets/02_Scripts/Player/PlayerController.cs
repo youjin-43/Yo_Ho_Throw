@@ -57,7 +57,10 @@ public class PlayerController : ThirdPersonController
 
         if (Input.GetKeyDown(KeyCode.F) && bulletCount > 0)
         {
+            
+            bulletCount--;
             anim.SetTrigger("Shoot");
+
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
@@ -82,13 +85,14 @@ public class PlayerController : ThirdPersonController
     [PunRPC]
     void ThrowProjectile_RPC()
     {
-        if (bulletCount == 0) return;
+       
 
         StartCoroutine(StartAnimationCoroutine("Shoot", 0.24f));
 
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
-            bulletCount--;
+            //bulletCount--;
+            
             GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
             if (projectile == null) return;
             projectile.transform.position = bulletSpawnPoint.position;
@@ -104,7 +108,7 @@ public class PlayerController : ThirdPersonController
             }
         }
     }
-
+    
     public void ThrowProjectile()
     {
         if (online && pv.IsMine)
