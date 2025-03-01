@@ -631,6 +631,7 @@ MonoBehaviour:
   nickNameText: {fileID: 1357142514}
   scoreText: {fileID: 387170467}
   rankText: {fileID: 2012621990}
+  _isVisible: 0
 --- !u!1 &79706577
 GameObject:
   m_ObjectHideFlags: 0
@@ -9810,8 +9811,8 @@ MonoBehaviour:
     - {fileID: 882178636}
     - {fileID: 2100970709}
     - {fileID: 1938053949}
-  playerObject: {fileID: 5897515838875935530, guid: 2ddb2d29471e3cc46b4de6498c9ad0fe, type: 3}
-  offsetY: 0.5
+  playerObject: {fileID: 5264226163476715299, guid: 945bba02fa871754aaae8fd944c1638e, type: 3}
+  offsetY: 0
   respawnTime: 5
 --- !u!4 &484005147
 Transform:
@@ -22418,6 +22419,7 @@ MonoBehaviour:
   nickNameText: {fileID: 573126651}
   scoreText: {fileID: 1909509880}
   rankText: {fileID: 952044346}
+  _isVisible: 0
 --- !u!1 &822713352
 GameObject:
   m_ObjectHideFlags: 0
@@ -46421,6 +46423,7 @@ MonoBehaviour:
   nickNameText: {fileID: 1735369381}
   scoreText: {fileID: 1549825479}
   rankText: {fileID: 1721462653}
+  _isVisible: 0
 --- !u!1 &1279041776
 GameObject:
   m_ObjectHideFlags: 0
@@ -54114,12 +54117,12 @@ GameObject:
   - component: {fileID: 1573331114}
   - component: {fileID: 1573331117}
   m_Layer: 0
-  m_Name: Main Camera
-  m_TagString: MainCamera
+  m_Name: TestCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &1573331114
 AudioListener:
   m_ObjectHideFlags: 0
