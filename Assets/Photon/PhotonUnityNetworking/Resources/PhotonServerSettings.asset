@@ -56,6 +56,8 @@ MonoBehaviour:
   - EnableMeleeAttackCollider_RPC
   - MeleeAttack_RPC
   - Throw_RPC
+  - HidePlayerIcon
+  - ShowPlayerIcon
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

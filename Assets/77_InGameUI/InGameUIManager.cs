@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -155,14 +156,14 @@ public class InGameUIManager : MonoBehaviour
         Minimap.BindIndicator(actorNumber, minimapIndicatorDesc, isPlayer);
     }
 
-    public static void ShowPlayerIcon(int targetActorNumber)
+    public static void ShowPlayerIcon(int myActorNr, int targetActorNr)
     {
-        instance.Minimap.ShowPlayerIcon(targetActorNumber);
+        instance.Minimap.SetPlayerIcon(true, myActorNr, targetActorNr);
     }
 
-    public static void HidePlayerIcon(int targetActorNumber)
+    public static void HidePlayerIcon(int myActorNr, int targetActorNr)
     {
-        instance.Minimap.HidePlayerIcon(targetActorNumber);
+        instance.Minimap.SetPlayerIcon(false, myActorNr, targetActorNr);
     }
     #endregion
 
@@ -197,9 +198,9 @@ public class InGameUIManager : MonoBehaviour
     /// <summary>
     /// 실시간 점수보드 UI를 초기화 하는곳에서 호출해 주세요
     /// </summary>
-    public void InitRealtimeScoreboard(int order, string nickName)
+    public RealtimePlayerScoreEntry InitRealtimeScoreboard(int order, string nickName)
     {
-        RealtimeScoreboard.InitRealtimeScoreboard(order, nickName);
+        return RealtimeScoreboard.InitRealtimeScoreboard(order, nickName);
     }
 
     /// <summary>
@@ -233,9 +234,9 @@ public class InGameUIManager : MonoBehaviour
     /// </summary>
     /// <param name="actorNumber"></param>
     /// <param name="nickName"></param>
-    public void InitScoreboard(int actorNumber, string nickName)
+    public PlayerScoreEntry InitScoreboard(int actorNumber, string nickName)
     {
-        ScoreBoard.InitScoreboard(playerScoreEntryPrefab, actorNumber, nickName);
+        return ScoreBoard.InitScoreboard(playerScoreEntryPrefab, actorNumber, nickName);
     }
 
     public void UpdateScoreboardData_DeathCount(int actorNumber, int deathCount)
@@ -391,9 +392,9 @@ public class InGameUIManager : MonoBehaviour
     /// 플레이어가 사망할 때 호출해 주세요
     /// </summary>
     /// <param name="respawnTime">리스폰 시간</param>
-    public void Death(float respawnTime)
+    public IEnumerator Death(float respawnTime)
     {
-        DeathPopup.Death(respawnTime);
+        yield return DeathPopup.DeathPopupActive(respawnTime);
     }
     #endregion
 }

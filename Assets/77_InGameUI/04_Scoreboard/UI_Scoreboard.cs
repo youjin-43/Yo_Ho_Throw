@@ -43,13 +43,15 @@ public class UI_Scoreboard : UI_Base
         gameObject.SetActive(isVisible);
     }
 
-    public void InitScoreboard(PlayerScoreEntry playerScoreEntryPrefab, int actorNumber, string nickName)
+    public PlayerScoreEntry InitScoreboard(PlayerScoreEntry playerScoreEntryPrefab, int actorNumber, string nickName)
     {
-        PlayerScoreEntry entry = Instantiate(playerScoreEntryPrefab, transform.GetChild(0));
+        PlayerScoreEntry entry = Instantiate(playerScoreEntryPrefab, transform);
 
         entry.Init(nickName);
 
         _playerScoreEntries[actorNumber] = entry;
+
+        return entry;
     }
 
     public void UpdateScoreboardData_DeathCount(int actorNumber, int deathCount)

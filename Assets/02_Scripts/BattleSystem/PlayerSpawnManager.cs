@@ -18,6 +18,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
     [SerializeField] float offsetY = 0.5f;
 
+    [SerializeField] float respawnTime = 5f;
+
     GameObject currPlayer = null;
     PhotonView currPlayerPhotonView = null;
 
@@ -88,11 +90,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
         currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
 
-        // 1번 방법 : 값 변경
-        InGameUIManager.Instance.PlayerTransform = currPlayer.transform;
-
-        // 2번 방법 : 함수 호출
-        // InGameUIManager.Instance.RegisterPlayerTransform(currPlayer.transform); 미구현이므로 주석처리
+        InGameUIManager.Instance.Minimap.SetPlayerTransform(currPlayer.transform);
 
         BattleSystem.SpawnCheck();
 
@@ -105,18 +103,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     }
     IEnumerator RespawnPlayerCoroutine()
     {
-        int remainSpawnTimer = 3;
-
-        while (remainSpawnTimer > 0)
-        {
-            BattleUIController.Instance.SetRespawnTimer(remainSpawnTimer);
-
-            yield return new WaitForSeconds(1.5f);
-
-            remainSpawnTimer--;
-        }
-
-        BattleUIController.Instance.SetRespawnTimer(remainSpawnTimer);
+        yield return InGameUIManager.Instance.Death(respawnTime);
 
         Transform spawnPosition = GetRandomTransform();
 

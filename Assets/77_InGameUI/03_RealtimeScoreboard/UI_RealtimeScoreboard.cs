@@ -4,7 +4,7 @@ using UnityEngine;
 public class UI_RealtimeScoreboard : UI_Base
 {
     #region VARIABLES
-    List<RealtimePlayerScoreEntry> _scoreEntries = new List<RealtimePlayerScoreEntry>();
+    [SerializeField] RealtimePlayerScoreEntry[] _scoreEntries;
     #endregion
 
 
@@ -19,18 +19,18 @@ public class UI_RealtimeScoreboard : UI_Base
 
     public override void On()
     {
-        foreach (Transform child in transform)
+        foreach (RealtimePlayerScoreEntry realtimePlayerScoreEntry in _scoreEntries)
         {
-            child.gameObject.SetActive(true);
+            if (realtimePlayerScoreEntry._isVisible) realtimePlayerScoreEntry.gameObject.SetActive(true);
         }
     }
 
     public override void Off()
     {
-        //foreach (Transform child in transform)
-        //{
-        //    child.gameObject.SetActive(false);
-        //}
+        foreach (RealtimePlayerScoreEntry realtimePlayerScoreEntry in _scoreEntries)
+        {
+            if (realtimePlayerScoreEntry._isVisible) realtimePlayerScoreEntry.gameObject.SetActive(false);
+        }
     }
 
     public override void ResetUI()
@@ -43,26 +43,16 @@ public class UI_RealtimeScoreboard : UI_Base
 
 
 
-    #region MONOBEHAVIOUR
-    void Awake()
-    {
-        for (int i = 0; i < 3; ++i)
-        {
-            _scoreEntries.Add(transform.GetChild(i).GetComponent<RealtimePlayerScoreEntry>());
-        }
-    }
-    #endregion
-
-
-
-
-
     #region FUNCTION
-    public void InitRealtimeScoreboard(int order, string nickName)
+    public RealtimePlayerScoreEntry InitRealtimeScoreboard(int order, string nickName)
     {
         order = Mathf.Clamp(order, 0, 2);
 
         _scoreEntries[order].Init(nickName);
+
+        _scoreEntries[order].gameObject.SetActive(true);
+
+        return _scoreEntries[order];
     }
 
     public void UpdateRealtimeScoreboardData(int order, string nickName, int rank, int score)
