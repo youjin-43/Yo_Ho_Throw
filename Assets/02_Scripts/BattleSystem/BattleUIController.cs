@@ -43,7 +43,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
     Dictionary<int, PlayerScoreEntry> playerScoreEntries = new Dictionary<int, PlayerScoreEntry>();
 
-    RealtimePlayerScoreEntry[] realtimeScoreEntry = new RealtimePlayerScoreEntry[3];
+    List<RealtimePlayerScoreEntry> realtimeScoreEntry = new List<RealtimePlayerScoreEntry>();
 
     bool isGameRunning = true;
 
@@ -67,26 +67,16 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
             // 우상단에 상시 표시되는 스코어보드
             {
-                // 1. 기존 로직
-                // 실시간 스코어 정보 오브젝트 초기화
-                if (i < 3) realtimeScoreEntry[i++].Init(PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
-
                 // 2. InGameUI 연동
                 if (i < 3)
                 {
-                    realtimeScoreEntry[i] =
-                        InGameUIManager.Instance.InitRealtimeScoreboard(i, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
-
+                    realtimeScoreEntry.Add(InGameUIManager.Instance.InitRealtimeScoreboard(
+                            i, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName));
+                    realtimeScoreEntry[realtimeScoreEntry.Count - 1]._isVisible = true;
                     i++;
                 }
 
             }
-        }
-
-        for (; i < 3; i++) // 최소 실시간 스코어 정보 오브젝트(3)보다 현재 인원이 적을 때
-        {
-            // 표시되고 있던 실시간 스코어 정보 오브젝트를 비활성화 한다
-            realtimeScoreEntry[i].gameObject.SetActive(false);
         }
 
         isGameRunning = true;

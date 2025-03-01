@@ -71,6 +71,8 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
         // 마스터 클라이언트가 아닐 때는 반환
         if (!PhotonNetwork.IsMasterClient) return;
 
+        Debug.Log("크아아아");
+
         // 리스폰 시킴 ( 물론 내부적으로 필요할 때만 리스폰 시킴 )
         PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.RespawnPlayer.ToString(), victimActorNumber);
     }

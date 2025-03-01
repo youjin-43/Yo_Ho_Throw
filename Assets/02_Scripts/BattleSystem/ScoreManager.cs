@@ -60,22 +60,30 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 bonusReward += 2;
 
-                InGameUIManager.HidePlayerIcon(victimActorNumber);
+                int targetActorNr = bountyTargetActorNumber;
+
+                foreach (var kvp in PhotonNetwork.CurrentRoom.Players)
+                {
+                    InGameUIManager.HidePlayerIcon(kvp.Key, targetActorNr);
+                    Debug.Log("숨기기 타겟 액터넘버 : " + targetActorNr.ToString());
+                }
 
                 PlayerSpawnManager.Instance.ExecuteRPC(
-                    RaiseEventCode.DeactivateBountyTarget.ToString(), bountyTargetActorNumber);
+                    RaiseEventCode.DeactivateBountyTarget.ToString(), targetActorNr);
 
+                photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, -1);
                 bountyTargetActorNumber = -1;
-
-                photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, bountyTargetActorNumber);
             }
+
+            Debug.Log("획득 전 점수 : " + playerScoreEntryDict[killerActorNumber].Score.ToString());
+            Debug.Log("얻어야 하는 점수 : " + (KILL_SCORE_REWARD + bonusReward).ToString());
 
             playerScoreEntryDict[killerActorNumber].SetScore(
             playerScoreEntryDict[killerActorNumber].Score +
             (KILL_SCORE_REWARD + bonusReward) *
             (isFinalMinute ? 2 : 1)
             );
-
+            Debug.Log("현재 점수 : " + playerScoreEntryDict[killerActorNumber].Score.ToString());
 
             playerScoreEntryDict[killerActorNumber].SetKill(playerScoreEntryDict[killerActorNumber].Kill + 1);
 
@@ -103,11 +111,12 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
             SendOptions.SendReliable);
     }
     [PunRPC]
-    public void SetBountyTargetActorNumber(int actorNumber)
+    public void SetBountyTargetActorNumber(int targetActorNr)
     {
-        InGameUIManager.ShowPlayerIcon(actorNumber);
+        if (targetActorNr != -1)
+            InGameUIManager.ShowPlayerIcon(PhotonNetwork.LocalPlayer.ActorNumber, targetActorNr);
 
-        bountyTargetActorNumber = actorNumber;
+        bountyTargetActorNumber = targetActorNr;
     }
     void HasRankingChanged(int actorNumber)
     {

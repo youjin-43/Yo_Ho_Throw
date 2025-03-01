@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Photon.Pun;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(PhotonView))]
 public class UI_Minimap : UI_Base
 {
     #region VARIABLES
@@ -17,6 +19,7 @@ public class UI_Minimap : UI_Base
     List<ValueTuple<Transform, Transform>> _otherIndicator = new List<(Transform, Transform)>();
 
     private Transform _playerAngle;
+    private PhotonView photonView = null;
     #endregion
 
 
@@ -27,8 +30,10 @@ public class UI_Minimap : UI_Base
     public override void Init()
     {
         _name = name;
-    }
 
+        photonView = GetComponent<PhotonView>();
+    }
+    
     public override void On()
     {
         gameObject.SetActive(true);
@@ -75,6 +80,7 @@ public class UI_Minimap : UI_Base
 
     void LateUpdate()
     {
+        if (_playerTransform == null) return;
         _minimapCamera.transform.position = new Vector3(_playerTransform.position.x, 100f, _playerTransform.position.z);
         //MinimapCamera.transform.rotation = Quaternion.Euler(90f, PlayerTransform.localEulerAngles.y, 0f);
         _minimapFrame.rotation     = Quaternion.Euler(0f, 0f, -_playerTransform.localEulerAngles.y);
@@ -106,18 +112,29 @@ public class UI_Minimap : UI_Base
             _otherIndicator.Add(otherIndicator);
         }
     }
-
-    public void ShowPlayerIcon(int targetActorNumber)
+    [PunRPC]
+    private void ShowPlayerIcon(int targetActorNumber)
     {
         // ActorNumber를 통해 Icon 오브젝트 활성화
-        playerIndicatorDict[targetActorNumber].gameObject.SetActive(true);
+        playerIndicatorDict[targetActorNumber].indicator.gameObject.SetActive(true);
     }
-    public void HidePlayerIcon(int targetActorNumber)
+    [PunRPC]
+    private void HidePlayerIcon(int targetActorNumber)
     {
         // ActorNumber를 통해 Icon 오브젝트 비활성화
-        playerIndicatorDict[targetActorNumber].gameObject.SetActive(false);
-    }
+        playerIndicatorDict[targetActorNumber].indicator.gameObject.SetActive(false);
 
+        Debug.Log(playerIndicatorDict[targetActorNumber].gameObject.name + " 비활성화 아이콘 확인");
+    }
+    public void SetPlayerIcon(bool isShow, int myActorNr, int targetActorNr)
+    {
+        if (myActorNr == targetActorNr) return;
+
+        if (isShow)
+            photonView.RPC("ShowPlayerIcon", PhotonNetwork.CurrentRoom.Players[myActorNr], targetActorNr);
+        else
+            photonView.RPC("HidePlayerIcon", PhotonNetwork.CurrentRoom.Players[myActorNr], targetActorNr);
+    }
     private void AdjustIndicator()
     {
         if(_playerIndicator.Item1 == null)

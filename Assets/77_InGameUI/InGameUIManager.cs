@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -155,14 +156,14 @@ public class InGameUIManager : MonoBehaviour
         Minimap.BindIndicator(actorNumber, minimapIndicatorDesc, isPlayer);
     }
 
-    public static void ShowPlayerIcon(int targetActorNumber)
+    public static void ShowPlayerIcon(int myActorNr, int targetActorNr)
     {
-        instance.Minimap.ShowPlayerIcon(targetActorNumber);
+        instance.Minimap.SetPlayerIcon(true, myActorNr, targetActorNr);
     }
 
-    public static void HidePlayerIcon(int targetActorNumber)
+    public static void HidePlayerIcon(int myActorNr, int targetActorNr)
     {
-        instance.Minimap.HidePlayerIcon(targetActorNumber);
+        instance.Minimap.SetPlayerIcon(false, myActorNr, targetActorNr);
     }
     #endregion
 
@@ -393,7 +394,7 @@ public class InGameUIManager : MonoBehaviour
     /// <param name="respawnTime">리스폰 시간</param>
     public IEnumerator Death(float respawnTime)
     {
-        yield return DeathPopup.Death(respawnTime);
+        yield return DeathPopup.DeathPopupActive(respawnTime);
     }
     #endregion
 }

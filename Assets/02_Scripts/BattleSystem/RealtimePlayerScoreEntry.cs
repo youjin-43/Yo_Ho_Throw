@@ -7,7 +7,7 @@ public class RealtimePlayerScoreEntry : MonoBehaviour
     public TMP_Text nickNameText;
     public TMP_Text scoreText;
     public TMP_Text rankText;
-
+    public bool _isVisible;
     public void Init(string nickName)
     {
         nickNameText.text = nickName;

@@ -60,9 +60,9 @@ public class DeathMatchSystem : BattleSystem
         {
             revengeTargetDict[killerActorNumber] = -1;
 
-            InGameUIManager.HidePlayerIcon(victimActorNumber);
-
             ScoreManager.Instance.AddScore(killerActorNumber, victimActorNumber, REVENGE_BONUS_REWARD);
+
+            InGameUIManager.HidePlayerIcon(killerActorNumber, victimActorNumber);
         }
 
         // 복수 대상이 아닐 때
@@ -70,8 +70,6 @@ public class DeathMatchSystem : BattleSystem
         {
             ScoreManager.Instance.AddScore(killerActorNumber, victimActorNumber);
         }
-
-        InGameUIManager.HidePlayerIcon(victimActorNumber);
 
         // 타살일 경우 죽인 자는 죽은 자의 복수 대상으로 갱신
         revengeTargetDict[victimActorNumber] = victimActorNumber != killerActorNumber ? killerActorNumber : revengeTargetDict[victimActorNumber];

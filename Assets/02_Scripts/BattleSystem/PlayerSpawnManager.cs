@@ -18,7 +18,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
     [SerializeField] float offsetY = 0.5f;
 
-    [SerializeField] float respawnTime;
+    [SerializeField] float respawnTime = 5f;
 
     GameObject currPlayer = null;
     PhotonView currPlayerPhotonView = null;
@@ -126,9 +126,6 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     }
     public void ExecuteRPC(string functionName, int actorNumber)
     {
-        Debug.Log("호출 ActorNumber : " + PhotonNetwork.LocalPlayer.ActorNumber + " / " +
-            "수신 ActorNumber : " + actorNumber.ToString() + " / 함수 : " + functionName);
-
         photonView.RPC(functionName, PhotonNetwork.CurrentRoom.Players[actorNumber]);
     }
     public void ExecutePlayerRPC(string functionName)
