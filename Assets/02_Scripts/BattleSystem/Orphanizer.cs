@@ -4,7 +4,7 @@ public class Orphanizer : MonoBehaviour
 {
     static Transform parent = null;
 
-    private void Awake()
+    private void Start()
     {
         if (parent == null)
             parent = new GameObject("UnparentedGroup").transform;
