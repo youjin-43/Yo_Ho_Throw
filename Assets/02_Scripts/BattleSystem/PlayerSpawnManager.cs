@@ -82,11 +82,14 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         Vector3 position = (Vector3)spawnInfo[0];
         Quaternion rotation = (Quaternion)spawnInfo[1];
 
-        // TODO 찬규 : 확실한 테스트를 위한 Pivot 조정 (제거 or 수정 바람)
-        position += Vector3.up;
+        Ray ray = new Ray(position + Vector3.up * 10f, Vector3.down);
+
+        RaycastHit hit;
+
+        Physics.Raycast(ray, out hit, 30f, LayerMask.NameToLayer("Ground"));
 
         // 각자의 클라이언트에서 PhotonNetwork를 통한 Instantiate를 하기 때문에 별도의 RPC는 없어도 된다
-        currPlayer = PhotonNetwork.Instantiate(playerObject.name, position + Vector3.up * offsetY, rotation);
+        currPlayer = PhotonNetwork.Instantiate(playerObject.name, hit.point + Vector3.up * offsetY, rotation);
 
         currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
 
