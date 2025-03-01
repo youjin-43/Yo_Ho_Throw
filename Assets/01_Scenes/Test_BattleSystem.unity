@@ -8651,7 +8651,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Island_2 Variant (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6802483502284078883, guid: b7b0ddb3da0aad249858dc70ef273fc6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: -4449050252936945561, guid: b7b0ddb3da0aad249858dc70ef273fc6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -25889,7 +25894,7 @@ GameObject:
   - component: {fileID: 698431836}
   - component: {fileID: 698431835}
   - component: {fileID: 698431834}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25906,7 +25911,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 7, z: 0}
-  m_LocalScale: {x: 30, y: 540, z: 30}
+  m_LocalScale: {x: 30, y: 0.01, z: 30}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1536265459}
@@ -25930,7 +25935,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &698431835
@@ -53277,6 +53282,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
+    - target: {fileID: -4449050252936945561, guid: b7b0ddb3da0aad249858dc70ef273fc6, type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5001171264320528118, guid: b7b0ddb3da0aad249858dc70ef273fc6, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -53341,7 +53350,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Island_2 Variant
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6802483502284078883, guid: b7b0ddb3da0aad249858dc70ef273fc6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: -4449050252936945561, guid: b7b0ddb3da0aad249858dc70ef273fc6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
