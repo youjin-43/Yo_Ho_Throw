@@ -297,15 +297,15 @@ MonoBehaviour:
   BottomClamp: -30
   CameraAngleOverride: 0
   LockCameraPosition: 0
-  _controller: {fileID: 0}
+  _controller: {fileID: 2957492828568410456}
   online: 1
   bulletPrefab: {fileID: 8430071279321725386, guid: 7ed4621ce93ddae43adba43f8795ebea, type: 3}
   bulletSpawnPoint: {fileID: 1625589534162421683}
   bulletSpeed: 50
   bulletArc: 5
   meleeAttackColliderObject: {fileID: 5727853010510017898}
-  cameraTransform: {fileID: 0}
-  aimCam: {fileID: 0}
+  cameraTransform: {fileID: 7276187137989279990}
+  aimCam: {fileID: 2668146103834246462}
   targetLayer:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -696,6 +696,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76a9597cc7376844eb9fbef7237c336d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2668146103834246462 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2070925441746177913, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
+  m_PrefabInstance: {fileID: 4159724106850792007}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2668146103834246336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &2668146103834246463 stripped
