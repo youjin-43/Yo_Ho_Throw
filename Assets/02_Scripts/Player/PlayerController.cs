@@ -31,7 +31,7 @@ public class PlayerController : ThirdPersonController
     private Vector3 targetPosition = Vector3.zero;
     private int maxBulletCount;
     [SerializeField]
-    private int bulletCount;
+   
     private Animator anim;
 
     void Start()
@@ -55,6 +55,8 @@ public class PlayerController : ThirdPersonController
         if (input.aim) aimCam.gameObject.SetActive(true);
         else aimCam.gameObject.SetActive(false);
 
+
+        if (!isAlive) return;
         if (Input.GetKeyDown(KeyCode.F) && bulletCount > 0)
         {
             
@@ -63,7 +65,7 @@ public class PlayerController : ThirdPersonController
 
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded && _input.move != Vector2.zero)
         {
             anim.SetTrigger("Dash");
             Dash();
@@ -119,11 +121,21 @@ public class PlayerController : ThirdPersonController
     
     IEnumerator StartAnimationCoroutine(string _animName, float _frame, bool _layerLerp = false, int _layerIndex = 0, float _layerWeight = 1)
     {
-       // anim.SetTrigger(_animName);
+        // anim.SetTrigger(_animName);
+        if(_animName == "Dash")
+        {
+            IsDash = true;  
+        }
+
         anim.SetLayerWeight(_layerIndex, _layerWeight);
         yield return new WaitForSeconds(_frame);
         anim.SetTrigger(_animName);
 
+        if (_animName == "Dash")
+        {
+            IsDash = false;
+        }
+        
         if (_layerLerp)
             StartCoroutine(SmoothLayerReset(_layerIndex));
         else
@@ -152,7 +164,7 @@ public class PlayerController : ThirdPersonController
         anim.SetLayerWeight(1, 1);
     }
 
-    // 🔥 [카메라 방향을 따라 플레이어 회전]
+    
     void LookSameCameraDirection()
     {
         Transform camTransform = Camera.main.transform;
@@ -179,7 +191,7 @@ public class PlayerController : ThirdPersonController
         transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
     }
 
-    // 🔥 [대시 기능] - 네트워크 적용
+    
     public void Dash()
     {
         if (photonTransformView != null)
@@ -226,11 +238,11 @@ public class PlayerController : ThirdPersonController
         }
         if (photonTransformView != null)
         {
-            photonTransformView.enabled = true; // ✅ 보간 다시 활성화
+            photonTransformView.enabled = true; 
         }
     }
 
-    // 🔥 [근접 공격] - 네트워크 적용
+    
     public void MeleeAttack()
     {
         if (online && pv.IsMine)

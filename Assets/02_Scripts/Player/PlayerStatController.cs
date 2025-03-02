@@ -6,6 +6,7 @@ public class PlayerStatController : MonoBehaviour
 {
     public float playerHp;
     public float playerMaxHp;
+    public int bulletCount=10;
     public bool isAlive=true;
     public bool isInRobby=true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -37,5 +38,10 @@ public class PlayerStatController : MonoBehaviour
     public virtual void OnDead()
     {
         Debug.Log("Dead");
+    }
+
+    public void FullBullet()
+    {
+        bulletCount = 10;
     }
 }
