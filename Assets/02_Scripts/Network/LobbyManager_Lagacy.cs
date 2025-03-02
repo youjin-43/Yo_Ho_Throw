@@ -13,7 +13,10 @@ public enum RoomProperties
     teamCount
 }
 
-public class LobbyManager : MonoBehaviourPunCallbacks
+/// <summary>
+/// 포톤 매니저로 대체됨
+/// </summary>
+public class LobbyManager_Lagacy : MonoBehaviourPunCallbacks
 {
 
     [Header("PlayerNameInput")]
@@ -127,7 +130,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         // 플레이어 이름을 Photon 네트워크 닉네임으로 설정
         PhotonNetwork.NickName = playerNameInput.text;
-        GameManager.Instance.UserId = playerNameInput.text;
+        //GameManager.Instance.UserId = playerNameInput.text;
 
         // 포톤 서버에 연결
         PhotonNetwork.ConnectUsingSettings();
@@ -185,8 +188,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                 Debug.LogWarning($"방 목록 업데이트 - 모드 정보 없음 (룸 이름: {room.Name})");
             }
 
+            // 방 입장 버튼 설정
             roomItem.transform.GetChild((int)roomListItemPrefabChilds.JoinButton).GetComponent<Button>().onClick.AddListener(() => TryJoinRoom(room));
-            if (room.CustomProperties.ContainsKey("password"))roomItem.transform.GetChild((int)roomListItemPrefabChilds.LockIcon).gameObject.SetActive(true);
+
+            // 비밀번호가 있는 경우 🔒 아이콘 활성화
+            if (room.CustomProperties.ContainsKey("password")) roomItem.transform.GetChild((int)roomListItemPrefabChilds.LockIcon).gameObject.SetActive(true);
         }
     }
 
@@ -297,19 +303,19 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         string selectedMode = modeDropdown.options[modeIndex].text;
 
-        if (selectedMode == GameMode.TeamMatch.ToString())
-        {
-            TeamCountArea.SetActive(true);
-            //MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(false);
-            MaxPlayerCountDropdown_TeamMatch.gameObject.SetActive(true);
-            UpdateMaxTeamCount(MaxPlayerCountDropdown_TeamMatch.value); // 팀 개수 업데이트
-        }
-        else
-        {
-            TeamCountArea.SetActive(false);
-            //MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(true);
-            MaxPlayerCountDropdown_TeamMatch.gameObject.SetActive(false);
-        }
+        //if (selectedMode == GameMode.TeamMatch.ToString())
+        //{
+        //    TeamCountArea.SetActive(true);
+        //    //MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(false);
+        //    MaxPlayerCountDropdown_TeamMatch.gameObject.SetActive(true);
+        //    UpdateMaxTeamCount(MaxPlayerCountDropdown_TeamMatch.value); // 팀 개수 업데이트
+        //}
+        //else
+        //{
+        //    TeamCountArea.SetActive(false);
+        //    //MaxPlayerCountDropdown_DeathMatch.gameObject.SetActive(true);
+        //    MaxPlayerCountDropdown_TeamMatch.gameObject.SetActive(false);
+        //}
     }
 
     // 최대 플레이어 수 변경 시 팀 개수 드롭다운 업데이트
