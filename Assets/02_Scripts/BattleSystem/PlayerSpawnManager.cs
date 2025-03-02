@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Cinemachine;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -15,6 +16,13 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     [SerializeField] SpawnPosition[] spawnPositions;
 
     [SerializeField] GameObject playerObject;
+
+    [SerializeField] Transform mainCamera;
+    [SerializeField] CinemachineVirtualCamera world_followCam;
+    [SerializeField] CinemachineVirtualCamera world_aimCam;
+
+    [SerializeField] Transform camaraRoot;
+
 
     [SerializeField] float offsetY = 0.5f;
 
@@ -82,13 +90,25 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         Vector3 position = (Vector3)spawnInfo[0];
         Quaternion rotation = (Quaternion)spawnInfo[1];
 
-        // TODO 찬규 : 확실한 테스트를 위한 Pivot 조정 (제거 or 수정 바람)
-        position += Vector3.up;
+        Debug.Log("수정 전 위치 : " + position.ToString());
+
+        position.y = GetHighestCollisionY(position);
+
+        Debug.Log("수정 후 위치 : " + position.ToString());
 
         // 각자의 클라이언트에서 PhotonNetwork를 통한 Instantiate를 하기 때문에 별도의 RPC는 없어도 된다
-        currPlayer = PhotonNetwork.Instantiate(playerObject.name, position + Vector3.up * offsetY, rotation);
+        currPlayer = PhotonNetwork.Instantiate(playerObject.name, position, rotation);
 
         currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
+
+        // 카메라에 루트 셋팅
+        camaraRoot = currPlayer.transform.GetChild(1);
+        world_followCam.Follow = camaraRoot;
+        world_aimCam.Follow = camaraRoot;
+
+        // 플레이어에 카메라 셋팅
+        currPlayer.GetComponent<PlayerController>().aimCam = world_aimCam;
+        currPlayer.GetComponent<PlayerController>().cameraTransform = mainCamera.transform;
 
         InGameUIManager.Instance.Minimap.SetPlayerTransform(currPlayer.transform);
 
@@ -106,6 +126,11 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         yield return InGameUIManager.Instance.Death(respawnTime);
 
         Transform spawnPosition = GetRandomTransform();
+
+        Vector3 position = spawnPosition.position;
+        Quaternion rotation = spawnPosition.rotation;
+
+        position.y = GetHighestCollisionY(position);
 
         currPlayer.transform.position = spawnPosition.position + Vector3.up * offsetY;
         currPlayer.transform.rotation = spawnPosition.rotation;
@@ -147,6 +172,18 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     {
         // TODO 찬규 : 현상금 타겟 지정 이펙트 비활성화
 
+    }
+    float GetHighestCollisionY(Vector3 position)
+    {
+        Ray ray = new Ray(position + Vector3.up * 100f, Vector3.down);
+
+        RaycastHit hit;
+
+        Physics.Raycast(ray, out hit, 150f);
+
+        Debug.Log("충돌 위치 : " + hit.point.ToString());
+
+        return hit.point.y;
     }
     Transform GetRandomTransform() => spawnPositions[Random.Range(0, spawnPositions.Length)].GetRandomTransform();
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
