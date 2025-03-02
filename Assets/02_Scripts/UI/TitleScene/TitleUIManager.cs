@@ -20,10 +20,10 @@ public class TitleUIManager : MonoBehaviour
     enum roomItemChilds
     {
         RoomName,
-        PlayerCount,
         GameMode,
-        JoinButton,
-        LockIcon
+        PlayerCount,
+        LockIcon,
+        JoinButton
     }
 
     [Header("CreatNewRoom")]
@@ -53,6 +53,7 @@ public class TitleUIManager : MonoBehaviour
     public GameObject passwordPromptPanel; // 비밀번호 입력 패널
     public TMP_InputField passwordInput; // 비밀번호 입력 필드
     public Button passwordSubmitButton; // 비밀번호 확인 버튼
+    public Button passwordCancelButton; // 비밀번호 확인 버튼
 
     private void Start()
     {
@@ -102,6 +103,7 @@ public class TitleUIManager : MonoBehaviour
         #region JoinRoom
         passwordPromptPanel.SetActive(false);
         passwordSubmitButton.onClick.AddListener(VerifyPassword);
+        passwordCancelButton.onClick.AddListener(CancelVerifyPassword);
         #endregion
     }
 
@@ -308,6 +310,12 @@ public class TitleUIManager : MonoBehaviour
             Debug.LogWarning("비밀번호가 틀렸습니다!");
             passwordInput.text = "";
         }
+    }
+
+    private void CancelVerifyPassword()
+    {
+        passwordPromptPanel.SetActive(false);
+        RoomListArea.SetActive(true);
     }
     #endregion
 
