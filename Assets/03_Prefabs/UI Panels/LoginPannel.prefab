@@ -1119,7 +1119,7 @@ GameObject:
   - component: {fileID: 1605450961728048773}
   - component: {fileID: 3282869386664992995}
   m_Layer: 5
-  m_Name: LogInPanel
+  m_Name: LoginPannel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

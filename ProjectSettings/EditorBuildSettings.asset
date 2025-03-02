@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/01_Scenes/LobbyScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/01_Scenes/TitleScene.unity
+    path: Assets/01_Scenes/TitleScene_Lagacy.unity
     guid: 16e52d15ce1f74b69be7d6ad69e8dbb9
   - enabled: 1
     path: Assets/01_Scenes/GameReadyScene.unity

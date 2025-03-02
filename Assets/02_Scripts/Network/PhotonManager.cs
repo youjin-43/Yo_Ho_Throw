@@ -1,80 +1,150 @@
 //포톤 네트워크를 이용하기 위해 아래 두개가 필수 
+using System;
+using System.Collections.Generic;
 using Photon.Pun; // Pun : 포톤 유니티 네트워크의 약자
 using Photon.Realtime; // 실시간 통신? 을 위해서
-using TMPro;
 using UnityEngine;
 
+public enum PhotonRoomProperties
+{
+    mode,
+    password
+}
+/*
+           
+    일반 클라이언트의 흐름
+    1. 마스터 클라이언트가 씬을 변경했기 때문에 JoinRoom()을 하게 되면 자동으로 GameReadyScene으로 이동
+    2. GameReadyManager.OnJoinedRoom() 실행
+    3. SpawnPlayer() 실행 
+            
+*/
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
+    private static PhotonManager _instance;
+    public static PhotonManager Instance
+    {
+        get
+        {
+            if (!_instance)
+            {
+                _instance = FindFirstObjectByType<PhotonManager>();
+                if (!_instance)
+                {
+                    GameObject obj = new GameObject();
+                    obj.name = "GameManager";
+                    _instance = obj.AddComponent(typeof(PhotonManager)) as PhotonManager;
+                }
+            }
+            return _instance;
+        }
+    }
+
     void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+        }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+    }
+
+    #region TITLE
+
+    public void ConnectToPhoton()
     {
         //지역 kr로 고정.이 부분이 없으면 자동으로 지역을 찾는데,다른 지역에 걸릴 경우 네트워크를 통해 만날 수 없다.
         PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "kr";
 
-        PhotonNetwork.AutomaticallySyncScene = true; //이 값이 true일 때 MasterClient는 PhotonNetwork.LoadLevel()을 호출 할 수 있고 모든 연결된 플레이어들은 동일한 레벨(씬)을 자동적으로 로드
-        //PhotonNetwork.AutomaticallySyncScene = false;
-
-        // 같은 버전의 유저끼리 접속 허용. 다른 버전 유저 차단
-        //PhotonNetwork.GameVersion = version;
-
-        //플레이어가 네트워크에서 사용할 닉네임을 설정. 서버로 보낼 나의 아이디. 
-        PhotonNetwork.NickName = GameManager.Instance.UserId;
-        //GameManager.Instance.UserName = userID.text;
+        PhotonNetwork.AutomaticallySyncScene = true; // 이렇게 설정하면 방장이 이동한 씬(GameReadyScene)으로 새로운 플레이어도 자동 이동됨!
+        // 이 설정이 꺼져 있으면, 새로 들어온 플레이어는 방장이 이동한 씬으로 자동 이동되지 않음! 이 경우, 새로 들어온 플레이어도 수동으로 씬을 이동시켜야 함 
 
         // 포톤 서버와 통신 횟수 확인. 초당 30회. 30이 떠야 정상
         Debug.Log("포톤 서버와 통신 횟수 확인 : " + PhotonNetwork.SendRate);
 
+        // 플레이어 이름을 Photon 네트워크 닉네임으로 설정
+        PhotonNetwork.NickName = GameManager.Instance.UserName;
+        
+        // 포톤 서버에 연결
         PhotonNetwork.ConnectUsingSettings(); // 세팅한걸로 커넥트. PhotonNetwork를 실제 연결하며 서버 접속. 이거 하면 OnConnectedToMaster()가 호출됨
     }
 
     // 포톤 서버에 접속 후 호출되는 콜백 함수
     public override void OnConnectedToMaster()
     {
-        print("서버 접속 완료");
-        // 로비 입장했는지 확인, False. 연결과 로비 입장은 다르기 때문에 False 가 정상.
-        Debug.Log($"로비 입장 여부 = {PhotonNetwork.InLobby}");
-
-        //TODO : 로컬 닉네임이랑 그냥 닉네임이랑 차이가 뭐지?? 
-        //PhotonNetwork.LocalPlayer.NickName = userID.text;
-
+        print($"{PhotonNetwork.NickName} : 서버 접속 완료");
+        Debug.Log($"로비 입장 여부 = {PhotonNetwork.InLobby}"); // 로비 입장했는지 확인, False. 연결과 로비 입장은 다르기 때문에 False 가 정상.
         PhotonNetwork.JoinLobby(); //서버에 입장한 후 바로 로비로 입장 
     }
+
+    // 로비에 입장했을 때 실행할 이벤트
+    public static event Action OnLobbyJoined;
 
     //로비에 접속 후 호출되는 콜백 함수 
     public override void OnJoinedLobby()
     {
-        // 로비 입장했는지 확인, True
-        Debug.Log($"로비 입장 여부 = {PhotonNetwork.InLobby}");
-
-        // 생성되어 있는 룸 중에서 랜덤하게 입장
-        PhotonNetwork.JoinRandomRoom(); // TODO : 나중에는 내가 의도하는 곳으로
-
+        Debug.Log($"로비 입장 여부 = {PhotonNetwork.InLobby}"); // 로비 입장했는지 확인, True
+        OnLobbyJoined?.Invoke(); // 이벤트 발생! (구독한 함수들 실행됨)
     }
 
-    // 랜덤 룸 입장에 실패했을 떄 호출되는 콜백 함수. 랜덤 룸 입장에 실패할 경우엔 내가 직접 방을 만든다.
-    public override void OnJoinRandomFailed(short returnCode, string message)
+    // 방 목록이 변경될 때 실행할 이벤트
+    public static event Action<List<RoomInfo>> OnRoomListUpdated;
+
+    // 포톤(PUN)의 로비에서 방 목록이 갱신될 때 자동으로 호출
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        // 에러 메세지 출력
-        Debug.Log($"랜덤 룸 입장 실패 {returnCode}:{message}");
-
-        // 룸 속성 정의
-        RoomOptions ro = new RoomOptions(); //ro 는 RoomOption
-        ro.MaxPlayers = 2;      // 최대 동접자 수:4. 포톤은 20명까지 지원 
-        ro.IsOpen = true;        // 룸의 오픈 여부
-        ro.IsVisible = true;     // 로비에서 룸 목록 노출 여부
-
-        // 룸 생성
-        //TODO : 닉네임 중복되지 않도록 처리해줘야함 
-        //방의 이름이 중복되지 않도록 방 이름에 플레이어의 이름을 붙여 생성하도록 했다. 이름이 중복될 경우 방이 생성되지 않는다.
-        PhotonNetwork.CreateRoom("My Room " + PhotonNetwork.NickName, ro); // 이름과 옵션(위에서 설정한)
+        Debug.Log("방 목록이 업데이트됨!");
+        OnRoomListUpdated?.Invoke(roomList);
     }
 
+    // TitleUIManager에서 createRoomButton을 눌렀을때 실행 
+    public void CreateRoom(string roomName, RoomOptions options)
+    {
+        Debug.Log(
+            $"방 생성 요청 - 이름: {roomName}, " +
+            $"모드 : {options.CustomRoomProperties[PhotonRoomProperties.mode.ToString()]}, " +
+            $"최대 인원: {options.MaxPlayers}"
+            );
+
+        PhotonNetwork.CreateRoom(roomName, options);
+    }
+
+    // 방 입장 요청 이벤트!
+    public static event Action<RoomInfo> OnPasswordCheckRequested;
+
+    // TitleUIManager는 “이 방에 입장하고 싶어요!” 신호를 보냄 -> PhotonManager는 그 신호를 듣고 TryJoinRoom 실행
+    public void TryJoinRoom(RoomInfo room)
+    {
+        Debug.Log($"[PhotonManager] 방 입장 시도: {room.Name}");
+
+        // 비밀번호가 설정돼있다면 
+        if (room.CustomProperties.ContainsKey(PhotonRoomProperties.password.ToString()))
+        {
+            Debug.Log("비밀번호가 설정된 방입니다");
+            OnPasswordCheckRequested?.Invoke(room); // 비밀번호 입력 UI 활성화 이벤트 호출
+        }
+        else
+        {
+            Debug.Log("비밀번호가 설정되지 않은 방입니다. 바로 입장을 시도합니다");
+            PhotonNetwork.JoinRoom(room.Name);
+        }
+    }
+
+    // TitleUIManager의 VerifyPassword에서 호출됨 
+    public void JoinRoomByName(string roomName)
+    {
+        PhotonNetwork.JoinRoom(roomName);
+    }
+
+    #endregion
 
     // 룸 생성이 완료된 후 호출되는 콜백 함수
     public override void OnCreatedRoom()
     {
-        Debug.Log("룸 생성");
-        Debug.Log($"룸 이름 = {PhotonNetwork.CurrentRoom.Name}");
+        Debug.Log($"룸 생성 - 이름 : {PhotonNetwork.CurrentRoom.Name}");
     }
 
     // 룸에 입장한 후 호출되는 콜백 함수
@@ -84,27 +154,22 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("내가 방장이다!!!");
+            PhotonNetwork.LoadLevel("GameReadyScene");
+            // AutomaticallySyncScene를 true로 설정했기 때문에, 새로 들어온 클라이언트도 자동으로 방장이 이동한 씬(GameReadyScene)으로 이동
         }
         else
         {
-            Debug.Log("나는 클라이언트다!!");
+            Debug.Log("나는 클라이언트다!!"); // 여기 스크립트에서는 실행 안돼야 정상 
         }
 
-
         Debug.Log($"룸 입장 여부 = {PhotonNetwork.InRoom}");
-        Debug.Log($"현재 룸의 인원수 = {PhotonNetwork.CurrentRoom.PlayerCount}");
+        Debug.Log($"현재 룸의 인원수 = {PhotonNetwork.CurrentRoom.PlayerCount}"); // 방장 1명으로 떠야 정상 
 
 
         //for 문 처럼 Player 마다 실행 
         foreach (var player in PhotonNetwork.CurrentRoom.Players)
         {
             Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐
-        }
-
-        if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
-        {
-            // 네트워크를 통해 동기화된 오브젝트 생성
-            PhotonNetwork.Instantiate("tmp_player", new Vector3(0,10,0), Quaternion.identity);
         }
 
         // 인원수가 꽉 차면 룸 닫는거 처리 
@@ -119,7 +184,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
         //    Debug.Log("Game Start!");
 
-        //    // TODO : 게임 씬으로 이동 하면 됨 
+        //   
         //}
     }
 }
