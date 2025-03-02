@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public enum GameMode
 {
     DeathMatch,
-    TeamMatch
+    ZombieMode
 }
 
 public class GameManager : MonoBehaviour
@@ -31,9 +31,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public string UserId { get; set; } = "soldier";
-    public bool isPlaying { get; set; } = false;
-
     void Awake()
     {
         if (_instance == null)
@@ -47,4 +44,5 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public string UserName { get; set; } = "soldier";
 }
