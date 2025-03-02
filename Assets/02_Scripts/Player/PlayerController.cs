@@ -12,6 +12,9 @@ public class PlayerController : ThirdPersonController
     [Header("Online")]
     public bool online = true;
 
+    [Header("State")]
+    public bool canDash = true;
+
     [Header("Bullet")]
     private StarterAssetsInputs input;
     public GameObject bulletPrefab;
@@ -65,16 +68,19 @@ public class PlayerController : ThirdPersonController
 
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded && _input.move != Vector2.zero)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded && _input.move != Vector2.zero && canDash)
         {
             anim.SetTrigger("Dash");
             Dash();
+            StartCoroutine(DashCooltime());
         }
 
         if (Input.GetKeyDown(KeyCode.C))
         {
             MeleeAttack();
         }
+
+        
     }
 
     void FixedUpdate()
@@ -83,6 +89,12 @@ public class PlayerController : ThirdPersonController
         base.FixedUpdate();
     }
 
+    IEnumerator DashCooltime()
+    {
+        canDash = false;
+        yield return new WaitForSeconds(dashCoolTime);
+        canDash = true;
+    }
     
     public void ThrowProjectile()
     {

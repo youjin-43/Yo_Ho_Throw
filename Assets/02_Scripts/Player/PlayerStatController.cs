@@ -9,6 +9,8 @@ public class PlayerStatController : MonoBehaviour
     public int bulletCount=10;
     public bool isAlive=true;
     public bool isInRobby=true;
+    public float dashCoolTime = 5f;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
