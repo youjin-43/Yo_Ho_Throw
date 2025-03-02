@@ -66,7 +66,10 @@ public class UI_Minimap : UI_Base
 
     void Start()
     {
-        //_playerTransform = InGameUIManager.Instance.PlayerTransform;
+        // Map+InGameUI_TestScene Scene 디버그용, 나중에 주석처리하셈
+        {
+            _playerTransform = InGameUIManager.Instance.PlayerTransform;
+        }
 
         _minimapCamera   = InGameUIManager.Instance.MinimapCamera;
 
