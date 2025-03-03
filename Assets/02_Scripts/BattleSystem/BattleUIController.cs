@@ -46,7 +46,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     List<RealtimePlayerScoreEntry> realtimeScoreEntry = new List<RealtimePlayerScoreEntry>();
 
     bool isGameRunning = true;
-
+    bool isAlive = true;
     private void Awake()
     {
         Instance = this;
@@ -91,12 +91,21 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     {
         if (!isGameRunning) return;
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && isAlive)
         {
             ShowScoreboard();
         }
 
         if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            HideScoreboard();
+        }
+    }
+    public void SetIsAlive(bool isAlive)
+    {
+        this.isAlive = isAlive;
+
+        if (isAlive == false)
         {
             HideScoreboard();
         }

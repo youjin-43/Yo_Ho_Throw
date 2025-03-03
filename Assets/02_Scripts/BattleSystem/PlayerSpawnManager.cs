@@ -125,6 +125,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     {
         yield return InGameUIManager.Instance.Death(respawnTime);
 
+        BattleUIController.Instance.SetIsAlive(true);
+
         Transform spawnPosition = GetRandomTransform();
 
         Vector3 position = spawnPosition.position;
