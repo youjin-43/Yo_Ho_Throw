@@ -140,7 +140,7 @@ public class TitleUIManager : MonoBehaviour
     // 방 목록이 변경될 때 실행할 함수 
     private void UpdateRoomList(List<RoomInfo> roomList)
     {
-        Debug.Log("UI에서 방 목록 업데이트 실행!");
+        Debug.Log($"UI에서 방 목록 업데이트 실행! - 생성돼있는 룸 갯수 : {roomList.Count}");
 
         // 기존 방 목록 삭제
         foreach (Transform child in roomListContent) Destroy(child.gameObject);

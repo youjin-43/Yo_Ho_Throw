@@ -79,15 +79,15 @@ public class PoolManager : MonoBehaviour
     private void Awake()
     {
         // ΩÃ±€≈Ê √ ±‚»≠
-        if (Instance == null)
-        {
+        //if (Instance == null)
+        //{
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        //    DontDestroyOnLoad(gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //}
     }
 
     /// <summary>

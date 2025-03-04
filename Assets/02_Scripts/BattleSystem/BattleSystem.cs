@@ -68,6 +68,11 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
         // 킬로그 발생
         KillLogPanelController.Instance.AddKillLog(killerActorNumber, victimActorNumber);
 
+        if (victimActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+        {
+            BattleUIController.Instance.SetIsAlive(false);
+        }
+
         // 마스터 클라이언트가 아닐 때는 반환
         if (!PhotonNetwork.IsMasterClient) return;
 
