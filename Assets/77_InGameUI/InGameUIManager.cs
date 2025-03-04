@@ -41,6 +41,7 @@ public class InGameUIManager : MonoBehaviour
     [Header("Minimap")]
     [SerializeField] public Transform PlayerTransform;
     [SerializeField] public Camera    MinimapCamera;
+    [SerializeField] public MinimapIconColor minimapIconColor;
 
     [Header("ScorePanel")]
     [SerializeField] public PlayerScoreEntry playerScoreEntryPrefab;
@@ -156,14 +157,14 @@ public class InGameUIManager : MonoBehaviour
         Minimap.BindIndicator(actorNumber, minimapIndicatorDesc, isPlayer);
     }
 
-    public static void ShowPlayerIcon(int myActorNr, int targetActorNr)
+    public static void ShowPlayerIcon(int myActorNr, int targetActorNr, MinimapIconType iconType)
     {
-        instance.Minimap.SetPlayerIcon(true, myActorNr, targetActorNr);
+        instance.Minimap.SetPlayerIcon(true, myActorNr, targetActorNr, iconType);
     }
 
-    public static void HidePlayerIcon(int myActorNr, int targetActorNr)
+    public static void HidePlayerIcon(int myActorNr, int targetActorNr, MinimapIconType iconType)
     {
-        instance.Minimap.SetPlayerIcon(false, myActorNr, targetActorNr);
+        instance.Minimap.SetPlayerIcon(false, myActorNr, targetActorNr, iconType);
     }
     #endregion
 

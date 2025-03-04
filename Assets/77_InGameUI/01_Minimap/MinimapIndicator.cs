@@ -1,17 +1,16 @@
-using Photon.Pun;
+Ôªøusing Photon.Pun;
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MinimapIndicator : MonoBehaviour
 {
-    // πÃ¥œ∏ ø° ±◊∑¡¡Ææﬂ «“ ø¿∫Í¡ß∆ÆµÈø°∞‘ ∫Œ¬¯
+    // ÎØ∏ÎãàÎßµÏóê Í∑∏Î†§Ï†∏Ïïº Ìï† Ïò§Î∏åÏ†ùÌä∏Îì§ÏóêÍ≤å Î∂ÄÏ∞©
 
     [SerializeField] private bool   IsPlayer = false;
-    [SerializeField] public  Sprite Icon     = null;
-    [SerializeField] public  Color  Color    = new Color(0, 1, 0, 1);
 
     public GameObject indicator {  get; private set; }
+
+    SpriteRenderer spriteRenderer = null;
 
     void Start()
     {
@@ -20,21 +19,14 @@ public class MinimapIndicator : MonoBehaviour
         indicator.transform.SetParent(transform);
         indicator.transform.localPosition = Vector3.zero;
 
-        indicator.AddComponent<SpriteRenderer>();
-
-        if(Icon != null)
-        {
-            indicator.GetComponent<SpriteRenderer>().sprite = Icon;
-        }
-
-        indicator.GetComponent<SpriteRenderer>().color = Color;
+        spriteRenderer = indicator.AddComponent<SpriteRenderer>();
 
         indicator.transform.position = new Vector3(indicator.transform.position.x, 50, indicator.transform.position.z);
         indicator.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
 
         indicator.gameObject.layer = LayerMask.NameToLayer("Minimap");
 
-        // ±‚¡∏
+        // Í∏∞Ï°¥
         // ValueTuple<Transform, Transform> pair = new ValueTuple<Transform, Transform>(transform, indicator.transform);
         // InGameUIManager.Instance.BindIndicator(pair, IsPlayer);
 
@@ -42,10 +34,35 @@ public class MinimapIndicator : MonoBehaviour
 
         if (IsPlayer == true)
         {
-            actorNumber = GetComponent<PhotonView>().OwnerActorNr;
+            actorNumber = GetComponentInParent<PhotonView>().OwnerActorNr;
         }
 
-        // ≈Î¬∞∑Œ ≥—±Ë
-        InGameUIManager.Instance.BindIndicator(actorNumber, this, IsPlayer);
+        // ÌÜµÏß∏Î°ú ÎÑòÍπÄ
+        if (InGameUIManager.Instance != null) InGameUIManager.Instance.BindIndicator(actorNumber, this, IsPlayer);
+    }
+    public void MyPlayerSetting()
+    {
+        spriteRenderer.sprite = InGameUIManager.Instance.minimapIconColor.my_Player_Sprite;
+        spriteRenderer.color = InGameUIManager.Instance.minimapIconColor.my_Player_Color;
+    }
+    public void OtherPlayerSetting()
+    {
+        spriteRenderer.sprite = InGameUIManager.Instance.minimapIconColor.other_Player_Sprite;
+        spriteRenderer.color = InGameUIManager.Instance.minimapIconColor.other_Player_Color;
+    }
+    public void BountyHunterSetting()
+    {
+        spriteRenderer.sprite = InGameUIManager.Instance.minimapIconColor.bounty_Hunter_Sprite;
+        spriteRenderer.color = InGameUIManager.Instance.minimapIconColor.bounty_Hunter_Color;
+    }
+    public void RevengeTargetSetting()
+    {
+        spriteRenderer.sprite = InGameUIManager.Instance.minimapIconColor.revenge_Target_Sprite;
+        spriteRenderer.color = InGameUIManager.Instance.minimapIconColor.revenge_Target_Color;
+    }
+    public void TreasureBoxSetting()
+    {
+        spriteRenderer.sprite = InGameUIManager.Instance.minimapIconColor.treasure_Box_Sprite;
+        spriteRenderer.color = InGameUIManager.Instance.minimapIconColor.treasure_Box_Color;
     }
 }
