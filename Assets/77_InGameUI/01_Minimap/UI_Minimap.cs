@@ -95,10 +95,15 @@ public class UI_Minimap : UI_Base
     #region FUNCTION
     public void BindIndicator(int actorNumber, MinimapIndicator minimapIndicator, bool isPlayer)
     {
-        if(isPlayer == true)
+        if (isPlayer == true)
         {
             _playerIndicator.Item1 = minimapIndicator.transform;
             _playerIndicator.Item2 = minimapIndicator.indicator.transform;
+
+            if (actorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+                minimapIndicator.MyPlayerSetting();
+            else
+                minimapIndicator.OtherPlayerSetting();
 
             playerIndicatorDict[actorNumber] = minimapIndicator;
         }
@@ -109,6 +114,8 @@ public class UI_Minimap : UI_Base
                 otherIndicator.Item1 = minimapIndicator.transform;
                 otherIndicator.Item2 = minimapIndicator.indicator.transform;
             }
+            minimapIndicator.TreasureBoxSetting();
+
             _otherIndicator.Add(otherIndicator);
         }
     }
@@ -119,16 +126,29 @@ public class UI_Minimap : UI_Base
         playerIndicatorDict[targetActorNumber].indicator.gameObject.SetActive(true);
     }
     [PunRPC]
-    private void HidePlayerIcon(int targetActorNumber)
+    private void HidePlayerIcon(int targetActorNr)
     {
         // ActorNumber를 통해 Icon 오브젝트 비활성화
-        playerIndicatorDict[targetActorNumber].indicator.gameObject.SetActive(false);
+        playerIndicatorDict[targetActorNr].indicator.gameObject.SetActive(false);
 
-        Debug.Log(playerIndicatorDict[targetActorNumber].gameObject.name + " 비활성화 아이콘 확인");
+        Debug.Log(playerIndicatorDict[targetActorNr].gameObject.name + " 비활성화 아이콘 확인");
     }
-    public void SetPlayerIcon(bool isShow, int myActorNr, int targetActorNr)
+    public void SetPlayerIcon(bool isShow, int myActorNr, int targetActorNr, MinimapIconType iconType)
     {
         if (myActorNr == targetActorNr) return;
+
+        switch (iconType)
+        {
+            case MinimapIconType.Other_Player:
+                playerIndicatorDict[targetActorNr].OtherPlayerSetting(); break;
+
+            case MinimapIconType.Bounty_Hunter:
+                playerIndicatorDict[targetActorNr].BountyHunterSetting(); break;
+
+            case MinimapIconType.Revenge_Target:
+                playerIndicatorDict[targetActorNr].RevengeTargetSetting(); break;
+        }
+        
 
         if (isShow)
             photonView.RPC("ShowPlayerIcon", PhotonNetwork.CurrentRoom.Players[myActorNr], targetActorNr);
@@ -183,4 +203,13 @@ public class UI_Minimap : UI_Base
         }
     }
     #endregion
+}
+
+public enum MinimapIconType
+{
+    My_Player,
+    Other_Player,
+    Bounty_Hunter,
+    Revenge_Target,
+    Treasure_Box,
 }
