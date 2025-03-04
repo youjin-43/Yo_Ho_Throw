@@ -9,8 +9,7 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject playerPrefab; // 인스펙터에서 할당
 
     [SerializeField] Transform mainCamera;
-    [SerializeField] CinemachineVirtualCamera world_followCam;
-    [SerializeField] CinemachineVirtualCamera world_aimCam;
+    [SerializeField] CinemachineCamera world_followCam;
 
     [SerializeField] GameObject player;
     [SerializeField] Transform camaraRoot;
@@ -62,17 +61,24 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         player = PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
         Debug.Log($"Spawned Player: {player}");
 
-        // 카메라에 루트 셋팅
-        camaraRoot = player.transform.GetChild(1);
-        world_followCam.Follow = camaraRoot;
-        world_aimCam.Follow = camaraRoot;
+        // 카메라에 루트 셋팅 
+        camaraRoot = player.GetComponent<CameraController>().targetTransform;
+        player.GetComponent<PlayerKnifeController>().dirTransform = camaraRoot;
+        player.GetComponent<PlayerKnifeController>().cameraTransform = world_followCam.transform;
+
+        player.GetComponent<PhotonView>().RPC("OnInLobby", RpcTarget.All);
+
+        world_followCam.Target.TrackingTarget = camaraRoot;
+        world_followCam.Target.LookAtTarget = camaraRoot;
+        world_followCam.Target.CustomLookAtTarget = true;
+
+        // --------------------------------------------------------------------------------------
+        //world_aimCam.Follow = camaraRoot;
 
         // 플레이어에 카메라 셋팅
-        player.GetComponent<PlayerController>().aimCam = world_aimCam;
-        player.GetComponent<PlayerController>().cameraTransform = mainCamera.transform;
+        //player.GetComponent<PlayerController>().aimCam = world_aimCam;
+        //player.GetComponent<PlayerController>().cameraTransform = mainCamera.transform;
 
-        
-       
 
     }
 
