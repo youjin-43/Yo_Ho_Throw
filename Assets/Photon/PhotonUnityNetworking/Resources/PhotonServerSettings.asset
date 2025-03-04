@@ -58,6 +58,12 @@ MonoBehaviour:
   - Throw_RPC
   - HidePlayerIcon
   - ShowPlayerIcon
+  - KnifeSwingRPC
+  - ThrowKnifeRPC
+  - ReceiveDamage
+  - OnInLobby
+  - OnOutLobby
+  - HandleDeath
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
