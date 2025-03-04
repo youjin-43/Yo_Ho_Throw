@@ -48,7 +48,7 @@ public class Knife : MonoBehaviour
         {
             PhotonView playerPhotonView = other.GetComponent<PhotonView>();
 
-            // 내 공격이였을 경우 제외
+            // 자신에 대한 공격일 경우 제외
             if (attackerActorNr == playerPhotonView.OwnerActorNr) return;
 
             // 칼 비활성화

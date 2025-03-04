@@ -34,11 +34,11 @@ public class MinimapIndicator : MonoBehaviour
 
         if (IsPlayer == true)
         {
-            actorNumber = GetComponent<PhotonView>().OwnerActorNr;
+            actorNumber = GetComponentInParent<PhotonView>().OwnerActorNr;
         }
 
         // 통째로 넘김
-        InGameUIManager.Instance.BindIndicator(actorNumber, this, IsPlayer);
+        if (InGameUIManager.Instance != null) InGameUIManager.Instance.BindIndicator(actorNumber, this, IsPlayer);
     }
     public void MyPlayerSetting()
     {
