@@ -44,8 +44,9 @@ public class PlayerController : ThirdPersonController
         photonTransformView = GetComponent<PhotonTransformView>();
         maxBulletCount = 10;
         bulletCount = maxBulletCount;
-        anim = GetComponent<Animator>();
+        
         pv = GetComponent<PhotonView>();
+
     }
 
     void Update()
@@ -55,12 +56,13 @@ public class PlayerController : ThirdPersonController
 
         LookSameCameraDirection();
 
+        /* 오른쪽 마우스 확대 기능
         if (input.aim) aimCam.gameObject.SetActive(true);
         else aimCam.gameObject.SetActive(false);
-
+        */
 
         if (!isAlive) return;
-        if (Input.GetKeyDown(KeyCode.F) && bulletCount > 0)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && bulletCount > 0)
         {
             
             bulletCount--;
@@ -75,7 +77,7 @@ public class PlayerController : ThirdPersonController
             StartCoroutine(DashCooltime());
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             MeleeAttack();
         }
@@ -89,6 +91,11 @@ public class PlayerController : ThirdPersonController
         base.FixedUpdate();
     }
 
+    private void OnEnable()
+    {
+        anim = GetComponent<Animator>();
+        anim.Update(0f);
+    }
     IEnumerator DashCooltime()
     {
         canDash = false;
@@ -220,7 +227,7 @@ public class PlayerController : ThirdPersonController
     [PunRPC]
     void Dash_RPC()
     {
-        StartCoroutine(StartAnimationCoroutine("Dash", 0.467f, true, 1, 0.1f));
+        StartCoroutine(StartAnimationCoroutine("Dash", 0.1638f, true, 1, 0.1f));
 
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
@@ -238,7 +245,7 @@ public class PlayerController : ThirdPersonController
     IEnumerator DashMovement_RPC(Vector3 direction)
     {
         float dashDistance = 3f;
-        float dashTime = 0.4915f;
+        float dashTime = 0.1638f;
         float elapsedTime = 0f;
         Vector3 velocity = direction * (dashDistance / dashTime);
 
