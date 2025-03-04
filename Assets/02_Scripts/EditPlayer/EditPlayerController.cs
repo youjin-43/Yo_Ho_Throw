@@ -1,442 +1,242 @@
+ï»¿using Photon.Pun;
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class EditPlayerController : MonoBehaviour
+[RequireComponent(typeof(CameraController))]
+[RequireComponent(typeof(PlayerAnimator))]
+[RequireComponent(typeof(EditPlayerState))]
+[RequireComponent(typeof(PhotonView))]
+[RequireComponent(typeof(PlayerKnifeController))]
+public class EditPlayerController : MonoBehaviourPun
 {
-    [Header("Need Reference")] // Header Á¤¸®
-    [SerializeField] Transform cameraTransform; // Ä«¸Ş¶óÀÇ Transform
-    [SerializeField] Transform playerPivotTransform; // ÇÃ·¹ÀÌ¾î ÇÇ¹ş Transform
-    [SerializeField] Transform initPosition;
-    [SerializeField] PlayerGroundChecker playerGroundChecker;
-
-    [Header("Move Attribute")]                  // Header Á¤¸®
-    [SerializeField] float walkMoveSpeed = 3.5f; // °È±â ÀÌµ¿¼Óµµ
-    [SerializeField] float runMoveSpeed = 7f; // ¶Ù±â ÀÌµ¿¼Óµµ
-    [SerializeField] float acceleration = 3f; // ÀÌµ¿¼Óµµ Áõ°¡¼Óµµ
-    [SerializeField] float deceleration = 3f; // ÀÌµ¿¼Óµµ °¨¼Ò¼Óµµ
-    [SerializeField] float crouchRatioSpeed = 0.5f; // ¾ÉÀ» ¶§ÀÇ ÀÌ¼Ó ºñÀ²
+    [Header("Move Attribute")]                  // Header ì •ë¦¬
+    [SerializeField] float acceleration = 3f; // ì´ë™ì†ë„ ì¦ê°€ì†ë„
+    [SerializeField] float deceleration = 3f; // ì´ë™ì†ë„ ê°ì†Œì†ë„
     [SerializeField] float jumpSpeed = 10f;
     [SerializeField] float gravity = -9.81f;
-    [SerializeField] float oxygenBurnRate = 0.5f;
     [SerializeField] float moveSpeedLimit;
 
-    [Header("Rotate Attribute")] // Header Á¤¸®
-    [SerializeField] float pitchClampMax = 70f; // Ä«¸Ş¶ó °¢µµ ÃÖ´ë°ª
-    [SerializeField] float pitchClampMin = -70f; // Ä«¸Ş¶ó °¢µµ ÃÖ´ë°ª
-    [SerializeField] float rotateSpeed = 10f; // È¸Àü ¼Óµµ
-    [SerializeField] float cameraCrouchHeight = 0.891f; // ¾É¾ÆÀÖÀ» ¶§ÀÇ Ä«¸Ş¶ó ³ôÀÌ
-
-    [Header("JumpPivot Attribute")] // Header Á¤¸®
-    [SerializeField] float maxJumpHeightTime = 0.3f; // Á¡ÇÁ ÇßÀ» ½Ã ÃÖ´ë·Î ³ôÀÌ ¿Ã¶ó°¡´Â ½Ã°£
+    PlayerGroundChecker playerGroundChecker;
 
     PlayerAnimator playerAnimator = null; // PlayerAnimator
-    CharacterController characterController = null; // ÇÃ·¹ÀÌ¾î Ä³¸¯ÅÍ ÄÁÆ®·Ñ·¯
-    Transform playerTransform = null; // ÇÃ·¹ÀÌ¾î Æ®·£½ºÆû
 
-    Vector2 moveDelta = Vector2.zero; // Å°º¸µå ÀÌµ¿ ÀÔ·Â °ª ÀúÀå º¯¼ö
-    Vector2 rotateDelta = Vector2.zero; // ¸¶¿ì½º ÀÌµ¿ ÀÔ·Â °ª ÀúÀå º¯¼ö
+    CharacterController characterController = null; // í”Œë ˆì´ì–´ ìºë¦­í„° ì»¨íŠ¸ë¡¤ëŸ¬
 
-    float velocityX = 0f; // XÃà Velocity
-    float velocityY = 0f; // YÃà Velocity
-    float velocityZ = 0f; // ZÃà Velocity
+    PhotonTransformView photonTransformView;
 
-    float shoesSpeed = 1f; // ½Å¹ß ¼Óµµ (°­È­µÈ ½Å¹ß shoesSpeed = 1.15f)
+    Transform playerTransform = null; // í”Œë ˆì´ì–´ íŠ¸ëœìŠ¤í¼
 
-    Vector3 velocity = Vector3.zero; // ÀÌµ¿¿¡ Àû¿ëÇÏ´Â velocity
+    Vector2 moveDelta = Vector2.zero; // í‚¤ë³´ë“œ ì´ë™ ì…ë ¥ ê°’ ì €ì¥ ë³€ìˆ˜
 
-    float currCameraAngle = 0f; // Ä«¸Ş¶ó xÃà È¸Àü °ª
-    float cameraStandHeight; // ¼­ÀÖÀ» ¶§ÀÇ Ä«¸Ş¶ó ³ôÀÌ
-    float currCameraHeight; // ÇöÀç Ä«¸Ş¶ó ³ôÀÌ
+    float velocityX = 0f; // Xì¶• Velocity
+    float velocityY = 0f; // Yì¶• Velocity
+    float velocityZ = 0f; // Zì¶• Velocity
 
-    Coroutine cameraHeightCoroutine = null;
+    Vector3 velocity = Vector3.zero; // ì´ë™ì— ì ìš©í•˜ëŠ” velocity
 
-    bool isCrouch = false; // ¾ÉÀº »óÅÂ ¿©ºÎ
-    bool canMove = false;
+    [HideInInspector] public bool canMove = true;
     bool characterEnabled = true;
-
-    event Action<float> animMoveSpeedSetAction = null; // ¾Ö´Ï¸ŞÀÌÅÍ ÀÌµ¿¼Óµµ ¼³Á¤ Action
-    event Action<float> audioMoveValueAddAction = null; // ¹ß°ÉÀ½ ¼Ò¸®¸¦ À§ÇÑ Action
+    bool isDash = false;
 
     float coyoteTime = 0.2f;
     float coyoteTimeCounter = 0;
-    float jumpPivotHeight = -0.3f; // Á¡ÇÁ ÇßÀ» ½ÃÀÇ ³ôÀÌ
-    float standPivotHeight = -0.024f; // ¼­ÀÖÀ» ¶§ÀÇ ³ôÀÌ
 
-    Vector3 pivotLocalPosition = Vector3.zero; // ÇÃ·¹ÀÌ¾î ·ÎÄÃ ÇÇ¹ş YÃà Àû¿ë Vector3
+    public static EditPlayerController Instance { get; private set; } = null;
 
-    void InitPosition()
+    private void Awake()
     {
-        StartCoroutine(InitPositionCoroutine());
+        if (!photonView.IsMine) return;
+
+        Instance = this;
     }
-    IEnumerator InitPositionCoroutine()
-    {
-        characterEnabled = false;
-
-        characterController.enabled = false;
-
-        transform.position = initPosition.position;
-        transform.rotation = initPosition.rotation;
-
-        yield return null;
-
-        characterEnabled = true;
-
-        characterController.enabled = true;
-    }
-
     private void Start()
     {
-        // GetComponent·Î ÇÊ¿ä ÄÄÆ÷³ÍÆ® °¡Á®¿À±â
+        canMove = true;
+
+        // GetComponentë¡œ í•„ìš” ì»´í¬ë„ŒíŠ¸ ê°€ì ¸ì˜¤ê¸°
         characterController = GetComponent<CharacterController>();
         playerAnimator = GetComponent<PlayerAnimator>();
+        playerGroundChecker = GetComponentInChildren<PlayerGroundChecker>();
+        photonTransformView = GetComponent<PhotonTransformView>();
 
-        // ÇÃ·¹ÀÌ¾î Transform ÃÊ±âÈ­
+        // í”Œë ˆì´ì–´ Transform ì´ˆê¸°í™”
         playerTransform = transform;
-
-        // ¼­ÀÖÀ» ¶§ÀÇ Ä«¸Ş¶ó ³ôÀÌ
-        cameraStandHeight = 1.657f;
-        //cameraStandHeight = cameraTransform.localPosition.y;
-
-        // ÇöÀç Ä«¸Ş¶ó ³ôÀÌ ¼³Á¤
-        currCameraHeight = cameraStandHeight;
     }
     private void Update()
     {
+        if (!photonView.IsMine) return;
+
         if (!characterEnabled) return;
 
-        #region Velocity X,Z °ª ¼³Á¤
+        if (isDash) return;
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Dash();
+        }
+
+        #region Velocity X,Z ê°’ ì„¤ì •
 
         moveDelta.x = Input.GetAxisRaw("Horizontal");
         moveDelta.y = Input.GetAxisRaw("Vertical");
 
         if (!canMove) moveDelta = Vector2.zero;
 
-        // XÃàÀÇ ÀÔ·ÂÀÌ ÀÖÀ» ¶§
+        // Xì¶•ì˜ ì…ë ¥ì´ ìˆì„ ë•Œ
         if (Mathf.Abs(moveDelta.x) > 0.1f)
         {
-            // ÇØ´ç ¹æÇâÀ¸·Î ÁÖ´Â ÈûÀ» Áõ°¡½ÃÅ²´Ù
+            // í•´ë‹¹ ë°©í–¥ìœ¼ë¡œ ì£¼ëŠ” í˜ì„ ì¦ê°€ì‹œí‚¨ë‹¤
             velocityX += moveDelta.x * Time.deltaTime * acceleration;
 
-            // ÀÌµ¿¼Óµµ¸¸Å­ Á¦ÇÑÀ» µĞ´Ù
+            // ì´ë™ì†ë„ë§Œí¼ ì œí•œì„ ë‘”ë‹¤
             if (velocityX > moveSpeedLimit) velocityX = moveSpeedLimit;
             if (velocityX < -moveSpeedLimit) velocityX = -moveSpeedLimit;
         }
 
-        // XÃàÀÇ ÀÔ·ÂÀÌ ¾ø´Ù¸é XÃàÀÇ velocity°¡ 0f°¡ ¾Æ´Ï¶ó¸é
+        // Xì¶•ì˜ ì…ë ¥ì´ ì—†ë‹¤ë©´ Xì¶•ì˜ velocityê°€ 0fê°€ ì•„ë‹ˆë¼ë©´
         else if (velocityX != 0f)
         {
-            // velocity.x°¡ À½¼ö¶ó¸é 1, ¾ç¼ö¶ó¸é -1À» sign °ª¿¡ ³Ö´Â´Ù
+            // velocity.xê°€ ìŒìˆ˜ë¼ë©´ 1, ì–‘ìˆ˜ë¼ë©´ -1ì„ sign ê°’ì— ë„£ëŠ”ë‹¤
             float sign = -Mathf.Sign(velocityX);
 
-            // sign °ªÀ» ÀÌ¿ëÇØ¼­ ¾ç¼ö¶ó¸é À½¼ö °ªÀ¸·Î, À½¼ö¶ó¸é ¾ç¼ö °ªÀ¸·Î º¯È­½ÃÅ²´Ù
+            // sign ê°’ì„ ì´ìš©í•´ì„œ ì–‘ìˆ˜ë¼ë©´ ìŒìˆ˜ ê°’ìœ¼ë¡œ, ìŒìˆ˜ë¼ë©´ ì–‘ìˆ˜ ê°’ìœ¼ë¡œ ë³€í™”ì‹œí‚¨ë‹¤
             velocityX += Time.deltaTime * deceleration * sign;
 
-            // ¸¸¾à velocity.x°¡ 0À» Áö³ª ºÎÈ£°¡ ´Ş¶óÁ³´Ù¸é velocity.xÀÇ °ªÀ» 0f·Î ÃÊ±âÈ­ ÇÑ´Ù
+            // ë§Œì•½ velocity.xê°€ 0ì„ ì§€ë‚˜ ë¶€í˜¸ê°€ ë‹¬ë¼ì¡Œë‹¤ë©´ velocity.xì˜ ê°’ì„ 0fë¡œ ì´ˆê¸°í™” í•œë‹¤
             if (Mathf.Sign(velocityX) == sign) velocityX = 0f;
         }
 
-        // YÃàÀÇ ÀÔ·ÂÀÌ ÀÖÀ» ¶§
+        // Yì¶•ì˜ ì…ë ¥ì´ ìˆì„ ë•Œ
         if (Mathf.Abs(moveDelta.y) > 0.1f)
         {
-            // ÇØ´ç ¹æÇâÀ¸·Î ÁÖ´Â ÈûÀ» Áõ°¡½ÃÅ²´Ù
+            // í•´ë‹¹ ë°©í–¥ìœ¼ë¡œ ì£¼ëŠ” í˜ì„ ì¦ê°€ì‹œí‚¨ë‹¤
             velocityZ += moveDelta.y * Time.deltaTime * acceleration;
 
-            // ÀÌµ¿¼Óµµ¸¸Å­ Á¦ÇÑÀ» µĞ´Ù
+            // ì´ë™ì†ë„ë§Œí¼ ì œí•œì„ ë‘”ë‹¤
             if (velocityZ > moveSpeedLimit) velocityZ = moveSpeedLimit;
             if (velocityZ < -moveSpeedLimit) velocityZ = -moveSpeedLimit;
         }
 
-        // YÃàÀÇ ÀÔ·ÂÀÌ ¾ø´Ù¸é
+        // Yì¶•ì˜ ì…ë ¥ì´ ì—†ë‹¤ë©´
         else if (velocityZ != 0f)
         {
-            // velocity.y°¡ À½¼ö¶ó¸é 1, ¾ç¼ö¶ó¸é -1À» sign °ª¿¡ ³Ö´Â´Ù
+            // velocity.yê°€ ìŒìˆ˜ë¼ë©´ 1, ì–‘ìˆ˜ë¼ë©´ -1ì„ sign ê°’ì— ë„£ëŠ”ë‹¤
             float sign = -Mathf.Sign(velocityZ);
 
-            // sign °ªÀ» ÀÌ¿ëÇØ¼­ ¾ç¼ö¶ó¸é À½¼ö °ªÀ¸·Î, À½¼ö¶ó¸é ¾ç¼ö °ªÀ¸·Î º¯È­½ÃÅ²´Ù
+            // sign ê°’ì„ ì´ìš©í•´ì„œ ì–‘ìˆ˜ë¼ë©´ ìŒìˆ˜ ê°’ìœ¼ë¡œ, ìŒìˆ˜ë¼ë©´ ì–‘ìˆ˜ ê°’ìœ¼ë¡œ ë³€í™”ì‹œí‚¨ë‹¤
             velocityZ += Time.deltaTime * deceleration * sign;
 
-            // ¸¸¾à velocity.z°¡ 0À» Áö³ª ºÎÈ£°¡ ´Ş¶óÁ³´Ù¸é velocity.zÀÇ °ªÀ» 0f·Î ÃÊ±âÈ­ ÇÑ´Ù
+            // ë§Œì•½ velocity.zê°€ 0ì„ ì§€ë‚˜ ë¶€í˜¸ê°€ ë‹¬ë¼ì¡Œë‹¤ë©´ velocity.zì˜ ê°’ì„ 0fë¡œ ì´ˆê¸°í™” í•œë‹¤
             if (Mathf.Sign(velocityZ) == sign) velocityZ = 0f;
         }
 
         #endregion
-        #region Velocity Y °ª ¼³Á¤
+        #region Velocity Y ê°’ ì„¤ì •
 
-        // ÇÃ·¹ÀÌ¾î°¡ ¶¥¿¡ ÀÖ°Å³ª ÄÚ¿äÅ× Å¸ÀÓ °ªÀÌ ³²¾ÆÀÖ°Å³ª, ¹Ù·Î ¹Ø¿¡ ¿ÀºêÁ§Æ®°¡ ÀÖÀ» ¶§
+        // í”Œë ˆì´ì–´ê°€ ë•…ì— ìˆê±°ë‚˜ ì½”ìš”í…Œ íƒ€ì„ ê°’ì´ ë‚¨ì•„ìˆê±°ë‚˜, ë°”ë¡œ ë°‘ì— ì˜¤ë¸Œì íŠ¸ê°€ ìˆì„ ë•Œ
         if (playerGroundChecker.IsGrounded || coyoteTimeCounter > 0f)
         {
-            // Á¡ÇÁ ÁßÀÌ ¾Æ´Ò ¶§, ¾É°í ÀÖÁö ¾ÊÀ» ¶§, Á¡ÇÁ Å°¸¦ ´­·¶´Ù¸é
-            if (velocityY <= float.Epsilon && Input.GetButtonDown("Jump") && canMove && !isCrouch)
+            // ì í”„ ì¤‘ì´ ì•„ë‹ ë•Œ, ì•‰ê³  ìˆì§€ ì•Šì„ ë•Œ, ì í”„ í‚¤ë¥¼ ëˆŒë €ë‹¤ë©´
+            if (velocityY <= float.Epsilon && Input.GetButtonDown("Jump") && canMove && playerAnimator.IsMoveState())
             {
-                // ÄÚ¿äÅ× Å¸ÀÓ ÃÊ±âÈ­
+                // ì½”ìš”í…Œ íƒ€ì„ ì´ˆê¸°í™”
                 coyoteTimeCounter = 0;
 
-                // Áß·ÂÀ» ÇöÀç jumpSpeed·Î º¯°æÇÏ¿© Æ¢¾î¿À¸£°Ô ÇÑ´Ù
+                // ì¤‘ë ¥ì„ í˜„ì¬ jumpSpeedë¡œ ë³€ê²½í•˜ì—¬ íŠ€ì–´ì˜¤ë¥´ê²Œ í•œë‹¤
                 velocityY = jumpSpeed;
 
-                // Á¡ÇÁ ¾Ö´Ï¸ŞÀÌ¼Ç Æ®¸®°Å ¹× ÇÃ·¹ÀÌ¾î ³ôÀÌ Á¶Àı
-                PlayerJumpHeightAnim(playerAnimator.SetJumpTrigger());
+                // ì í”„ ì• ë‹ˆë©”ì´ì…˜ íŠ¸ë¦¬ê±° ë° í”Œë ˆì´ì–´ ë†’ì´ ì¡°ì ˆ
+                playerAnimator.SetTrigger(AnimationParameter.Jump);
 
                 //PlayerAudioController.PlayerAudioPlay(AudioName.PlayerJump);
             }
         }
 
-        // ¸¸¾à Ä³¸¯ÅÍ°¡ ¹«¾ğ°¡ À§¿¡ ÀÖÁö¸¸ Á¡ÇÁÇÒ ¼ö ÀÖ´Â Ground°¡ ¾Æ´Ò °æ¿ì
+        // ë§Œì•½ ìºë¦­í„°ê°€ ë¬´ì–¸ê°€ì˜ ìœ„ì— ìˆì§€ë§Œ ì í”„í•  ìˆ˜ ìˆëŠ” Groundê°€ ì•„ë‹ ê²½ìš°
         if (playerGroundChecker.IsColliderBelow && !playerGroundChecker.IsGrounded)
         {
-            // Áß·Â Àû¿ë
+            // ì¤‘ë ¥ ì ìš©
             velocityY = Mathf.Clamp(velocityY + Time.deltaTime * gravity, -10f, 1000f);
 
-            // ¾Ö´Ï¸ŞÀÌÅÍ¿¡°Ô ¶¥ À§ ¾ø´Ù°í ¾Ë¸°´Ù
-            playerAnimator.SetIsGround(false);
-
-            // ÄÚ¿äÅ× Å¸ÀÓ °¨¼Ò
+            // ì½”ìš”í…Œ íƒ€ì„ ê°ì†Œ
             coyoteTimeCounter -= Time.deltaTime;
-        }
-        else if (!playerGroundChecker.IsColliderBelow)
-        {
-            // Áß·Â Àû¿ë
-            velocityY += Time.deltaTime * gravity;
 
-            // ¾Ö´Ï¸ŞÀÌÅÍ¿¡°Ô ¶¥ À§ ¾ø´Ù°í ¾Ë¸°´Ù
-            playerAnimator.SetIsGround(false);
-
-            // ÄÚ¿äÅ× Å¸ÀÓ °¨¼Ò
-            coyoteTimeCounter -= Time.deltaTime;
+            if (coyoteTimeCounter <= 0f)
+            {
+                // ì• ë‹ˆë©”ì´í„°ì—ê²Œ ë•… ìœ„ ì—†ë‹¤ê³  ì•Œë¦°ë‹¤
+                playerAnimator.SetIsGround(false);
+            }
         }
         else if (playerGroundChecker.IsGrounded)
         {
             if (velocityY <= 0f)
             {
-                // velocityY¸¦ 0À¸·Î ÃÊ±âÈ­
+                // velocityYë¥¼ 0ìœ¼ë¡œ ì´ˆê¸°í™”
                 velocityY = 0;
 
-                // ¾Ö´Ï¸ŞÀÌÅÍ¿¡°Ô ¶¥ À§¿¡ ÀÖ´Ù°í ¾Ë¸°´Ù
+                // ì• ë‹ˆë©”ì´í„°ì—ê²Œ ë•… ìœ„ì— ìˆë‹¤ê³  ì•Œë¦°ë‹¤
                 playerAnimator.SetIsGround(true);
 
-                // ¶¥ À§¿¡ ÀÖÀ¸¹Ç·Î ÇÇ¹şÀ» standPivotHeight À§Ä¡·Î Àû¿ëÇÑ´Ù
-                pivotLocalPosition.y = standPivotHeight;
-                playerPivotTransform.localPosition = pivotLocalPosition;
-
-                // ÄÚ¿äÅ× Å¸ÀÓ °»½Å
+                // ì½”ìš”í…Œ íƒ€ì„ ê°±ì‹ 
                 coyoteTimeCounter = coyoteTime;
             }
         }
-
-        /*
-        // ¸¸¾à Ä³¸¯ÅÍ°¡ ¶¥ À§¿¡ ¾ø´Ù¸é
-        else
+        else if (!playerGroundChecker.IsColliderBelow)
         {
-            // ÄÚ¿äÅ× Å¸ÀÓ °¨¼Ò
-            coyoteTimeCounter -= Time.deltaTime;
-
-            // Áß·Â Àû¿ë
+            // ì¤‘ë ¥ ì ìš©
             velocityY += Time.deltaTime * gravity;
 
-            // ¾Ö´Ï¸ŞÀÌÅÍ¿¡°Ô ¶¥ À§¿¡ ¾ø´Ù°í ¾Ë¸²
-            playerAnimator.SetIsGround(false);
+            // ì½”ìš”í…Œ íƒ€ì„ ê°ì†Œ
+            coyoteTimeCounter -= Time.deltaTime;
 
-            // ¸¸¾à ¾Æ·¡¿¡ ¸Â´Â ¿ÀºêÁ§Æ®°¡ ¾ø´Ù¸é
-            if (playerGroundChecker.IsColliderBelow)
+            if (coyoteTimeCounter <= 0f)
             {
-                // Áß·Â Àû¿ë
-                velocityY += Time.deltaTime * gravity;
-
-                // ¾Ö´Ï¸ŞÀÌÅÍ¿¡°Ô ¶¥ À§¿¡ ¾ø´Ù°í ¾Ë¸²
+                // ì• ë‹ˆë©”ì´í„°ì—ê²Œ ë•… ìœ„ ì—†ë‹¤ê³  ì•Œë¦°ë‹¤
                 playerAnimator.SetIsGround(false);
             }
         }
-
-        // Ä³¸¯ÅÍ°¡ ¶³¾îÁö°í ÀÖ°Å³ª °¡¸¸È÷ ÀÖÀ» ¶§
-        if (velocityY <= 0f)
-        {
-            // velocityY¸¦ 0À¸·Î ÃÊ±âÈ­
-            velocityY = 0;
-
-            // ¾Ö´Ï¸ŞÀÌÅÍ¿¡°Ô ¶¥ À§¿¡ ÀÖ´Ù°í ¾Ë¸°´Ù
-            playerAnimator.SetIsGround(true);
-
-            // ¶¥ À§¿¡ ÀÖÀ¸¹Ç·Î ÇÇ¹şÀ» standPivotHeight À§Ä¡·Î Àû¿ëÇÑ´Ù
-            pivotLocalPosition.y = standPivotHeight;
-            playerPivotTransform.localPosition = pivotLocalPosition;
-        }
-
-        // ÄÚ¿äÅ× Å¸ÀÓ °»½Å
-        coyoteTimeCounter = coyoteTime;
-*/
+        
 
         #endregion
-        #region velocity °ª °»½Å
+        #region velocity ê°’ ê°±ì‹ 
 
-        // velocityÀÇ x¿Í zÀÇ º¤ÅÍ Å©±â °ªÀ» ±¸ÇÑ´Ù
-        // moveSpeed·Î Á¦ÇÑÀ» µÎ±â ÀüÀÇ °ªÀÎ prevMagnitude¿Í
-        // Á¦ÇÑÀ» µĞ ÈÄÀÎ currMagnitude °ªÀ» ¸¸µç´Ù
+        // velocityì˜ xì™€ zì˜ ë²¡í„° í¬ê¸° ê°’ì„ êµ¬í•œë‹¤
+        // moveSpeedë¡œ ì œí•œì„ ë‘ê¸° ì „ì˜ ê°’ì¸ prevMagnitudeì™€
+        // ì œí•œì„ ë‘” í›„ì¸ currMagnitude ê°’ì„ ë§Œë“ ë‹¤
         float prevMagnitude = new Vector2(velocityX, velocityZ).magnitude;
         float currMagnitude = prevMagnitude > moveSpeedLimit ? moveSpeedLimit : prevMagnitude;
 
         velocity.Set(
-            prevMagnitude > float.Epsilon ? (velocityX / prevMagnitude) * currMagnitude * shoesSpeed : 0f,
+            prevMagnitude > float.Epsilon ? (velocityX / prevMagnitude) * currMagnitude : 0f,
             velocityY,
-            prevMagnitude > float.Epsilon ? (velocityZ / prevMagnitude) * currMagnitude * shoesSpeed : 0f);
+            prevMagnitude > float.Epsilon ? (velocityZ / prevMagnitude) * currMagnitude : 0f);
 
         #endregion
-        #region Ä«¸Ş¶ó È¸Àü
 
-        // ¸¶¿ì½º ÀÌµ¿ °ª °¡Á®¿À±â
-        rotateDelta.x = Input.GetAxisRaw("Mouse X");
-        rotateDelta.y = Input.GetAxisRaw("Mouse Y");
+        #region ì´ë™ ê°’ ì ìš©
 
-        if (!canMove) rotateDelta = Vector2.zero;
+        animHorizontalSetAction?.Invoke(velocityX == 0 ? 0 : velocityX / moveSpeedLimit);
+        animVerticalSetAction?.Invoke(velocityZ == 0 ? 0 : velocityZ / moveSpeedLimit);
 
-        // ¸¶¿ì½º ÀÌµ¿ °ªÀÌ ÀÖÀ» ¶§
-        if (rotateDelta != Vector2.zero)
-        {
-            // ¸¶¿ì½º »óÇÏ ÀÌµ¿ °ªÀº up:1, down:-1ÀÌ¶ó »ı°¢ÇÏ¸é µÇ´Âµ¥
-            // ½ÇÁ¦·Î Ä«¸Ş¶óÀÇ xÃà È¸ÀüÀ» Àû¿ëÇßÀ» ¶§´Â up:-1, down:1 °ªÀ» ÇØ¾ßÇÏ±â ¶§¹®¿¡ 
-            // mouseMoveValue.y¿¡ -1fÀ» °öÇØÁÜÀ¸·Î½á °ªÀ» ¸ÂÃçÁØ´Ù
-            rotateDelta.y *= -1f;
+        animMotionSpeedSetAction?.Invoke(
+            Mathf.Max(Mathf.Abs(velocityX), Mathf.Abs(velocityZ)) == 0 ?
+            0 : Mathf.Max(Mathf.Abs(velocityX), Mathf.Abs(velocityZ)) / moveSpeedLimit);
 
-            // Ä«¸Ş¶óÀÇ È¸ÀüÀº Clamp¸¦ ÀÌ¿ëÇØ¼­ Á¦ÇÑÀ» ÇÑ´Ù
-            currCameraAngle = Mathf.Clamp(
-                currCameraAngle + (rotateDelta.y * Time.deltaTime * rotateSpeed),
-                pitchClampMin,
-                pitchClampMax);
+        // Animator ì´ë™ì†ë„ ê°’ ì œê³µ
+        animSpeedSetAction?.Invoke(currMagnitude);
 
-            playerAnimator.SetWaistValue(currCameraAngle);
+        // AudioController ê°’ ì œê³µ
+        audioMoveValueAddAction?.Invoke(currMagnitude);
 
-            // Ä«¸Ş¶óÀÇ »óÇÏ È¸ÀüÀº Transform eulerAngle X¿¡ Àû¿ë
-            // ÁÂ¿ì È¸ÀüÀº playerTransform.eulerAngles.y¸¦ °¡Á®¿È
-            cameraTransform.rotation = Quaternion.Euler(currCameraAngle, playerTransform.eulerAngles.y, 0f);
+        // í”Œë ˆì´ì–´ ì´ë™ ì ìš©
+        characterController.Move(playerTransform.rotation * new Vector3(velocity.x, velocity.y, velocity.z) * Time.deltaTime);
 
-            // ÇÃ·¹ÀÌ¾î Æ®·£½ºÆû¿¡´Â xÃàÀÇ ¸¶¿ì½º È¸Àü °ª¸¸ Àû¿ëÇÑ´Ù
-            playerTransform.Rotate(0, rotateDelta.x * rotateSpeed * Time.deltaTime, 0);
-        }
-        #endregion
-
-        #region ÀÌµ¿ °ª Àû¿ë
-
-        // Animator ÀÌµ¿¼Óµµ °ª Á¦°ø
-        animMoveSpeedSetAction?.Invoke(currMagnitude);
-
-        // AudioController °ª Á¦°ø
-        audioMoveValueAddAction?.Invoke(!isCrouch ? currMagnitude : currMagnitude * crouchRatioSpeed);
-
-        // ¼­ÀÖÀ» ¶§ÀÇ ÀÌµ¿ Àû¿ë
-        if (!isCrouch)
-        {
-            // ÇÃ·¹ÀÌ¾î ÀÌµ¿ Àû¿ë
-            characterController.Move(playerTransform.rotation * velocity * Time.deltaTime);
-        }
-
-        // ¾É¾Æ ÀÖÀ» ¶§ÀÇ ÀÌµ¿ Àû¿ë 
-        else
-        {
-            // ÇÃ·¹ÀÌ¾î ÀÌµ¿ Àû¿ë
-            characterController.Move(playerTransform.rotation * new Vector3(velocity.x * crouchRatioSpeed, velocity.y, velocity.z * crouchRatioSpeed) * Time.deltaTime);
-        }
         #endregion
     }
-    void CrouchStateUpdate(bool isCrouch) // ¾ÉÀº »óÅÂ °»½Å
-    {
-        // »óÅÂ °»½Å
-        this.isCrouch = isCrouch;
-
-        // ¾Ö´Ï¸ŞÀÌÅÍ¿¡°Ô ¾Ë¸²
-        playerAnimator.SetIsCrouch(isCrouch);
-
-        // º¯°æ ÁßÀÎ Ä«¸Ş¶ó ÄÚ·çÆ¾ ÁßÁö
-        if (cameraHeightCoroutine != null)
-        {
-            StopCoroutine(cameraHeightCoroutine);
-        }
-
-        // Ä«¸Ş¶ó ³ôÀÌ º¯°æ ÄÚ·çÆ¾ ½ÇÇà
-        cameraHeightCoroutine = StartCoroutine(CameraHeightAnimCoroutine(isCrouch));
-    }
-    void PlayerJumpHeightAnim(bool isJump) // Á¡ÇÁ ½ÃÀÇ ÇÇ¹ş ¾Ö´Ï¸ŞÀÌ¼Ç
-    {
-        // Á¡ÇÁ°¡ Æ®¸®°Å µÇÁö ¾Ê¾Ò´Ù¸é ½ÇÇàÇÏÁö ¾Ê´Â´Ù
-        if (!isJump) return;
-
-        // Á¡ÇÁ ½ÃÀÇ À§Ä¡ Á¶Àı CoroutineÀ» ½ÇÇà
-        StartCoroutine(PlayerJumpHeightAnimCoroutine());
-    }
-    IEnumerator PlayerJumpHeightAnimCoroutine() // ÇÇ¹ş ¾Ö´Ï¸ŞÀÌ¼Ç ÄÚ·çÆ¾
-    {
-        // ½Ã°£ °ª
-        float t = 0;
-
-        // 0ÃÊºÎÅÍ °øÁß¿¡ ÀÖ´Â ½Ã°£¸¸Å­ ÁøÇà
-        while (t < maxJumpHeightTime)
-        {
-            // ½Ã°£ °ª ´©Àû
-            t += Time.deltaTime;
-
-            // ÇÇ¹ş ·ÎÄÃ y Æ÷Áö¼ÇÀ» ¼­ÀÖ´Â »óÅÂ¿Í Á¡ÇÁÇÑ »óÅÂÀÇ ±âÁØ ³ôÀÌ¸¦ Lerp·Î °øÁß¿¡ ÀÖ´Â ½Ã°£
-            pivotLocalPosition.y = Mathf.Lerp(standPivotHeight, jumpPivotHeight, Mathf.InverseLerp(0, maxJumpHeightTime, t));
-
-            // ÇÃ·¹ÀÌ¾î ÇÇ¹ş Æ®·£½ºÆû¿¡ ·ÎÄÃ Æ÷Áö¼Ç Àû¿ë
-            playerPivotTransform.localPosition = pivotLocalPosition;
-
-            // ´ÙÀ½ ÇÁ·¹ÀÓ ´ë±â
-            yield return null;
-        }
-    }
-    IEnumerator CameraHeightAnimCoroutine(bool isCrouch) // Ä«¸Ş¶ó ³ôÀÌ º¯°æ ÄÚ·çÆ¾
-    {
-        Vector3 cameraLocalPosition = cameraTransform.localPosition;
-
-        // ¾É¾ÆÀÖÀ» °æ¿ì
-        if (isCrouch)
-        {
-            for (; currCameraHeight > cameraCrouchHeight; currCameraHeight -= Time.deltaTime * 7f)
-            {
-                // Ä«¸Ş¶óÀÇ ·ÎÄÃ ÁÂÇ¥ °¡Á®¿À±â
-                cameraLocalPosition = cameraTransform.localPosition;
-
-                // Ä«¸Ş¶óÀÇ ·ÎÄÃ yÃà °ª º¯°æÇÏ±â
-                cameraLocalPosition.y = currCameraHeight;
-
-                // Ä«¸Ş¶óÀÇ ·ÎÄÃ ÁÂÇ¥¿¡ Àû¿ëÇÏ±â
-                cameraTransform.localPosition = cameraLocalPosition;
-
-                // ´ÙÀ½ ÇÁ·¹ÀÓ±îÁö ´ë±â
-                yield return null;
-            }
-            // Ä«¸Ş¶óÀÇ ·ÎÄÃ ÁÂÇ¥ cameraCrouchHeight·Î Á¤È®È÷ °ª ¸ÂÃç³õ±â
-            cameraLocalPosition.y = cameraCrouchHeight;
-        }
-
-        // ¼­ÀÖÀ» °æ¿ì
-        else
-        {
-            for (; currCameraHeight < cameraStandHeight; currCameraHeight += Time.deltaTime * 7f)
-            {
-                // Ä«¸Ş¶óÀÇ ·ÎÄÃ ÁÂÇ¥ °¡Á®¿À±â
-                cameraLocalPosition = cameraTransform.localPosition;
-
-                // Ä«¸Ş¶óÀÇ ·ÎÄÃ yÃà °ª º¯°æÇÏ±â
-                cameraLocalPosition.y = currCameraHeight;
-
-                // Ä«¸Ş¶óÀÇ ·ÎÄÃ ÁÂÇ¥¿¡ Àû¿ëÇÏ±â
-                cameraTransform.localPosition = cameraLocalPosition;
-
-                // ´ÙÀ½ ÇÁ·¹ÀÓ±îÁö ´ë±â
-                yield return null;
-            }
-            // Ä«¸Ş¶óÀÇ ·ÎÄÃ ÁÂÇ¥ cameraStandHeight·Î Á¤È®È÷ °ª ¸ÂÃç³õ±â
-            cameraLocalPosition.y = cameraStandHeight;
-        }
-        // Á¤È®È÷ ¸ÂÃç³õÀº °ªÀ¸·Î Ä«¸Ş¶óÀÇ ·ÎÄÃ ÁÂÇ¥¿¡ Àû¿ëÇÏ±â
-        cameraTransform.localPosition = cameraLocalPosition;
-    }
-    public void EquipEnhancedShoes() => shoesSpeed = 1.15f;
-    public void DisableMovement() // ¿òÁ÷ÀÓ ºñÈ°¼ºÈ­
-    {
-        canMove = false;
-    }
-    public void EnableMovement() => canMove = true; // ¿òÁ÷ÀÓ È°¼ºÈ­
+    public void DisableMovement() => canMove = false;
+    public void EnableMovement() => canMove = true; // ì›€ì§ì„ í™œì„±í™”
     public void MovePosition(Transform targetTransform)
     {
         StartCoroutine(MovePositionCoroutine(targetTransform));
@@ -461,25 +261,88 @@ public class EditPlayerController : MonoBehaviour
 
         characterController.enabled = true;
     }
-    #region ÇÃ·¹ÀÌ¾î ÀÌµ¿¼Óµµ ¼³Á¤ Action ¹ÙÀÎµå
-    public void BindToPlayerAnimator(Action<float> action)
-    {
-        animMoveSpeedSetAction += action;
-    }
-    public void UnbindFromPlayerAnimator(Action<float> action)
-    {
-        animMoveSpeedSetAction -= action;
-    }
-    #region ÇÃ·¹ÀÌ¾î ¿Àµğ¿À ÄÁÆ®·Ñ·¯ Action ¹ÙÀÎµå
-    #endregion
-    public void BindToPlayerAudioController(Action<float> action)
-    {
-        audioMoveValueAddAction += action;
-    }
-    public void UnbindFromAudioController(Action<float> action)
-    {
-        audioMoveValueAddAction -= action;
-    }
-    #endregion
 
+    public void Dash()
+    {
+        if (photonTransformView != null)
+        {
+            photonTransformView.enabled = false;
+        }
+
+        photonView.RPC("Dash_RPC", RpcTarget.All, Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+    }
+    [PunRPC]
+    public void Dash_RPC(float horizontal, float vertical)
+    {
+        isDash = true;
+
+        playerAnimator.SetTrigger(AnimationParameter.Dash);
+
+        Vector3 dashDirection = transform.forward * vertical + transform.right * horizontal;
+        dashDirection.Normalize();
+
+        animHorizontalRawSetAction?.Invoke(horizontal);
+        animVerticalRawSetAction?.Invoke(vertical);
+
+        StartCoroutine(DashMovement_RPC(dashDirection));
+    }
+    IEnumerator DashMovement_RPC(Vector3 direction)
+    {
+        float dashDistance = 3f;
+        float dashTime = 0.4915f;
+        float elapsedTime = 0f;
+
+        Vector3 velocity = direction * (dashDistance / dashTime);
+
+        while (elapsedTime < dashTime)
+        {
+            characterController.Move(velocity * Time.deltaTime);
+
+            elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+
+        photonTransformView.enabled = true; // âœ… ë³´ê°„ ë‹¤ì‹œ í™œì„±í™”
+
+        isDash = false;
+    }
+
+    [PunRPC]
+    public void OnInLobby()
+    {
+        GetComponent<PlayerKnifeController>().OnInLobby();
+        GetComponent<EditPlayerState>().OnInLobby();
+    }
+    [PunRPC]
+    public void OnOutLobby()
+    {
+        GetComponent<PlayerKnifeController>().OnOutLobby();
+        GetComponent<EditPlayerState>().OnOutLobby();
+    }
+    #region í”Œë ˆì´ì–´ ì• ë‹ˆë©”ì´í„° ì—°ê²° Action ë°”ì¸ë“œ
+
+    event Action<float> animMotionSpeedSetAction = null; // ì• ë‹ˆë©”ì´í„° ëª¨ì…˜ ì†ë„ ì„¤ì • Action
+    event Action<float> animSpeedSetAction = null;
+    event Action<float> animHorizontalSetAction = null;
+    event Action<float> animVerticalSetAction = null;
+    event Action<float> animHorizontalRawSetAction = null;
+    event Action<float> animVerticalRawSetAction = null;
+    event Action<float> audioMoveValueAddAction = null; // ë°œê±¸ìŒ ì†Œë¦¬ë¥¼ ìœ„í•œ Action
+
+    public void BindToSetActionMotionSpeed(Action<float> action) => animMotionSpeedSetAction += action;
+    public void UnbindFromSetActionMotionSpeed(Action<float> action) => animMotionSpeedSetAction -= action;
+    public void BindToSetActionSpeed(Action<float> action) => animSpeedSetAction += action;
+    public void UnbindFromSetActionSpeed(Action<float> action) => animSpeedSetAction -= action;
+    public void BindToSetActionHorizontal(Action<float> action) => animHorizontalSetAction += action;
+    public void UnbindFromSetActionHorizontal(Action<float> action) => animHorizontalSetAction -= action;
+    public void BindToSetActionVertical(Action<float> action) => animVerticalSetAction += action;
+    public void UnbindFromSetActionVertical(Action<float> action) => animVerticalSetAction -= action;
+    public void BindToSetActionHorizontalRaw(Action<float> action) => animHorizontalRawSetAction += action;
+    public void UnbindFromSetActionHorizontalRaw(Action<float> action) => animHorizontalRawSetAction -= action;
+    public void BindToSetActionVerticalRaw(Action<float> action) => animVerticalRawSetAction += action;
+    public void UnbindFromSetActionVerticalRaw(Action<float> action) => animVerticalRawSetAction -= action;
+    public void BindToPlayerAudioController(Action<float> action) => audioMoveValueAddAction += action;
+    public void UnbindFromAudioController(Action<float> action) => audioMoveValueAddAction -= action;
+    #endregion
 }

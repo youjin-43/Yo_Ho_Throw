@@ -22,6 +22,8 @@ public class PlayerGroundChecker : MonoBehaviour
 
     Ray ray = new Ray();
 
+    RaycastHit hit;
+
     private void Start()
     {
         ray.direction = Vector3.down;
@@ -33,7 +35,21 @@ public class PlayerGroundChecker : MonoBehaviour
         ray.origin = transform.position;
 
         isGrounded = isTriggered ? false : Physics.Raycast(ray, groundRayRange, groundLayerMask);
-        isColliderBelow = Physics.Raycast(ray, out RaycastHit hit, colliderBelowRange, otherLayerMask);
+
+        isColliderBelow = Physics.Raycast(ray, out hit, colliderBelowRange, otherLayerMask);
+
+        if (!isGrounded)
+        {
+            ray.origin = transform.position + (Vector3.up * 0.5f);
+
+            if (Physics.Raycast(ray, out hit, 0.5f + groundRayRange, groundLayerMask))
+            {
+                if (transform.position.y - hit.point.y <= groundRayRange)
+                {
+                    isGrounded = true;
+                }
+            }
+        }
 
         if (isGrounded != wasGrounded)
         {

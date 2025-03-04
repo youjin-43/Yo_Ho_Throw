@@ -1,84 +1,60 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
-    protected Animator playerAnimator; // ÇÃ·¹ÀÌ¾î ¾Ö´Ï¸ŞÀÌÅÍ
+    protected Animator playerAnimator; // í”Œë ˆì´ì–´ ì• ë‹ˆë©”ì´í„°
 
-    protected bool isGround = true; // ÇöÀç isGround »óÅÂ
+    protected bool isGround = true; // í˜„ì¬ isGround ìƒíƒœ
 
     protected const int HAND_LAYER = 1;
 
-    protected virtual void Start()
+    void Start()
     {
-        // Animator °¡Á®¿À±â
+        // Animator ê°€ì ¸ì˜¤ê¸°
         playerAnimator = GetComponentInChildren<Animator>();
-    }
-    private void Awake()
-    {
-        playerAnimator = GetComponentInChildren<Animator>();
-    }
-    #region PlayerController
-    protected virtual void SetMoveSpeed(float value) // ÀÌµ¿¼Óµµ °ª Àû¿ë 
-    {
-        // ÀÌµ¿ °ª ¾Ö´Ï¸ŞÀÌÅÍ¿¡ Àû¿ë
-        playerAnimator.SetFloat(AnimationParameter.Move.ToString(), value);
-    }
-    public virtual void SetIsCrouch(bool isCrouch) // ¾ÉÀº »óÅÂ ¿©ºÎ Àû¿ë 
-    {
-        playerAnimator.SetBool(AnimationParameter.IsCrouch.ToString(), isCrouch);
-    }
-    public virtual bool SetJumpTrigger() // Á¡ÇÁ ¾Ö´ÔÀÌ ºÒ°¡´ÉÇÏ¸é False, °¡´ÉÇÏ¸é True ¹İÈ¯ ÈÄ ¾Ö´Ï¸ŞÀÌ¼Ç Àû¿ë 
-    {
-        // ÇöÀç ÂŞ±¸¸®°í ÀÖÀ» ¶§
-        if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("CrouchMove"))
-        {
-            // false¸¦ ¹İÈ¯
-            return false;
-        }
-        // ¸¸¾à ¼­ÀÖ´Ù¸é Jump Trigger ½ÇÇà
-        playerAnimator.SetTrigger(AnimationParameter.Jump.ToString());
 
-        // true¸¦ ¹İÈ¯
-        return true;
+        // IsGround ì ìš©
+        playerAnimator.SetBool(AnimationParameter.IsGround.ToString(), isGround);
     }
-    public virtual void SetIsGround(bool isGround) // IsGround ¿©ºÎ Àû¿ë
+    void Awake()
     {
-        // ÇöÀç »óÅÂ¿Í µ¿ÀÏÇÏ´Ù¸é ¹İÈ¯
+        playerAnimator = GetComponentInChildren<Animator>();
+    }
+    void SetMotionSpeed(float value) => playerAnimator.SetFloat(AnimationParameter.MotionSpeed.ToString(), value);
+    void SetSpeed(float value) => playerAnimator.SetFloat(AnimationParameter.Speed.ToString(), value);
+    void SetHorizontal(float value) => playerAnimator.SetFloat(AnimationParameter.Horizontal.ToString(), value);
+    void SetVertical(float value) => playerAnimator.SetFloat(AnimationParameter.Vertical.ToString(), value);
+    void SetHorizontalRaw(float value) => playerAnimator.SetFloat(AnimationParameter.HorizontalRaw.ToString(), value);
+    void SetVerticalRaw(float value) => playerAnimator.SetFloat(AnimationParameter.VerticalRaw.ToString(), value);
+    public void SetTrigger(AnimationParameter animationParameter) => playerAnimator.SetTrigger(animationParameter.ToString());
+    public void SetIsGround(bool isGround) // IsGround ì—¬ë¶€ ì ìš©
+    {
+        // í˜„ì¬ ìƒíƒœì™€ ë™ì¼í•˜ë‹¤ë©´ ë°˜í™˜
         if (this.isGround == isGround) return;
 
-        // ÇöÀç »óÅÂ¿¡ Àû¿ë
+        // í˜„ì¬ ìƒíƒœì— ì ìš©
         this.isGround = isGround;
 
-        // IsGround Àû¿ë
-        playerAnimator.SetBool("IsGround", isGround);
+        // IsGround ì ìš©
+        playerAnimator.SetBool(AnimationParameter.IsGround.ToString(), isGround);
     }
-    public virtual void SetWaistValue(float value)
+    protected void OnEnable()
     {
-        playerAnimator.SetFloat(AnimationParameter.Waist.ToString(), value);
-    }
-    #endregion
-    #region PlayerItemHandler
-    public virtual void SetItemChangeTrigger(AnimationParameter triggerState) // ¾ÆÀÌÅÛ º¯°æ ½ÃÀÇ Æ®¸®°Å ¼ÂÆÃ
-    {
-        playerAnimator.SetLayerWeight(HAND_LAYER, triggerState == AnimationParameter.NoItem ? 0f : 1f);
+        EditPlayerController editPlayerController = GetComponent<EditPlayerController>();
 
-        playerAnimator.SetTrigger(triggerState.ToString());
+        editPlayerController.BindToSetActionMotionSpeed(SetMotionSpeed);
+        editPlayerController.BindToSetActionSpeed(SetSpeed);
+        editPlayerController.BindToSetActionHorizontal(SetHorizontal);
+        editPlayerController.BindToSetActionHorizontalRaw(SetHorizontalRaw);
+        editPlayerController.BindToSetActionVertical(SetVertical);
+        editPlayerController.BindToSetActionVerticalRaw(SetVerticalRaw);
     }
-    public virtual void SetItemUseTrigger(AnimationParameter triggerState)
+    protected void OnDisable()
     {
-        playerAnimator.SetTrigger(triggerState.ToString());
+        // í•¨ìˆ˜ êµ¬ë… í•´ì œí•˜ê¸°
+        GetComponent<EditPlayerController>().UnbindFromSetActionMotionSpeed(SetMotionSpeed);
     }
-    #endregion
-    protected virtual void OnEnable()
-    {
-        // ÇÔ¼ö ±¸µ¶ ½ÃÄÑ³õ±â
-        GetComponent<PlayerController>().BindToPlayerAnimator(SetMoveSpeed);
-    }
-    protected virtual void OnDisable()
-    {
-        // ÇÔ¼ö ±¸µ¶ ÇØÁ¦ÇÏ±â
-        GetComponent<PlayerController>().UnbindFromPlayerAnimator(SetMoveSpeed);
-    }
-    void PlayerDieSetTrigger() => playerAnimator.SetTrigger(AnimationParameter.PlayerDie.ToString());
-    void PlayerAliveSetTrigger() => playerAnimator.SetTrigger(AnimationParameter.PlayerAlive.ToString());
+    public void PlayerDieSetTrigger() => playerAnimator.SetTrigger(AnimationParameter.PlayerDie.ToString());
+    public void PlayerAliveSetTrigger() => playerAnimator.SetTrigger(AnimationParameter.PlayerAlive.ToString());
+    public bool IsMoveState() => playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("IdleWalkRunBlend");
 }

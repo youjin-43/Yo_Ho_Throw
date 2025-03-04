@@ -18,8 +18,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     [SerializeField] GameObject playerObject;
 
     [SerializeField] Transform mainCamera;
-    [SerializeField] CinemachineVirtualCamera world_followCam;
-    [SerializeField] CinemachineVirtualCamera world_aimCam;
+    [SerializeField] CinemachineCamera world_followCam;
 
     [SerializeField] Transform camaraRoot;
 
@@ -101,14 +100,18 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
         currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
 
-        // 카메라에 루트 셋팅
-        camaraRoot = currPlayer.transform.GetChild(1);
-        world_followCam.Follow = camaraRoot;
-        world_aimCam.Follow = camaraRoot;
+        // 카메라에 루트 셋팅 
+        camaraRoot = currPlayer.GetComponent<CameraController>().targetTransform;
+        currPlayer.GetComponent<PlayerKnifeController>().dirTransform = camaraRoot;
+        currPlayer.GetComponent<PlayerKnifeController>().cameraTransform = world_followCam.transform;
 
-        // 플레이어에 카메라 셋팅
-        currPlayer.GetComponent<PlayerController>().aimCam = world_aimCam;
-        currPlayer.GetComponent<PlayerController>().cameraTransform = mainCamera.transform;
+        currPlayer.GetComponent<PhotonView>().RPC("OnOutLobby", RpcTarget.All);
+
+        world_followCam.Target.TrackingTarget = camaraRoot;
+        world_followCam.Target.LookAtTarget = camaraRoot;
+        world_followCam.Target.CustomLookAtTarget = true;
+
+
 
         InGameUIManager.Instance.Minimap.SetPlayerTransform(currPlayer.transform);
 
