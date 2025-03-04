@@ -64,7 +64,6 @@ public class UI_DeathPopup : UI_Base
 
     public IEnumerator DeathPopupActive(float respawnTime)
     {
-        Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         Death();
 
         float elapsedTime = 0f;
@@ -76,7 +75,6 @@ public class UI_DeathPopup : UI_Base
             _gauge.fillAmount = elapsedTime / respawnTime;
             _timerText.text = (respawnTime - elapsedTime).ToString("0.000");
 
-            Debug.Log("BBBBBBBBBBBBBBBBBBBBB");
             yield return null;
         }
 
@@ -84,7 +82,6 @@ public class UI_DeathPopup : UI_Base
         InGameUIManager.Instance.ResetAllUI();
         
         gameObject.SetActive(false);
-        Debug.Log("CCCCCCCCCCCCCCCCCCCCCCCc");
     }
     #endregion
 }

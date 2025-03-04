@@ -13,10 +13,17 @@ public class EditPlayerState : MonoBehaviourPun, IDamagable
 
         set
         {
+            if (hp > value)
+            {
+                for (; hp == value; hp--)
+                    InGameUIManager.Instance.OnHealthChangedDebug(-1);
+            }
+            else if (hp < value)
+            {
+                for (; hp == value; hp++)
+                    InGameUIManager.Instance.OnHealthChangedDebug(1);
+            }
             hp = value;
-
-
-            InGameUIManager.Instance.OnHealthChangedDebug(hp);
         }
     }
 
@@ -35,7 +42,7 @@ public class EditPlayerState : MonoBehaviourPun, IDamagable
 
         Debug.Log("맞은 후 HP : " + Hp.ToString());
 
-        if (Hp <= 0)
+        if (Hp <= 0 && photonView.IsMine)
         {
             photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
 
@@ -45,10 +52,18 @@ public class EditPlayerState : MonoBehaviourPun, IDamagable
     [PunRPC]
     void HandleDeath(int killerActorNr)
     {
+        gameObject.name += Random.value.ToString();
+        Debug.Log("죽은 플레이어 : " + gameObject.name);
+
         // 이동 비활성화
         EditPlayerController.Instance.DisableMovement();
 
-        BattleSystem.Instance.RegisterKill(killerActorNr, photonView.OwnerActorNr);
+        //BattleSystem.Instance.RegisterKill(killerActorNr, photonView.OwnerActorNr);
+        BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
+
+        Debug.Log("----------HandleDeath----------");
+
+        //BattleSystem.Instance.RegisterKill(this.photonView.OwnerActorNr, photonView.OwnerActorNr);
     }
 
     public void OnInLobby() => isInLobby = true;
