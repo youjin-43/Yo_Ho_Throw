@@ -64,7 +64,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
                 foreach (var kvp in PhotonNetwork.CurrentRoom.Players)
                 {
-                    InGameUIManager.HidePlayerIcon(kvp.Key, targetActorNr);
+                    InGameUIManager.HidePlayerIcon(kvp.Key, targetActorNr, MinimapIconType.Other_Player);
                     Debug.Log("숨기기 타겟 액터넘버 : " + targetActorNr.ToString());
                 }
 
@@ -114,7 +114,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void SetBountyTargetActorNumber(int targetActorNr)
     {
         if (targetActorNr != -1)
-            InGameUIManager.ShowPlayerIcon(PhotonNetwork.LocalPlayer.ActorNumber, targetActorNr);
+            InGameUIManager.ShowPlayerIcon(PhotonNetwork.LocalPlayer.ActorNumber, targetActorNr, MinimapIconType.Bounty_Hunter);
 
         bountyTargetActorNumber = targetActorNr;
     }

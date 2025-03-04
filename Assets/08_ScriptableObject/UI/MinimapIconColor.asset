@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b172ba9029dea849b91c972dd35e83b, type: 3}
+  m_Name: MinimapIconColor
+  m_EditorClassIdentifier: 
+  my_Player_Color: {r: 0, g: 1, b: 0, a: 1}
+  other_Player_Color: {r: 1, g: 0.4666667, b: 0.4666667, a: 1}
+  bounty_Hunter_Color: {r: 1, g: 0.79215693, b: 0, a: 1}
+  revenge_Target_Color: {r: 1, g: 0, b: 0, a: 1}
+  treasure_Box_Color: {r: 0, g: 0.13333334, b: 1, a: 1}
+  my_Player_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  other_Player_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  bounty_Hunter_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  revenge_Target_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  treasure_Box_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
