@@ -31,9 +31,12 @@ public class EditPlayerState : MonoBehaviourPun, IDamagable
 
         if (Hp <= 0)
         {
+            photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNumber);
+
             HandleDeath(attackerActorNumber);
         }
     }
+    [PunRPC]
     void HandleDeath(int killerActorNr)
     {
         // 이동 비활성화

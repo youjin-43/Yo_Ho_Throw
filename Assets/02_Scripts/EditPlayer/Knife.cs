@@ -66,7 +66,7 @@ public class Knife : MonoBehaviour
             // if (PhotonNetwork.LocalPlayer.ActorNumber != attackerActorNr) return;
 
             // EditPlayerState 에 있는 ReceiveDamage 함수 호출
-            playerPhotonView.RPC("ReceiveDamage", RpcTarget.All, attackerActorNr, KNIFE_THROW_DAMAGE);
+            playerPhotonView.RPC("ReceiveDamage", PhotonNetwork.CurrentRoom.Players[playerPhotonView.OwnerActorNr], attackerActorNr, KNIFE_THROW_DAMAGE);
         }
         else
         {
