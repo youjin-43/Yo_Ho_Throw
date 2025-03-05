@@ -16,6 +16,8 @@ namespace StarterAssets
 #endif
     public class ThirdPersonController : PlayerStatController
     {
+        public float rotateSpeed = 1f;
+
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
@@ -217,9 +219,13 @@ namespace StarterAssets
             _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
             _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
+            transform.Rotate(0, _input.look.x * rotateSpeed, 0);
+
+            Debug.Log("_cinemachineTargetYaw : " + _cinemachineTargetYaw.ToString());
+
             // Cinemachine will follow this target
             CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
-                _cinemachineTargetYaw, 0.0f);
+                CinemachineCameraTarget.transform.rotation.eulerAngles.y/*_cinemachineTargetYaw*/, 0.0f);
         }
 
         

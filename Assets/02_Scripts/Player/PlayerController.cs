@@ -186,28 +186,30 @@ public class PlayerController : ThirdPersonController
     
     void LookSameCameraDirection()
     {
-        Transform camTransform = Camera.main.transform;
-        RaycastHit hit;
-        Vector3 previousTargetPosition = targetPosition;
+        //Transform camTransform = Camera.main.transform;
+        //RaycastHit hit;
+        //Vector3 previousTargetPosition = targetPosition;
 
-        if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, 100f, targetLayer))
-        {
-            if (Vector3.Distance(previousTargetPosition, hit.point) > 0.1f)
-            {
-                targetPosition = Vector3.Lerp(previousTargetPosition, hit.point, Time.deltaTime * 100f);
-            }
-        }
-        else
-        {
-            Vector3 newTargetPosition = camTransform.position + camTransform.forward * 100f;
-            targetPosition = Vector3.Lerp(previousTargetPosition, newTargetPosition, Time.deltaTime * 100f);
-        }
+        //if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, 100f, targetLayer))
+        //{
+        //    if (Vector3.Distance(previousTargetPosition, hit.point) > 0.1f)
+        //    {
+        //        targetPosition = Vector3.Lerp(previousTargetPosition, hit.point, Time.deltaTime * 100f);
+        //    }
+        //}
+        //else
+        //{
+        //    Vector3 newTargetPosition = camTransform.position + camTransform.forward * 100f;
+        //    targetPosition = Vector3.Lerp(previousTargetPosition, newTargetPosition, Time.deltaTime * 100f);
+        //}
 
-        Vector3 targetAim = targetPosition;
-        targetAim.y = transform.position.y;
-        Vector3 aimDir = (targetAim - transform.position).normalized;
+        //Vector3 targetAim = targetPosition;
+        //targetAim.y = transform.position.y;
+        //Vector3 aimDir = (targetAim - transform.position).normalized;
 
-        transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
+        //transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
+
+
     }
 
     

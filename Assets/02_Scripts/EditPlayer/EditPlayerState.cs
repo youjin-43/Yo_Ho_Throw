@@ -24,7 +24,9 @@ public class EditPlayerState : MonoBehaviourPun, IDamagable
     [PunRPC]
     public void ReceiveDamage(int attackerActorNr, int damage)
     {
-        if (isInLobby || photonView.IsMine) return;
+        if (isInLobby || !photonView.IsMine) return;
+
+        if (PhotonNetwork.LocalPlayer.ActorNumber != photonView.OwnerActorNr) return;
 
         Hp -= damage;
 
