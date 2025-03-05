@@ -12,6 +12,9 @@ public class PlayerController : ThirdPersonController
     [Header("Online")]
     public bool online = true;
 
+    [Header("State")]
+    public bool canDash = true;
+
     [Header("Bullet")]
     private StarterAssetsInputs input;
     public GameObject bulletPrefab;
@@ -31,7 +34,7 @@ public class PlayerController : ThirdPersonController
     private Vector3 targetPosition = Vector3.zero;
     private int maxBulletCount;
     [SerializeField]
-    private int bulletCount;
+   
     private Animator anim;
 
     void Start()
@@ -41,21 +44,25 @@ public class PlayerController : ThirdPersonController
         photonTransformView = GetComponent<PhotonTransformView>();
         maxBulletCount = 10;
         bulletCount = maxBulletCount;
-        anim = GetComponent<Animator>();
+        
         pv = GetComponent<PhotonView>();
+
     }
 
     void Update()
     {
         if (online && !pv.IsMine) return;
         base.Update();
+        if(isAlive)
+            LookSameCameraDirection();
 
-        LookSameCameraDirection();
-
+        /* 오른쪽 마우스 확대 기능
         if (input.aim) aimCam.gameObject.SetActive(true);
         else aimCam.gameObject.SetActive(false);
+        */
 
-        if (Input.GetKeyDown(KeyCode.F) && bulletCount > 0)
+        if (!isAlive) return;
+        if (Input.GetKeyDown(KeyCode.Mouse0) && bulletCount > 0)
         {
             
             bulletCount--;
@@ -63,16 +70,19 @@ public class PlayerController : ThirdPersonController
 
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded && _input.move != Vector2.zero && canDash)
         {
             anim.SetTrigger("Dash");
             Dash();
+            StartCoroutine(DashCooltime());
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             MeleeAttack();
         }
+
+        
     }
 
     void FixedUpdate()
@@ -81,6 +91,17 @@ public class PlayerController : ThirdPersonController
         base.FixedUpdate();
     }
 
+    private void OnEnable()
+    {
+        anim = GetComponent<Animator>();
+        anim.Update(0f);
+    }
+    IEnumerator DashCooltime()
+    {
+        canDash = false;
+        yield return new WaitForSeconds(dashCoolTime);
+        canDash = true;
+    }
     
     public void ThrowProjectile()
     {
@@ -119,11 +140,21 @@ public class PlayerController : ThirdPersonController
     
     IEnumerator StartAnimationCoroutine(string _animName, float _frame, bool _layerLerp = false, int _layerIndex = 0, float _layerWeight = 1)
     {
-       // anim.SetTrigger(_animName);
+        // anim.SetTrigger(_animName);
+        if(_animName == "Dash")
+        {
+            IsDash = true;  
+        }
+
         anim.SetLayerWeight(_layerIndex, _layerWeight);
         yield return new WaitForSeconds(_frame);
         anim.SetTrigger(_animName);
 
+        if (_animName == "Dash")
+        {
+            IsDash = false;
+        }
+        
         if (_layerLerp)
             StartCoroutine(SmoothLayerReset(_layerIndex));
         else
@@ -152,7 +183,7 @@ public class PlayerController : ThirdPersonController
         anim.SetLayerWeight(1, 1);
     }
 
-    // 🔥 [카메라 방향을 따라 플레이어 회전]
+    
     void LookSameCameraDirection()
     {
         Transform camTransform = Camera.main.transform;
@@ -179,7 +210,7 @@ public class PlayerController : ThirdPersonController
         transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
     }
 
-    // 🔥 [대시 기능] - 네트워크 적용
+    
     public void Dash()
     {
         if (photonTransformView != null)
@@ -196,7 +227,7 @@ public class PlayerController : ThirdPersonController
     [PunRPC]
     void Dash_RPC()
     {
-        StartCoroutine(StartAnimationCoroutine("Dash", 0.467f, true, 1, 0.1f));
+        StartCoroutine(StartAnimationCoroutine("Dash", 0.1638f, true, 1, 0.1f));
 
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
@@ -214,7 +245,7 @@ public class PlayerController : ThirdPersonController
     IEnumerator DashMovement_RPC(Vector3 direction)
     {
         float dashDistance = 3f;
-        float dashTime = 0.4915f;
+        float dashTime = 0.1638f;
         float elapsedTime = 0f;
         Vector3 velocity = direction * (dashDistance / dashTime);
 
@@ -226,11 +257,11 @@ public class PlayerController : ThirdPersonController
         }
         if (photonTransformView != null)
         {
-            photonTransformView.enabled = true; // ✅ 보간 다시 활성화
+            photonTransformView.enabled = true; 
         }
     }
 
-    // 🔥 [근접 공격] - 네트워크 적용
+    
     public void MeleeAttack()
     {
         if (online && pv.IsMine)
@@ -263,5 +294,12 @@ public class PlayerController : ThirdPersonController
         base.OnDamaged(damage);
         if (online && !pv.IsMine) return;
         anim.SetTrigger("Hit");
+    }
+
+    public override void OnDead()
+    {
+        base.OnDead();
+        anim.SetTrigger("Dead");
+
     }
 }
