@@ -94,7 +94,9 @@ public class UI_UITestScript : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha8))
         {
-            InGameUIManager.Instance.Death(5f); // StartCoroutine으로 하지 않을 경우 실행안됨
+            // InGameUIManager.Instance.Death(5f); // StartCoroutine으로 하지 않을 경우 실행안됨
+
+            StartCoroutine(InGameUIManager.Instance.Death(5f));
         }
         if (Input.GetKey(KeyCode.Tab))
         {

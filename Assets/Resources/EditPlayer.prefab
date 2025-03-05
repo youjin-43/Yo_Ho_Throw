@@ -592,8 +592,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsPlayer: 1
-  Icon: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  Color: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &7258212547320222933
 GameObject:
   m_ObjectHideFlags: 0
