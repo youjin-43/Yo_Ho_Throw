@@ -73,5 +73,10 @@ public class UI_HealthIndicator : UI_Base
 
         _gaugeImage.fillAmount = 0.01667f * Mathf.Pow(currentHealth, 3) - 0.1f * Mathf.Pow(currentHealth, 2) + 0.4833f * currentHealth;
     }
+    public void SetHealth(int health)
+    {
+        currentHealth = health;
+        _gaugeImage.fillAmount = 0.01667f * Mathf.Pow(currentHealth, 3) - 0.1f * Mathf.Pow(currentHealth, 2) + 0.4833f * currentHealth;
+    }
     #endregion
 }

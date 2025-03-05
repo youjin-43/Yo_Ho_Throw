@@ -65,8 +65,10 @@ public class Knife : MonoBehaviour
             // 2번 칼을 던진 사람이 아닐 경우 제외
             // if (PhotonNetwork.LocalPlayer.ActorNumber != attackerActorNr) return;
 
+            Debug.Log("Knife OnTrigger Master 호출");
+
             // EditPlayerState 에 있는 ReceiveDamage 함수 호출
-            playerPhotonView.RPC("ReceiveDamage", PhotonNetwork.CurrentRoom.Players[playerPhotonView.OwnerActorNr], attackerActorNr, KNIFE_THROW_DAMAGE);
+            playerPhotonView.RPC("ReceiveDamage", RpcTarget.All, attackerActorNr, KNIFE_THROW_DAMAGE);
         }
         else
         {

@@ -83,7 +83,7 @@ public class PlayerKnifeController : MonoBehaviourPun
 
         isAttackAction = true;
 
-        if (!isInLobby) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(0, 1f);
+        if (!isInLobby) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 1f);
 
         playerAnimator.SetTrigger(AnimationParameter.Shoot);
     }
@@ -95,7 +95,7 @@ public class PlayerKnifeController : MonoBehaviourPun
 
         isAttackAction = true;
 
-        if (!isInLobby) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 1f);
+        if (!isInLobby) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(0, 1f);
 
         playerAnimator.SetTrigger(AnimationParameter.MeleeAttack);
     }

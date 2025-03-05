@@ -184,10 +184,6 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     void UpdatePlayerScoreEntry(EventData photonEvent, RaiseEventCode raiseEventCode)
     {
-        Debug.Log($"CustomData Type: {photonEvent.CustomData.GetType()}");
-
-        Debug.Log("이벤트 종류 : " + raiseEventCode.ToString());
-
         int[] data = (int[])photonEvent.CustomData;
 
         // 수정할 대상의 ActorNumber와 변경 값 가져오기
