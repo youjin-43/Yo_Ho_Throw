@@ -4,6 +4,7 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
+
 public class PlayerController : ThirdPersonController
 {
     PhotonView pv;
@@ -14,9 +15,10 @@ public class PlayerController : ThirdPersonController
 
     [Header("State")]
     public bool canDash = true;
+    private StarterAssetsInputs input;
 
     [Header("Bullet")]
-    private StarterAssetsInputs input;
+    public float bulletRange = 100f;
     public GameObject bulletPrefab;
     public Transform bulletSpawnPoint;
     public float bulletSpeed = 10f;
@@ -25,9 +27,9 @@ public class PlayerController : ThirdPersonController
     [Header("Melee Attack")]
     public GameObject meleeAttackColliderObject;
 
-    [Header("Aim")]
-    public Transform cameraTransform;
-    public CinemachineVirtualCamera aimCam;
+    //[Header("Aim")]
+    //public Transform cameraTransform;
+    //public CinemachineVirtualCamera aimCam;
     [SerializeField]
     private LayerMask targetLayer;
 
@@ -36,10 +38,12 @@ public class PlayerController : ThirdPersonController
     [SerializeField]
    
     private Animator anim;
+    private Transform cameraTransform;
 
     void Start()
     {
         base.Start();
+        cameraTransform = Camera.main.transform;
         input = GetComponent<StarterAssetsInputs>();
         photonTransformView = GetComponent<PhotonTransformView>();
         maxBulletCount = 10;
@@ -65,7 +69,7 @@ public class PlayerController : ThirdPersonController
         if (Input.GetKeyDown(KeyCode.Mouse0) && bulletCount > 0)
         {
             
-            bulletCount--;
+            
             anim.SetTrigger("Shoot");
 
         }
@@ -105,26 +109,27 @@ public class PlayerController : ThirdPersonController
     
     public void ThrowProjectile()
     {
-       // TODO 애니메이션 되는지 확인 
+        
+        // TODO 애니메이션 되는지 확인 
         StartCoroutine(StartAnimationCoroutine("Shoot", 0.24f));
 
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
             bulletCount--;
-            Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized;
+            Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position) - bulletSpawnPoint.position).normalized;
             if (online && pv.IsMine)
-                pv.RPC("Throw_RPC", RpcTarget.All, throwDirection);
+                pv.RPC("Throw_RPC", RpcTarget.All, throwDirection, PhotonNetwork.LocalPlayer.ActorNumber);
         }
     }
 
     [PunRPC]
-    void Throw_RPC(Vector3 throwDirection)
+    void Throw_RPC(Vector3 throwDirection, int attackerActorNr)
     {
         // 칼 오브젝트 생성 
         GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
         if (projectile == null) return;
         projectile.transform.position = bulletSpawnPoint.position;
-
+        projectile.GetComponent<Knife>().attackerActorNr = attackerActorNr;
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -209,6 +214,22 @@ public class PlayerController : ThirdPersonController
 
         //transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
 
+
+        Transform camTransform = Camera.main.transform;
+        RaycastHit hit;
+        
+
+
+
+
+        targetPosition = camTransform.position + camTransform.forward * 10f;
+        
+
+        Vector3 targetAim = targetPosition;
+        targetAim.y = transform.position.y;
+        Vector3 aimDir = (targetAim - transform.position).normalized;
+
+       
 
     }
 

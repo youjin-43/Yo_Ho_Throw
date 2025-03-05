@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem.Processors;
@@ -79,5 +80,15 @@ public class PlayerStatController : MonoBehaviour
     public void FullBullet()
     {
         bulletCount = 10;
+    }
+    [PunRPC]
+    public void OnInLobby()
+    {
+        
+    }
+    [PunRPC]
+    public void OnOutLobby()
+    {
+        
     }
 }

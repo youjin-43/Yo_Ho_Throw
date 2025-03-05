@@ -272,7 +272,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHp: 3
   playerMaxHp: 3
-  bulletCount: 0
+  bulletCount: 10
   isAlive: 1
   isInRobby: 1
   dashCoolTime: 5
@@ -280,6 +280,7 @@ MonoBehaviour:
   MoveSpeed: 2
   IsDash: 0
   SprintSpeed: 5.335
+  mouseSpeed: 1
   RotationSmoothTime: 0.12
   SpeedChangeRate: 10
   LandingAudioClip: {fileID: 0}
@@ -304,13 +305,12 @@ MonoBehaviour:
   _input: {fileID: 0}
   online: 1
   canDash: 1
-  bulletPrefab: {fileID: 8430071279321725386, guid: 7ed4621ce93ddae43adba43f8795ebea, type: 3}
+  bulletRange: 100
+  bulletPrefab: {fileID: 8430071279321725386, guid: 37e43b2cd10e4134897069dfe31facea, type: 3}
   bulletSpawnPoint: {fileID: 1625589534162421683}
   bulletSpeed: 50
   bulletArc: 5
   meleeAttackColliderObject: {fileID: 5727853010510017898}
-  cameraTransform: {fileID: 0}
-  aimCam: {fileID: 0}
   targetLayer:
     serializedVersion: 2
     m_Bits: 4294967295
