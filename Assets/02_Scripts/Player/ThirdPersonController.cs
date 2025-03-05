@@ -19,7 +19,7 @@ namespace StarterAssets
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
-
+        public bool IsDash = false;
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
 
@@ -105,7 +105,7 @@ namespace StarterAssets
 #endif
         private Animator _animator;
         public CharacterController _controller;
-        private StarterAssetsInputs _input;
+        public StarterAssetsInputs _input;
         private GameObject _mainCamera;
 
         private const float _threshold = 0.01f;
@@ -160,11 +160,17 @@ namespace StarterAssets
 
         public void Update()
         {
+            base.Update();
             _hasAnimator = TryGetComponent(out _animator);
-
-            JumpAndGravity();
+            
             GroundedCheck();
-            Move();
+            
+            if (isAlive)
+            {
+                JumpAndGravity();
+                Move();
+
+            }
         }
 
         public void FixedUpdate()
@@ -283,6 +289,8 @@ namespace StarterAssets
         
         private void JumpAndGravity()
         {
+            if (IsDash) return;
+
             if (Grounded)
             {
                 // reset the fall timeout timer
