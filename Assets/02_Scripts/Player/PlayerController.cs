@@ -53,8 +53,8 @@ public class PlayerController : ThirdPersonController
     {
         if (online && !pv.IsMine) return;
         base.Update();
-
-        LookSameCameraDirection();
+        if(isAlive)
+            LookSameCameraDirection();
 
         /* 오른쪽 마우스 확대 기능
         if (input.aim) aimCam.gameObject.SetActive(true);
@@ -294,5 +294,12 @@ public class PlayerController : ThirdPersonController
         base.OnDamaged(damage);
         if (online && !pv.IsMine) return;
         anim.SetTrigger("Hit");
+    }
+
+    public override void OnDead()
+    {
+        base.OnDead();
+        anim.SetTrigger("Dead");
+
     }
 }
