@@ -82,6 +82,11 @@ public class UI_UITestScript : MonoBehaviour
             Debug.Log("Shift 스킬 발동");
             InGameUIManager.Instance.UseSkill(2, 5);
         }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("F 아이템 사용");
+            InGameUIManager.Instance.UseSkill(3, 5);
+        }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
