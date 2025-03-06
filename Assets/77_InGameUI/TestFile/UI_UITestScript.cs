@@ -44,25 +44,27 @@ public class UI_UITestScript : MonoBehaviour
         {
             Debug.LogError("사망 팝업창 할당 안됨");
         }
+
+        InGameUIManager.Instance.GameStart();
     }
 
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            Debug.Log("좌클릭 스킬 발동");
-            InGameUIManager.Instance.UseSkill(0, 2);
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            Debug.Log("우클릭 스킬 발동");
-            InGameUIManager.Instance.UseSkill(1, 1f);
-        }
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            Debug.Log("Shift 스킬 발동");
-            InGameUIManager.Instance.UseSkill(2, 5);
-        }
+        //if(Input.GetMouseButtonDown(0))
+        //{
+        //    Debug.Log("좌클릭 스킬 발동");
+        //    InGameUIManager.Instance.UseSkill(0, 2);
+        //}
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    Debug.Log("우클릭 스킬 발동");
+        //    InGameUIManager.Instance.UseSkill(1, 1f);
+        //}
+        //if (Input.GetKeyDown(KeyCode.LeftShift))
+        //{
+        //    Debug.Log("Shift 스킬 발동");
+        //    InGameUIManager.Instance.UseSkill(2, 5);
+        //}
 
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {

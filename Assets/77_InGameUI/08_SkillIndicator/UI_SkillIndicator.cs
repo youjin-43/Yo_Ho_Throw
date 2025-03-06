@@ -12,19 +12,24 @@ public class UI_SkillIndicator : UI_Base
     private GameObject _skill_Shift_ActiveEffect;
     private GameObject _skill_LClick_ActiveEffect;
     private GameObject _skill_RClick_ActiveEffect;
+    private GameObject _skill_Item_ActiveEffect;
 
     // 스킬 쿨타임 이펙트
     private Image _skill_Shift_CooldownEffect;
     private Image _skill_LClick_CooldownEffect;
     private Image _skill_RClick_CooldownEffect;
 
-    // 스킬 비활성화 이펙트(우클릭(단검 던지기) 전용)
+    // 스킬 비활성화 이펙트(우클릭(단검 던지기), 아이템)
     private Image _skillActivation;
+    private Image _itemActivation;
 
     // 단검 갯수 카운터
     private List<GameObject> _daggerCounter = new List<GameObject>();
 
     private int _numOfDagger = 5;
+
+    // 아이템 슬롯 이미지
+    private Image _itemSlot;
     #endregion
 
 
@@ -62,6 +67,7 @@ public class UI_SkillIndicator : UI_Base
         _skill_RClick_CooldownEffect.gameObject.SetActive(false);
 
         _skillActivation.gameObject.SetActive(false);
+        _skillActivation.gameObject.SetActive(false);
     }
     #endregion
 
@@ -80,6 +86,7 @@ public class UI_SkillIndicator : UI_Base
             _skill_Shift_ActiveEffect  = transform.GetChild(0).transform.GetChild(0).gameObject;
             _skill_LClick_ActiveEffect = transform.GetChild(1).transform.GetChild(0).gameObject;
             _skill_RClick_ActiveEffect = transform.GetChild(2).transform.GetChild(0).gameObject;
+            _skill_RClick_ActiveEffect = transform.GetChild(3).transform.GetChild(0).gameObject;
         }
         // 쿨타임 이펙트
         {
@@ -91,10 +98,13 @@ public class UI_SkillIndicator : UI_Base
             _skill_LClick_CooldownEffect.gameObject.SetActive(false);
             _skill_RClick_CooldownEffect.gameObject.SetActive(false);
         }
-        // 스킬 비활성화 이펙트(우클릭(단검 던지기) 전용)
+        // 스킬 비활성화 이펙트(우클릭(단검 던지기), 아이템)
         {
             _skillActivation = transform.GetChild(2).GetChild(3).GetComponent<Image>();
+            _itemActivation  = transform.GetChild(3).GetChild(3).GetComponent<Image>();
+
             _skillActivation.gameObject.SetActive(false);
+            _itemActivation.gameObject.SetActive(false);
         }
         // 단검 갯수 카운터
         {
@@ -105,6 +115,10 @@ public class UI_SkillIndicator : UI_Base
                 _daggerCounter.Add(daggerCounter.GetChild(i).GetChild(0).gameObject);
             }
         }
+        // 아이템 슬롯
+        {
+            _itemSlot = transform.GetChild(3).GetChild(1).GetComponent<Image>();
+        }
     }
     #endregion
 
@@ -112,7 +126,7 @@ public class UI_SkillIndicator : UI_Base
 
 
 
-    #region FUNCTIONe
+    #region FUNCTION
     #region COOLDOWN
     public void StartCooldownEffect(int button, float cooldownTime)
     {
@@ -134,6 +148,16 @@ public class UI_SkillIndicator : UI_Base
                 RemoveDagger();
                 StartCoroutine(CooldownEffect(_skill_RClick_ActiveEffect, _skill_RClick_CooldownEffect, cooldownTime, true));
             }
+        }
+        // F(아이템 사용)
+        else if(button == 3)
+        {
+            // 아이템은 쿨타임이 없음, 그냥 이펙트만 끄면 됨
+            
+            // 검은 배경은 키고
+            _itemActivation.gameObject.SetActive(true);
+            // 파티클은 끄고
+            _skill_Item_ActiveEffect.SetActive(false);
         }
     }
 
@@ -217,6 +241,14 @@ public class UI_SkillIndicator : UI_Base
             }
         }
     }
+    #endregion
+    public void SetItemSlotImage(Image image)
+    {
+        _itemSlot.sprite = image.sprite;
+    }
+    #region ITEM
+
+
     #endregion
     #endregion
 }
