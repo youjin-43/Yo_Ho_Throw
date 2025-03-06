@@ -129,14 +129,14 @@ public class PlayerController : ThirdPersonController
         GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
         if (projectile == null) return;
         projectile.transform.position = bulletSpawnPoint.position;
-        projectile.GetComponent<Knife>().attackerActorNr = attackerActorNr;
+        projectile.GetComponentInChildren<Cutlass>().attackerActorNr = attackerActorNr;
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.useGravity = false;
             Debug.Log($"throwDir : {throwDirection}");
 
-            Quaternion rotationOffset = Quaternion.Euler(90, 0, 0);
+            Quaternion rotationOffset = Quaternion.Euler(-35f, 0, 0);
             projectile.transform.rotation = Quaternion.LookRotation(throwDirection) * rotationOffset;
             rb.linearVelocity = throwDirection * bulletSpeed;
         }
