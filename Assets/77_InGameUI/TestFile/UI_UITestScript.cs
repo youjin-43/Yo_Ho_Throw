@@ -45,28 +45,50 @@ public class UI_UITestScript : MonoBehaviour
             Debug.LogError("사망 팝업창 할당 안됨");
         }
 
+        // 게임이 시작되면 상점UI를 제외한 모든 UI를 Off 함
         InGameUIManager.Instance.GameStart();
     }
 
+
+    private bool isGameStart = false;
+
     void Update()
     {
-        //if(Input.GetMouseButtonDown(0))
-        //{
-        //    Debug.Log("좌클릭 스킬 발동");
-        //    InGameUIManager.Instance.UseSkill(0, 2);
-        //}
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //    Debug.Log("우클릭 스킬 발동");
-        //    InGameUIManager.Instance.UseSkill(1, 1f);
-        //}
-        //if (Input.GetKeyDown(KeyCode.LeftShift))
-        //{
-        //    Debug.Log("Shift 스킬 발동");
-        //    InGameUIManager.Instance.UseSkill(2, 5);
-        //}
+        // 상점UI가 켜져 있다는 뜻은 게임이 아직 시작되지 않았다는 뜻
+        if(InGameUIManager.Instance.IsStoreUIOpen() == true)
+        {
 
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        }
+        else
+        {
+            UIControl();
+        }
+    }
+
+    public void UIControl()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("좌클릭 스킬 발동");
+            InGameUIManager.Instance.UseSkill(0, 2);
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            Debug.Log("우클릭 스킬 발동");
+            InGameUIManager.Instance.UseSkill(1, 1f);
+        }
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Debug.Log("Shift 스킬 발동");
+            InGameUIManager.Instance.UseSkill(2, 5);
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("F 아이템 사용");
+            InGameUIManager.Instance.UseSkill(3, 5);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             InGameUIManager.Instance.ResetAllUI();
         }

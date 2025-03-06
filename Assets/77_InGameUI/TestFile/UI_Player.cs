@@ -24,8 +24,8 @@ public class TestScript : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
 
         InputActionAsset inputActions = GetComponent<PlayerInput>().actions;
 
