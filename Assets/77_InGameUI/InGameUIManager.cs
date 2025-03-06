@@ -300,7 +300,7 @@ public class InGameUIManager : MonoBehaviour
     /// </summary>
     /// <param name="button">입력한 버튼(0 : 좌클릭, 1 : 우클릭, 2 : Shift, 3 : F)</param>
     /// <param name="time">해당 스킬 쿨타임</param>
-    public void UseSkill(int button, float time)
+    public void UseSkill(int button, float time = 0f)
     {
         SkillIndicator.StartCooldownEffect(button, time);
     }
