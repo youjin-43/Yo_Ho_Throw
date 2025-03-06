@@ -242,10 +242,13 @@ public class PlayerController : ThirdPersonController
             photonTransformView.enabled = false;
         }
 
+        float input_Y = _input.move.y;
+        float input_X = input_Y == -1 ? 0 : _input.move.x;
+
         if (online && photonView.IsMine)
-            photonView.RPC("Dash_RPC", RpcTarget.All, _input.move.x, _input.move.y);
+            photonView.RPC("Dash_RPC", RpcTarget.All, input_X, input_Y);
         else
-            Dash_RPC(_input.move.x, _input.move.y);
+            Dash_RPC(input_X, input_Y);
     }
 
     [PunRPC]
