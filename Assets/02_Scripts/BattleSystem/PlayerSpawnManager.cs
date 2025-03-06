@@ -173,6 +173,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     [PunRPC]
     public void ActivateBountyTarget()
     {
+        Debug.Log("ActivateBountyTarget 주인 : " + photonView.OwnerActorNr.ToString());
+
         // TODO 찬규 : 현상금 타겟 지정 이펙트 활성화
         currPlayerPhotonView.RPC("BountyColorSetting", RpcTarget.All);
     }

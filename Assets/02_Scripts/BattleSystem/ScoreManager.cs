@@ -205,11 +205,15 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         bountyTargetActorNumber = GetTopScorerActorNumber();
 
+        Debug.Log("바운티 타겟 설정 : " + bountyTargetActorNumber.ToString());
+
         photonView.RPC("SetBountyTargetActorNumber", RpcTarget.All, bountyTargetActorNumber);
     }
     [PunRPC]
     public void SetBountyTargetActorNumber(int targetActorNr)
     {
+        Debug.Log("바운티 타겟 ActorNr 확인 : " + targetActorNr.ToString());
+
         if (targetActorNr != -1 && targetActorNr == PhotonNetwork.LocalPlayer.ActorNumber)
             InGameUIManager.ShowPlayerIcon(PhotonNetwork.LocalPlayer.ActorNumber, targetActorNr, MinimapIconType.Bounty_Hunter);
 
