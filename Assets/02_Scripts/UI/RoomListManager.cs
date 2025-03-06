@@ -1,8 +1,8 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class RoomListManager : MonoBehaviour
 {
-    [SerializeField] GameObject titlePage; // Å¸ÀÌÆ² ÆäÀÌÁö
+    [SerializeField] GameObject titlePage; // íƒ€ì´í‹€ í˜ì´ì§€
 
     [SerializeField] GameObject settingPanel;
     [SerializeField] GameObject createRoomPanel;
@@ -11,7 +11,7 @@ public class RoomListManager : MonoBehaviour
 
     private void Awake()
     {
-        // ¹öÆ°¿¡ »ç¿îµå ¿¬°á
+        // ë²„íŠ¼ì— ì‚¬ìš´ë“œ ì—°ê²°
         buttonSound.RegisterButtonSounds();
     }
     public void OnReloadButtonClick()
@@ -20,7 +20,7 @@ public class RoomListManager : MonoBehaviour
     }
     public void OnCloseButtonClick()
     {
-        gameObject.SetActive(false); // ºí·¯ÆäÀÌÁö ºñÈ°¼ºÈ­
+        gameObject.SetActive(false); // ë¸”ëŸ¬í˜ì´ì§€ ë¹„í™œì„±í™”
         titlePage.SetActive(true);
     }
     public void OnGameOverButtonClick()
