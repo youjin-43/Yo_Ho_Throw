@@ -158,6 +158,10 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     {
         photonView.RPC(functionName, PhotonNetwork.CurrentRoom.Players[actorNumber]);
     }
+    public void ExecuteRPC(string functionName)
+    {
+        photonView.RPC(functionName, RpcTarget.All);
+    }
     public void ExecutePlayerRPC(string functionName)
     {
         currPlayerPhotonView.RPC(functionName, RpcTarget.All);
