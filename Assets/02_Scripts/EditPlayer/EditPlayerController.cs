@@ -269,7 +269,12 @@ public class EditPlayerController : MonoBehaviourPun
             photonTransformView.enabled = false;
         }
 
-        photonView.RPC("Dash_RPC", RpcTarget.All, Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        float verticalRaw = Input.GetAxisRaw("Vertical");
+        float horizontalRaw = Input.GetAxisRaw("Horizontal");
+
+        if (verticalRaw < -0.5f) horizontalRaw = 0;
+
+        photonView.RPC("Dash_RPC", RpcTarget.All, horizontalRaw, verticalRaw);
     }
     [PunRPC]
     public void Dash_RPC(float horizontal, float vertical)
@@ -280,7 +285,7 @@ public class EditPlayerController : MonoBehaviourPun
 
         Vector3 dashDirection = transform.forward * vertical + transform.right * horizontal;
         dashDirection.Normalize();
-
+        
         animHorizontalRawSetAction?.Invoke(horizontal);
         animVerticalRawSetAction?.Invoke(vertical);
 
@@ -308,18 +313,18 @@ public class EditPlayerController : MonoBehaviourPun
         isDash = false;
     }
 
-    [PunRPC]
-    public void OnInLobby()
-    {
-        GetComponent<PlayerKnifeController>().OnInLobby();
-        GetComponent<EditPlayerState>().OnInLobby();
-    }
-    [PunRPC]
-    public void OnOutLobby()
-    {
-        GetComponent<PlayerKnifeController>().OnOutLobby();
-        GetComponent<EditPlayerState>().OnOutLobby();
-    }
+    //[PunRPC]
+    //public void OnInLobby()
+    //{
+    //    GetComponent<PlayerKnifeController>().OnInLobby();
+    //    GetComponent<EditPlayerState>().OnInLobby();
+    //}
+    //[PunRPC]
+    //public void OnOutLobby()
+    //{
+    //    GetComponent<PlayerKnifeController>().OnOutLobby();
+    //    GetComponent<EditPlayerState>().OnOutLobby();
+    //}
     #region 플레이어 애니메이터 연결 Action 바인드
 
     event Action<float> animMotionSpeedSetAction = null; // 애니메이터 모션 속도 설정 Action

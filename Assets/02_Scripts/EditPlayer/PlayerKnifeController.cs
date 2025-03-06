@@ -40,8 +40,9 @@ public class PlayerKnifeController : MonoBehaviourPun
             }
             else if (knifeCount < value)
             {
-                for (; knifeCount == value; knifeCount++)
-                    InGameUIManager.Instance.SkillIndicator.AddDagger(1);
+                InGameUIManager.Instance.SkillIndicator.AddDagger(value - knifeCount);
+
+                knifeCount = value;
             }
         }
     }
@@ -143,7 +144,7 @@ public class PlayerKnifeController : MonoBehaviourPun
         knifeGameObject.transform.Rotate(90f, 0, 0);
 
         knifeGameObject.GetComponent<Knife>().attackerActorNr = attackerActorNr;
-        knifeGameObject.GetComponent<Knife>().gravityTime = gravityTime;
+        //knifeGameObject.GetComponent<Knife>().gravityTime = gravityTime;
         
         Rigidbody rb = knifeGameObject.GetComponent<Rigidbody>();
 

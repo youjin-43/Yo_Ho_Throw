@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &529072498365824654
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8955633663145117043}
+  - component: {fileID: 2594988919351720748}
+  m_Layer: 8
+  m_Name: MinimapIndicator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8955633663145117043
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529072498365824654}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4933986420811193164}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2594988919351720748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529072498365824654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ff7127a590623449b93b8b26e033cf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsPlayer: 1
 --- !u!1 &3728001361432756594
 GameObject:
   m_ObjectHideFlags: 0
@@ -73,6 +118,7 @@ Transform:
   - {fileID: 4834628567689382776}
   - {fileID: 1625589534162421683}
   - {fileID: 4251825970379378937}
+  - {fileID: 8955633663145117043}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1762665303443641123
@@ -270,11 +316,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerHp: 3
-  playerMaxHp: 3
+  bulletCount: 10
   isAlive: 1
-  isInRobby: 1
+  isInLobby: 1
+  dashCoolTime: 5
+  anim: {fileID: 0}
   MoveSpeed: 2
+  IsDash: 0
   SprintSpeed: 5.335
+  mouseSpeed: 1
   RotationSmoothTime: 0.12
   SpeedChangeRate: 10
   LandingAudioClip: {fileID: 0}
@@ -296,18 +346,21 @@ MonoBehaviour:
   CameraAngleOverride: 0
   LockCameraPosition: 0
   _controller: {fileID: 0}
+  _input: {fileID: 0}
   online: 1
-  bulletPrefab: {fileID: 8430071279321725386, guid: 7ed4621ce93ddae43adba43f8795ebea, type: 3}
+  canDash: 1
+  bulletRange: 100
+  bulletPrefab: {fileID: 8430071279321725386, guid: 37e43b2cd10e4134897069dfe31facea, type: 3}
   bulletSpawnPoint: {fileID: 1625589534162421683}
   bulletSpeed: 50
   bulletArc: 5
   meleeAttackColliderObject: {fileID: 5727853010510017898}
-  cameraTransform: {fileID: 0}
-  aimCam: {fileID: 0}
   targetLayer:
     serializedVersion: 2
     m_Bits: 4294967295
-  bulletCount: 0
+  cameraTransform: {fileID: 0}
+  defaultColorMaterial: {fileID: 2100000, guid: adf31e9f4e0a76b478ab67dd8dfd7643, type: 2}
+  bountyColorMaterial: {fileID: 2100000, guid: 69243a0c6520b7c45b49f2f6e16ee476, type: 2}
 --- !u!114 &152954773064983578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,6 +455,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 1
     Name: Hit
+  - Type: 9
+    SynchronizeType: 0
+    Name: Dead
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0

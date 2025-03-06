@@ -101,9 +101,9 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
 
         // 카메라에 루트 셋팅 
-        camaraRoot = currPlayer.GetComponent<CameraController>().targetTransform;
-        currPlayer.GetComponent<PlayerKnifeController>().dirTransform = camaraRoot;
-        currPlayer.GetComponent<PlayerKnifeController>().cameraTransform = world_followCam.transform;
+        camaraRoot = currPlayer.GetComponent<PlayerController>().CinemachineCameraTarget.transform;
+        //currPlayer.GetComponent<PlayerKnifeController>().dirTransform = camaraRoot;
+        //currPlayer.GetComponent<PlayerKnifeController>().cameraTransform = world_followCam.transform;
 
         currPlayer.GetComponent<PhotonView>().RPC("OnOutLobby", RpcTarget.All);
 

@@ -4,9 +4,10 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
+
 public class PlayerController : ThirdPersonController
 {
-    PhotonView pv;
+    //PhotonView pv;
     private PhotonTransformView photonTransformView;
 
     [Header("Online")]
@@ -14,9 +15,10 @@ public class PlayerController : ThirdPersonController
 
     [Header("State")]
     public bool canDash = true;
+    private StarterAssetsInputs input;
 
     [Header("Bullet")]
-    private StarterAssetsInputs input;
+    public float bulletRange = 100f;
     public GameObject bulletPrefab;
     public Transform bulletSpawnPoint;
     public float bulletSpeed = 10f;
@@ -25,9 +27,9 @@ public class PlayerController : ThirdPersonController
     [Header("Melee Attack")]
     public GameObject meleeAttackColliderObject;
 
-    [Header("Aim")]
-    public Transform cameraTransform;
-    public CinemachineVirtualCamera aimCam;
+    //[Header("Aim")]
+    //public Transform cameraTransform;
+    //public CinemachineVirtualCamera aimCam;
     [SerializeField]
     private LayerMask targetLayer;
 
@@ -35,26 +37,27 @@ public class PlayerController : ThirdPersonController
     private int maxBulletCount;
     [SerializeField]
    
-    private Animator anim;
+    
+    private Transform cameraTransform;
 
     void Start()
     {
         base.Start();
+        cameraTransform = Camera.main.transform;
         input = GetComponent<StarterAssetsInputs>();
         photonTransformView = GetComponent<PhotonTransformView>();
         maxBulletCount = 10;
         bulletCount = maxBulletCount;
-        
-        pv = GetComponent<PhotonView>();
+
+        //photonView = GetComponent<PhotonView>();
 
     }
 
     void Update()
     {
-        if (online && !pv.IsMine) return;
+        if (online && !photonView.IsMine) return;
         base.Update();
-        if(isAlive)
-            LookSameCameraDirection();
+        
 
         /* 오른쪽 마우스 확대 기능
         if (input.aim) aimCam.gameObject.SetActive(true);
@@ -65,7 +68,7 @@ public class PlayerController : ThirdPersonController
         if (Input.GetKeyDown(KeyCode.Mouse0) && bulletCount > 0)
         {
             
-            bulletCount--;
+            
             anim.SetTrigger("Shoot");
 
         }
@@ -79,6 +82,7 @@ public class PlayerController : ThirdPersonController
 
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
+            anim.SetTrigger("Melee Attack");
             MeleeAttack();
         }
 
@@ -87,7 +91,7 @@ public class PlayerController : ThirdPersonController
 
     void FixedUpdate()
     {
-        if (online && !pv.IsMine) return;
+        if (online && !photonView.IsMine) return;
         base.FixedUpdate();
     }
 
@@ -105,26 +109,27 @@ public class PlayerController : ThirdPersonController
     
     public void ThrowProjectile()
     {
-       // TODO 애니메이션 되는지 확인 
+        
+        // TODO 애니메이션 되는지 확인 
         StartCoroutine(StartAnimationCoroutine("Shoot", 0.24f));
 
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
             bulletCount--;
-            Vector3 throwDirection = (targetPosition - bulletSpawnPoint.position).normalized;
-            if (online && pv.IsMine)
-                pv.RPC("Throw_RPC", RpcTarget.All, throwDirection);
+            Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position) - bulletSpawnPoint.position).normalized;
+            if (online && photonView.IsMine)
+                photonView.RPC("Throw_RPC", RpcTarget.All, throwDirection, PhotonNetwork.LocalPlayer.ActorNumber);
         }
     }
 
     [PunRPC]
-    void Throw_RPC(Vector3 throwDirection)
+    void Throw_RPC(Vector3 throwDirection, int attackerActorNr)
     {
         // 칼 오브젝트 생성 
         GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
         if (projectile == null) return;
         projectile.transform.position = bulletSpawnPoint.position;
-
+        projectile.GetComponent<Knife>().attackerActorNr = attackerActorNr;
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -186,28 +191,46 @@ public class PlayerController : ThirdPersonController
     
     void LookSameCameraDirection()
     {
+        //Transform camTransform = Camera.main.transform;
+        //RaycastHit hit;
+        //Vector3 previousTargetPosition = targetPosition;
+
+        //if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, 100f, targetLayer))
+        //{
+        //    if (Vector3.Distance(previousTargetPosition, hit.point) > 0.1f)
+        //    {
+        //        targetPosition = Vector3.Lerp(previousTargetPosition, hit.point, Time.deltaTime * 100f);
+        //    }
+        //}
+        //else
+        //{
+        //    Vector3 newTargetPosition = camTransform.position + camTransform.forward * 100f;
+        //    targetPosition = Vector3.Lerp(previousTargetPosition, newTargetPosition, Time.deltaTime * 100f);
+        //}
+
+        //Vector3 targetAim = targetPosition;
+        //targetAim.y = transform.position.y;
+        //Vector3 aimDir = (targetAim - transform.position).normalized;
+
+        //transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
+
+
         Transform camTransform = Camera.main.transform;
         RaycastHit hit;
-        Vector3 previousTargetPosition = targetPosition;
+        
 
-        if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, 100f, targetLayer))
-        {
-            if (Vector3.Distance(previousTargetPosition, hit.point) > 0.1f)
-            {
-                targetPosition = Vector3.Lerp(previousTargetPosition, hit.point, Time.deltaTime * 100f);
-            }
-        }
-        else
-        {
-            Vector3 newTargetPosition = camTransform.position + camTransform.forward * 100f;
-            targetPosition = Vector3.Lerp(previousTargetPosition, newTargetPosition, Time.deltaTime * 100f);
-        }
+
+
+
+        targetPosition = camTransform.position + camTransform.forward * 10f;
+        
 
         Vector3 targetAim = targetPosition;
         targetAim.y = transform.position.y;
         Vector3 aimDir = (targetAim - transform.position).normalized;
 
-        transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
+       
+
     }
 
     
@@ -218,8 +241,8 @@ public class PlayerController : ThirdPersonController
             photonTransformView.enabled = false;
         }
 
-        if (online && pv.IsMine)
-            pv.RPC("Dash_RPC", RpcTarget.All);
+        if (online && photonView.IsMine)
+            photonView.RPC("Dash_RPC", RpcTarget.All);
         else
             Dash_RPC();
     }
@@ -264,8 +287,8 @@ public class PlayerController : ThirdPersonController
     
     public void MeleeAttack()
     {
-        if (online && pv.IsMine)
-            pv.RPC("MeleeAttack_RPC", RpcTarget.All);
+        if (online && photonView.IsMine)
+            photonView.RPC("MeleeAttack_RPC", RpcTarget.All);
         else
             MeleeAttack_RPC();
     }
@@ -289,17 +312,24 @@ public class PlayerController : ThirdPersonController
         _meleeAttackColliderObject.SetActive(false);
     }
 
-    public override void OnDamaged(float damage)
+    public override void OnDamaged()
     {
-        base.OnDamaged(damage);
-        if (online && !pv.IsMine) return;
+        
+        if (online && !photonView.IsMine) return;
         anim.SetTrigger("Hit");
     }
 
-    public override void OnDead()
-    {
-        base.OnDead();
-        anim.SetTrigger("Dead");
+    [SerializeField] Material defaultColorMaterial;
+    [SerializeField] Material bountyColorMaterial;
 
+    [PunRPC]
+    public void DefaultColorSetting()
+    {
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+    }
+    [PunRPC]
+    public void BountyColorSetting()
+    {
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = bountyColorMaterial;
     }
 }

@@ -43,6 +43,7 @@ public class Knife : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("맞음");
         // 플레이어에게 충돌했을 때
         if (other.CompareTag("Player"))
         {
