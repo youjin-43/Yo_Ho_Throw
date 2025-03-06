@@ -68,8 +68,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
                     Debug.Log("숨기기 타겟 액터넘버 : " + targetActorNr.ToString());
                 }
 
-                PlayerSpawnManager.Instance.ExecuteRPC(
-                    RaiseEventCode.DeactivateBountyTarget.ToString(), targetActorNr);
+                PlayerSpawnManager.Instance.ExecutePlayerRPC(RaiseEventCode.DeactivateBountyTarget.ToString());
 
                 photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, -1);
                 bountyTargetActorNumber = -1;
@@ -216,8 +215,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, bountyTargetActorNumber);
 
-        PlayerSpawnManager.Instance.ExecuteRPC(
-            RaiseEventCode.ActivateBountyTarget.ToString(), bountyTargetActorNumber);
+        PlayerSpawnManager.Instance.ExecutePlayerRPC(RaiseEventCode.ActivateBountyTarget.ToString());
     }
     void SaveData(EventData photonEvent)
     {
