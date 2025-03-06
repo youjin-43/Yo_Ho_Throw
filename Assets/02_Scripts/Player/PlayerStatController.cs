@@ -80,7 +80,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         }
     }
     [PunRPC]
-    void HandleDeath(int killerActorNr)
+    public void HandleDeath(int killerActorNr)
     {
         if (!photonView.IsMine) return;
         
