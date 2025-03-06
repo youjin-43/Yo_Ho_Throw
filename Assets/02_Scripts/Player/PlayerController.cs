@@ -57,8 +57,9 @@ public class PlayerController : ThirdPersonController
     {
         if (online && !photonView.IsMine) return;
         base.Update();
-        
 
+        //float horizontalInput = Input.GetAxisRaw("Horizontal");
+        //float verticalInput = Input.GetAxisRaw("Vertical");
         /* 오른쪽 마우스 확대 기능
         if (input.aim) aimCam.gameObject.SetActive(true);
         else aimCam.gameObject.SetActive(false);
@@ -242,18 +243,17 @@ public class PlayerController : ThirdPersonController
         }
 
         if (online && photonView.IsMine)
-            photonView.RPC("Dash_RPC", RpcTarget.All);
+            photonView.RPC("Dash_RPC", RpcTarget.All, _input.move.x, _input.move.y);
         else
-            Dash_RPC();
+            Dash_RPC(_input.move.x, _input.move.y);
     }
 
     [PunRPC]
-    void Dash_RPC()
+    void Dash_RPC(float horizontalInput, float verticalInput)
     {
         StartCoroutine(StartAnimationCoroutine("Dash", 0.1638f, true, 1, 0.1f));
 
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        float verticalInput = Input.GetAxisRaw("Vertical");
+        
 
         Vector3 dashDirection = transform.forward * verticalInput + transform.right * horizontalInput;
         dashDirection.Normalize();
