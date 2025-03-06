@@ -40,7 +40,8 @@ public class TestScript : MonoBehaviour
 
     void Update()
     {
-        if(InGameUIManager.Instance.IsPopupUIOpen() == false)
+        if(InGameUIManager.Instance.IsStoreUIOpen() == false &&
+            InGameUIManager.Instance.IsPopupUIOpen() == false)
         {
             Moving();
         }

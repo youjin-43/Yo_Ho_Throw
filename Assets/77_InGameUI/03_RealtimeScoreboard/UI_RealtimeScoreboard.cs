@@ -19,18 +19,22 @@ public class UI_RealtimeScoreboard : UI_Base
 
     public override void On()
     {
-        foreach (RealtimePlayerScoreEntry realtimePlayerScoreEntry in _scoreEntries)
-        {
-            if (realtimePlayerScoreEntry._isVisible) realtimePlayerScoreEntry.gameObject.SetActive(true);
-        }
+        //foreach (RealtimePlayerScoreEntry realtimePlayerScoreEntry in _scoreEntries)
+        //{
+        //    if (realtimePlayerScoreEntry._isVisible) realtimePlayerScoreEntry.gameObject.SetActive(true);
+        //}
+
+        gameObject.SetActive(true);
     }
 
     public override void Off()
     {
-        foreach (RealtimePlayerScoreEntry realtimePlayerScoreEntry in _scoreEntries)
-        {
-            if (realtimePlayerScoreEntry._isVisible) realtimePlayerScoreEntry.gameObject.SetActive(false);
-        }
+        //foreach (RealtimePlayerScoreEntry realtimePlayerScoreEntry in _scoreEntries)
+        //{
+        //    if (realtimePlayerScoreEntry._isVisible) realtimePlayerScoreEntry.gameObject.SetActive(false);
+        //}
+
+        gameObject.SetActive(false);
     }
 
     public override void ResetUI()

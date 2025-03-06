@@ -1,0 +1,66 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class UI_ItemSelect : UI_Base
+{
+    #region VARIABLES
+    private GameObject _itemButton_1;
+    private GameObject _itemButton_2;
+    private GameObject _itemButton_3;
+    #endregion
+
+
+
+
+
+    #region OVERRIDE
+    public override void Init()
+    {
+        _name = name;
+    }
+
+    public override void On()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public override void Off()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public override void ResetUI()
+    {
+    }
+    #endregion
+
+
+
+
+
+    #region MONOBEHAVIOUR
+    void Awake()
+    {
+        _itemButton_1 = transform.GetChild(2).gameObject;
+        _itemButton_2 = transform.GetChild(3).gameObject;
+        _itemButton_3 = transform.GetChild(4).gameObject;
+
+        transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() => ItemClicked(_itemButton_1));
+        transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() => ItemClicked(_itemButton_2));
+        transform.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ItemClicked(_itemButton_3));
+
+        Cursor.lockState = CursorLockMode.None;
+    }
+    #endregion
+
+
+
+
+
+    #region FUNCTION
+    public void ItemClicked(GameObject button)
+    {
+        InGameUIManager.Instance.SetItemSlotImage(button.transform.GetChild(0).GetChild(0).GetComponent<Image>());
+    }
+    #endregion
+}
