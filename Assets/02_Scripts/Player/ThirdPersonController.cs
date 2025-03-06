@@ -223,7 +223,7 @@ namespace StarterAssets
 
             transform.Rotate(0, _input.look.x * mouseSpeed, 0);
 
-            Debug.Log("_cinemachineTargetYaw : " + _cinemachineTargetYaw.ToString());
+            //Debug.Log("_cinemachineTargetYaw : " + _cinemachineTargetYaw.ToString());
 
             // Cinemachine will follow this target
             CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,

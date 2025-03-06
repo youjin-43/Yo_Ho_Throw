@@ -313,18 +313,18 @@ public class EditPlayerController : MonoBehaviourPun
         isDash = false;
     }
 
-    [PunRPC]
-    public void OnInLobby()
-    {
-        GetComponent<PlayerKnifeController>().OnInLobby();
-        GetComponent<EditPlayerState>().OnInLobby();
-    }
-    [PunRPC]
-    public void OnOutLobby()
-    {
-        GetComponent<PlayerKnifeController>().OnOutLobby();
-        GetComponent<EditPlayerState>().OnOutLobby();
-    }
+    //[PunRPC]
+    //public void OnInLobby()
+    //{
+    //    GetComponent<PlayerKnifeController>().OnInLobby();
+    //    GetComponent<EditPlayerState>().OnInLobby();
+    //}
+    //[PunRPC]
+    //public void OnOutLobby()
+    //{
+    //    GetComponent<PlayerKnifeController>().OnOutLobby();
+    //    GetComponent<EditPlayerState>().OnOutLobby();
+    //}
     #region 플레이어 애니메이터 연결 Action 바인드
 
     event Action<float> animMotionSpeedSetAction = null; // 애니메이터 모션 속도 설정 Action

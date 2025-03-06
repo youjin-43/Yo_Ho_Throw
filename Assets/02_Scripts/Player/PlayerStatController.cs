@@ -3,34 +3,45 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem.Processors;
 
-public class PlayerStatController : MonoBehaviour
+public class PlayerStatController : MonoBehaviourPun , IDamagable
 {
-    public float playerHp;
-    public float playerMaxHp;
+    const int MAX_HP = 3;
+    public int playerHp = MAX_HP;
     public int bulletCount = 10;
     public bool isAlive = true;
-    public bool isInRobby = true;
+    public bool isInLobby = true;
     public float dashCoolTime = 5f;
+    public Animator anim;
 
     private float lastDamageTime = 0f; // 마지막으로 데미지를 받은 시간
     private float healDelay = 5f; // 체력 회복 시작까지의 지연 시간
     private float healInterval = 1f; // 체력 회복 간격
 
     private Coroutine healingCoroutine;
+    int Hp
+    {
+        get => playerHp;
 
+        set
+        {
+            playerHp = value;
+
+            InGameUIManager.Instance.HealthIndicator.SetHealth(playerHp);
+        }
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     public void Update()
     {
         //Debug.Log(Time.time);   
-        if (isAlive && !isInRobby && Time.time - lastDamageTime >= healDelay)
-        {
-            Debug.Log("5ch");
+        if (isAlive && !isInLobby && Time.time - lastDamageTime >= healDelay)
+       {
+            
             if (healingCoroutine == null)
             {
 
@@ -39,12 +50,12 @@ public class PlayerStatController : MonoBehaviour
         }
     }
 
-    //팀 식별
-    public virtual void OnDamaged(float damage)
+    
+    public virtual void OnDamaged()
     {
-        if (isInRobby) return;
+        if (isInLobby) return;
 
-        playerHp -= damage;
+        
         lastDamageTime = Time.time;
 
         if (healingCoroutine != null)
@@ -53,29 +64,52 @@ public class PlayerStatController : MonoBehaviour
             healingCoroutine = null; // 체력 회복 중이면 중단
         }
 
-        if (playerHp <= 0)
-        {
-            OnDead();
-            isAlive = false;
-        }
-
     }
+    [PunRPC]
+    public void ReceiveDamage(int attackerActorNr, int damage)
+    {
+        if (isInLobby || !photonView.IsMine) return;
+
+        if (PhotonNetwork.LocalPlayer.ActorNumber != photonView.OwnerActorNr) return;
+
+        Hp -= damage;
+
+        if (Hp <= 0)
+        {
+            photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
+        }
+    }
+    [PunRPC]
+    void HandleDeath(int killerActorNr)
+    {
+        if (!photonView.IsMine) return;
+
+        gameObject.name += Random.value.ToString();
+
+        // 이동 비활성화
+        isAlive = false;
+
+        BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
+    }
+
+    [PunRPC]
     private IEnumerator HealOverTime()
     {
         Debug.Log("회복");
-        while (playerHp < playerMaxHp)
+        while (Hp < MAX_HP)
         {
             playerHp += 1; // 체력 1씩 회복
-            playerHp = Mathf.Min(playerHp, playerMaxHp); // 최대 체력 초과 방지
+            playerHp = Mathf.Min(Hp, MAX_HP); // 최대 체력 초과 방지
             yield return new WaitForSeconds(healInterval);
         }
         healingCoroutine = null; // 체력 다 차면 종료
     }
-
-    public virtual void OnDead()
-    {
-        Debug.Log("Dead");
-    }
+    //[PunRPC]
+    //public virtual void OnDead()
+    //{
+    //    if (!photonView.IsMine) return;
+    //    Debug.Log("Dead");
+    //}
 
     public void FullBullet()
     {
@@ -84,11 +118,11 @@ public class PlayerStatController : MonoBehaviour
     [PunRPC]
     public void OnInLobby()
     {
-        
+        isInLobby = true;
     }
     [PunRPC]
     public void OnOutLobby()
     {
-        
+        isInLobby = false;
     }
 }

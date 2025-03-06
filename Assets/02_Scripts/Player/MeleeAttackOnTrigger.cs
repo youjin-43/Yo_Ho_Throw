@@ -52,7 +52,7 @@ public class MeleeAttackOnTrigger : MonoBehaviour
             PlayerController pc = other.GetComponent<PlayerController>();
             if (pc != null)
             {
-                pc.OnDamaged(1);
+                pc.OnDamaged();
             }
         }
     }

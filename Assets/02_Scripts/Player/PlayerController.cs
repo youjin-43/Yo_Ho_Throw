@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class PlayerController : ThirdPersonController
 {
-    PhotonView pv;
+    //PhotonView pv;
     private PhotonTransformView photonTransformView;
 
     [Header("Online")]
@@ -37,7 +37,7 @@ public class PlayerController : ThirdPersonController
     private int maxBulletCount;
     [SerializeField]
    
-    private Animator anim;
+    
     private Transform cameraTransform;
 
     void Start()
@@ -48,14 +48,14 @@ public class PlayerController : ThirdPersonController
         photonTransformView = GetComponent<PhotonTransformView>();
         maxBulletCount = 10;
         bulletCount = maxBulletCount;
-        
-        pv = GetComponent<PhotonView>();
+
+        //photonView = GetComponent<PhotonView>();
 
     }
 
     void Update()
     {
-        if (online && !pv.IsMine) return;
+        if (online && !photonView.IsMine) return;
         base.Update();
         if(isAlive)
             LookSameCameraDirection();
@@ -91,7 +91,7 @@ public class PlayerController : ThirdPersonController
 
     void FixedUpdate()
     {
-        if (online && !pv.IsMine) return;
+        if (online && !photonView.IsMine) return;
         base.FixedUpdate();
     }
 
@@ -117,8 +117,8 @@ public class PlayerController : ThirdPersonController
         {
             bulletCount--;
             Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position) - bulletSpawnPoint.position).normalized;
-            if (online && pv.IsMine)
-                pv.RPC("Throw_RPC", RpcTarget.All, throwDirection, PhotonNetwork.LocalPlayer.ActorNumber);
+            if (online && photonView.IsMine)
+                photonView.RPC("Throw_RPC", RpcTarget.All, throwDirection, PhotonNetwork.LocalPlayer.ActorNumber);
         }
     }
 
@@ -241,8 +241,8 @@ public class PlayerController : ThirdPersonController
             photonTransformView.enabled = false;
         }
 
-        if (online && pv.IsMine)
-            pv.RPC("Dash_RPC", RpcTarget.All);
+        if (online && photonView.IsMine)
+            photonView.RPC("Dash_RPC", RpcTarget.All);
         else
             Dash_RPC();
     }
@@ -287,8 +287,8 @@ public class PlayerController : ThirdPersonController
     
     public void MeleeAttack()
     {
-        if (online && pv.IsMine)
-            pv.RPC("MeleeAttack_RPC", RpcTarget.All);
+        if (online && photonView.IsMine)
+            photonView.RPC("MeleeAttack_RPC", RpcTarget.All);
         else
             MeleeAttack_RPC();
     }
@@ -312,17 +312,12 @@ public class PlayerController : ThirdPersonController
         _meleeAttackColliderObject.SetActive(false);
     }
 
-    public override void OnDamaged(float damage)
+    public override void OnDamaged()
     {
-        base.OnDamaged(damage);
-        if (online && !pv.IsMine) return;
+        
+        if (online && !photonView.IsMine) return;
         anim.SetTrigger("Hit");
     }
 
-    public override void OnDead()
-    {
-        base.OnDead();
-        anim.SetTrigger("Dead");
-
-    }
+    
 }

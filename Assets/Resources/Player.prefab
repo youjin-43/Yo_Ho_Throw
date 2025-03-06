@@ -49,7 +49,6 @@ GameObject:
   - component: {fileID: 152954773064983578}
   - component: {fileID: 8960680114042870991}
   - component: {fileID: 9094096662284160659}
-  - component: {fileID: 7487304704583124105}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -271,12 +270,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerHp: 3
-  playerMaxHp: 3
   bulletCount: 10
   isAlive: 1
-  isInRobby: 1
+  isInLobby: 1
   dashCoolTime: 5
-  rotateSpeed: 1
+  anim: {fileID: 0}
   MoveSpeed: 2
   IsDash: 0
   SprintSpeed: 5.335
@@ -314,7 +312,7 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 4294967295
-  anim: {fileID: 0}
+  cameraTransform: {fileID: 0}
 --- !u!114 &152954773064983578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,18 +414,6 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 1
     LayerIndex: 2
---- !u!114 &7487304704583124105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5264226163476715299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9d68e82447c66447b753c4c5bbbf4c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5727853010510017898
 GameObject:
   m_ObjectHideFlags: 0

@@ -47,7 +47,17 @@ public class EditPlayerState : MonoBehaviourPun, IDamagable
 
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
     }
-
-    public void OnInLobby() => isInLobby = true;
-    public void OnOutLobby() => isInLobby = false;
+    //[PunRPC]
+    //public void OnInLobby()
+    //{
+    //    GetComponent<PlayerKnifeController>().OnInLobby();
+    //    GetComponent<EditPlayerState>().OnInLobby();
+    //}
+    //[PunRPC]
+    //public void OnOutLobby()
+    //{
+    //    GetComponent<PlayerKnifeController>().OnOutLobby();
+    //    GetComponent<EditPlayerState>().OnOutLobby();
+    //}
+    
 }
