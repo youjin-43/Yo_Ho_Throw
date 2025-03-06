@@ -109,14 +109,6 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
             new RaiseEventOptions { Receivers = ReceiverGroup.Others },
             SendOptions.SendReliable);
     }
-    [PunRPC]
-    public void SetBountyTargetActorNumber(int targetActorNr)
-    {
-        if (targetActorNr != -1)
-            InGameUIManager.ShowPlayerIcon(PhotonNetwork.LocalPlayer.ActorNumber, targetActorNr, MinimapIconType.Bounty_Hunter);
-
-        bountyTargetActorNumber = targetActorNr;
-    }
     void HasRankingChanged(int actorNumber)
     {
         var sortedScores = new List<KeyValuePair<int, PlayerScoreEntryData>>(playerScoreEntryDict);
@@ -213,7 +205,15 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         bountyTargetActorNumber = GetTopScorerActorNumber();
 
-        photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, bountyTargetActorNumber);
+        photonView.RPC("SetBountyTargetActorNumber", RpcTarget.All, bountyTargetActorNumber);
+    }
+    [PunRPC]
+    public void SetBountyTargetActorNumber(int targetActorNr)
+    {
+        if (targetActorNr != -1 && targetActorNr == PhotonNetwork.LocalPlayer.ActorNumber)
+            InGameUIManager.ShowPlayerIcon(PhotonNetwork.LocalPlayer.ActorNumber, targetActorNr, MinimapIconType.Bounty_Hunter);
+
+        bountyTargetActorNumber = targetActorNr;
 
         PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.ActivateBountyTarget.ToString(), bountyTargetActorNumber);
     }
