@@ -1,5 +1,6 @@
 using Photon.Pun;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.Processors;
 
@@ -7,7 +8,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 {
     const int MAX_HP = 3;
     public int playerHp = MAX_HP;
-    public int bulletCount = 10;
+    public int bulletCount = 5;
     public bool isAlive = true;
     public bool isInLobby = true;
     public float dashCoolTime = 5f;
@@ -76,19 +77,21 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
         if (Hp <= 0)
         {
+            
             photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
         }
     }
     [PunRPC]
     public void HandleDeath(int killerActorNr)
     {
+        anim.SetTrigger("Dead");
         if (!photonView.IsMine) return;
         
         gameObject.name += Random.value.ToString();
 
         // 이동 비활성화
         isAlive = false;
-
+        
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
     }
 
@@ -125,4 +128,21 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         isInLobby = false;
     }
+
+    [PunRPC]
+    public void InitPlayer()
+    {
+        if(!photonView.IsMine) return;
+
+        isAlive = true;
+
+        bulletCount = 5;
+
+        anim.Rebind();
+
+        anim.Update(0f);
+    }
+
+
+    
 }

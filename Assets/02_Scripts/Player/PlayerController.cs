@@ -70,8 +70,13 @@ public class PlayerController : ThirdPersonController
             if (!isAlive) return;
         if (Input.GetKeyDown(KeyCode.Mouse0) && bulletCount > 0)
         {
-            
-            
+            //if (!isInLobby)
+            //{
+            //    InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 1f);
+            //    InGameUIManager.Instance.SkillIndicator.RemoveDagger();
+
+            //}
+
             anim.SetTrigger("Shoot");
 
         }
@@ -120,6 +125,7 @@ public class PlayerController : ThirdPersonController
 
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
+            
             bulletCount--;
             Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position) - bulletSpawnPoint.position).normalized;
             if (online && photonView.IsMine)
@@ -130,7 +136,10 @@ public class PlayerController : ThirdPersonController
     [PunRPC]
     void Throw_RPC(Vector3 throwDirection, int attackerActorNr)
     {
+
+        
         // 칼 오브젝트 생성 
+
         GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
         if (projectile == null) return;
         projectile.transform.position = bulletSpawnPoint.position;
