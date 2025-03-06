@@ -10,6 +10,11 @@ public enum PhotonRoomProperties
     mode,
     password
 }
+
+public enum PhotonPlayerProperties
+{
+    IsReady
+}
 /*
            
     일반 클라이언트의 흐름
@@ -112,6 +117,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(roomName, options);
     }
 
+    // 룸 생성이 완료된 후 호출되는 콜백 함수
+    public override void OnCreatedRoom()
+    {
+        Debug.Log($"룸 생성 - 이름 : {PhotonNetwork.CurrentRoom.Name}");
+    }
+
     // 방 입장 요청 이벤트!
     public static event Action<RoomInfo> OnPasswordCheckRequested;
 
@@ -139,14 +150,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRoom(roomName);
     }
 
-    #endregion
-
-    // 룸 생성이 완료된 후 호출되는 콜백 함수
-    public override void OnCreatedRoom()
-    {
-        Debug.Log($"룸 생성 - 이름 : {PhotonNetwork.CurrentRoom.Name}");
-    }
-
     // 룸에 입장한 후 호출되는 콜백 함수
     public override void OnJoinedRoom()
     {
@@ -154,7 +157,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("내가 방장이다!!!");
-            PhotonNetwork.LoadLevel("GameReadyScene");
+            //PhotonNetwork.LoadLevel("GameReadyScene");
+            PhotonNetwork.LoadLevel("GameReadyScene_1");
             // AutomaticallySyncScene를 true로 설정했기 때문에, 새로 들어온 클라이언트도 자동으로 방장이 이동한 씬(GameReadyScene)으로 이동
         }
         else
@@ -171,20 +175,22 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         {
             Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐
         }
-
-        // 인원수가 꽉 차면 룸 닫는거 처리 
-        //if (PhotonNetwork.CurrentRoom.PlayerCount >= 2)
-        //{
-        //    Debug.Log("현재 인원수: " + PhotonNetwork.CurrentRoom.PlayerCount);
-
-        //    //룸 닫고 
-        //    PhotonNetwork.CurrentRoom.IsOpen = false;
-        //    PhotonNetwork.CurrentRoom.IsVisible = false;
-        //    Debug.Log("현재 방 오픈 여부: " + PhotonNetwork.CurrentRoom.IsOpen);
-
-        //    Debug.Log("Game Start!");
-
-        //   
-        //}
     }
+
+    #endregion
+
+    // 인원수가 꽉 차면 룸 닫는거 처리 
+    //if (PhotonNetwork.CurrentRoom.PlayerCount >= 2)
+    //{
+    //    Debug.Log("현재 인원수: " + PhotonNetwork.CurrentRoom.PlayerCount);
+
+    //    //룸 닫고 
+    //    PhotonNetwork.CurrentRoom.IsOpen = false;
+    //    PhotonNetwork.CurrentRoom.IsVisible = false;
+    //    Debug.Log("현재 방 오픈 여부: " + PhotonNetwork.CurrentRoom.IsOpen);
+
+    //    Debug.Log("Game Start!");
+
+    //   
+    //}
 }
