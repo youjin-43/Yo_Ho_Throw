@@ -62,9 +62,7 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         Debug.Log($"Spawned Player: {player}");
 
         // 카메라에 루트 셋팅 
-        camaraRoot = player.GetComponent<CameraController>().targetTransform;
-        player.GetComponent<PlayerKnifeController>().dirTransform = camaraRoot;
-        player.GetComponent<PlayerKnifeController>().cameraTransform = world_followCam.transform;
+        camaraRoot = player.GetComponent<PlayerController>().CinemachineCameraTarget.transform;
 
         player.GetComponent<PhotonView>().RPC("OnInLobby", RpcTarget.All);
 

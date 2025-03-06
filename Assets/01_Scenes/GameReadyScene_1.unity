@@ -6437,7 +6437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac4ed934c829f4c8aa7cb8fd9cbfb6ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 6003778358493816855, guid: 702e4c145190b0a4aa3a10d8f95b4ed9, type: 3}
+  playerPrefab: {fileID: 5264226163476715299, guid: adcde7277b6a5467499f0c76f2c2303a, type: 3}
   mainCamera: {fileID: 2088619755}
   world_followCam: {fileID: 2123811550}
   player: {fileID: 0}

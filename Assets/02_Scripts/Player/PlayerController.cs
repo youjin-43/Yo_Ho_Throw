@@ -319,5 +319,17 @@ public class PlayerController : ThirdPersonController
         anim.SetTrigger("Hit");
     }
 
-    
+    [SerializeField] Material defaultColorMaterial;
+    [SerializeField] Material bountyColorMaterial;
+
+    [PunRPC]
+    public void DefaultColorSetting()
+    {
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+    }
+    [PunRPC]
+    public void BountyColorSetting()
+    {
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = bountyColorMaterial;
+    }
 }
