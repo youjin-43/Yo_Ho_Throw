@@ -30,7 +30,7 @@ public class BulletOnTrigger : MonoBehaviour
             
             PlayerController pc;
             if (pc = other.GetComponent<PlayerController>()){
-                pc.OnDamaged();
+                pc.OnDamagedAnim();
 
             }
             PoolManager.Instance.Push(gameObject);

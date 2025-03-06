@@ -2,6 +2,7 @@ using Photon.Pun;
 using StarterAssets;
 using System.Collections;
 using Unity.Cinemachine;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -36,9 +37,9 @@ public class PlayerController : ThirdPersonController
     private Vector3 targetPosition = Vector3.zero;
     private int maxBulletCount;
     [SerializeField]
-   
-    
     private Transform cameraTransform;
+
+    
 
     void Start()
     {
@@ -48,8 +49,8 @@ public class PlayerController : ThirdPersonController
         photonTransformView = GetComponent<PhotonTransformView>();
         maxBulletCount = 10;
         bulletCount = maxBulletCount;
-
-        //photonView = GetComponent<PhotonView>();
+        
+       
 
     }
 
@@ -58,14 +59,15 @@ public class PlayerController : ThirdPersonController
         if (online && !photonView.IsMine) return;
         base.Update();
 
-        //float horizontalInput = Input.GetAxisRaw("Horizontal");
-        //float verticalInput = Input.GetAxisRaw("Vertical");
-        /* 오른쪽 마우스 확대 기능
-        if (input.aim) aimCam.gameObject.SetActive(true);
-        else aimCam.gameObject.SetActive(false);
-        */
+        
+            //float horizontalInput = Input.GetAxisRaw("Horizontal");
+            //float verticalInput = Input.GetAxisRaw("Vertical");
+            /* 오른쪽 마우스 확대 기능
+            if (input.aim) aimCam.gameObject.SetActive(true);
+            else aimCam.gameObject.SetActive(false);
+            */
 
-        if (!isAlive) return;
+            if (!isAlive) return;
         if (Input.GetKeyDown(KeyCode.Mouse0) && bulletCount > 0)
         {
             
@@ -76,6 +78,8 @@ public class PlayerController : ThirdPersonController
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded && _input.move != Vector2.zero && canDash)
         {
+            
+            
             anim.SetTrigger("Dash");
             Dash();
             StartCoroutine(DashCooltime());
@@ -112,7 +116,7 @@ public class PlayerController : ThirdPersonController
     {
         
         // TODO 애니메이션 되는지 확인 
-        StartCoroutine(StartAnimationCoroutine("Shoot", 0.24f));
+        //StartCoroutine(StartAnimationCoroutine("Shoot", 0.24f));
 
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
@@ -144,28 +148,28 @@ public class PlayerController : ThirdPersonController
     }
     
     
-    IEnumerator StartAnimationCoroutine(string _animName, float _frame, bool _layerLerp = false, int _layerIndex = 0, float _layerWeight = 1)
-    {
-        // anim.SetTrigger(_animName);
-        if(_animName == "Dash")
-        {
-            IsDash = true;  
-        }
+    //IEnumerator StartAnimationCoroutine(string _animName, float _frame, bool _layerLerp = false, int _layerIndex = 0, float _layerWeight = 1)
+    //{
+    //    // anim.SetTrigger(_animName);
+    //    if(_animName == "Dash")
+    //    {
+    //        IsDash = true;  
+    //    }
 
-        anim.SetLayerWeight(_layerIndex, _layerWeight);
-        yield return new WaitForSeconds(_frame);
-        anim.SetTrigger(_animName);
+    //    anim.SetLayerWeight(_layerIndex, _layerWeight);
+    //    yield return new WaitForSeconds(_frame);
+    //    anim.SetTrigger(_animName);
 
-        if (_animName == "Dash")
-        {
-            IsDash = false;
-        }
+    //    if (_animName == "Dash")
+    //    {
+    //        IsDash = false;
+    //    }
         
-        if (_layerLerp)
-            StartCoroutine(SmoothLayerReset(_layerIndex));
-        else
-            LayerReset();
-    }
+    //    if (_layerLerp)
+    //        StartCoroutine(SmoothLayerReset(_layerIndex));
+    //    else
+    //        LayerReset();
+    //}
 
     public void LayerReset()
     {
@@ -237,6 +241,7 @@ public class PlayerController : ThirdPersonController
     
     public void Dash()
     {
+        anim.SetLayerWeight(1, 0);
         if (photonTransformView != null)
         {
             photonTransformView.enabled = false;
@@ -254,7 +259,7 @@ public class PlayerController : ThirdPersonController
     [PunRPC]
     void Dash_RPC(float horizontalInput, float verticalInput)
     {
-        StartCoroutine(StartAnimationCoroutine("Dash", 0.1638f, true, 1, 0.1f));
+        //StartCoroutine(StartAnimationCoroutine("Dash", 0.1638f, true, 1, 0.1f));
 
         
 
@@ -299,7 +304,7 @@ public class PlayerController : ThirdPersonController
     [PunRPC]
     void MeleeAttack_RPC()
     {
-        StartCoroutine(StartAnimationCoroutine("Melee Attack", 0.833f));
+        //StartCoroutine(StartAnimationCoroutine("Melee Attack", 0.833f));
     }
 
     [PunRPC]
@@ -315,10 +320,9 @@ public class PlayerController : ThirdPersonController
         _meleeAttackColliderObject.SetActive(false);
     }
 
-    public override void OnDamaged()
+    public void OnDamagedAnim()
     {
-        
-        if (online && !photonView.IsMine) return;
+        //TODO 석진 플레이어 피격음
         anim.SetTrigger("Hit");
     }
 
