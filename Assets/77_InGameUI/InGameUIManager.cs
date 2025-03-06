@@ -48,6 +48,9 @@ public class InGameUIManager : MonoBehaviour
 
     [Header("KillLog")]
     [SerializeField] public KillLogPanel KillLogPanelPrefab;
+
+    [Header("ItemSelect")]
+    private bool _isItemSelected = false;
     #endregion
 
     public UI_DeathPopup         DeathPopup         { get; private set; }
@@ -309,15 +312,6 @@ public class InGameUIManager : MonoBehaviour
     {
         SkillIndicator.AddDagger(count);
     }
-
-    /// <summary>
-    /// UI_ItemSelect <-> UI_SkillIndicator
-    /// </summary>
-    /// <param name="image"></param>
-    public void SetItemSlotImage(Image image)
-    {
-        SkillIndicator.SetItemSlotImage(image);
-    }
     #endregion
 
 
@@ -431,6 +425,37 @@ public class InGameUIManager : MonoBehaviour
     public IEnumerator Death(float respawnTime)
     {
         yield return DeathPopup.DeathPopupActive(respawnTime);
+    }
+    #endregion
+
+
+
+
+
+    #region ITEM SELECT
+    /// <summary>
+    /// UI_ItemSelect <-> UI_SkillIndicator
+    /// </summary>
+    /// <param name="image"></param>
+    public void ItemSelected(Image image)
+    {
+        SkillIndicator.SetItemSlotImage(image);
+
+        ItemSelect.gameObject.SetActive(false);
+
+        OnAllUI();
+
+        Cursor.visible   = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    /// <summary>
+    /// 아이템을 선택했는지 확인하는 곳에서 호출해 주세요
+    /// </summary>
+    /// <returns></returns>
+    public bool IsItemSelected()
+    {
+        return _isItemSelected;
     }
     #endregion
 }
