@@ -45,12 +45,12 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             if (healingCoroutine == null)
             {
 
-                healingCoroutine = StartCoroutine(HealOverTime());
+                //healingCoroutine = StartCoroutine(HealOverTime());
             }
         }
     }
 
-    
+    //애니메이션,힐 코루틴 용도
     public virtual void OnDamaged()
     {
         if (isInLobby) return;
@@ -69,9 +69,9 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     public void ReceiveDamage(int attackerActorNr, int damage)
     {
         if (isInLobby || !photonView.IsMine) return;
-
+        
         if (PhotonNetwork.LocalPlayer.ActorNumber != photonView.OwnerActorNr) return;
-
+        
         Hp -= damage;
 
         if (Hp <= 0)
@@ -83,7 +83,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     void HandleDeath(int killerActorNr)
     {
         if (!photonView.IsMine) return;
-
+        
         gameObject.name += Random.value.ToString();
 
         // 이동 비활성화
@@ -95,9 +95,9 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     private IEnumerator HealOverTime()
     {
-        Debug.Log("회복");
+        //Debug.Log("회복");
         while (Hp < MAX_HP)
-        {
+        { Debug.Log("체력 회복");
             playerHp += 1; // 체력 1씩 회복
             playerHp = Mathf.Min(Hp, MAX_HP); // 최대 체력 초과 방지
             yield return new WaitForSeconds(healInterval);

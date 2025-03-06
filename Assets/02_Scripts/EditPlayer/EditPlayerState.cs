@@ -35,18 +35,20 @@ public class EditPlayerState : MonoBehaviourPun, IDamagable
             photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
         }
     }
-    [PunRPC]
-    void HandleDeath(int killerActorNr)
-    {
-        if (!photonView.IsMine) return;
+    //[PunRPC]
+    //void HandleDeath(int killerActorNr)
+    //{
+    //    if (!photonView.IsMine) return;
 
-        gameObject.name += Random.value.ToString();
+    //    gameObject.name += Random.value.ToString();
 
-        // 이동 비활성화
-        EditPlayerController.Instance.DisableMovement();
+    //    // 이동 비활성화
+    //    EditPlayerController.Instance.DisableMovement();
 
-        BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
-    }
+    //    BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
+    //}
+
+
     //[PunRPC]
     //public void OnInLobby()
     //{

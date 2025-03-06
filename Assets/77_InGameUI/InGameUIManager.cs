@@ -48,6 +48,9 @@ public class InGameUIManager : MonoBehaviour
 
     [Header("KillLog")]
     [SerializeField] public KillLogPanel KillLogPanelPrefab;
+
+    [Header("ItemSelect")]
+    private bool _isItemSelected = false;
     #endregion
 
     public UI_DeathPopup         DeathPopup         { get; private set; }
@@ -60,6 +63,7 @@ public class InGameUIManager : MonoBehaviour
     public UI_Menu               Menu               { get; private set; }
     public UI_Setting            Setting            { get; private set; }
     public UI_KillLog            KillLog            { get; private set; }
+    public UI_ItemSelect         ItemSelect         { get; private set; }
 
     private Dictionary<string, UI_Base> UIs = new Dictionary<string, UI_Base>();
 
@@ -68,16 +72,17 @@ public class InGameUIManager : MonoBehaviour
         SingletonInitialize();
 
         // UI 할당
-        UIs["DeathPopup"]         =  DeathPopup         = transform.GetChild(0).GetComponent<UI_DeathPopup>();
-        UIs["Minimap"]            =  Minimap            = transform.GetChild(1).GetComponent<UI_Minimap>();
-        UIs["Timer"]              =  Timer              = transform.GetChild(2).GetComponent<UI_Timer>();
-        UIs["RealtimeScoreboard"] =  RealtimeScoreboard = transform.GetChild(3).GetComponent<UI_RealtimeScoreboard>();
-        UIs["Scoreboard"]         =  ScoreBoard         = transform.GetChild(4).GetComponent<UI_Scoreboard>();
-        UIs["SkillIndicator"]     =  SkillIndicator     = transform.GetChild(5).GetComponent<UI_SkillIndicator>();
-        UIs["HealthIndicator"]    =  HealthIndicator    = transform.GetChild(6).GetComponent<UI_HealthIndicator>();
-        UIs["Menu"]               =  Menu               = transform.GetChild(7).GetComponent<UI_Menu>();
-        UIs["Setting"]            =  Setting            = transform.GetChild(8).GetComponent<UI_Setting>();
-        UIs["KillLog"]            =  KillLog            = transform.GetChild(9).GetComponent<UI_KillLog>();
+        UIs["DeathPopup"]         =  DeathPopup         = transform.GetChild( 0).GetComponent<UI_DeathPopup>();
+        UIs["Minimap"]            =  Minimap            = transform.GetChild( 1).GetComponent<UI_Minimap>();
+        UIs["Timer"]              =  Timer              = transform.GetChild( 2).GetComponent<UI_Timer>();
+        UIs["RealtimeScoreboard"] =  RealtimeScoreboard = transform.GetChild( 3).GetComponent<UI_RealtimeScoreboard>();
+        UIs["Scoreboard"]         =  ScoreBoard         = transform.GetChild( 4).GetComponent<UI_Scoreboard>();
+        UIs["SkillIndicator"]     =  SkillIndicator     = transform.GetChild( 5).GetComponent<UI_SkillIndicator>();
+        UIs["HealthIndicator"]    =  HealthIndicator    = transform.GetChild( 6).GetComponent<UI_HealthIndicator>();
+        UIs["Menu"]               =  Menu               = transform.GetChild( 7).GetComponent<UI_Menu>();
+        UIs["Setting"]            =  Setting            = transform.GetChild( 8).GetComponent<UI_Setting>();
+        UIs["KillLog"]            =  KillLog            = transform.GetChild( 9).GetComponent<UI_KillLog>();
+                                     ItemSelect         = transform.GetChild(10).GetComponent<UI_ItemSelect>();
 
         foreach (var ui in UIs)
         {
@@ -86,6 +91,18 @@ public class InGameUIManager : MonoBehaviour
     }
 
     #region COMMON
+    /// <summary>
+    /// 게임이 시작될 때 호출해 주세요
+    /// </summary>
+    public void GameStart()
+    {
+        OffAllUI();
+
+        Cursor.visible   = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+
     /// <summary>
     /// 라운드가 종료되거나, 다시 시작될 때 호출해 주세요
     /// </summary>
@@ -132,6 +149,18 @@ public class InGameUIManager : MonoBehaviour
     public bool IsPopupUIOpen()
     {
         if (Menu.gameObject.activeSelf == true || Setting.gameObject.activeSelf == true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool IsStoreUIOpen()
+    {
+        if(ItemSelect.gameObject.activeSelf == true)
         {
             return true;
         }
@@ -227,7 +256,7 @@ public class InGameUIManager : MonoBehaviour
     /// </summary>
     public void ShowScoreboardUI(bool isVisible)
     {
-        ScoreBoard.ShowScoreboardUI(isVisible);
+        ScoreBoard?.ShowScoreboardUI(isVisible);
     }
 
     /// <summary>
@@ -269,7 +298,7 @@ public class InGameUIManager : MonoBehaviour
     /// <summary>
     /// 플레이어가 스킬을 사용할 때 호출해 주세요
     /// </summary>
-    /// <param name="button">입력한 버튼(0 : 좌클릭, 1 : 우클릭, 2 : Shift)</param>
+    /// <param name="button">입력한 버튼(0 : 좌클릭, 1 : 우클릭, 2 : Shift, 3 : F)</param>
     /// <param name="time">해당 스킬 쿨타임</param>
     public void UseSkill(int button, float time)
     {
@@ -396,6 +425,37 @@ public class InGameUIManager : MonoBehaviour
     public IEnumerator Death(float respawnTime)
     {
         yield return DeathPopup.DeathPopupActive(respawnTime);
+    }
+    #endregion
+
+
+
+
+
+    #region ITEM SELECT
+    /// <summary>
+    /// UI_ItemSelect <-> UI_SkillIndicator
+    /// </summary>
+    /// <param name="image"></param>
+    public void ItemSelected(Image image)
+    {
+        SkillIndicator.SetItemSlotImage(image);
+
+        ItemSelect.gameObject.SetActive(false);
+
+        OnAllUI();
+
+        Cursor.visible   = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    /// <summary>
+    /// 아이템을 선택했는지 확인하는 곳에서 호출해 주세요
+    /// </summary>
+    /// <returns></returns>
+    public bool IsItemSelected()
+    {
+        return _isItemSelected;
     }
     #endregion
 }
