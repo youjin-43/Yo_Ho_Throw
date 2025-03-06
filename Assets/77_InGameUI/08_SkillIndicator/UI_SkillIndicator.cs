@@ -67,7 +67,7 @@ public class UI_SkillIndicator : UI_Base
         _skill_RClick_CooldownEffect.gameObject.SetActive(false);
 
         _skillActivation.gameObject.SetActive(false);
-        _skillActivation.gameObject.SetActive(false);
+        _itemActivation.gameObject.SetActive(false);
     }
     #endregion
 
@@ -86,7 +86,7 @@ public class UI_SkillIndicator : UI_Base
             _skill_Shift_ActiveEffect  = transform.GetChild(0).transform.GetChild(0).gameObject;
             _skill_LClick_ActiveEffect = transform.GetChild(1).transform.GetChild(0).gameObject;
             _skill_RClick_ActiveEffect = transform.GetChild(2).transform.GetChild(0).gameObject;
-            _skill_RClick_ActiveEffect = transform.GetChild(3).transform.GetChild(0).gameObject;
+            _skill_Item_ActiveEffect   = transform.GetChild(3).transform.GetChild(0).gameObject;
         }
         // ƒ≈∏¿” ¿Ã∆Â∆Æ
         {
