@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerReadyManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private bool isReady = false; // 내 레디 상태
-    
+
+    public static event System.Action<int,bool> OnPlayerReadyChanged; // ✅ 특정 플레이어의 레디 상태가 변경될 때 실행될 이벤트 (ActorNumber 전달)
     public static event System.Action OnAllPlayersReady; // 모든 플레이어가 레디 상태가 되었을 때 실행할 이벤트
 
     void Update()
@@ -34,10 +35,18 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
     // Photon에서 플레이어 `CustomProperties`가 변경될 때 호출됨
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        if (changedProps.ContainsKey(PhotonPlayerProperties.IsReady.ToString()))
+        string isReadyKey = PhotonPlayerProperties.IsReady.ToString();
+
+        if (changedProps.ContainsKey(isReadyKey))
         {
-            Debug.Log($"플레이어 {targetPlayer.NickName} 레디 상태 업데이트됨!");
-            CheckAllPlayersReady(); 
+            bool isReady = (bool)changedProps[isReadyKey]; // ✅ changedProps에서 바로 가져옴!
+
+            Debug.Log($"플레이어 {targetPlayer.NickName} 레디 상태 업데이트됨! → {isReady}");
+
+            // 이벤트 발생 → GameReadyUIManager에서 이걸 듣고 UI 업데이트!
+            OnPlayerReadyChanged?.Invoke(targetPlayer.ActorNumber, isReady);
+
+            CheckAllPlayersReady();
         }
     }
 
@@ -70,7 +79,6 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
         }
 
         Debug.Log("모든 플레이어가 레디 완료 & 최대 인원 충족! 게임 시작 가능!");
-
         OnAllPlayersReady?.Invoke(); // 이벤트 호출 (모든 플레이어가 레디 상태일 때 실행됨)
     }
 

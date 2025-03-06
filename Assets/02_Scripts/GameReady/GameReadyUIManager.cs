@@ -22,6 +22,12 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
     [Header("DeathMatch PlayerList")]
     [SerializeField] GameObject PlayerInfoItemPrefab; // 플레이어 인포 프리팹
     public Transform PlayerInfoListContent; // 플레이어 목록이 추가될 부모 오브젝트
+    enum PIChild
+    {
+        ProfileArea,
+        Name,
+        IsReady
+    }
 
     //[Header("Team Player List")]
     //public Transform TeamContainer;
@@ -35,8 +41,9 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         Debug.Log(PhotonNetwork.CurrentRoom.MaxPlayers);
         gameReadyNetworkManager = GetComponent<GameReadyNetworkManager>();
 
-        // 모든 플레이어가 레디 상태가 되면 실행되는 이벤트 구독
-        PlayerReadyManager.OnAllPlayersReady += HandleAllPlayersReady;
+        // 이벤트 구독 
+        PlayerReadyManager.OnPlayerReadyChanged += SetReady; //플레이어가 레디 상태가 변경될 때 UI 업데이트
+        PlayerReadyManager.OnAllPlayersReady += HandleAllPlayersReady; // 모든 플레이어가 레디 상태가 되면 실행
 
         InitUI();
         UpdatePlayerListUI();
@@ -114,12 +121,27 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         foreach (var player in PhotonNetwork.CurrentRoom.Players)
         {
             Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}");
+
             GameObject playerItem = Instantiate(PlayerInfoItemPrefab, PlayerInfoListContent);
-            playerItem.GetComponentInChildren<TMP_Text>().text = player.Value.NickName;
+            playerItem.transform.GetChild((int)PIChild.Name).GetComponentInChildren<TMP_Text>().text = player.Value.NickName;
+
+            // 포톤 커스텀 프로퍼티에서 `IsReady` 값 확인하여 값에 따라 Ready UI 활성화/비활성화
+            bool isReady = false;
+            if (player.Value.CustomProperties.ContainsKey(PhotonPlayerProperties.IsReady.ToString()))
+            {
+                isReady = (bool)player.Value.CustomProperties[PhotonPlayerProperties.IsReady.ToString()];
+            }
+            playerItem.transform.GetChild((int)PIChild.IsReady).gameObject.SetActive(isReady);
             playerUIObjects[player.Value.ActorNumber] = playerItem;
         }
 
         //GameStartButton.interactable = PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers; //현재 인원이 MaxPlayers에 도달해야 GameStartButton 활성화
+    }
+
+    // PlayerReadyManager의 OnPlayerPropertiesUpdate에서 실행 
+    public void SetReady(int playerActorNumber, bool isrReady)
+    {
+        playerUIObjects[playerActorNumber].transform.GetChild((int)PIChild.IsReady).gameObject.SetActive(isrReady);
     }
 
     // 모든 플레이어가 레디 상태가 되었을 때 실행될 함수
@@ -241,6 +263,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
     private void OnDestroy()
     {
         // 이벤트 구독 해제 (메모리 누수 방지)
+        PlayerReadyManager.OnPlayerReadyChanged -= SetReady;
         PlayerReadyManager.OnAllPlayersReady -= HandleAllPlayersReady;
     }
 }
