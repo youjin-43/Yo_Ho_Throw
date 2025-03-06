@@ -48,8 +48,6 @@ public class UI_ItemSelect : UI_Base
         transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_1));
         transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_2));
         transform.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_3));
-
-        Cursor.lockState = CursorLockMode.None;
     }
     #endregion
 

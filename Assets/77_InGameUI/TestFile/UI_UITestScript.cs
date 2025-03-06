@@ -24,7 +24,7 @@ public class UI_UITestScript : MonoBehaviour
         {
             Debug.LogError("스킬창 할당 안됨");
         }
-        if (InGameUIManager.Instance.HealthIndicator == null)
+        if (InGameUIManager.Instance.StatusIndicator == null)
         {
             Debug.LogError("체력창 할당 안됨");
         }
@@ -98,11 +98,11 @@ public class UI_UITestScript : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            InGameUIManager.Instance.OnHealthChangedDebug(1);
+            //InGameUIManager.Instance.OnHealthChangedDebug(1);
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            InGameUIManager.Instance.OnHealthChangedDebug(-1);
+            //InGameUIManager.Instance.OnHealthChangedDebug(-1);
         }
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {

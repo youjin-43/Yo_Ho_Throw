@@ -26,7 +26,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         {
             playerHp = value;
 
-            InGameUIManager.Instance.HealthIndicator.SetHealth(playerHp);
+            InGameUIManager.Instance.StatusIndicator.SetHealth(playerHp);
         }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created

@@ -59,7 +59,7 @@ public class InGameUIManager : MonoBehaviour
     public UI_RealtimeScoreboard RealtimeScoreboard { get; private set; }
     public UI_Scoreboard         ScoreBoard         { get; private set; }
     public UI_SkillIndicator     SkillIndicator     { get; private set; }
-    public UI_HealthIndicator    HealthIndicator    { get; private set; }
+    public UI_StatusIndicator    StatusIndicator    { get; private set; }
     public UI_Menu               Menu               { get; private set; }
     public UI_Setting            Setting            { get; private set; }
     public UI_KillLog            KillLog            { get; private set; }
@@ -78,7 +78,7 @@ public class InGameUIManager : MonoBehaviour
         UIs["RealtimeScoreboard"] =  RealtimeScoreboard = transform.GetChild( 3).GetComponent<UI_RealtimeScoreboard>();
         UIs["Scoreboard"]         =  ScoreBoard         = transform.GetChild( 4).GetComponent<UI_Scoreboard>();
         UIs["SkillIndicator"]     =  SkillIndicator     = transform.GetChild( 5).GetComponent<UI_SkillIndicator>();
-        UIs["HealthIndicator"]    =  HealthIndicator    = transform.GetChild( 6).GetComponent<UI_HealthIndicator>();
+        UIs["StatusIndicator"]    =  StatusIndicator    = transform.GetChild( 6).GetComponent<UI_StatusIndicator>();
         UIs["Menu"]               =  Menu               = transform.GetChild( 7).GetComponent<UI_Menu>();
         UIs["Setting"]            =  Setting            = transform.GetChild( 8).GetComponent<UI_Setting>();
         UIs["KillLog"]            =  KillLog            = transform.GetChild( 9).GetComponent<UI_KillLog>();
@@ -318,19 +318,14 @@ public class InGameUIManager : MonoBehaviour
 
 
 
-    #region HEALTH INDICATOR
+    #region STATUS INDICATOR
     /// <summary>
-    /// 체력이 변경되었을 때 호출해 주세요
+    /// 공격을 받았을 때 호출해 주세요
     /// </summary>
-    /// <param name="currentHealth">변경 후 현재 체력</param>
-    public void OnHealthChanged(int currentHealth)
+    /// <param name="currentHealth">입은 대미지</param>
+    public void AddDamage(int damage)
     {
-        HealthIndicator.OnHealthChanged(currentHealth);
-    }
-
-    public void OnHealthChangedDebug(int healthDelta)
-    {
-        HealthIndicator.OnHealthChangedDebug(healthDelta);
+        StatusIndicator.AddDamage(damage);
     }
     #endregion
 

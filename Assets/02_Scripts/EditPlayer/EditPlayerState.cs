@@ -15,7 +15,7 @@ public class EditPlayerState : MonoBehaviourPun, IDamagable
         {
             hp = value;
 
-            InGameUIManager.Instance.HealthIndicator.SetHealth(hp);
+            InGameUIManager.Instance.StatusIndicator.SetHealth(hp);
         }
     }
 
