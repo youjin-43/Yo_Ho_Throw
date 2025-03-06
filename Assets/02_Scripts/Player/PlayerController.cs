@@ -57,8 +57,7 @@ public class PlayerController : ThirdPersonController
     {
         if (online && !photonView.IsMine) return;
         base.Update();
-        if(isAlive)
-            LookSameCameraDirection();
+        
 
         /* 오른쪽 마우스 확대 기능
         if (input.aim) aimCam.gameObject.SetActive(true);
@@ -83,6 +82,7 @@ public class PlayerController : ThirdPersonController
 
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
+            anim.SetTrigger("Melee Attack");
             MeleeAttack();
         }
 
