@@ -12,6 +12,8 @@ public class MinimapIndicator : MonoBehaviour
 
     SpriteRenderer spriteRenderer = null;
 
+    [HideInInspector] public bool isAlwaysShow = false;
+
     void Start()
     {
         indicator = new GameObject("MinimapIndicator");
@@ -44,21 +46,29 @@ public class MinimapIndicator : MonoBehaviour
     {
         spriteRenderer.sprite = InGameUIManager.Instance.minimapIconColor.my_Player_Sprite;
         spriteRenderer.color = InGameUIManager.Instance.minimapIconColor.my_Player_Color;
+
+        isAlwaysShow = true;
     }
     public void OtherPlayerSetting()
     {
         spriteRenderer.sprite = InGameUIManager.Instance.minimapIconColor.other_Player_Sprite;
         spriteRenderer.color = InGameUIManager.Instance.minimapIconColor.other_Player_Color;
+
+        isAlwaysShow = false;
     }
     public void BountyHunterSetting()
     {
         spriteRenderer.sprite = InGameUIManager.Instance.minimapIconColor.bounty_Hunter_Sprite;
         spriteRenderer.color = InGameUIManager.Instance.minimapIconColor.bounty_Hunter_Color;
+
+        isAlwaysShow = true;
     }
     public void RevengeTargetSetting()
     {
         spriteRenderer.sprite = InGameUIManager.Instance.minimapIconColor.revenge_Target_Sprite;
         spriteRenderer.color = InGameUIManager.Instance.minimapIconColor.revenge_Target_Color;
+
+        isAlwaysShow = true;
     }
     public void TreasureBoxSetting()
     {

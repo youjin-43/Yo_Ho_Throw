@@ -213,13 +213,13 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void SetBountyTargetActorNumber(int targetActorNr)
     {
         Debug.Log("바운티 타겟 ActorNr 확인 : " + targetActorNr.ToString());
+        if (targetActorNr != -1)
+        {
+            InGameUIManager.ShowPlayerIcon(targetActorNr, MinimapIconType.Bounty_Hunter);
 
-        if (targetActorNr != -1 && targetActorNr == PhotonNetwork.LocalPlayer.ActorNumber)
-            InGameUIManager.ShowPlayerIcon(PhotonNetwork.LocalPlayer.ActorNumber, targetActorNr, MinimapIconType.Bounty_Hunter);
-
+            PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.ActivateBountyTarget.ToString(), targetActorNr);
+        }
         bountyTargetActorNumber = targetActorNr;
-
-        PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.ActivateBountyTarget.ToString(), bountyTargetActorNumber);
     }
     void SaveData(EventData photonEvent)
     {
