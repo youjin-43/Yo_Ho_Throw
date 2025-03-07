@@ -127,7 +127,7 @@ public class PlayerController : ThirdPersonController
         {
             
             bulletCount--;
-            Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position) - bulletSpawnPoint.position).normalized;
+            Vector3 throwDirection = ((cameraTransform.forward * bulletRange + 2*cameraTransform.position) - bulletSpawnPoint.position).normalized;
             if (online && photonView.IsMine)
                 photonView.RPC("Throw_RPC", RpcTarget.All, throwDirection, PhotonNetwork.LocalPlayer.ActorNumber);
         }
@@ -141,6 +141,7 @@ public class PlayerController : ThirdPersonController
         // 칼 오브젝트 생성 
 
         GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
+        projectile.transform.GetChild(0).GetComponent<Collider>().enabled = true;
         if (projectile == null) return;
         projectile.transform.position = bulletSpawnPoint.position;
         projectile.GetComponentInChildren<Cutlass>().attackerActorNr = attackerActorNr;
@@ -306,19 +307,14 @@ public class PlayerController : ThirdPersonController
     {
         if (online && photonView.IsMine)
             photonView.RPC("MeleeAttack_RPC", RpcTarget.All);
-        else
-            MeleeAttack_RPC();
+
     }
 
     [PunRPC]
     void MeleeAttack_RPC()
     {
-        //StartCoroutine(StartAnimationCoroutine("Melee Attack", 0.833f));
-    }
+        //if (!photonView.IsMine) return;
 
-    [PunRPC]
-    void EnableMeleeAttackCollider_RPC()
-    {
         StartCoroutine(EnableCollider_RPC(meleeAttackColliderObject, 0.4f));
     }
 
@@ -329,11 +325,7 @@ public class PlayerController : ThirdPersonController
         _meleeAttackColliderObject.SetActive(false);
     }
 
-    public void OnDamagedAnim()
-    {
-        //TODO 석진 플레이어 피격음
-        anim.SetTrigger("Hit");
-    }
+    
 
     [SerializeField] Material defaultColorMaterial;
     [SerializeField] Material bountyColorMaterial;
