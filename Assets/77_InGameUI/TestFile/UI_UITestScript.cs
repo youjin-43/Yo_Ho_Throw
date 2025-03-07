@@ -98,11 +98,11 @@ public class UI_UITestScript : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            //InGameUIManager.Instance.OnHealthChangedDebug(1);
+            InGameUIManager.Instance.AddDamage(1);
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            //InGameUIManager.Instance.OnHealthChangedDebug(-1);
+            InGameUIManager.Instance.AddHealth(1);
         }
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {

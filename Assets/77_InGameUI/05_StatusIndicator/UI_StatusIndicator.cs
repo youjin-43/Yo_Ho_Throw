@@ -9,8 +9,8 @@ public class UI_StatusIndicator : UI_Base
     // 체력 관련 변수
     List<Image> _healthCounters = new List<Image>();
 
-    private int _maxHealth;
-    private int _currentHealth;
+    private int _maxHealth     = 3;
+    private int _currentHealth = 3;
 
     // 금화 관련 변수
     private TextMeshProUGUI _CoinCounter;
@@ -77,27 +77,62 @@ public class UI_StatusIndicator : UI_Base
 
     public void AddDamage(int damage)
     {
-        if(damage <= 0)
+        if(damage <= 0 || _currentHealth == 0)
         {
             return;
         }
 
         damage = Mathf.Clamp(damage, 1, 3);
 
-        for(int i = 2; i < 0; --i)
+        int addDamagePoint = 0;
+
+        for(int i = 2; i >= 0; --i)
         {
-            if(_currentHealth == 0)
+            if(addDamagePoint == damage)
             {
                 break;
             }
+
+            if (_healthCounters[i].gameObject.activeSelf == true)
+            {
+                _healthCounters[i].gameObject.SetActive(false);
+
+                --_currentHealth;
+                ++addDamagePoint;
+            }
             else
             {
-                if (_healthCounters[i].gameObject.activeSelf == true)
-                {
-                    _healthCounters[i].gameObject.SetActive(false);
+                continue;
+            }
+        }
+    }
 
-                    --_currentHealth;
-                }
+    public void AddHealth(int health)
+    {
+        if(health <= 0 || _currentHealth == 3)
+        {
+            return;
+        }
+
+        int addHealthPoint = 0;
+
+        for(int i = 0; i < 3; ++i)
+        {
+            if(addHealthPoint == health)
+            {
+                break;
+            }
+
+            if (_healthCounters[i].gameObject.activeSelf == false)
+            {
+                _healthCounters[i].gameObject.SetActive(true);
+
+                ++_currentHealth;
+                ++addHealthPoint;
+            }
+            else
+            {
+                continue;
             }
         }
     }

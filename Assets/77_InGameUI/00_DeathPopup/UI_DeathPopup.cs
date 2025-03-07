@@ -54,17 +54,11 @@ public class UI_DeathPopup : UI_Base
 
 
     #region FUNCTION
-    public void Death()
-    {
-        gameObject.SetActive(true);
-
-        Cursor.lockState = CursorLockMode.Locked;
-        InGameUIManager.Instance.OffAllUI(_name);
-    }
-
     public IEnumerator DeathPopupActive(float respawnTime)
     {
-        Death();
+        InGameUIManager.Instance.OffAllUI();
+
+        gameObject.SetActive(true);
 
         float elapsedTime = 0f;
 

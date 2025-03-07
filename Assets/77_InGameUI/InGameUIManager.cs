@@ -50,7 +50,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] public KillLogPanel KillLogPanelPrefab;
 
     [Header("ItemSelect")]
-    private bool _isItemSelected = false;
+    private int _selectedItemIndex = 0;
     #endregion
 
     public UI_DeathPopup         DeathPopup         { get; private set; }
@@ -64,6 +64,7 @@ public class InGameUIManager : MonoBehaviour
     public UI_Setting            Setting            { get; private set; }
     public UI_KillLog            KillLog            { get; private set; }
     public UI_ItemSelect         ItemSelect         { get; private set; }
+    public UI_ItemStore          ItemStore          { get; private set; }
 
     private Dictionary<string, UI_Base> UIs = new Dictionary<string, UI_Base>();
 
@@ -83,6 +84,7 @@ public class InGameUIManager : MonoBehaviour
         UIs["Setting"]            =  Setting            = transform.GetChild( 8).GetComponent<UI_Setting>();
         UIs["KillLog"]            =  KillLog            = transform.GetChild( 9).GetComponent<UI_KillLog>();
                                      ItemSelect         = transform.GetChild(10).GetComponent<UI_ItemSelect>();
+                                     ItemStore          = transform.GetChild(11).GetComponent<UI_ItemStore>();
 
         foreach (var ui in UIs)
         {
@@ -91,6 +93,20 @@ public class InGameUIManager : MonoBehaviour
     }
 
     #region COMMON
+    private void ToggleCursor(bool toggle)
+    {
+        if(toggle == true)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+    }
+
     /// <summary>
     /// 게임이 시작될 때 호출해 주세요
     /// </summary>
@@ -98,8 +114,7 @@ public class InGameUIManager : MonoBehaviour
     {
         OffAllUI();
 
-        Cursor.visible   = true;
-        Cursor.lockState = CursorLockMode.None;
+        ToggleCursor(true);
     }
 
 
@@ -131,14 +146,11 @@ public class InGameUIManager : MonoBehaviour
     /// <summary>
     /// 모든 UI를 Off하는 함수입니다.
     /// </summary>
-    public void OffAllUI(string exception = "")
+    public void OffAllUI()
     {
         foreach (var ui in UIs)
         {
-            if(ui.Key != exception)
-            {
-                ui.Value.Off();
-            }
+            ui.Value.Off();
         }
     }
 
@@ -327,6 +339,15 @@ public class InGameUIManager : MonoBehaviour
     {
         StatusIndicator.AddDamage(damage);
     }
+
+    /// <summary>
+    /// 디버그용
+    /// </summary>
+    /// <param name="health"></param>
+    public void AddHealth(int health)
+    {
+        StatusIndicator.AddHealth(health);
+    }
     #endregion
 
 
@@ -344,16 +365,7 @@ public class InGameUIManager : MonoBehaviour
             Menu.ToggleUI();
         }
 
-        Cursor.visible = IsPopupUIOpen();
-
-        if (Cursor.visible == true)
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+        ToggleCursor(IsPopupUIOpen());
     }
     #endregion
 
@@ -374,16 +386,7 @@ public class InGameUIManager : MonoBehaviour
 
         Setting.ToggleUI();
 
-        Cursor.visible = IsPopupUIOpen();
-
-        if (Cursor.visible == true)
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+        ToggleCursor(IsPopupUIOpen());
     }
     #endregion
 
@@ -419,7 +422,14 @@ public class InGameUIManager : MonoBehaviour
     /// <param name="respawnTime">리스폰 시간</param>
     public IEnumerator Death(float respawnTime)
     {
+        ToggleCursor(true);
+        ItemStore.gameObject.SetActive(true);
+        ItemStore.PurchaceActivation(true);
+
         yield return DeathPopup.DeathPopupActive(respawnTime);
+
+        ToggleCursor(false);
+        ItemStore.gameObject.SetActive(false);
     }
     #endregion
 
@@ -432,25 +442,46 @@ public class InGameUIManager : MonoBehaviour
     /// UI_ItemSelect <-> UI_SkillIndicator
     /// </summary>
     /// <param name="image"></param>
-    public void ItemSelected(Image image)
+    /// <param name="index"></param>
+    public void ItemSelected(Image image, int index)
     {
+        _selectedItemIndex = index;
+
         SkillIndicator.SetItemSlotImage(image);
 
         ItemSelect.gameObject.SetActive(false);
 
         OnAllUI();
 
-        Cursor.visible   = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        ToggleCursor(false);
     }
 
     /// <summary>
-    /// 아이템을 선택했는지 확인하는 곳에서 호출해 주세요
+    /// 어떤 아이템을 선택했는지 확인하는 곳에서 호출해 주세요
     /// </summary>
     /// <returns></returns>
-    public bool IsItemSelected()
+    public int GetSelectedItem()
     {
-        return _isItemSelected;
+        return _selectedItemIndex;
+    }
+    #endregion
+
+
+
+
+    /// <summary>
+    /// UI_ItemStore <-> UI_SkillIndicator
+    /// </summary>
+    /// <param name="image"></param>
+    /// <param name="index"></param>
+    #region ITEM STORE
+    public void ItemPurchase(Image image, int index)
+    {
+        _selectedItemIndex = index;
+
+        SkillIndicator.SetItemSlotImage(image);
+
+        ItemStore.PurchaceActivation(false);
     }
     #endregion
 }
