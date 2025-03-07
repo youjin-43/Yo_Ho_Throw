@@ -79,7 +79,7 @@ public class DeathMatchSystem : BattleSystem
                 InGameUIManager.HidePlayerIcon(victimActorNumber, revengeTargetDict[victimActorNumber], MinimapIconType.Other_Player);
 
             // 현재 복수 대상에 대해서 표시
-            InGameUIManager.ShowPlayerIcon(victimActorNumber, killerActorNumber, MinimapIconType.Revenge_Target);
+            InGameUIManager.SetRevengeTargetIcon(victimActorNumber, killerActorNumber);
 
             // 타살일 경우 죽인 자는 죽은 자의 복수 대상으로 갱신
             revengeTargetDict[victimActorNumber] = victimActorNumber != killerActorNumber ? killerActorNumber : revengeTargetDict[victimActorNumber];
@@ -93,13 +93,22 @@ public class DeathMatchSystem : BattleSystem
             ScoreManager.Instance.SetIsFinalMinute(true);
         }
 
-        if (seconds % 60 == 0 && seconds != 0) // TODO 찬규 : 1분마다 현상금 이벤트 발생
+        if (seconds == 297) // TODO 찬규 : 1분마다 현상금 이벤트 발생
         {
             if (PhotonNetwork.IsMasterClient)
             {
+                Debug.Log("SetBountyTarget");
                 ScoreManager.Instance.SetBountyTarget();
             }
         }
+
+        //if (seconds % 60 == 0 && seconds != 0) // TODO 찬규 : 1분마다 현상금 이벤트 발생
+        //{
+        //    if (PhotonNetwork.IsMasterClient)
+        //    {
+        //        ScoreManager.Instance.SetBountyTarget();
+        //    }
+        //}
     }
     protected override IEnumerator BattleCoroutine()
     {
