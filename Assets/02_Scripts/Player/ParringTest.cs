@@ -22,6 +22,7 @@ public class ParringTest : MonoBehaviour
     private void FireBullet()
     {
         GameObject bullet = PoolManager.Instance.Pop(bulletPrefab);
+        bullet.transform.GetChild(0).GetComponent<Collider>().enabled = true;
         bullet.transform.position = firePoint.position;
 
         //GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);

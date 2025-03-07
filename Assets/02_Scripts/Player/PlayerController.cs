@@ -141,6 +141,7 @@ public class PlayerController : ThirdPersonController
         // 칼 오브젝트 생성 
 
         GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
+        projectile.transform.GetChild(0).GetComponent<Collider>().enabled = true;
         if (projectile == null) return;
         projectile.transform.position = bulletSpawnPoint.position;
         projectile.GetComponentInChildren<Cutlass>().attackerActorNr = attackerActorNr;
@@ -306,19 +307,14 @@ public class PlayerController : ThirdPersonController
     {
         if (online && photonView.IsMine)
             photonView.RPC("MeleeAttack_RPC", RpcTarget.All);
-        else
-            MeleeAttack_RPC();
+
     }
 
     [PunRPC]
     void MeleeAttack_RPC()
     {
-        //StartCoroutine(StartAnimationCoroutine("Melee Attack", 0.833f));
-    }
+        //if (!photonView.IsMine) return;
 
-    [PunRPC]
-    void EnableMeleeAttackCollider_RPC()
-    {
         StartCoroutine(EnableCollider_RPC(meleeAttackColliderObject, 0.4f));
     }
 

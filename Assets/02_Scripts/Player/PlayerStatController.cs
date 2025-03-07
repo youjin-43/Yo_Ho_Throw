@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.Processors;
+using UnityEngine.Windows;
 
 public class PlayerStatController : MonoBehaviourPun , IDamagable
 {
@@ -132,15 +133,25 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public void InitPlayer()
     {
-        if(!photonView.IsMine) return;
+        anim.Rebind();
+        anim.Update(0f);
+        if (!photonView.IsMine) return;
 
+        playerHp = MAX_HP;
         isAlive = true;
 
         bulletCount = 5;
 
-        anim.Rebind();
+        //카메라와 맞는 방향으로 회전
+        Transform camTransform = Camera.main.transform;
+        Vector3 cameraForward = camTransform.forward;
+        cameraForward.y = 0; 
+        transform.rotation = Quaternion.LookRotation(cameraForward);
 
-        anim.Update(0f);
+        
+        
+
+        
     }
 
 

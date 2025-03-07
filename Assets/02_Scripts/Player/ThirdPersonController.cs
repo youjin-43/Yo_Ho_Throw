@@ -221,7 +221,11 @@ namespace StarterAssets
             _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
             _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
-            transform.Rotate(0, _input.look.x * mouseSpeed, 0);
+            if (isAlive)
+            {
+                transform.Rotate(0, _input.look.x * mouseSpeed, 0);
+
+            }
 
             //Debug.Log("_cinemachineTargetYaw : " + _cinemachineTargetYaw.ToString());
 
