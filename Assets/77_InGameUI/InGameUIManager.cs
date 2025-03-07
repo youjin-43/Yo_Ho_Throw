@@ -198,14 +198,18 @@ public class InGameUIManager : MonoBehaviour
         Minimap.BindIndicator(actorNumber, minimapIndicatorDesc, isPlayer);
     }
 
-    public static void ShowPlayerIcon(int myActorNr, int targetActorNr, MinimapIconType iconType)
+    public static void ShowPlayerIcon(int targetActorNr, MinimapIconType iconType)
     {
-        instance.Minimap.SetPlayerIcon(true, myActorNr, targetActorNr, iconType);
+        instance.Minimap.SetPlayerIcon(targetActorNr, iconType);
+    }
+    public static void SetRevengeTargetIcon(int myActorNr, int targetActorNr)
+    {
+        instance.Minimap.SetRevengeTargetIcon(myActorNr, targetActorNr);
     }
 
     public static void HidePlayerIcon(int myActorNr, int targetActorNr, MinimapIconType iconType)
     {
-        instance.Minimap.SetPlayerIcon(false, myActorNr, targetActorNr, iconType);
+        instance.Minimap.SetPlayerIcon(targetActorNr, iconType);
     }
     #endregion
 

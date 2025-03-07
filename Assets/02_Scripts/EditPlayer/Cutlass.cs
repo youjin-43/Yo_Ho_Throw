@@ -48,7 +48,9 @@ public class Cutlass : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PhotonView playerPhotonView = other.GetComponent<PhotonView>();
-
+            //데미지 받을 때 애니메이션 출력
+            PlayerController pc = other.GetComponent<PlayerController>();
+            pc.OnDamagedAnim();
             // 자신에 대한 공격일 경우 제외
             if (attackerActorNr == playerPhotonView.OwnerActorNr) return;
 

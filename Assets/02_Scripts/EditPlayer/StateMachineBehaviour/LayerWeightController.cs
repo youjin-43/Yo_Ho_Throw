@@ -5,7 +5,7 @@ public class LayerWeightController : StateMachineBehaviour
 {
     public float fadeSpeed = 1f;
 
-    public bool isFadingIn; // true일 경우 weight 증가, false일 경우 weight 감소
+    //public bool isFadingIn; // true일 경우 weight 증가, false일 경우 weight 감소
 
     Coroutine[] layerCoroutines = new Coroutine[3] { null, null , null };
 
@@ -19,7 +19,8 @@ public class LayerWeightController : StateMachineBehaviour
 
         if (layerCoroutines[layerIndex] != null) monoBehaviour.StopCoroutine(layerCoroutines[layerIndex]);
 
-        layerCoroutines[layerIndex] = monoBehaviour.StartCoroutine(isFadingIn ? FadeInCoroutine(animator, layerIndex) : FadeOutCoroutine(animator, layerIndex));
+        //layerCoroutines[layerIndex] = monoBehaviour.StartCoroutine(isFadingIn ? FadeInCoroutine(animator, layerIndex) : FadeOutCoroutine(animator, layerIndex));
+        layerCoroutines[layerIndex] = monoBehaviour.StartCoroutine(FadeInCoroutine(animator, layerIndex));
     }
     IEnumerator FadeInCoroutine(Animator animator, int layerIndex)
     {
@@ -48,5 +49,16 @@ public class LayerWeightController : StateMachineBehaviour
             yield return null;
         }
         animator.SetLayerWeight(layerIndex, 0);
+    }
+
+    public virtual void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (monoBehaviour == null) monoBehaviour = animator.GetComponent<MonoBehaviour>();
+
+        if (monoBehaviour == null) Debug.LogWarning("뭔가 잘못됨 !");
+
+        if (layerCoroutines[layerIndex] != null) monoBehaviour.StopCoroutine(layerCoroutines[layerIndex]);
+
+        layerCoroutines[layerIndex] = monoBehaviour.StartCoroutine(FadeOutCoroutine(animator, layerIndex));
     }
 }

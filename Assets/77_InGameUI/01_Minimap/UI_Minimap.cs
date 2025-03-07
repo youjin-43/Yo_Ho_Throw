@@ -16,7 +16,7 @@ public class UI_Minimap : UI_Base
 
     // 원래 부모, 인디케이터
     ValueTuple<Transform, Transform> _playerIndicator;
-    List<ValueTuple<Transform, Transform>> _otherIndicator = new List<(Transform, Transform)>();
+    List<ValueTuple<Transform, MinimapIndicator>> _otherIndicator = new List<(Transform, MinimapIndicator)>();
 
     private Transform _playerAngle;
     private PhotonView photonView = null;
@@ -98,45 +98,36 @@ public class UI_Minimap : UI_Base
     #region FUNCTION
     public void BindIndicator(int actorNumber, MinimapIndicator minimapIndicator, bool isPlayer)
     {
+        ValueTuple<Transform, MinimapIndicator> otherIndicator;
+        {
+            otherIndicator.Item1 = minimapIndicator.transform;
+            otherIndicator.Item2 = minimapIndicator;
+        }
+
         if (isPlayer == true)
         {
-            _playerIndicator.Item1 = minimapIndicator.transform;
-            _playerIndicator.Item2 = minimapIndicator.indicator.transform;
-
             if (actorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                _playerIndicator.Item1 = minimapIndicator.transform;
+                _playerIndicator.Item2 = minimapIndicator.indicator.transform;
+
                 minimapIndicator.MyPlayerSetting();
+            }
             else
+            {
                 minimapIndicator.OtherPlayerSetting();
+            }
 
             playerIndicatorDict[actorNumber] = minimapIndicator;
         }
         else
         {
-            ValueTuple<Transform, Transform> otherIndicator;
-            {
-                otherIndicator.Item1 = minimapIndicator.transform;
-                otherIndicator.Item2 = minimapIndicator.indicator.transform;
-            }
             minimapIndicator.TreasureBoxSetting();
-
-            _otherIndicator.Add(otherIndicator);
         }
+        _otherIndicator.Add(otherIndicator);
     }
     [PunRPC]
-    private void ShowPlayerIcon(int targetActorNumber)
-    {
-        // ActorNumber를 통해 Icon 오브젝트 활성화
-        playerIndicatorDict[targetActorNumber].indicator.gameObject.SetActive(true);
-    }
-    [PunRPC]
-    private void HidePlayerIcon(int targetActorNr)
-    {
-        // ActorNumber를 통해 Icon 오브젝트 비활성화
-        playerIndicatorDict[targetActorNr].indicator.gameObject.SetActive(false);
-
-        Debug.Log(playerIndicatorDict[targetActorNr].gameObject.name + " 비활성화 아이콘 확인");
-    }
-    public void SetPlayerIcon(bool isShow, int myActorNr, int targetActorNr, MinimapIconType iconType)
+    private void ShowPlayerIcon(int myActorNr, int targetActorNr, MinimapIconType iconType)
     {
         if (myActorNr == targetActorNr) return;
 
@@ -151,12 +142,53 @@ public class UI_Minimap : UI_Base
             case MinimapIconType.Revenge_Target:
                 playerIndicatorDict[targetActorNr].RevengeTargetSetting(); break;
         }
+    }
+    [PunRPC]
+    private void HidePlayerIcon(int myActorNr, int targetActorNr, MinimapIconType iconType)
+    {
+        if (myActorNr == targetActorNr) return;
         
+        switch (iconType)
+        {
+            case MinimapIconType.Other_Player:
+                playerIndicatorDict[targetActorNr].OtherPlayerSetting(); break;
 
-        if (isShow)
-            photonView.RPC("ShowPlayerIcon", PhotonNetwork.CurrentRoom.Players[myActorNr], targetActorNr);
-        else
-            photonView.RPC("HidePlayerIcon", PhotonNetwork.CurrentRoom.Players[myActorNr], targetActorNr);
+            case MinimapIconType.Bounty_Hunter:
+                playerIndicatorDict[targetActorNr].BountyHunterSetting(); break;
+
+            case MinimapIconType.Revenge_Target:
+                playerIndicatorDict[targetActorNr].RevengeTargetSetting(); break;
+        }
+    }
+    [PunRPC]
+    public void SetPlayerIconRPC(int targetActorNr, MinimapIconType iconType)
+    {
+        int myActorNr = PhotonNetwork.LocalPlayer.ActorNumber;
+
+        if (myActorNr == targetActorNr) return;
+
+        switch (iconType)
+        {
+            case MinimapIconType.Other_Player:
+                playerIndicatorDict[targetActorNr].OtherPlayerSetting(); break;
+
+            case MinimapIconType.Bounty_Hunter:
+                playerIndicatorDict[targetActorNr].BountyHunterSetting(); break;
+        }
+    }
+    public void SetRevengeTargetIconRPC(int myActorNr, int targetActorNr)
+    {
+        if (PhotonNetwork.LocalPlayer.ActorNumber != myActorNr) return;
+
+        playerIndicatorDict[targetActorNr].RevengeTargetSetting();
+    }
+    public void SetPlayerIcon(int targetActorNr, MinimapIconType iconType)
+    {
+        photonView.RPC("SetPlayerIconRPC", RpcTarget.All, targetActorNr, iconType);
+    }
+    public void SetRevengeTargetIcon(int myActorNr, int targetActorNr)
+    {
+        photonView.RPC("SetRevengeTargetIconRPC", RpcTarget.All, myActorNr, targetActorNr);
     }
     private void AdjustIndicator()
     {
@@ -174,34 +206,40 @@ public class UI_Minimap : UI_Base
             if (Vector3.Distance(_playerIndicator.Item1.position, indicator.Item1.position) >= 9.9f)
             {
                 // Adjust
-                indicator.Item2.position = _playerIndicator.Item2.position + (look * 9.9f);
+                indicator.Item2.indicator.transform.position = _playerIndicator.Item2.position + (look * 9.9f);
             }
             else
             {
-                indicator.Item2.position = new Vector3(indicator.Item1.position.x, 50f, indicator.Item1.position.z);
+                indicator.Item2.indicator.transform.position = new Vector3(indicator.Item1.position.x, 50f, indicator.Item1.position.z);
             }
 
             // 플레이어의 Look
             Vector3 playerLook = _playerTransform.transform.forward.normalized;
 
-            // 플레이어 시야각에만 그려지도록 하는 부분
-            if (Vector3.Dot(look, playerLook) >= 0.7f)
+            if (indicator.Item2.isAlwaysShow)
             {
-                indicator.Item2.gameObject.SetActive(true);
+                if (!indicator.Item2.gameObject.activeSelf)
+                {
+                    indicator.Item2.gameObject.SetActive(true);
+                }
             }
             else
             {
-                indicator.Item2.gameObject.SetActive(false);
-            }
-
-            // 근데 전부 그려져도 되나?
-            // 벽 뒤에 숨은건?
-
-            Ray ray = new Ray(_playerTransform.position, playerLook);
-
-            if(Physics.Raycast(ray, out RaycastHit hit, 100f, LayerMask.GetMask("Water")))
-            {
-                Debug.Log("Test");
+                // 플레이어 시야각에만 그려지도록 하는 부분
+                if (Vector3.Dot(look, playerLook) >= 0.7f)
+                {
+                    if (!indicator.Item2.gameObject.activeSelf)
+                    {
+                        indicator.Item2.gameObject.SetActive(true);
+                    }
+                }
+                else
+                {
+                    if (indicator.Item2.gameObject.activeSelf)
+                    {
+                        indicator.Item2.gameObject.SetActive(false);
+                    }
+                }
             }
         }
     }
