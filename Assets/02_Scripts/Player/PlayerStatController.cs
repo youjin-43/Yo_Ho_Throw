@@ -53,11 +53,11 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     }
 
     //애니메이션,힐 코루틴 용도
-    public virtual void OnDamaged()
+    public virtual void OnDamagedAnim()
     {
         if (isInLobby) return;
 
-        
+        anim.SetTrigger("Hit");
         lastDamageTime = Time.time;
 
         if (healingCoroutine != null)
@@ -71,7 +71,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     public void ReceiveDamage(int attackerActorNr, int damage)
     {
         if (isInLobby || !photonView.IsMine) return;
-        
+        if(!isAlive) return;
         if (PhotonNetwork.LocalPlayer.ActorNumber != photonView.OwnerActorNr) return;
         
         Hp -= damage;
@@ -149,9 +149,9 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         transform.rotation = Quaternion.LookRotation(cameraForward);
 
         
-        
 
-        
+
+
     }
 
 

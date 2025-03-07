@@ -325,11 +325,7 @@ public class PlayerController : ThirdPersonController
         _meleeAttackColliderObject.SetActive(false);
     }
 
-    public void OnDamagedAnim()
-    {
-        //TODO 석진 플레이어 피격음
-        anim.SetTrigger("Hit");
-    }
+    
 
     [SerializeField] Material defaultColorMaterial;
     [SerializeField] Material bountyColorMaterial;

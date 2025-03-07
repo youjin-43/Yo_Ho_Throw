@@ -403,15 +403,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerHp: 3
-  bulletCount: 10
+  bulletCount: 5
   isAlive: 1
   isInLobby: 1
   dashCoolTime: 5
   anim: {fileID: 0}
-  MoveSpeed: 2
+  MoveSpeed: 4
   IsDash: 0
   SprintSpeed: 5.335
-  mouseSpeed: 1
+  mouseSpeed: 3
   RotationSmoothTime: 0.12
   SpeedChangeRate: 10
   LandingAudioClip: {fileID: 0}
@@ -439,7 +439,7 @@ MonoBehaviour:
   bulletRange: 100
   bulletPrefab: {fileID: 8430071279321725386, guid: ef534139b75564f4da410b28c1d45740, type: 3}
   bulletSpawnPoint: {fileID: 1625589534162421683}
-  bulletSpeed: 50
+  bulletSpeed: 3
   bulletArc: 5
   meleeAttackColliderObject: {fileID: 5727853010510017898}
   targetLayer:

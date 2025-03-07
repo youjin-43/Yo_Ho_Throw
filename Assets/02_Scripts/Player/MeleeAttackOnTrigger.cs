@@ -75,7 +75,7 @@ public class MeleeAttackOnTrigger : MonoBehaviour
             Debug.Log("Knife OnTrigger Master 호출");
 
             // EditPlayerState 에 있는 ReceiveDamage 함수 호출
-            playerPhotonView.RPC("ReceiveDamage", RpcTarget.All, attackerActorNr, MELEE_ATTACK_DAMAGE);
+            playerPhotonView.RPC("ReceiveDamage", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, MELEE_ATTACK_DAMAGE);
         }
     }
     
