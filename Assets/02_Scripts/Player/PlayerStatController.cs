@@ -57,6 +57,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         if (isInLobby) return;
 
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerHit);
+
         anim.SetTrigger("Hit");
         lastDamageTime = Time.time;
 
@@ -87,7 +89,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         anim.SetTrigger("Dead");
         if (!photonView.IsMine) return;
-        
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerDead);
         gameObject.name += Random.value.ToString();
 
         // 이동 비활성화
@@ -102,6 +104,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         //Debug.Log("회복");
         while (Hp < MAX_HP)
         { Debug.Log("체력 회복");
+            
             playerHp += 1; // 체력 1씩 회복
             playerHp = Mathf.Min(Hp, MAX_HP); // 최대 체력 초과 방지
             yield return new WaitForSeconds(healInterval);
@@ -133,6 +136,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public void InitPlayer()
     {
+        //TODO 석진 플레이어 다시 살아나는 소리
+
         anim.Rebind();
         anim.Update(0f);
         if (!photonView.IsMine) return;
