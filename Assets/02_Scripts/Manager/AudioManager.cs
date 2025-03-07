@@ -13,24 +13,22 @@ public class AudioManager : MonoBehaviour
     [Header("SFX")]
     public AudioClip[] sfxClips;
     public float sfxVolume = 1.0f; // 기본값 설정
-    public int channels;//동시 다발적으로 많은 사운드를 내기 위해
+    public int channels;//동시 다발적으로 많은 사운드를 내기 위해 (조절필요)
     AudioSource[] sfxPlayers;
     int channelIndex;//현재 재생중인 채널 인덱스
 
     public enum Sfx
     {
-        MonsterDead, MonsterIdle, MonsterAttack, MonsterHit, MonsterBulletDestroy,
+        UIClick, UIToggle,
 
-        PlayerDead, PlayerHit, PlayerRun, PlayerAttack, PlayerEatSomething,
+        PlayerDead, PlayerHit, PlayerAttack, PlayerEatSomething, PlayerWalk,
 
-        FlowerCreate, FlowerDistroy,
-
-        UIClick
+        Knife, Block
     }
 
     void Awake()
     {
-
+        channels = 3;
         Init();
 
         if (Instance == null)
