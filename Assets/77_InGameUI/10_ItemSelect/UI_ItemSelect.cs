@@ -45,11 +45,9 @@ public class UI_ItemSelect : UI_Base
         _itemButton_2 = transform.GetChild(3).gameObject;
         _itemButton_3 = transform.GetChild(4).gameObject;
 
-        transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_1));
-        transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_2));
-        transform.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_3));
-
-        Cursor.lockState = CursorLockMode.None;
+        transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_1, 1));
+        transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_2, 2));
+        transform.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_3, 3));
     }
     #endregion
 
@@ -58,14 +56,11 @@ public class UI_ItemSelect : UI_Base
 
 
     #region FUNCTION
-    /// <summary>
-    /// 플레이어가 아이템을 선택했는지 판별하는 함수입니다.
-    /// </summary>
-    /// <param name="button"></param>
-    /// <returns></returns>
-    public void ItemSelected(GameObject button)
+    public void ItemSelected(GameObject button, int index)
     {
-        InGameUIManager.Instance.ItemSelected(button.transform.GetChild(0).GetChild(0).GetComponent<Image>());
+        Debug.Log(index + "번 아이템 선택");
+
+        InGameUIManager.Instance.ItemSelected(button.transform.GetChild(0).GetChild(0).GetComponent<Image>(), index);
     }
     #endregion
 }
