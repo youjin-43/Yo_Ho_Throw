@@ -1,13 +1,15 @@
 using Photon.Pun;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.Processors;
+using UnityEngine.Windows;
 
 public class PlayerStatController : MonoBehaviourPun , IDamagable
 {
     const int MAX_HP = 3;
     public int playerHp = MAX_HP;
-    public int bulletCount = 10;
+    public int bulletCount = 5;
     public bool isAlive = true;
     public bool isInLobby = true;
     public float dashCoolTime = 5f;
@@ -51,11 +53,11 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     }
 
     //애니메이션,힐 코루틴 용도
-    public virtual void OnDamaged()
+    public virtual void OnDamagedAnim()
     {
         if (isInLobby) return;
 
-        
+        anim.SetTrigger("Hit");
         lastDamageTime = Time.time;
 
         if (healingCoroutine != null)
@@ -69,26 +71,28 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     public void ReceiveDamage(int attackerActorNr, int damage)
     {
         if (isInLobby || !photonView.IsMine) return;
-        
+        if(!isAlive) return;
         if (PhotonNetwork.LocalPlayer.ActorNumber != photonView.OwnerActorNr) return;
         
         Hp -= damage;
 
         if (Hp <= 0)
         {
+            
             photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
         }
     }
     [PunRPC]
     public void HandleDeath(int killerActorNr)
     {
+        anim.SetTrigger("Dead");
         if (!photonView.IsMine) return;
         
         gameObject.name += Random.value.ToString();
 
         // 이동 비활성화
         isAlive = false;
-
+        
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
     }
 
@@ -125,4 +129,31 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         isInLobby = false;
     }
+
+    [PunRPC]
+    public void InitPlayer()
+    {
+        anim.Rebind();
+        anim.Update(0f);
+        if (!photonView.IsMine) return;
+
+        playerHp = MAX_HP;
+        isAlive = true;
+
+        bulletCount = 5;
+
+        //카메라와 맞는 방향으로 회전
+        Transform camTransform = Camera.main.transform;
+        Vector3 cameraForward = camTransform.forward;
+        cameraForward.y = 0; 
+        transform.rotation = Quaternion.LookRotation(cameraForward);
+
+        
+
+
+
+    }
+
+
+    
 }

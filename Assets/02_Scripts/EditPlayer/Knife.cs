@@ -48,7 +48,7 @@ public class Knife : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PhotonView playerPhotonView = other.GetComponent<PhotonView>();
-
+            
             // 자신에 대한 공격일 경우 제외
             if (attackerActorNr == playerPhotonView.OwnerActorNr) return;
 

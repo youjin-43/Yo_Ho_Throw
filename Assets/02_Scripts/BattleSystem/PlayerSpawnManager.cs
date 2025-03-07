@@ -158,6 +158,10 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     {
         photonView.RPC(functionName, PhotonNetwork.CurrentRoom.Players[actorNumber]);
     }
+    public void ExecuteRPC(string functionName)
+    {
+        photonView.RPC(functionName, RpcTarget.All);
+    }
     public void ExecutePlayerRPC(string functionName)
     {
         currPlayerPhotonView.RPC(functionName, RpcTarget.All);
@@ -169,14 +173,16 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     [PunRPC]
     public void ActivateBountyTarget()
     {
-        // TODO 찬규 : 현상금 타겟 지정 이펙트 활성화
+        Debug.Log("ActivateBountyTarget 주인 : " + photonView.OwnerActorNr.ToString());
 
+        // TODO 찬규 : 현상금 타겟 지정 이펙트 활성화
+        currPlayerPhotonView.RPC("BountyColorSetting", RpcTarget.All);
     }
     [PunRPC]
     public void DeactivateBountyTarget()
     {
         // TODO 찬규 : 현상금 타겟 지정 이펙트 비활성화
-
+        currPlayerPhotonView.RPC("DefaultColorSetting", RpcTarget.All);
     }
     float GetHighestCollisionY(Vector3 position)
     {

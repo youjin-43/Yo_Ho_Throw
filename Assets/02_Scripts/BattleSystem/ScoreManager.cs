@@ -68,8 +68,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
                     Debug.Log("숨기기 타겟 액터넘버 : " + targetActorNr.ToString());
                 }
 
-                PlayerSpawnManager.Instance.ExecuteRPC(
-                    RaiseEventCode.DeactivateBountyTarget.ToString(), targetActorNr);
+                PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.DeactivateBountyTarget.ToString(), bountyTargetActorNumber);
 
                 photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, -1);
                 bountyTargetActorNumber = -1;
@@ -109,14 +108,6 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
             PlayerScoreEntryData.ToHashtable(playerScoreEntryDict),
             new RaiseEventOptions { Receivers = ReceiverGroup.Others },
             SendOptions.SendReliable);
-    }
-    [PunRPC]
-    public void SetBountyTargetActorNumber(int targetActorNr)
-    {
-        if (targetActorNr != -1)
-            InGameUIManager.ShowPlayerIcon(PhotonNetwork.LocalPlayer.ActorNumber, targetActorNr, MinimapIconType.Bounty_Hunter);
-
-        bountyTargetActorNumber = targetActorNr;
     }
     void HasRankingChanged(int actorNumber)
     {
@@ -214,10 +205,21 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         bountyTargetActorNumber = GetTopScorerActorNumber();
 
-        photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, bountyTargetActorNumber);
+        Debug.Log("바운티 타겟 설정 : " + bountyTargetActorNumber.ToString());
 
-        PlayerSpawnManager.Instance.ExecuteRPC(
-            RaiseEventCode.ActivateBountyTarget.ToString(), bountyTargetActorNumber);
+        photonView.RPC("SetBountyTargetActorNumber", RpcTarget.All, bountyTargetActorNumber);
+    }
+    [PunRPC]
+    public void SetBountyTargetActorNumber(int targetActorNr)
+    {
+        Debug.Log("바운티 타겟 ActorNr 확인 : " + targetActorNr.ToString());
+        if (targetActorNr != -1)
+        {
+            InGameUIManager.ShowPlayerIcon(targetActorNr, MinimapIconType.Bounty_Hunter);
+
+            PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.ActivateBountyTarget.ToString(), targetActorNr);
+        }
+        bountyTargetActorNumber = targetActorNr;
     }
     void SaveData(EventData photonEvent)
     {
