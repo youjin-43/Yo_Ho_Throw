@@ -56,18 +56,19 @@ public class PlayerController : ThirdPersonController
 
     void Update()
     {
+
         if (online && !photonView.IsMine) return;
         base.Update();
 
-        
-            //float horizontalInput = Input.GetAxisRaw("Horizontal");
-            //float verticalInput = Input.GetAxisRaw("Vertical");
-            /* 오른쪽 마우스 확대 기능
-            if (input.aim) aimCam.gameObject.SetActive(true);
-            else aimCam.gameObject.SetActive(false);
-            */
+        //float horizontalInput = Input.GetAxisRaw("Horizontal");
+        //float verticalInput = Input.GetAxisRaw("Vertical");
+        /* 오른쪽 마우스 확대 기능
+        if (input.aim) aimCam.gameObject.SetActive(true);
+        else aimCam.gameObject.SetActive(false);
+        */
 
-            if (!isAlive) return;
+        if (!isAlive) return;
+
         if (Input.GetKeyDown(KeyCode.Mouse0) && bulletCount > 0)
         {
             //if (!isInLobby)
