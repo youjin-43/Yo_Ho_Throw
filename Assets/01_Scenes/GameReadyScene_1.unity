@@ -6469,7 +6469,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6b55a36234449cc826481ea9ad6773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameMode: 0
   PlayerInfoItemPrefab: {fileID: 5052651225846738415, guid: a9481e5ab4a8c1c478566e2db93b2a45, type: 3}
   PlayerInfoListContent: {fileID: 1856181492}
   GameStartButton: {fileID: 973316367}
