@@ -93,7 +93,7 @@ public class DeathMatchSystem : BattleSystem
             ScoreManager.Instance.SetIsFinalMinute(true);
         }
 
-        if (seconds == 297) // TODO 찬규 : 1분마다 현상금 이벤트 발생
+        if (seconds % 60 == 0 && seconds != 0)  // TODO 찬규 : 1분마다 현상금 이벤트 발생
         {
             if (PhotonNetwork.IsMasterClient)
             {
