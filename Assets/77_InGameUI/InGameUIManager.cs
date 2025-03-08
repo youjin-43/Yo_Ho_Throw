@@ -65,6 +65,7 @@ public class InGameUIManager : MonoBehaviour
     public UI_KillLog            KillLog            { get; private set; }
     public UI_ItemSelect         ItemSelect         { get; private set; }
     public UI_ItemStore          ItemStore          { get; private set; }
+    public GameObject            Crosshair;
 
     private Dictionary<string, UI_Base> UIs = new Dictionary<string, UI_Base>();
 
@@ -85,6 +86,7 @@ public class InGameUIManager : MonoBehaviour
         UIs["KillLog"]            =  KillLog            = transform.GetChild( 9).GetComponent<UI_KillLog>();
                                      ItemSelect         = transform.GetChild(10).GetComponent<UI_ItemSelect>();
                                      ItemStore          = transform.GetChild(11).GetComponent<UI_ItemStore>();
+                                     Crosshair          = transform.GetChild(12).gameObject;
 
         foreach (var ui in UIs)
         {
@@ -426,12 +428,14 @@ public class InGameUIManager : MonoBehaviour
     /// <param name="respawnTime">리스폰 시간</param>
     public IEnumerator Death(float respawnTime)
     {
+        ToggleCrosshair(false);
         ToggleCursor(true);
         ItemStore.gameObject.SetActive(true);
         ItemStore.PurchaceActivation(true);
 
         yield return DeathPopup.DeathPopupActive(respawnTime);
 
+        ToggleCrosshair(true);
         ToggleCursor(false);
         ItemStore.gameObject.SetActive(false);
     }
@@ -458,6 +462,7 @@ public class InGameUIManager : MonoBehaviour
         OnAllUI();
 
         ToggleCursor(false);
+        ToggleCrosshair(true);
     }
 
     /// <summary>
@@ -486,6 +491,17 @@ public class InGameUIManager : MonoBehaviour
         SkillIndicator.SetItemSlotImage(image);
 
         ItemStore.PurchaceActivation(false);
+    }
+    #endregion
+
+
+
+
+
+    #region CROSSHAIR
+    public void ToggleCrosshair(bool isActive)
+    {
+        Crosshair.gameObject.SetActive(isActive);
     }
     #endregion
 }
