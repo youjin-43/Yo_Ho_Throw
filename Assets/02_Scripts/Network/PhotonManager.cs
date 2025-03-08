@@ -200,19 +200,4 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
 
     #endregion
-
-    // 인원수가 꽉 차면 룸 닫는거 처리 
-    //if (PhotonNetwork.CurrentRoom.PlayerCount >= 2)
-    //{
-    //    Debug.Log("현재 인원수: " + PhotonNetwork.CurrentRoom.PlayerCount);
-
-    //    //룸 닫고 
-    //    PhotonNetwork.CurrentRoom.IsOpen = false;
-    //    PhotonNetwork.CurrentRoom.IsVisible = false;
-    //    Debug.Log("현재 방 오픈 여부: " + PhotonNetwork.CurrentRoom.IsOpen);
-
-    //    Debug.Log("Game Start!");
-
-    //   
-    //}
 }
