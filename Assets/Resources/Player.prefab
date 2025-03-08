@@ -440,7 +440,7 @@ MonoBehaviour:
   bulletRange: 100
   bulletPrefab: {fileID: 8430071279321725386, guid: ef534139b75564f4da410b28c1d45740, type: 3}
   bulletSpawnPoint: {fileID: 1625589534162421683}
-  bulletSpeed: 3
+  bulletSpeed: 50
   bulletArc: 5
   meleeAttackColliderObject: {fileID: 5727853010510017898}
   targetLayer:
@@ -560,7 +560,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5264226163476715299}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aff315745a0faa540b84df1b00659566, type: 3}
   m_Name: 
