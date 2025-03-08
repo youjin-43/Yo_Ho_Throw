@@ -1,4 +1,5 @@
 ﻿//using Codice.CM.Client.Differences;
+using Photon.Pun;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -179,7 +180,7 @@ namespace StarterAssets
 
         public void FixedUpdate()
         {
-           CameraRotation();
+            CameraRotation();
         }
 
         private void AssignAnimationIDs()
@@ -207,14 +208,16 @@ namespace StarterAssets
 
         private void CameraRotation()
         {
-            // if there is an input and camera position is not fixed
-            if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
-            {
-                //Don't multiply mouse input by Time.deltaTime;
-                float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
+            float horizontal = Input.GetAxis("Mouse X");
+            float vertical = Input.GetAxis("Mouse Y");
 
-                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier* mouseSpeed;
-                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier* mouseSpeed;
+            Vector2 look = new Vector2(horizontal, -vertical);
+
+            // if there is an input and camera position is not fixed
+            if (look.sqrMagnitude >= _threshold && !LockCameraPosition)
+            {
+                _cinemachineTargetYaw += look.x * mouseSpeed;
+                _cinemachineTargetPitch += look.y * mouseSpeed;
             }
 
             // clamp our rotations so our values are limited 360 degrees
@@ -223,15 +226,10 @@ namespace StarterAssets
 
             if (isAlive)
             {
-                transform.Rotate(0, _input.look.x * mouseSpeed, 0);
-
+                transform.Rotate(0, look.x * mouseSpeed, 0);
             }
 
-            //Debug.Log("_cinemachineTargetYaw : " + _cinemachineTargetYaw.ToString());
-
-            // Cinemachine will follow this target
-            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
-               /* CinemachineCameraTarget.transform.rotation.eulerAngles.y*/_cinemachineTargetYaw, 0.0f);
+            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0, 0);
         }
 
         
