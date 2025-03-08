@@ -57,6 +57,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(gameObject);
     }
 
+    private List<RoomInfo> currentRoomList = new List<RoomInfo>(); // 방 목록을 저장하는 리스트
+
     #region TITLE
 
     public void ConnectToPhoton()
@@ -102,7 +104,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         Debug.Log("방 목록이 업데이트됨!");
+        currentRoomList = new List<RoomInfo>(roomList); // 최신 방 목록 저장
         OnRoomListUpdated?.Invoke(roomList);
+    }
+
+    // 방 목록을 가져오는 함수 
+    public List<RoomInfo> GetCurrentRoomList()
+    {
+        return currentRoomList;
     }
 
     // 방 목록을 갱신하는 함수 추가!
@@ -130,12 +139,25 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     // TitleUIManager에서 createRoomButton을 눌렀을때 실행 
     public void CreateRoom(string roomName, RoomOptions options)
     {
+        // 최신 방 목록 가져오기
+        List<RoomInfo> roomList = GetCurrentRoomList();
+
+        // 같은 이름의 방이 있는지 확인
+        foreach (RoomInfo room in roomList)
+        {
+            if (room.Name == roomName)
+            {
+                Debug.LogWarning($"방 생성 실패: 이미 존재하는 방 이름입니다! ({roomName})");
+                return; // 방 생성 중단
+            }
+        }
+
+        // 중복이 없으면 정상적으로 방 생성
         Debug.Log(
             $"방 생성 요청 - 이름: {roomName}, " +
             $"모드 : {options.CustomRoomProperties[PhotonRoomProperties.mode.ToString()]}, " +
             $"최대 인원: {options.MaxPlayers}"
             );
-
         PhotonNetwork.CreateRoom(roomName, options);
     }
 
