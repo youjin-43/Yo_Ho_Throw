@@ -45,29 +45,29 @@ public class PlayerController : ThirdPersonController
     {
         base.Start();
         cameraTransform = Camera.main.transform;
-        input = GetComponent<StarterAssetsInputs>();
-        photonTransformView = GetComponent<PhotonTransformView>();
-        maxBulletCount = 10;
-        bulletCount = maxBulletCount;
         
-       
+        photonTransformView = GetComponent<PhotonTransformView>();
+        
 
     }
+    
 
     void Update()
     {
+
         if (online && !photonView.IsMine) return;
         base.Update();
-
         
-            //float horizontalInput = Input.GetAxisRaw("Horizontal");
-            //float verticalInput = Input.GetAxisRaw("Vertical");
-            /* 오른쪽 마우스 확대 기능
-            if (input.aim) aimCam.gameObject.SetActive(true);
-            else aimCam.gameObject.SetActive(false);
-            */
 
-            if (!isAlive) return;
+        //float horizontalInput = Input.GetAxisRaw("Horizontal");
+        //float verticalInput = Input.GetAxisRaw("Vertical");
+        /* 오른쪽 마우스 확대 기능
+        if (input.aim) aimCam.gameObject.SetActive(true);
+        else aimCam.gameObject.SetActive(false);
+        */
+        
+        if (!isAlive) return;
+
         if (Input.GetKeyDown(KeyCode.Mouse0) && bulletCount > 0)
         {
             //if (!isInLobby)
@@ -80,11 +80,12 @@ public class PlayerController : ThirdPersonController
             anim.SetTrigger("Shoot");
 
         }
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded && _input.move != Vector2.zero && canDash)
+       
+        if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded   && canDash)
         {
-            
-            
+            if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
+                return;
+
             anim.SetTrigger("Dash");
             Dash();
             StartCoroutine(DashCooltime());
@@ -257,8 +258,10 @@ public class PlayerController : ThirdPersonController
             photonTransformView.enabled = false;
         }
 
-        float input_Y = _input.move.y;
-        float input_X = input_Y == -1 ? 0 : _input.move.x;
+        //float input_Y = _input.move.y;
+        //float input_X = input_Y == -1 ? 0 : _input.move.x;
+        float input_Y = Input.GetAxisRaw("Vertical");
+        float input_X = input_Y == -1 ? 0 : Input.GetAxisRaw("Horizontal");
 
         if (online && photonView.IsMine)
             photonView.RPC("Dash_RPC", RpcTarget.All, input_X, input_Y);

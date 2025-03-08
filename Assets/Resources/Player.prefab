@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsPlayer: 1
+  isAlwaysShow: 0
 --- !u!1 &3728001361432756594
 GameObject:
   m_ObjectHideFlags: 0
@@ -559,7 +560,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5264226163476715299}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aff315745a0faa540b84df1b00659566, type: 3}
   m_Name: 
@@ -630,7 +631,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2070b4f1cf2b50645816eaf179587e95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackerActorNr: -1
 --- !u!1 &7625788939214566970
 GameObject:
   m_ObjectHideFlags: 0

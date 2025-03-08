@@ -17,9 +17,6 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     [Header("플레이어의 점수 기록 패널 부모 GameObject")]
     [SerializeField] GameObject scoreboardPanel;
 
-    [Header("플레이어의 점수 기록 패널 부모 Transform")]
-    [SerializeField] Transform scoreEntryParent;
-
     [Header("게임 종료 시 표시할 버튼들")]
     [SerializeField] Button titleButton;
     [SerializeField] Button lobbyButton;
@@ -31,9 +28,6 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     [SerializeField] Sprite goldMedalSprite;
     [SerializeField] Sprite silverMedalSprite;
     [SerializeField] Sprite bronzeMedalSprite;
-
-    [Header("부활까지 남은 시간")]
-    [SerializeField] TMP_Text respawnRemainingText;
 
     [Header("연속 처치 텍스트")]
     [SerializeField] TMP_Text comboKillText;
@@ -234,27 +228,6 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     public void SetLimitTimeText(int seconds)
     {
         limitTimeText.text = $"{(seconds / 60).ToString()} : {(seconds % 60).ToString("00")}";
-    }
-    PlayerScoreEntry InstantiatePlayerScoreEntry(Player player)
-    {
-        PlayerScoreEntry entry = Instantiate(playerScoreEntryPrefab, scoreEntryParent);
-
-        entry.Init(player.NickName);
-
-        return entry;
-    }
-    public void SetRespawnTimer(int timer)
-    {
-        if (timer > 0)
-        {
-            Debug.Log("Timer > 0");
-            respawnRemainingText.text = timer.ToString();
-        }
-        else
-        {
-            Debug.Log("Else");
-            respawnRemainingText.text = string.Empty;
-        }
     }
     public void SetComboKill(int combo)
     {
