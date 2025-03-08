@@ -17,6 +17,7 @@ public class TitleUIManager : MonoBehaviour
     public GameObject roomListItemPrefab; // 방 목록 아이템 프리팹
     public Transform roomListContent; // 방 목록이 추가될 부모 오브젝트
     public Button createNewRoomButton; // 새로운 방 생성하는 버튼
+    public Button ReloadingButton;
     enum roomItemChilds
     {
         RoomName,
@@ -79,6 +80,11 @@ public class TitleUIManager : MonoBehaviour
         #region RoomList
         RoomListArea.SetActive(false);
         createNewRoomButton.onClick.AddListener(ShowCreatRoomUI);
+        ReloadingButton.onClick.AddListener(() =>
+        {
+            Debug.Log("새로고침 버튼 클릭됨! 최신 방 목록 요청!");
+            PhotonManager.Instance.RequestRoomList(); // 최신 방 목록 요청
+        });
         #endregion
 
         #region CreatNewRoom

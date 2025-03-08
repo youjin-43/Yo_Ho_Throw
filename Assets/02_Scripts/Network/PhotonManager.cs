@@ -105,6 +105,28 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         OnRoomListUpdated?.Invoke(roomList);
     }
 
+    // 방 목록을 갱신하는 함수 추가!
+    public void RequestRoomList()
+    {
+        if (PhotonNetwork.InLobby)
+        {
+            Debug.Log("현재 로비에 있음. 다시 방 목록 요청을 위해 LeaveLobby 후 JoinLobby 실행!");
+            PhotonNetwork.LeaveLobby(); // 기존 로비 나가기 → OnLeftLobby() 실행됨
+        }
+        else
+        {
+            Debug.Log("🔄 로비에 없음. JoinLobby() 실행하여 방 목록 새로 요청!");
+            PhotonNetwork.JoinLobby(); // 로비에 입장하여 자동으로 방 목록 갱신
+        }
+    }
+
+    // LeaveLobby()의 콜백 함수 -> 로비에서 나가면 다시 입장하여 방 목록을 새로 요청
+    public override void OnLeftLobby()
+    {
+        Debug.Log("로비를 떠남. 다시 JoinLobby() 실행하여 방 목록 갱신 요청!");
+        PhotonNetwork.JoinLobby();
+    }
+
     // TitleUIManager에서 createRoomButton을 눌렀을때 실행 
     public void CreateRoom(string roomName, RoomOptions options)
     {
