@@ -146,7 +146,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     public void ActivatePlayer()
     {
         // TODO 찬규 : 플레이어 동작 활성화 (currPlayerPhotonView.RPC를 통해 수행해야할듯)
-        //currPlayerPhotonView.RPC("")
+        currPlayerPhotonView.RPC("InitPlayer", RpcTarget.All);
     }
     [PunRPC]
     public void DeactivatePlayer()
