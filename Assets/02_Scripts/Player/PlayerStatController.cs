@@ -57,7 +57,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         if (isInLobby) return;
 
-        AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerHit);
+        //AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerHit);
 
         anim.SetTrigger("Hit");
         lastDamageTime = Time.time;
@@ -89,7 +89,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         anim.SetTrigger("Dead");
         if (!photonView.IsMine) return;
-        AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerDead);
+        //AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerDead);
         gameObject.name += Random.value.ToString();
 
         // 이동 비활성화

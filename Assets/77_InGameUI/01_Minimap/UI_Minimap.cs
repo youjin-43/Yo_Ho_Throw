@@ -176,6 +176,7 @@ public class UI_Minimap : UI_Base
                 playerIndicatorDict[targetActorNr].BountyHunterSetting(); break;
         }
     }
+    [PunRPC]
     public void SetRevengeTargetIconRPC(int myActorNr, int targetActorNr)
     {
         if (PhotonNetwork.LocalPlayer.ActorNumber != myActorNr) return;
