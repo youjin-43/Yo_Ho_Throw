@@ -14,7 +14,7 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     [SerializeField] int timeLimit = 300;
 
     int spawnedPlayerCount = 0;
-
+    int itemSelectedPlayerCount = 0;
     private void Awake()
     {
         Instance = this;
@@ -47,9 +47,13 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
         {
             yield return new WaitForSeconds(0.5f);
         }
-
         // 화면을 활성화 함
         ScreenTransition.FadeOutRPC();
+
+        InGameUIManager.Instance.ItemSelect.OnShowItemPanel();
+
+        // 현재 방에 있는 사람의 수만큼 아이템 선택을 마쳤다면
+        while (PhotonNetwork.CurrentRoom.PlayerCount != itemSelectedPlayerCount) yield return null;
 
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.BattleStart,
@@ -142,10 +146,20 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     {
         Instance.photonView.RPC("SpawnCheckRPC", RpcTarget.All);
     }
+    
     [PunRPC]
     public void SpawnCheckRPC()
     {
         spawnedPlayerCount++;
+    }
+    public static void FirstItemSelect()
+    {
+        Instance.photonView.RPC("FirstItemSelectRPC", RpcTarget.All);
+    }
+    [PunRPC]
+    public void FirstItemSelectRPC()
+    {
+        itemSelectedPlayerCount++;
     }
     virtual protected void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     virtual protected void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
