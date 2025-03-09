@@ -98,6 +98,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if(!isAlive) return;
         if (PhotonNetwork.LocalPlayer.ActorNumber != photonView.OwnerActorNr) return;
         
+        InGameUIManager.Instance.StatusIndicator.AddDamage(damage);
         Hp -= damage;
 
         if (Hp <= 0)
@@ -175,12 +176,11 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         cameraForward.y = 0; 
         transform.rotation = Quaternion.LookRotation(cameraForward);
 
-        
-
-
-
     }
 
-
+    public void GameEndPlayer()
+    {
+        isAlive = false;
+    }
     
 }

@@ -123,7 +123,7 @@ public class PlayerController : ThirdPersonController
 
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
-            if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8333f);
+            if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
             
             if (!isInLobby) BulletCount--;
             
@@ -238,7 +238,10 @@ public class PlayerController : ThirdPersonController
         float input_X = input_Y == -1 ? 0 : Input.GetAxisRaw("Horizontal");
 
         if (online && photonView.IsMine)
+        {   
+            if(!isInLobby) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(2, 5f);
             photonView.RPC("Dash_RPC", RpcTarget.All, input_X, input_Y);
+        }
         else
             Dash_RPC(input_X, input_Y);
     }
@@ -282,7 +285,7 @@ public class PlayerController : ThirdPersonController
     
     public void MeleeAttack()
     {
-        if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(0, 0.867f);
+        if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(0, 0.5f);
 
         if (online && photonView.IsMine)
             photonView.RPC("MeleeAttack_RPC", RpcTarget.All);
