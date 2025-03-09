@@ -22,7 +22,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     private float healInterval = 1f; // 체력 회복 간격
 
     private Coroutine healingCoroutine;
-
+    private Coroutine bulletReloadCoroutine;
     public int BulletCount
     {
         get => bulletCount;
@@ -30,13 +30,17 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         {
             if (bulletCount > value)
             {
-                for (; bulletCount == value; bulletCount--)
-                    InGameUIManager.Instance.SkillIndicator.RemoveDagger();
+                while (bulletCount > value) 
+                {
+                    //InGameUIManager.Instance.SkillIndicator.RemoveDagger();
+                    Debug.Log("칼씀");
+                    bulletCount--;
+                }
             }
             else if (bulletCount < value)
             {
                 InGameUIManager.Instance.SkillIndicator.AddDagger(value - bulletCount);
-
+                Debug.Log("칼 얻음");
                 bulletCount = value;
             }
         }
@@ -69,9 +73,28 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             if (healingCoroutine == null)
             {
 
-                //healingCoroutine = StartCoroutine(HealOverTime());
+                healingCoroutine = StartCoroutine(HealOverTime());
             }
         }
+
+        if(isAlive && !isInLobby && BulletCount<5 )
+        {
+            if(bulletReloadCoroutine == null)
+            {
+                bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
+            }
+        }
+    }
+
+    IEnumerator BulletReloadOverTime()
+    {
+        while (BulletCount < 5)
+        {
+            yield return new WaitForSeconds(3f);
+            BulletCount++;
+            Debug.Log("칼 추가");
+        }
+        bulletReloadCoroutine = null;   
     }
 
     //애니메이션,힐 코루틴 용도
@@ -127,24 +150,16 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         //Debug.Log("회복");
         while (Hp < MAX_HP)
         { Debug.Log("체력 회복");
-            
+
+            InGameUIManager.Instance.AddHealth(1);
             playerHp += 1; // 체력 1씩 회복
             playerHp = Mathf.Min(Hp, MAX_HP); // 최대 체력 초과 방지
             yield return new WaitForSeconds(healInterval);
         }
         healingCoroutine = null; // 체력 다 차면 종료
     }
-    //[PunRPC]
-    //public virtual void OnDead()
-    //{
-    //    if (!photonView.IsMine) return;
-    //    Debug.Log("Dead");
-    //}
-
-    public void FullBullet()
-    {
-        BulletCount = 5;
-    }
+    
+    
     [PunRPC]
     public void OnInLobby()
     {
@@ -168,7 +183,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         playerHp = MAX_HP;
         isAlive = true;
 
-        bulletCount = 5;
+        BulletCount = 5;
 
         //카메라와 맞는 방향으로 회전
         Transform camTransform = Camera.main.transform;
