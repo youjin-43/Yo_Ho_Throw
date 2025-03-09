@@ -128,7 +128,8 @@ public class PlayerController : ThirdPersonController
         {
             
             bulletCount--;
-            Vector3 throwDirection = ((cameraTransform.forward * bulletRange + 2*cameraTransform.position) - bulletSpawnPoint.position).normalized;
+            Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position+ Vector3.up*3) - bulletSpawnPoint.position).normalized;
+           
             if (online && photonView.IsMine)
                 photonView.RPC("Throw_RPC", RpcTarget.All, throwDirection, PhotonNetwork.LocalPlayer.ActorNumber);
         }
@@ -159,29 +160,7 @@ public class PlayerController : ThirdPersonController
     }
     
     
-    //IEnumerator StartAnimationCoroutine(string _animName, float _frame, bool _layerLerp = false, int _layerIndex = 0, float _layerWeight = 1)
-    //{
-    //    // anim.SetTrigger(_animName);
-    //    if(_animName == "Dash")
-    //    {
-    //        IsDash = true;  
-    //    }
-
-    //    anim.SetLayerWeight(_layerIndex, _layerWeight);
-    //    yield return new WaitForSeconds(_frame);
-    //    anim.SetTrigger(_animName);
-
-    //    if (_animName == "Dash")
-    //    {
-    //        IsDash = false;
-    //    }
-        
-    //    if (_layerLerp)
-    //        StartCoroutine(SmoothLayerReset(_layerIndex));
-    //    else
-    //        LayerReset();
-    //}
-
+ 
     public void LayerReset()
     {
         anim.SetLayerWeight(0, 1);
@@ -233,10 +212,6 @@ public class PlayerController : ThirdPersonController
 
         Transform camTransform = Camera.main.transform;
         RaycastHit hit;
-        
-
-
-
 
         targetPosition = camTransform.position + camTransform.forward * 10f;
         
