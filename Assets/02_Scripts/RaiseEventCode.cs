@@ -16,8 +16,8 @@ public enum RaiseEventCode
     ActivatePlayer = 42,
     DeactivatePlayer = 43,
     ActivateBountyTarget = 44,
-    DeactivateBountyTarget = 45,
-
+    DeactivateBountyTargetImmediate = 45,
+    ScheduleBountyTargetDeactivation = 46,
     #endregion
 
     #region UI 갱신 이벤트 [ 각 플레이어의 Kill, Death, Assist, Score 텍스트 변경 ]

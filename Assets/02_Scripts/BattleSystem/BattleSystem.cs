@@ -52,11 +52,11 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 
         yield return new WaitForSeconds(0.5f);
 
-        // 아이템 패널 활성화
-        InGameUIManager.Instance.ItemSelect.OnShowItemPanel();
+        //// 아이템 패널 활성화
+        //InGameUIManager.Instance.ItemSelect.OnShowItemPanel();
 
-        // 현재 방에 있는 사람의 수만큼 아이템 선택을 마쳤다면
-        while (PhotonNetwork.CurrentRoom.PlayerCount != itemSelectedPlayerCount) yield return null;
+        //// 현재 방에 있는 사람의 수만큼 아이템 선택을 마쳤다면
+        //while (PhotonNetwork.CurrentRoom.PlayerCount != itemSelectedPlayerCount) yield return null;
 
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.BattleStart,
