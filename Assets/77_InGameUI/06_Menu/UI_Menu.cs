@@ -1,8 +1,17 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UI_Menu : UI_Base
 {
+    #region VARIABLES
+    private Button ReturnToGameButton;
+    private Button SettingButton;
+    private Button ReturnToTitleButton;
+    #endregion
+
+
+
+
+
     #region OVERRIDE
     public override void Init()
     {
@@ -21,6 +30,23 @@ public class UI_Menu : UI_Base
 
     public override void ResetUI()
     {
+    }
+    #endregion
+
+
+
+
+
+    #region BEHAVIOUR
+    void Awake()
+    {
+        ReturnToGameButton  = transform.GetChild(0).GetChild(2).GetComponent<Button>();
+        SettingButton       = transform.GetChild(0).GetChild(3).GetComponent<Button>();
+        ReturnToTitleButton = transform.GetChild(0).GetChild(4).GetComponent<Button>();
+
+        ReturnToGameButton .onClick.AddListener(Resume);
+        SettingButton      .onClick.AddListener(ToggleSettingUI);
+        ReturnToTitleButton.onClick.AddListener(ReturnToTitle);
     }
     #endregion
 
