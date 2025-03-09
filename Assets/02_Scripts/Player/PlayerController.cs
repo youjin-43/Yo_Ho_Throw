@@ -68,7 +68,7 @@ public class PlayerController : ThirdPersonController
         
         if (!isAlive) return;
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && bulletCount > 0)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && BulletCount > 0)
         {
             //if (!isInLobby)
             //{
@@ -94,7 +94,7 @@ public class PlayerController : ThirdPersonController
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             anim.SetTrigger("Melee Attack");
-            MeleeAttack();
+            
         }
 
         
@@ -120,14 +120,13 @@ public class PlayerController : ThirdPersonController
     
     public void ThrowProjectile()
     {
-        
-        // TODO 애니메이션 되는지 확인 
-        //StartCoroutine(StartAnimationCoroutine("Shoot", 0.24f));
 
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
+            if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8333f);
             
-            bulletCount--;
+            if (!isInLobby) BulletCount--;
+            
             Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position+ Vector3.up*3) - bulletSpawnPoint.position).normalized;
            
             if (online && photonView.IsMine)
@@ -283,6 +282,8 @@ public class PlayerController : ThirdPersonController
     
     public void MeleeAttack()
     {
+        if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(0, 0.867f);
+
         if (online && photonView.IsMine)
             photonView.RPC("MeleeAttack_RPC", RpcTarget.All);
 

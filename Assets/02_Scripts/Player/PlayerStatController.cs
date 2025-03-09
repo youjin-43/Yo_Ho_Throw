@@ -8,8 +8,10 @@ using UnityEngine.Windows;
 public class PlayerStatController : MonoBehaviourPun , IDamagable
 {
     const int MAX_HP = 3;
+    const int MAX_BULLET_COUNT = 5;
+
     public int playerHp = MAX_HP;
-    public int bulletCount = 5;
+    public int bulletCount = MAX_BULLET_COUNT;
     public bool isAlive = true;
     public bool isInLobby = true;
     public float dashCoolTime = 5f;
@@ -20,6 +22,26 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     private float healInterval = 1f; // 체력 회복 간격
 
     private Coroutine healingCoroutine;
+
+    public int BulletCount
+    {
+        get => bulletCount;
+        set
+        {
+            if (bulletCount > value)
+            {
+                for (; bulletCount == value; bulletCount--)
+                    InGameUIManager.Instance.SkillIndicator.RemoveDagger();
+            }
+            else if (bulletCount < value)
+            {
+                InGameUIManager.Instance.SkillIndicator.AddDagger(value - bulletCount);
+
+                bulletCount = value;
+            }
+        }
+    }
+
     int Hp
     {
         get => playerHp;
@@ -120,7 +142,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
     public void FullBullet()
     {
-        bulletCount = 10;
+        BulletCount = 5;
     }
     [PunRPC]
     public void OnInLobby()
