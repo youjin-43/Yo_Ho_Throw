@@ -74,19 +74,19 @@ public class InGameUIManager : MonoBehaviour
         SingletonInitialize();
 
         // UI 할당
-        UIs["DeathPopup"]         =  DeathPopup         = transform.GetChild( 0).GetComponent<UI_DeathPopup>();
-        UIs["Minimap"]            =  Minimap            = transform.GetChild( 1).GetComponent<UI_Minimap>();
-        UIs["Timer"]              =  Timer              = transform.GetChild( 2).GetComponent<UI_Timer>();
-        UIs["RealtimeScoreboard"] =  RealtimeScoreboard = transform.GetChild( 3).GetComponent<UI_RealtimeScoreboard>();
-        UIs["Scoreboard"]         =  ScoreBoard         = transform.GetChild( 4).GetComponent<UI_Scoreboard>();
-        UIs["SkillIndicator"]     =  SkillIndicator     = transform.GetChild( 5).GetComponent<UI_SkillIndicator>();
-        UIs["StatusIndicator"]    =  StatusIndicator    = transform.GetChild( 6).GetComponent<UI_StatusIndicator>();
-        UIs["Menu"]               =  Menu               = transform.GetChild( 7).GetComponent<UI_Menu>();
-        UIs["Setting"]            =  Setting            = transform.GetChild( 8).GetComponent<UI_Setting>();
-        UIs["KillLog"]            =  KillLog            = transform.GetChild( 9).GetComponent<UI_KillLog>();
-                                     ItemSelect         = transform.GetChild(10).GetComponent<UI_ItemSelect>();
-                                     ItemStore          = transform.GetChild(11).GetComponent<UI_ItemStore>();
-                                     Crosshair          = transform.GetChild(12).gameObject;
+                                     Crosshair          = transform.GetChild( 0).gameObject;
+        UIs["DeathPopup"]         =  DeathPopup         = transform.GetChild( 1).GetComponent<UI_DeathPopup>();
+        UIs["Minimap"]            =  Minimap            = transform.GetChild( 2).GetComponent<UI_Minimap>();
+        UIs["Timer"]              =  Timer              = transform.GetChild( 3).GetComponent<UI_Timer>();
+        UIs["RealtimeScoreboard"] =  RealtimeScoreboard = transform.GetChild( 4).GetComponent<UI_RealtimeScoreboard>();
+        UIs["Scoreboard"]         =  ScoreBoard         = transform.GetChild( 5).GetComponent<UI_Scoreboard>();
+        UIs["SkillIndicator"]     =  SkillIndicator     = transform.GetChild( 6).GetComponent<UI_SkillIndicator>();
+        UIs["StatusIndicator"]    =  StatusIndicator    = transform.GetChild( 7).GetComponent<UI_StatusIndicator>();
+        UIs["Menu"]               =  Menu               = transform.GetChild( 8).GetComponent<UI_Menu>();
+        UIs["Setting"]            =  Setting            = transform.GetChild( 9).GetComponent<UI_Setting>();
+        UIs["KillLog"]            =  KillLog            = transform.GetChild(10).GetComponent<UI_KillLog>();
+                                     ItemSelect         = transform.GetChild(11).GetComponent<UI_ItemSelect>();
+                                     ItemStore          = transform.GetChild(12).GetComponent<UI_ItemStore>();
 
         foreach (var ui in UIs)
         {
@@ -275,6 +275,8 @@ public class InGameUIManager : MonoBehaviour
     public void ShowScoreboardUI(bool isVisible)
     {
         ScoreBoard?.ShowScoreboardUI(isVisible);
+
+        Crosshair.SetActive(!isVisible);
     }
 
     /// <summary>
@@ -380,6 +382,8 @@ public class InGameUIManager : MonoBehaviour
             Menu.ToggleUI();
         }
 
+        Crosshair.SetActive(!Crosshair.gameObject.activeSelf);
+
         ToggleCursor(IsPopupUIOpen());
     }
     #endregion
@@ -442,6 +446,7 @@ public class InGameUIManager : MonoBehaviour
         ToggleCursor(true);
         ItemStore.gameObject.SetActive(true);
         ItemStore.PurchaceActivation(coin);
+        Crosshair.SetActive(!Crosshair.gameObject.activeSelf);
 
         yield return DeathPopup.DeathPopupActive(respawnTime);
 
@@ -449,6 +454,7 @@ public class InGameUIManager : MonoBehaviour
         ToggleCursor(false);
         ItemStore.PurchaceDeActivation();
         ItemStore.gameObject.SetActive(false);
+        Crosshair.SetActive(!Crosshair.gameObject.activeSelf);
     }
     #endregion
 
