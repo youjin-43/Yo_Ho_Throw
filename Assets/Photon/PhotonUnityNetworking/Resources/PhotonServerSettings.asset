@@ -72,6 +72,9 @@ MonoBehaviour:
   - SetPlayerIconRPC
   - SetRevengeTargetIconRPC
   - FirstItemSelectRPC
+  - OnShowItemPanelRPC
+  - FadeInRPC
+  - FadeOutRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
