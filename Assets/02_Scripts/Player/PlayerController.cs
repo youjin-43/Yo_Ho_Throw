@@ -70,12 +70,6 @@ public class PlayerController : ThirdPersonController
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && BulletCount > 0)
         {
-            //if (!isInLobby)
-            //{
-            //    InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 1f);
-            //    InGameUIManager.Instance.SkillIndicator.RemoveDagger();
-
-            //}
 
             anim.SetTrigger("Shoot");
 
@@ -166,62 +160,9 @@ public class PlayerController : ThirdPersonController
         anim.SetLayerWeight(1, 1);
     }
 
-    private IEnumerator SmoothLayerReset(int _layerIndex)
-    {
-        float elapsedTime = 0f;
-        float blendTime = 0.3f;
-        float currentWeight = anim.GetLayerWeight(_layerIndex);
-
-        while (elapsedTime < blendTime)
-        {
-            elapsedTime += Time.deltaTime;
-            float newWeight = Mathf.Lerp(currentWeight, 1, elapsedTime / blendTime);
-            anim.SetLayerWeight(1, newWeight);
-            yield return null;
-        }
-        anim.SetLayerWeight(1, 1);
-    }
-
     
-    void LookSameCameraDirection()
-    {
-        //Transform camTransform = Camera.main.transform;
-        //RaycastHit hit;
-        //Vector3 previousTargetPosition = targetPosition;
-
-        //if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, 100f, targetLayer))
-        //{
-        //    if (Vector3.Distance(previousTargetPosition, hit.point) > 0.1f)
-        //    {
-        //        targetPosition = Vector3.Lerp(previousTargetPosition, hit.point, Time.deltaTime * 100f);
-        //    }
-        //}
-        //else
-        //{
-        //    Vector3 newTargetPosition = camTransform.position + camTransform.forward * 100f;
-        //    targetPosition = Vector3.Lerp(previousTargetPosition, newTargetPosition, Time.deltaTime * 100f);
-        //}
-
-        //Vector3 targetAim = targetPosition;
-        //targetAim.y = transform.position.y;
-        //Vector3 aimDir = (targetAim - transform.position).normalized;
-
-        //transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
 
 
-        Transform camTransform = Camera.main.transform;
-        RaycastHit hit;
-
-        targetPosition = camTransform.position + camTransform.forward * 10f;
-        
-
-        Vector3 targetAim = targetPosition;
-        targetAim.y = transform.position.y;
-        Vector3 aimDir = (targetAim - transform.position).normalized;
-
-       
-
-    }
 
     
     public void Dash()
