@@ -49,8 +49,8 @@ public class InGameUIManager : MonoBehaviour
     [Header("KillLog")]
     [SerializeField] public KillLogPanel KillLogPanelPrefab;
 
-    [Header("ItemSelect")]
-    private int _selectedItemIndex = 0;
+    [Header("Item")]
+    private int _itemIndex = 0;
     #endregion
 
     public UI_DeathPopup         DeathPopup         { get; private set; }
@@ -338,6 +338,15 @@ public class InGameUIManager : MonoBehaviour
 
     #region STATUS INDICATOR
     /// <summary>
+    /// 금화가 추가되는 부분에서 호출해 주세요
+    /// </summary>
+    /// <param name="coin"></param>
+    public void AddGoldCoin(int coin)
+    {
+        StatusIndicator.AddGoldCoin(coin);
+    }
+
+    /// <summary>
     /// 공격을 받았을 때 호출해 주세요
     /// </summary>
     /// <param name="currentHealth">입은 대미지</param>
@@ -426,17 +435,19 @@ public class InGameUIManager : MonoBehaviour
     /// 플레이어가 사망할 때 호출해 주세요
     /// </summary>
     /// <param name="respawnTime">리스폰 시간</param>
-    public IEnumerator Death(float respawnTime)
+    /// <param name="coin">소지하고 있는 금화</param>
+    public IEnumerator Death(float respawnTime, int coin = 0)
     {
         ToggleCrosshair(false);
         ToggleCursor(true);
         ItemStore.gameObject.SetActive(true);
-        ItemStore.PurchaceActivation(true);
+        ItemStore.PurchaceActivation(coin);
 
         yield return DeathPopup.DeathPopupActive(respawnTime);
 
         ToggleCrosshair(true);
         ToggleCursor(false);
+        ItemStore.PurchaceDeActivation();
         ItemStore.gameObject.SetActive(false);
     }
     #endregion
@@ -447,13 +458,13 @@ public class InGameUIManager : MonoBehaviour
 
     #region ITEM SELECT
     /// <summary>
-    /// UI_ItemSelect <-> UI_SkillIndicator
+    /// 선택한 아이템의 이미지를 스킬UI에 적용하는 부분
     /// </summary>
     /// <param name="image"></param>
     /// <param name="index"></param>
     public void ItemSelected(Image image, int index)
     {
-        _selectedItemIndex = index;
+        _itemIndex = index;
 
         SkillIndicator.SetItemSlotImage(image);
 
@@ -466,31 +477,38 @@ public class InGameUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 어떤 아이템을 선택했는지 확인하는 곳에서 호출해 주세요
+    /// 어떤 아이템을 선택했는지 확인하는 부분에서 호출해 주세요
     /// </summary>
     /// <returns></returns>
-    public int GetSelectedItem()
+    public int WhatItemSelect()
     {
-        return _selectedItemIndex;
+        return _itemIndex;
     }
     #endregion
 
 
 
 
+    #region ITEM STORE
     /// <summary>
-    /// UI_ItemStore <-> UI_SkillIndicator
+    /// 구매한 아이템의 이미지를 스킬UI에 적용하는 부분
     /// </summary>
     /// <param name="image"></param>
     /// <param name="index"></param>
-    #region ITEM STORE
     public void ItemPurchase(Image image, int index)
     {
-        _selectedItemIndex = index;
+        _itemIndex = index;
 
         SkillIndicator.SetItemSlotImage(image);
+    }
 
-        ItemStore.PurchaceActivation(false);
+    /// <summary>
+    /// 어떤 아이템을 구매했는지 확인하는 부분에서 호출해 주세요
+    /// </summary>
+    /// <returns></returns>
+    public int WhatItemPurchase()
+    {
+        return _itemIndex;
     }
     #endregion
 

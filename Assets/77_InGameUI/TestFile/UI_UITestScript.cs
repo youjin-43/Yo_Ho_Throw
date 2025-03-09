@@ -120,7 +120,7 @@ public class UI_UITestScript : MonoBehaviour
         {
             // InGameUIManager.Instance.Death(5f); // StartCoroutine으로 하지 않을 경우 실행안됨
 
-            StartCoroutine(InGameUIManager.Instance.Death(5f));
+            StartCoroutine(InGameUIManager.Instance.Death(5f, 0));
         }
         if (Input.GetKey(KeyCode.Tab))
         {
