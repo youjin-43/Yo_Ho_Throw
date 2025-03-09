@@ -11,22 +11,22 @@ public class ScreenTransition : MonoBehaviourPun
     {
         instance = this;
     }
-    public static void FadeInRPC()
+    public static void FadeIn()
     {
-        instance.photonView.RPC("FadeIn", RpcTarget.All);
+        instance.photonView.RPC("FadeInRPC", RpcTarget.All);
     }
-    public static void FadeOutRPC()
+    public static void FadeOut()
     {
-        instance.photonView.RPC("FadeOut", RpcTarget.All);
+        instance.photonView.RPC("FadeOutRPC", RpcTarget.All);
     }
     [PunRPC]
-    public void FadeIn()
+    public void FadeInRPC()
     {
         Debug.Log("FadeIn");
         alphaMaskController.SetTrigger("FadeIn");
     }
     [PunRPC]
-    public void FadeOut()
+    public void FadeOutRPC()
     {
         Debug.Log("FadeOut");
         alphaMaskController.SetTrigger("FadeOut");

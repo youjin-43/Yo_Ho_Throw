@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
+[RequireComponent(typeof(PhotonView))]
 public class UI_ItemSelect : UI_Base
 {
     #region VARIABLES
@@ -62,6 +64,11 @@ public class UI_ItemSelect : UI_Base
 
     #region FUNCTION
     public void OnShowItemPanel()
+    {
+        GetComponent<PhotonView>().RPC("OnShowItemPanelRPC", RpcTarget.All);
+    }
+    [PunRPC]
+    public void OnShowItemPanelRPC()
     {
         animator.SetTrigger("OnShowItemPanel");
     }
