@@ -20,6 +20,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     private float healInterval = 1f; // 체력 회복 간격
 
     private Coroutine healingCoroutine;
+
+    protected bool isSettingColor = false;
     int Hp
     {
         get => playerHp;
@@ -156,9 +158,27 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         
 
 
-
+        if (isSettingColor) transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
     }
 
 
-    
+    [SerializeField] Material defaultColorMaterial;
+    [SerializeField] Material bountyColorMaterial;
+
+    [PunRPC]
+    public void DefaultColorSetting()
+    {
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+    }
+    [PunRPC]
+    public void BountyColorSetting()
+    {
+        isSettingColor = false;
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = bountyColorMaterial;
+    }
+    [PunRPC]
+    public void RespawnColorSetting()
+    {
+        isSettingColor = true;
+    }
 }
