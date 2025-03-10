@@ -68,13 +68,6 @@ public class PlayerController : ThirdPersonController
         
         if (!isAlive) return;
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && BulletCount > 0)
-        {
-
-            anim.SetTrigger("Shoot");
-
-        }
-       
         if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded   && canDash)
         {
             if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
@@ -84,8 +77,15 @@ public class PlayerController : ThirdPersonController
             Dash();
             StartCoroutine(DashCooltime());
         }
+        if (Input.GetKeyDown(KeyCode.Mouse0) && BulletCount > 0)
+        {
 
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+            anim.SetTrigger("Shoot");
+
+        }
+       
+
+        if (Input.GetKeyDown(KeyCode.Mouse1)&& BulletCount > 0)
         {
             anim.SetTrigger("Melee Attack");
             
@@ -114,13 +114,14 @@ public class PlayerController : ThirdPersonController
     
     public void ThrowProjectile()
     {
-
+        if (BulletCount <= 0) return;
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
             if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
             
             if (!isInLobby) BulletCount--;
-            
+
+            if (BulletCount == 0) IsKnifeOn(false);
             Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position+ Vector3.up*3) - bulletSpawnPoint.position).normalized;
            
             if (online && photonView.IsMine)

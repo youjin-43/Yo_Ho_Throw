@@ -23,6 +23,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
     private Coroutine healingCoroutine;
     private Coroutine bulletReloadCoroutine;
+
+    public GameObject knifeObject;
     public int BulletCount
     {
         get => bulletCount;
@@ -92,7 +94,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         {
             yield return new WaitForSeconds(3f);
             BulletCount++;
-            Debug.Log("Ä® Ãß°¡");
+            if (BulletCount == 1) IsKnifeOn(true);
+            
         }
         bulletReloadCoroutine = null;   
     }
@@ -190,7 +193,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         Vector3 cameraForward = camTransform.forward;
         cameraForward.y = 0; 
         transform.rotation = Quaternion.LookRotation(cameraForward);
-
+        IsKnifeOn(true);
     }
 
     public void GameEndPlayer()
@@ -198,4 +201,17 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         isAlive = false;
     }
     
+    public void IsKnifeOn(bool onoff)
+    {
+        if (onoff)
+        {
+            knifeObject.gameObject.SetActive(true);
+            Debug.Log("³ªÀÌÇÁ ÄÑÁü");
+        }
+        else
+        {
+            knifeObject.gameObject.SetActive(false);
+            Debug.Log("³ªÀÌÇÁ ²¨Áü");
+        }
+    }
 }

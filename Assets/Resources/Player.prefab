@@ -409,6 +409,7 @@ MonoBehaviour:
   isInLobby: 1
   dashCoolTime: 5
   anim: {fileID: 0}
+  knifeObject: {fileID: 4168487119516495865}
   MoveSpeed: 4
   IsDash: 0
   SprintSpeed: 5.335
