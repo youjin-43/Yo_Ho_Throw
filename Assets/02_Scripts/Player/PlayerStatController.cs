@@ -208,6 +208,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
     public void IsKnifeOn(bool onoff)
     {
+        if (!photonView.IsMine) return;
+
         if (onoff)
         {
             knifeObject.gameObject.SetActive(true);
