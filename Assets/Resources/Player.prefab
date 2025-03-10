@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsPlayer: 1
+  owner: -1
   isAlwaysShow: 0
 --- !u!1 &3728001361432756594
 GameObject:
@@ -428,7 +429,7 @@ MonoBehaviour:
   GroundedRadius: 0.28
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 72
   CinemachineCameraTarget: {fileID: 3728001361432756594}
   TopClamp: 90
   BottomClamp: -90
