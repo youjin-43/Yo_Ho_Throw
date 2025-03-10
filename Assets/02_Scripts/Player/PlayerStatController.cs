@@ -1,4 +1,4 @@
-using Photon.Pun;
+ï»¿using Photon.Pun;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -17,9 +17,9 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     public float dashCoolTime = 5f;
     public Animator anim;
 
-    private float lastDamageTime = 0f; // ¸¶Áö¸·À¸·Î µ¥¹ÌÁö¸¦ ¹ŞÀº ½Ã°£
-    private float healDelay = 5f; // Ã¼·Â È¸º¹ ½ÃÀÛ±îÁöÀÇ Áö¿¬ ½Ã°£
-    private float healInterval = 1f; // Ã¼·Â È¸º¹ °£°İ
+    private float lastDamageTime = 0f; // ë§ˆì§€ë§‰ìœ¼ë¡œ ë°ë¯¸ì§€ë¥¼ ë°›ì€ ì‹œê°„
+    private float healDelay = 5f; // ì²´ë ¥ íšŒë³µ ì‹œì‘ê¹Œì§€ì˜ ì§€ì—° ì‹œê°„
+    private float healInterval = 1f; // ì²´ë ¥ íšŒë³µ ê°„ê²©
 
     private Coroutine healingCoroutine;
     private Coroutine bulletReloadCoroutine;
@@ -35,14 +35,14 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
                 while (bulletCount > value) 
                 {
                     //InGameUIManager.Instance.SkillIndicator.RemoveDagger();
-                    Debug.Log("Ä®¾¸");
+                    Debug.Log("ì¹¼ì”€");
                     bulletCount--;
                 }
             }
             else if (bulletCount < value)
             {
                 InGameUIManager.Instance.SkillIndicator.AddDagger(value - bulletCount);
-                Debug.Log("Ä® ¾òÀ½");
+                Debug.Log("ì¹¼ ì–»ìŒ");
                 bulletCount = value;
             }
         }
@@ -100,7 +100,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         bulletReloadCoroutine = null;   
     }
 
-    //¾Ö´Ï¸ŞÀÌ¼Ç,Èú ÄÚ·çÆ¾ ¿ëµµ
+    //ì• ë‹ˆë©”ì´ì…˜,í ì½”ë£¨í‹´ ìš©ë„
     public virtual void OnDamagedAnim()
     {
         if (isInLobby) return;
@@ -113,7 +113,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if (healingCoroutine != null)
         {
             StopCoroutine(healingCoroutine);
-            healingCoroutine = null; // Ã¼·Â È¸º¹ ÁßÀÌ¸é Áß´Ü
+            healingCoroutine = null; // ì²´ë ¥ íšŒë³µ ì¤‘ì´ë©´ ì¤‘ë‹¨
         }
 
     }
@@ -141,7 +141,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         //AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerDead);
         gameObject.name += Random.value.ToString();
 
-        // ÀÌµ¿ ºñÈ°¼ºÈ­
+        // ì´ë™ ë¹„í™œì„±í™”
         isAlive = false;
         
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
@@ -150,16 +150,16 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     private IEnumerator HealOverTime()
     {
-        //Debug.Log("È¸º¹");
+        //Debug.Log("íšŒë³µ");
         while (Hp < MAX_HP)
-        { Debug.Log("Ã¼·Â È¸º¹");
+        { Debug.Log("ì²´ë ¥ íšŒë³µ");
 
             InGameUIManager.Instance.AddHealth(1);
-            playerHp += 1; // Ã¼·Â 1¾¿ È¸º¹
-            playerHp = Mathf.Min(Hp, MAX_HP); // ÃÖ´ë Ã¼·Â ÃÊ°ú ¹æÁö
+            playerHp += 1; // ì²´ë ¥ 1ì”© íšŒë³µ
+            playerHp = Mathf.Min(Hp, MAX_HP); // ìµœëŒ€ ì²´ë ¥ ì´ˆê³¼ ë°©ì§€
             yield return new WaitForSeconds(healInterval);
         }
-        healingCoroutine = null; // Ã¼·Â ´Ù Â÷¸é Á¾·á
+        healingCoroutine = null; // ì²´ë ¥ ë‹¤ ì°¨ë©´ ì¢…ë£Œ
     }
     
     
@@ -177,7 +177,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public void InitPlayer()
     {
-        //TODO ¼®Áø ÇÃ·¹ÀÌ¾î ´Ù½Ã »ì¾Æ³ª´Â ¼Ò¸®
+        //TODO ì„ì§„ í”Œë ˆì´ì–´ ë‹¤ì‹œ ì‚´ì•„ë‚˜ëŠ” ì†Œë¦¬
 
         anim.Rebind();
         anim.Update(0f);
@@ -188,30 +188,57 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
         BulletCount = 5;
 
-        //Ä«¸Ş¶ó¿Í ¸Â´Â ¹æÇâÀ¸·Î È¸Àü
+        //ì¹´ë©”ë¼ì™€ ë§ëŠ” ë°©í–¥ìœ¼ë¡œ íšŒì „
         Transform camTransform = Camera.main.transform;
         Vector3 cameraForward = camTransform.forward;
         cameraForward.y = 0; 
         transform.rotation = Quaternion.LookRotation(cameraForward);
         IsKnifeOn(true);
+        
+        // í˜„ìƒê¸ˆ íƒ€ê²Ÿìœ¼ë¡œì¨ ì£½ì—ˆì„ ê²½ìš° í”Œë ˆì´ì–´ ë©”í…Œë¦¬ì–¼ ê¸°ì¡´ ê²ƒìœ¼ë¡œ ì„¤ì •
+        if (isSettingColor) transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
     }
 
     public void GameEndPlayer()
     {
         isAlive = false;
     }
-    
+
+
+
     public void IsKnifeOn(bool onoff)
     {
         if (onoff)
         {
             knifeObject.gameObject.SetActive(true);
-            Debug.Log("³ªÀÌÇÁ ÄÑÁü");
+            Debug.Log("ë‚˜ì´í”„ ì¼œì§");
         }
         else
         {
             knifeObject.gameObject.SetActive(false);
-            Debug.Log("³ªÀÌÇÁ ²¨Áü");
+            Debug.Log("ë‚˜ì´í”„ êº¼ì§");
         }
+    }
+
+    bool isSettingColor = false;
+
+    [SerializeField] Material defaultColorMaterial;
+    [SerializeField] Material bountyColorMaterial;
+
+    [PunRPC]
+    public void DefaultColorSetting()
+    {
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+    }
+    [PunRPC]
+    public void BountyColorSetting()
+    {
+        isSettingColor = false;
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = bountyColorMaterial;
+    }
+    [PunRPC]
+    public void RespawnColorSetting()
+    {
+        isSettingColor = true;
     }
 }
