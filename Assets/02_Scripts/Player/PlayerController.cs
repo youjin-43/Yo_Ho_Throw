@@ -45,7 +45,6 @@ public class PlayerController : ThirdPersonController
     {
         base.Start();
         cameraTransform = Camera.main.transform;
-        
         photonTransformView = GetComponent<PhotonTransformView>();
         
 
@@ -122,6 +121,9 @@ public class PlayerController : ThirdPersonController
             if (!isInLobby) BulletCount--;
 
             if (BulletCount == 0) IsKnifeOn(false);
+
+            if (cameraTransform == null) cameraTransform = Camera.main.transform;
+
             Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position+ Vector3.up*3) - bulletSpawnPoint.position).normalized;
            
             if (online && photonView.IsMine)

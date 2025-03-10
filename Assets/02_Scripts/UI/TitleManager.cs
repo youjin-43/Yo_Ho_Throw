@@ -25,9 +25,9 @@ public class TitleManager : MonoBehaviour
 
     public void OnStartButtonClick()
     {
-        logInPanel.SetActive(false);
-        gameObject.SetActive(false); // 타이틀 페이지 비활성화
-        blurPage.SetActive(true);  // 룸 리스트 페이지 활성화
+        ////logInPanel.SetActive(false);
+        //gameObject.SetActive(false); // 타이틀 페이지 비활성화
+        //blurPage.SetActive(true);  // 룸 리스트 페이지 활성화
         buttonSound.RegisterButtonSounds();
     }
 
