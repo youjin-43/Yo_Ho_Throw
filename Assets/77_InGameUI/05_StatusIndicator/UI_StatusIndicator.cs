@@ -59,6 +59,7 @@ public class UI_StatusIndicator : UI_Base
         _healthCounters.Add(transform.GetChild(0).GetChild(2).GetChild(0).GetComponent<Image>());
 
         _CoinCounter = transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>();
+        _CoinCounter.text = "0";
     }
     #endregion
 
@@ -67,8 +68,7 @@ public class UI_StatusIndicator : UI_Base
 
 
     #region FUNCTION
-
-    // 체력 관련 함수
+    #region HEALTH
     public void SetHealth(int hp)
     {
         _maxHealth     = hp;
@@ -136,7 +136,13 @@ public class UI_StatusIndicator : UI_Base
             }
         }
     }
+    #endregion
 
-    // 금화 관련 함수
+    #region GOLDCOIN
+    public void AddGoldCoin(int coin)
+    {
+
+    }
+    #endregion
     #endregion
 }
