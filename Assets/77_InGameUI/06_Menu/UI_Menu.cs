@@ -18,7 +18,7 @@ public class UI_Menu : UI_Base
         _name = name;
     }
 
-    public override void On()
+    public override void On()   
     {
         gameObject.SetActive(true);
     }
@@ -45,8 +45,13 @@ public class UI_Menu : UI_Base
         ReturnToTitleButton = transform.GetChild(0).GetChild(4).GetComponent<Button>();
 
         ReturnToGameButton .onClick.AddListener(Resume);
+        ReturnToGameButton .onClick.AddListener(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIClick));
+
         SettingButton      .onClick.AddListener(ToggleSettingUI);
+        SettingButton      .onClick.AddListener(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIClick));
+
         ReturnToTitleButton.onClick.AddListener(ReturnToTitle);
+        ReturnToTitleButton.onClick.AddListener(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIClick));
     }
     #endregion
 

@@ -66,6 +66,7 @@ public class InGameUIManager : MonoBehaviour
     public UI_ItemSelect         ItemSelect         { get; private set; }
     public UI_ItemStore          ItemStore          { get; private set; }
     public GameObject            Crosshair;
+    public GameObject            OnDamaged;
 
     private Dictionary<string, UI_Base> UIs = new Dictionary<string, UI_Base>();
 
@@ -87,6 +88,7 @@ public class InGameUIManager : MonoBehaviour
         UIs["KillLog"]            =  KillLog            = transform.GetChild(10).GetComponent<UI_KillLog>();
                                      ItemSelect         = transform.GetChild(11).GetComponent<UI_ItemSelect>();
                                      ItemStore          = transform.GetChild(12).GetComponent<UI_ItemStore>();
+                                     OnDamaged          = transform.GetChild(13).gameObject;
 
         foreach (var ui in UIs)
         {
@@ -355,6 +357,9 @@ public class InGameUIManager : MonoBehaviour
     public void AddDamage(int damage)
     {
         StatusIndicator.AddDamage(damage);
+
+        OnDamaged.gameObject.SetActive(true);
+
     }
 
     /// <summary>
