@@ -90,6 +90,11 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
 
     public void GameStart()
     {
+        //룸 닫고
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+        Debug.Log("현재 방 오픈 여부: " + PhotonNetwork.CurrentRoom.IsOpen);
+        Debug.Log("게임 시작!");
         PhotonNetwork.LoadLevel("Test_BattleSystem");
     }
 
