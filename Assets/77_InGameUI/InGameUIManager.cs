@@ -452,7 +452,6 @@ public class InGameUIManager : MonoBehaviour
         ToggleCursor(true);
         ItemStore.gameObject.SetActive(true);
         ItemStore.PurchaceActivation(coin);
-        Crosshair.SetActive(!Crosshair.gameObject.activeSelf);
 
         yield return DeathPopup.DeathPopupActive(respawnTime);
 
@@ -460,7 +459,6 @@ public class InGameUIManager : MonoBehaviour
         ToggleCursor(false);
         ItemStore.PurchaceDeActivation();
         ItemStore.gameObject.SetActive(false);
-        Crosshair.SetActive(!Crosshair.gameObject.activeSelf);
     }
     #endregion
 

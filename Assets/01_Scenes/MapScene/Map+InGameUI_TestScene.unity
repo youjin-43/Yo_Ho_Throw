@@ -5942,6 +5942,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[O]_ItemSelect'
       objectReference: {fileID: 0}
+    - target: {fileID: 6096750610373739129, guid: 5e3afc2cd079cf149b962bfb50399234, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7467929648573585983, guid: 5e3afc2cd079cf149b962bfb50399234, type: 3}
       propertyPath: sceneViewId
       value: 2

@@ -245,6 +245,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
             case 1: battleStartText.text = "Go"; break;
 
             case 0: StartCoroutine(HideTextAfterTimeCoroutine(battleStartText, 1f)); break;
+
         }
     }
     IEnumerator HideTextAfterTimeCoroutine(TMP_Text targetTextUI, float delay)
@@ -252,6 +253,9 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
         yield return new WaitForSeconds(delay);
 
         targetTextUI.text = string.Empty;
+
+        // 카운트 끝나고 조준점 표시
+        InGameUIManager.Instance.ToggleCrosshair(true);
     }
     void SortPlayerScoreEntry()
     {
