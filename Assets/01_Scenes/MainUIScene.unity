@@ -146,6 +146,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1688931413212330386, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2866219652940917707, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000072626935
+      objectReference: {fileID: 0}
     - target: {fileID: 3099762600388934159, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -172,7 +180,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3390338672966564134, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5540154885613728077, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchorMax.x
@@ -180,7 +188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5540154885613728077, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6091198727280793112, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchorMax.y
@@ -201,6 +209,10 @@ PrefabInstance:
     - target: {fileID: 6091198727280793112, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6354817737907928582, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8146479364929453586, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchorMax.y
@@ -931,6 +943,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1463659846797107378, guid: 8d5981143d3a86d4e99e472f4a926e54, type: 3}
   m_PrefabInstance: {fileID: 6272268269009391412}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &984356442 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6247598383408199663, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
+  m_PrefabInstance: {fileID: 12019528}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1036130188 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 76422808393225974, guid: f55b2b531ccf9804a9b3372fbf7ba532, type: 3}
@@ -988,6 +1011,7 @@ MonoBehaviour:
   roomListItemPrefab: {fileID: 8133368382576821609, guid: 9dd707010b6274e49aa6804ceda4ce8d, type: 3}
   roomListContent: {fileID: 118950496}
   createNewRoomButton: {fileID: 12019530}
+  ReloadingButton: {fileID: 984356442}
   CreatNewRoomArea: {fileID: 1036130188}
   roomNameInput: {fileID: 1528665277}
   passwordToggle: {fileID: 1528665276}
