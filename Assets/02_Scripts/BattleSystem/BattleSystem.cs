@@ -50,6 +50,8 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
         // 화면 활성화 함
         ScreenTransition.FadeOut();
 
+        BattleUIController.Instance.SetLimitTimeText(timeLimit);
+
         yield return new WaitForSeconds(0.5f);
 
         //// 아이템 패널 활성화
