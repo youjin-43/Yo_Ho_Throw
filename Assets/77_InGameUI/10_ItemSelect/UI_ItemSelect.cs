@@ -1,12 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
+[RequireComponent(typeof(PhotonView))]
 public class UI_ItemSelect : UI_Base
 {
     #region VARIABLES
+    private Animator animator;
     private GameObject _itemButton_1;
     private GameObject _itemButton_2;
     private GameObject _itemButton_3;
+    private bool isFirstItemSelect = true;
     #endregion
 
 
@@ -17,6 +21,7 @@ public class UI_ItemSelect : UI_Base
     public override void Init()
     {
         _name = name;
+
     }
 
     public override void On()
@@ -45,18 +50,11 @@ public class UI_ItemSelect : UI_Base
         _itemButton_2 = transform.GetChild(3).gameObject;
         _itemButton_3 = transform.GetChild(4).gameObject;
 
-        Button btn1 = transform.GetChild(2).GetComponent<Button>();
-        Button btn2 = transform.GetChild(3).GetComponent<Button>();
-        Button btn3 = transform.GetChild(4).GetComponent<Button>();
-
-        btn1.onClick.AddListener(() => ItemSelected(_itemButton_1, 1));
-        btn1.onClick.AddListener(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIClick));
-
-        btn2.onClick.AddListener(() => ItemSelected(_itemButton_2, 2));
-        btn2.onClick.AddListener(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIClick));
-
-        btn3.onClick.AddListener(() => ItemSelected(_itemButton_3, 3));
-        btn3.onClick.AddListener(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIClick));
+        transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_1, 1));
+        transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_2, 2));
+        transform.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_3, 3));
+      
+        animator = GetComponent<Animator>();
     }
     #endregion
 
@@ -65,9 +63,27 @@ public class UI_ItemSelect : UI_Base
 
 
     #region FUNCTION
+    public void OnShowItemPanel()
+    {
+        GetComponent<PhotonView>().RPC("OnShowItemPanelRPC", RpcTarget.All);
+    }
+    [PunRPC]
+    public void OnShowItemPanelRPC()
+    {
+        animator.SetTrigger("OnShowItemPanel");
+    }
     public void ItemSelected(GameObject button, int index)
     {
         Debug.Log(index + "번 아이템 선택");
+
+        if (isFirstItemSelect)
+        {
+            BattleSystem.FirstItemSelect();
+
+            animator.SetTrigger("OnHideItemPanel");
+
+            isFirstItemSelect = false;
+        }
 
         InGameUIManager.Instance.ItemSelected(button.transform.GetChild(0).GetChild(0).GetComponent<Image>(), index);
     }

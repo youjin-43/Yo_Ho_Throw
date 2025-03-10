@@ -3,6 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -195,10 +196,12 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
             case RaiseEventCode.UpdateScore:
                 // 1. 기존 로직
-                playerScoreEntries[actorNumber].SetScore(value); break;
+                playerScoreEntries[actorNumber].SetScore(value); 
 
-                // 2. InGameUI 연동
-                // InGameUIManager.Instance.UpdateScoreboardData_Score(actorNumber, value);
+                SortPlayerScoreEntry(); break;
+
+            // 2. InGameUI 연동
+            // InGameUIManager.Instance.UpdateScoreboardData_Score(actorNumber, value);
 
             case RaiseEventCode.UpdateKillCount:
                 // 1. 기존 로직
@@ -249,6 +252,17 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
         yield return new WaitForSeconds(delay);
 
         targetTextUI.text = string.Empty;
+    }
+    void SortPlayerScoreEntry()
+    {
+        var sortedList = playerScoreEntries.Values
+                                       .OrderByDescending(entry => entry.score)
+                                       .ToList();
+
+        foreach (PlayerScoreEntry entry in sortedList)
+        {
+            entry.transform.SetAsLastSibling();
+        }
     }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);

@@ -68,7 +68,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
                     Debug.Log("숨기기 타겟 액터넘버 : " + targetActorNr.ToString());
                 }
 
-                PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.DeactivateBountyTarget.ToString(), bountyTargetActorNumber);
+                PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.ScheduleBountyTargetDeactivation.ToString(), bountyTargetActorNumber);
 
                 photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, -1);
                 bountyTargetActorNumber = -1;
@@ -216,6 +216,11 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (targetActorNr != -1)
         {
             InGameUIManager.ShowPlayerIcon(targetActorNr, MinimapIconType.Bounty_Hunter);
+
+            if (bountyTargetActorNumber != -1)
+            {
+                PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.DeactivateBountyTargetImmediate.ToString(), bountyTargetActorNumber);
+            }
 
             PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.ActivateBountyTarget.ToString(), targetActorNr);
         }

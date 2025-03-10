@@ -71,6 +71,13 @@ MonoBehaviour:
   - InitPlayer
   - SetPlayerIconRPC
   - SetRevengeTargetIconRPC
+  - FirstItemSelectRPC
+  - OnShowItemPanelRPC
+  - FadeInRPC
+  - FadeOutRPC
+  - DeactivateBountyTargetImmediate
+  - ScheduleBountyTargetDeactivation
+  - RespawnColorSetting
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
