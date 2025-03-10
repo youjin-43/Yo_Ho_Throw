@@ -33,7 +33,7 @@ namespace StarterAssets
         public float RotationSmoothTime = 0.12f;
 
         [Tooltip("Acceleration and deceleration")]
-        public float SpeedChangeRate = 10.0f;
+        public float SpeedChangeRate = 1000.0f;
 
         public AudioClip LandingAudioClip;
         public AudioClip[] FootstepAudioClips;
@@ -277,7 +277,8 @@ namespace StarterAssets
             // 움직임
             
 
-            Vector3 movementDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+            Vector3 movementDirection = (transform.forward * verticalInput + transform.right * horizontalInput).normalized;
+
             Vector3 finalMove = movementDirection * MoveSpeed;
 
             _controller.Move(finalMove * Time.deltaTime + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
