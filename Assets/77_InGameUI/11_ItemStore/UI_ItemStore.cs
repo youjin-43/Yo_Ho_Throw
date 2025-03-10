@@ -63,16 +63,28 @@ public class UI_ItemStore : UI_Base
 
 
     #region FUNCTION
+
+    // 이 버튼을 누르면 아이템이 구매가 
     public void ItemPurchace(GameObject button, int index)
     {
         Debug.Log(index + "번 아이템 구매");
 
         InGameUIManager.Instance.ItemPurchase(button.transform.GetChild(0).GetChild(0).GetComponent<Image>(), index);
+
+        PurchaceDeActivation();
     }
 
-    public void PurchaceActivation(bool isActive)
+    public void PurchaceActivation(int coin)
     {
-        _disablePanel.gameObject.SetActive(!isActive);
+        if (coin >= 5)
+        {
+            _disablePanel.gameObject.SetActive(false);
+        }
+    }
+
+    public void PurchaceDeActivation()
+    {
+        _disablePanel.gameObject.SetActive(true);
     }
     #endregion
 }

@@ -45,9 +45,18 @@ public class UI_ItemSelect : UI_Base
         _itemButton_2 = transform.GetChild(3).gameObject;
         _itemButton_3 = transform.GetChild(4).gameObject;
 
-        transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_1, 1));
-        transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_2, 2));
-        transform.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ItemSelected(_itemButton_3, 3));
+        Button btn1 = transform.GetChild(2).GetComponent<Button>();
+        Button btn2 = transform.GetChild(3).GetComponent<Button>();
+        Button btn3 = transform.GetChild(4).GetComponent<Button>();
+
+        btn1.onClick.AddListener(() => ItemSelected(_itemButton_1, 1));
+        btn1.onClick.AddListener(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIClick));
+
+        btn2.onClick.AddListener(() => ItemSelected(_itemButton_2, 2));
+        btn2.onClick.AddListener(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIClick));
+
+        btn3.onClick.AddListener(() => ItemSelected(_itemButton_3, 3));
+        btn3.onClick.AddListener(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIClick));
     }
     #endregion
 
