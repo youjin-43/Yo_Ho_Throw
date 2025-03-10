@@ -179,10 +179,15 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         currPlayerPhotonView.RPC("BountyColorSetting", RpcTarget.All);
     }
     [PunRPC]
-    public void DeactivateBountyTarget()
+    public void DeactivateBountyTargetImmediate()
     {
         // TODO 찬규 : 현상금 타겟 지정 이펙트 비활성화
         currPlayerPhotonView.RPC("DefaultColorSetting", RpcTarget.All);
+    }
+    [PunRPC]
+    public void ScheduleBountyTargetDeactivation()
+    {
+        currPlayerPhotonView.RPC("RespawnColorSetting", RpcTarget.All);
     }
     float GetHighestCollisionY(Vector3 position)
     {

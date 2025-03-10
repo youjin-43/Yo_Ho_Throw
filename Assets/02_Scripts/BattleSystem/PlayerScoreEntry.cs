@@ -11,6 +11,8 @@ public class PlayerScoreEntry : MonoBehaviour
     [SerializeField] TMP_Text scoreText;
 
     [SerializeField] Image iconImage;
+
+    [HideInInspector] public int score = 0;
     public void Init(string nickName)
     {
         nickNameText.text = nickName;
@@ -22,6 +24,8 @@ public class PlayerScoreEntry : MonoBehaviour
         killCountText.text = "0";
         deathCountText.text = "0";
         scoreText.text = "0";
+
+        score = 0;
     }
     public void SetKillCount(int killCount)
     {
@@ -34,6 +38,8 @@ public class PlayerScoreEntry : MonoBehaviour
     public void SetScore(int score)
     {
         scoreText.text = score.ToString();
+
+        this.score = score;
     }
     public void SetIconImage(Sprite sprite)
     {

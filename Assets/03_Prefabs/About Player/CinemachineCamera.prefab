@@ -95,13 +95,13 @@ MonoBehaviour:
   CameraSide: 1
   CameraDistance: 2.13
   AvoidObstacles:
-    Enabled: 0
+    Enabled: 1
     CollisionFilter:
       serializedVersion: 2
-      m_Bits: 1
+      m_Bits: 87
     IgnoreTag: 
     CameraRadius: 0.2
-    DampingIntoCollision: 0
+    DampingIntoCollision: 0.5
     DampingFromCollision: 0.5
 --- !u!114 &8760356791071830566
 MonoBehaviour:

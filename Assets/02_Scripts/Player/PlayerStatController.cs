@@ -8,8 +8,10 @@ using UnityEngine.Windows;
 public class PlayerStatController : MonoBehaviourPun , IDamagable
 {
     const int MAX_HP = 3;
+    const int MAX_BULLET_COUNT = 5;
+
     public int playerHp = MAX_HP;
-    public int bulletCount = 5;
+    public int bulletCount = MAX_BULLET_COUNT;
     public bool isAlive = true;
     public bool isInLobby = true;
     public float dashCoolTime = 5f;
@@ -20,6 +22,32 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     private float healInterval = 1f; // 체력 회복 간격
 
     private Coroutine healingCoroutine;
+    private Coroutine bulletReloadCoroutine;
+
+    public GameObject knifeObject;
+    public int BulletCount
+    {
+        get => bulletCount;
+        set
+        {
+            if (bulletCount > value)
+            {
+                while (bulletCount > value) 
+                {
+                    //InGameUIManager.Instance.SkillIndicator.RemoveDagger();
+                    Debug.Log("칼씀");
+                    bulletCount--;
+                }
+            }
+            else if (bulletCount < value)
+            {
+                InGameUIManager.Instance.SkillIndicator.AddDagger(value - bulletCount);
+                Debug.Log("칼 얻음");
+                bulletCount = value;
+            }
+        }
+    }
+
     int Hp
     {
         get => playerHp;
@@ -47,9 +75,29 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             if (healingCoroutine == null)
             {
 
-                //healingCoroutine = StartCoroutine(HealOverTime());
+                healingCoroutine = StartCoroutine(HealOverTime());
             }
         }
+
+        if(isAlive && !isInLobby && BulletCount<5 )
+        {
+            if(bulletReloadCoroutine == null)
+            {
+                bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
+            }
+        }
+    }
+
+    IEnumerator BulletReloadOverTime()
+    {
+        while (BulletCount < 5)
+        {
+            yield return new WaitForSeconds(3f);
+            BulletCount++;
+            if (BulletCount == 1) IsKnifeOn(true);
+            
+        }
+        bulletReloadCoroutine = null;   
     }
 
     //애니메이션,힐 코루틴 용도
@@ -76,6 +124,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if(!isAlive) return;
         if (PhotonNetwork.LocalPlayer.ActorNumber != photonView.OwnerActorNr) return;
         
+        InGameUIManager.Instance.StatusIndicator.AddDamage(damage);
         Hp -= damage;
 
         if (Hp <= 0)
@@ -104,24 +153,16 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         //Debug.Log("회복");
         while (Hp < MAX_HP)
         { Debug.Log("체력 회복");
-            
+
+            InGameUIManager.Instance.AddHealth(1);
             playerHp += 1; // 체력 1씩 회복
             playerHp = Mathf.Min(Hp, MAX_HP); // 최대 체력 초과 방지
             yield return new WaitForSeconds(healInterval);
         }
         healingCoroutine = null; // 체력 다 차면 종료
     }
-    //[PunRPC]
-    //public virtual void OnDead()
-    //{
-    //    if (!photonView.IsMine) return;
-    //    Debug.Log("Dead");
-    //}
-
-    public void FullBullet()
-    {
-        bulletCount = 10;
-    }
+    
+    
     [PunRPC]
     public void OnInLobby()
     {
@@ -145,20 +186,32 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         playerHp = MAX_HP;
         isAlive = true;
 
-        bulletCount = 5;
+        BulletCount = 5;
 
         //카메라와 맞는 방향으로 회전
         Transform camTransform = Camera.main.transform;
         Vector3 cameraForward = camTransform.forward;
         cameraForward.y = 0; 
         transform.rotation = Quaternion.LookRotation(cameraForward);
-
-        
-
-
-
+        IsKnifeOn(true);
     }
 
-
+    public void GameEndPlayer()
+    {
+        isAlive = false;
+    }
     
+    public void IsKnifeOn(bool onoff)
+    {
+        if (onoff)
+        {
+            knifeObject.gameObject.SetActive(true);
+            Debug.Log("나이프 켜짐");
+        }
+        else
+        {
+            knifeObject.gameObject.SetActive(false);
+            Debug.Log("나이프 꺼짐");
+        }
+    }
 }

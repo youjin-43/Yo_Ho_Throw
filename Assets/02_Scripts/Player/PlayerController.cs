@@ -68,19 +68,6 @@ public class PlayerController : ThirdPersonController
         
         if (!isAlive) return;
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && bulletCount > 0)
-        {
-            //if (!isInLobby)
-            //{
-            //    InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 1f);
-            //    InGameUIManager.Instance.SkillIndicator.RemoveDagger();
-
-            //}
-
-            anim.SetTrigger("Shoot");
-
-        }
-       
         if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded   && canDash)
         {
             if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
@@ -90,11 +77,18 @@ public class PlayerController : ThirdPersonController
             Dash();
             StartCoroutine(DashCooltime());
         }
+        if (Input.GetKeyDown(KeyCode.Mouse0) && BulletCount > 0)
+        {
 
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+            anim.SetTrigger("Shoot");
+
+        }
+       
+
+        if (Input.GetKeyDown(KeyCode.Mouse1)&& BulletCount > 0)
         {
             anim.SetTrigger("Melee Attack");
-            MeleeAttack();
+            
         }
 
         
@@ -120,15 +114,16 @@ public class PlayerController : ThirdPersonController
     
     public void ThrowProjectile()
     {
-        
-        // TODO 애니메이션 되는지 확인 
-        //StartCoroutine(StartAnimationCoroutine("Shoot", 0.24f));
-
+        if (BulletCount <= 0) return;
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
+            if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
             
-            bulletCount--;
-            Vector3 throwDirection = ((cameraTransform.forward * bulletRange + 2*cameraTransform.position) - bulletSpawnPoint.position).normalized;
+            if (!isInLobby) BulletCount--;
+
+            if (BulletCount == 0) IsKnifeOn(false);
+            Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position+ Vector3.up*3) - bulletSpawnPoint.position).normalized;
+           
             if (online && photonView.IsMine)
                 photonView.RPC("Throw_RPC", RpcTarget.All, throwDirection, PhotonNetwork.LocalPlayer.ActorNumber);
         }
@@ -159,95 +154,16 @@ public class PlayerController : ThirdPersonController
     }
     
     
-    //IEnumerator StartAnimationCoroutine(string _animName, float _frame, bool _layerLerp = false, int _layerIndex = 0, float _layerWeight = 1)
-    //{
-    //    // anim.SetTrigger(_animName);
-    //    if(_animName == "Dash")
-    //    {
-    //        IsDash = true;  
-    //    }
-
-    //    anim.SetLayerWeight(_layerIndex, _layerWeight);
-    //    yield return new WaitForSeconds(_frame);
-    //    anim.SetTrigger(_animName);
-
-    //    if (_animName == "Dash")
-    //    {
-    //        IsDash = false;
-    //    }
-        
-    //    if (_layerLerp)
-    //        StartCoroutine(SmoothLayerReset(_layerIndex));
-    //    else
-    //        LayerReset();
-    //}
-
+ 
     public void LayerReset()
     {
         anim.SetLayerWeight(0, 1);
         anim.SetLayerWeight(1, 1);
     }
 
-    private IEnumerator SmoothLayerReset(int _layerIndex)
-    {
-        float elapsedTime = 0f;
-        float blendTime = 0.3f;
-        float currentWeight = anim.GetLayerWeight(_layerIndex);
-
-        while (elapsedTime < blendTime)
-        {
-            elapsedTime += Time.deltaTime;
-            float newWeight = Mathf.Lerp(currentWeight, 1, elapsedTime / blendTime);
-            anim.SetLayerWeight(1, newWeight);
-            yield return null;
-        }
-        anim.SetLayerWeight(1, 1);
-    }
-
     
-    void LookSameCameraDirection()
-    {
-        //Transform camTransform = Camera.main.transform;
-        //RaycastHit hit;
-        //Vector3 previousTargetPosition = targetPosition;
-
-        //if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, 100f, targetLayer))
-        //{
-        //    if (Vector3.Distance(previousTargetPosition, hit.point) > 0.1f)
-        //    {
-        //        targetPosition = Vector3.Lerp(previousTargetPosition, hit.point, Time.deltaTime * 100f);
-        //    }
-        //}
-        //else
-        //{
-        //    Vector3 newTargetPosition = camTransform.position + camTransform.forward * 100f;
-        //    targetPosition = Vector3.Lerp(previousTargetPosition, newTargetPosition, Time.deltaTime * 100f);
-        //}
-
-        //Vector3 targetAim = targetPosition;
-        //targetAim.y = transform.position.y;
-        //Vector3 aimDir = (targetAim - transform.position).normalized;
-
-        //transform.forward = Vector3.Slerp(transform.forward, aimDir, Time.deltaTime * 30f);
 
 
-        Transform camTransform = Camera.main.transform;
-        RaycastHit hit;
-        
-
-
-
-
-        targetPosition = camTransform.position + camTransform.forward * 10f;
-        
-
-        Vector3 targetAim = targetPosition;
-        targetAim.y = transform.position.y;
-        Vector3 aimDir = (targetAim - transform.position).normalized;
-
-       
-
-    }
 
     
     public void Dash()
@@ -264,7 +180,10 @@ public class PlayerController : ThirdPersonController
         float input_X = input_Y == -1 ? 0 : Input.GetAxisRaw("Horizontal");
 
         if (online && photonView.IsMine)
+        {   
+            if(!isInLobby) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(2, 5f);
             photonView.RPC("Dash_RPC", RpcTarget.All, input_X, input_Y);
+        }
         else
             Dash_RPC(input_X, input_Y);
     }
@@ -308,6 +227,8 @@ public class PlayerController : ThirdPersonController
     
     public void MeleeAttack()
     {
+        if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(0, 0.5f);
+
         if (online && photonView.IsMine)
             photonView.RPC("MeleeAttack_RPC", RpcTarget.All);
 
