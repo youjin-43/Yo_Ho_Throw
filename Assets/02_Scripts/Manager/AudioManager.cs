@@ -21,7 +21,7 @@ public class AudioManager : MonoBehaviour
     {
         UIClick, UIToggle,
 
-        PlayerDead, PlayerHit, PlayerAttack, PlayerEatSomething, PlayerWalk,
+        PlayerDead, PlayerHit, PlayerAttack, PlayerWalk,
 
         Knife, Block
     }
