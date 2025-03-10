@@ -152,7 +152,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     public void DeactivatePlayer()
     {
         // TODO 찬규 : 플레이어 동작 비활성화 (currPlayerPhotonView.RPC를 통해 수행해야할듯)
-
+        currPlayerPhotonView.RPC("원하는 함수명", RpcTarget.All);
     }
     public void ExecuteRPC(string functionName, int actorNumber)
     {

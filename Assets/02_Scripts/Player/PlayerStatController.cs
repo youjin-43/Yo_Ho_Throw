@@ -143,7 +143,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
         // 이동 비활성화
         isAlive = false;
-        
+
+        CursorController.Instance.CursorEnable();
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
     }
 
@@ -197,6 +198,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         
         // 현상금 타겟으로써 죽었을 경우 플레이어 메테리얼 기존 것으로 설정
         if (isSettingColor) transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+
+        CursorController.Instance.CursorDisable();
     }
 
     public void GameEndPlayer()
