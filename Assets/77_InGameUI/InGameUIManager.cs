@@ -53,6 +53,7 @@ public class InGameUIManager : MonoBehaviour
     private int _itemIndex = 0;
     #endregion
 
+    public GameObject            Crosshair;
     public UI_DeathPopup         DeathPopup         { get; private set; }
     public UI_Minimap            Minimap            { get; private set; }
     public UI_Timer              Timer              { get; private set; }
@@ -65,8 +66,8 @@ public class InGameUIManager : MonoBehaviour
     public UI_KillLog            KillLog            { get; private set; }
     public UI_ItemSelect         ItemSelect         { get; private set; }
     public UI_ItemStore          ItemStore          { get; private set; }
-    public GameObject            Crosshair;
-    public GameObject            OnDamaged;
+    public UI_GameOverPopup      GameOverPopup      { get; private set; }
+    public UI_OnDamage           OnDamaged          { get; private set; }
 
     private Dictionary<string, UI_Base> UIs = new Dictionary<string, UI_Base>();
 
@@ -88,7 +89,8 @@ public class InGameUIManager : MonoBehaviour
         UIs["KillLog"]            =  KillLog            = transform.GetChild(10).GetComponent<UI_KillLog>();
                                      ItemSelect         = transform.GetChild(11).GetComponent<UI_ItemSelect>();
                                      ItemStore          = transform.GetChild(12).GetComponent<UI_ItemStore>();
-                                     OnDamaged          = transform.GetChild(13).gameObject;
+                                     GameOverPopup      = transform.GetChild(13).GetComponent<UI_GameOverPopup>();
+                                     OnDamaged          = transform.GetChild(14).GetComponent<UI_OnDamage>();
 
         foreach (var ui in UIs)
         {
@@ -358,8 +360,7 @@ public class InGameUIManager : MonoBehaviour
     {
         StatusIndicator.AddDamage(damage);
 
-        OnDamaged.gameObject.SetActive(true);
-
+        OnDamaged.OnDamage();
     }
 
     /// <summary>
