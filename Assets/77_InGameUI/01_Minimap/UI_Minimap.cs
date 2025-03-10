@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(UI_Minimap_Helper))]
 [RequireComponent(typeof(PhotonView))]
 public class UI_Minimap : UI_Base
 {
@@ -51,6 +52,21 @@ public class UI_Minimap : UI_Base
     public void SetPlayerTransform(Transform playerTransform)
     {
         _playerTransform = playerTransform;
+    }
+    public void RemovePlayerTransform(int actorNumber)
+    {
+        (Transform, MinimapIndicator) target = new();
+
+        foreach (var kvp in _otherIndicator)
+        {
+            if (kvp.Item2.owner == actorNumber)
+            {
+                target = kvp;
+            }
+        }
+        _otherIndicator.Remove(target);
+
+        playerIndicatorDict.Remove(actorNumber);
     }
     #endregion
 
@@ -104,6 +120,7 @@ public class UI_Minimap : UI_Base
             otherIndicator.Item2 = minimapIndicator;
         }
 
+
         if (isPlayer == true)
         {
             if (actorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
@@ -118,6 +135,7 @@ public class UI_Minimap : UI_Base
                 minimapIndicator.OtherPlayerSetting();
             }
 
+            minimapIndicator.owner = actorNumber;
             playerIndicatorDict[actorNumber] = minimapIndicator;
         }
         else

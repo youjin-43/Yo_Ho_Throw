@@ -12,6 +12,8 @@ public class MinimapIndicator : MonoBehaviour
 
     SpriteRenderer spriteRenderer = null;
 
+    [HideInInspector] public int owner = -1;
+
     [HideInInspector] public bool isAlwaysShow = false;
 
     void Start()
