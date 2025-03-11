@@ -34,17 +34,18 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         {
             if (bulletCount > value)
             {
-                while (bulletCount > value) 
-                {
-                    //InGameUIManager.Instance.SkillIndicator.RemoveDagger();
-                    Debug.Log("칼씀");
-                    bulletCount--;
-                }
+                bulletCount = value;
+
+                InGameUIManager.Instance.SkillIndicator.RemoveDagger(bulletCount);
+
+                InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
             }
             else if (bulletCount < value)
             {
                 InGameUIManager.Instance.SkillIndicator.AddDagger(value - bulletCount);
+
                 Debug.Log("칼 얻음");
+
                 bulletCount = value;
             }
         }
@@ -295,21 +296,28 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             {
                 StopCoroutine(stealthCoroutine);
             }
+            eyePatch.material = eyePatchDefaultMaterial;
 
             transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = beforeColorSetting == 0 ? defaultColorMaterial : bountyColorMaterial;
         }
     }
+    [SerializeField] MeshRenderer eyePatch;
+    [SerializeField] Material eyePatchDefaultMaterial;
     IEnumerator StealthCoroutine()
     {
         isStealthMaterial = true;
 
         transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = stealthMaterial;
 
+        eyePatch.material = stealthMaterial;
+
         yield return new WaitForSeconds(10f);
 
         isStealthMaterial = false;
 
         transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = beforeColorSetting == 0 ? defaultColorMaterial : bountyColorMaterial;
+
+        eyePatch.material = eyePatchDefaultMaterial;
     }
 
     [PunRPC]

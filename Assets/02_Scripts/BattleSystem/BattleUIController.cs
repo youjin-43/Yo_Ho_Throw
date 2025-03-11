@@ -8,7 +8,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleUIController : MonoBehaviour, IOnEventCallback
+[RequireComponent(typeof(PhotonView))]
+public class BattleUIController : MonoBehaviourPun, IOnEventCallback
 {
     public static BattleUIController Instance { get; private set; } = null;
 
@@ -18,9 +19,11 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     [Header("플레이어의 점수 기록 패널 부모 GameObject")]
     [SerializeField] GameObject scoreboardPanel;
 
+    [Header("아이템 선택 대기 화면")]
+    [SerializeField] GameObject waitingScreenUI;
+
     [Header("게임 종료 시 표시할 UI")]
-    [SerializeField] GameObject backgroundPanel;
-    [SerializeField] GameObject interactPanel;
+    [SerializeField] GameObject gameoverPanel;
 
     [Header("LimitTime")]
     [SerializeField] TMP_Text limitTimeText;
@@ -31,7 +34,8 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     [SerializeField] Sprite bronzeMedalSprite;
 
     [Header("전투 시작 텍스트")]
-    [SerializeField] TMP_Text battleStartText;
+    [SerializeField] GameObject readyTexts;
+    [SerializeField] GameObject goTexts;
 
     Dictionary<int, PlayerScoreEntry> playerScoreEntries = new Dictionary<int, PlayerScoreEntry>();
 
@@ -73,8 +77,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         isGameRunning = true;
 
-        backgroundPanel.SetActive(false);
-        interactPanel.SetActive(false);
+        gameoverPanel.SetActive(false);
     }
     private void Update()
     {
@@ -211,8 +214,9 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         ShowScoreboard();
 
-        backgroundPanel.SetActive(true);
-        interactPanel.SetActive(true);
+        CursorController.Instance.CursorEnable();
+
+        gameoverPanel.SetActive(true);
     }
     void ResetScoreboard()
     {
@@ -233,12 +237,16 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     {
         switch (count)
         {
-            case 2: battleStartText.text = "Ready"; break;
+            case 2: readyTexts.SetActive(true);
+                goTexts.SetActive(false); break;
 
-            case 1: battleStartText.text = "Go"; break;
+            case 1:
+                readyTexts.SetActive(false);
+                goTexts.SetActive(true); break;
 
-            case 0: StartCoroutine(HideTextAfterTimeCoroutine(battleStartText, 1f));
-                battleStartText.text = string.Empty; break;
+            case 0:
+                readyTexts.SetActive(false);
+                goTexts.SetActive(false); break;
 
         }
     }
@@ -261,6 +269,16 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
         {
             entry.transform.SetAsLastSibling();
         }
+    }
+    public void ShowWaitingScreen() => waitingScreenUI.SetActive(true);
+    public void HideWaitingScreen()
+    {
+        photonView.RPC("HideWaitingScreenRPC", RpcTarget.All);
+    }
+    [PunRPC]
+    public void HideWaitingScreenRPC()
+    {
+        waitingScreenUI.SetActive(false);
     }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);

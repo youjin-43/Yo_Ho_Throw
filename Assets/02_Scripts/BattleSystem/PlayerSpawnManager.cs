@@ -29,7 +29,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
     [HideInInspector] public GameObject currPlayer = null;
 
-    PhotonView currPlayerPhotonView = null;
+    [HideInInspector] public PhotonView currPlayerPhotonView = null;
 
     private void Awake()
     {

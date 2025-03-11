@@ -118,9 +118,7 @@ public class PlayerController : ThirdPersonController
     }
     void ThrowCutlass()
     {
-        if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
-
-        if (!isInLobby) BulletCount--;
+        if (!isInLobby) BulletCount -= isKnifeConsumed ? 1 : 0;
 
         if (BulletCount == 0)
             photonView.RPC("IsKnifeOn", RpcTarget.All, false);
