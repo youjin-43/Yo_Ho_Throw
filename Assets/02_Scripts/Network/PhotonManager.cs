@@ -136,6 +136,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
+    public static event Action<string> OnRoomCreationFailed;
+
     // TitleUIManager에서 createRoomButton을 눌렀을때 실행 
     public void CreateRoom(string roomName, RoomOptions options)
     {
@@ -147,7 +149,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         {
             if (room.Name == roomName)
             {
-                Debug.LogWarning($"방 생성 실패: 이미 존재하는 방 이름입니다! ({roomName})");
+                // 이벤트 발생 (UI에 알림 메시지를 보냄)
+                OnRoomCreationFailed?.Invoke($"방 생성 실패: 이미 존재하는 방 이름입니다! ({roomName})");
                 return; // 방 생성 중단
             }
         }

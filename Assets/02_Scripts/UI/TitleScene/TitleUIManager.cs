@@ -7,6 +7,12 @@ using UnityEngine.UI;
 
 public class TitleUIManager : MonoBehaviour
 {
+    // 인스펙터에서 할당
+
+    [Header("Notice")]
+    public GameObject NoticePannel; // 알림 패널 오브젝트 
+    public TMP_Text NoticeText; // 알림 텍스트 
+
     [Header("PlayerNameInput")]
     public GameObject PlayerNameInputArea; // 플레이어 이름을 받는 UI 영역 
     public TMP_InputField playerNameInput; // 플레이어 이름 입력 필드
@@ -62,8 +68,11 @@ public class TitleUIManager : MonoBehaviour
         PhotonManager.OnLobbyJoined += ShowRoomListPanel;
         PhotonManager.OnRoomListUpdated += UpdateRoomList;
         PhotonManager.OnPasswordCheckRequested += ShowPasswordPannel;
+        PhotonManager.OnRoomCreationFailed += ShowNoticePannel; // 방 생성 실패 이벤트 구독
 
         #endregion
+
+        NoticePannel.SetActive(false);
 
         #region PlayerNameInput
         PlayerNameInputArea.SetActive(false);
@@ -121,7 +130,7 @@ public class TitleUIManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(playerNameInput.text))
         {
-            Debug.LogWarning("이름을 입력해야 합니다!");
+            ShowNoticePannel("이름을 입력해야 합니다!");
             return false;
         }
         return true;
@@ -249,7 +258,7 @@ public class TitleUIManager : MonoBehaviour
         // 룸 네임이 입력됐는지 확인 
         if (string.IsNullOrEmpty(roomNameInput.text))
         {
-            Debug.LogWarning("룸 이름을 를 입력해야 합니다!");
+            ShowNoticePannel("룸 이름을 를 입력해야 합니다!");
             return; // 방 생성 중단
         }
         
@@ -264,7 +273,7 @@ public class TitleUIManager : MonoBehaviour
         {
             if (string.IsNullOrEmpty(roomPasswordInput.text))
             {
-                Debug.LogWarning("비밀번호를 입력해야 합니다!");
+                ShowNoticePannel("비밀번호를 입력해야 합니다!");
                 return; // 방 생성 중단
             }
             options.CustomRoomProperties.Add(PhotonRoomProperties.password.ToString(), roomPasswordInput.text);
@@ -330,11 +339,18 @@ public class TitleUIManager : MonoBehaviour
     }
     #endregion
 
+
+    public void ShowNoticePannel(string message)
+    {
+        NoticePannel.SetActive(true);
+        NoticeText.text = message;
+    }
     private void OnDestroy()
     {
         // 이벤트 해제 (메모리 누수 방지)
         PhotonManager.OnLobbyJoined -= ShowRoomListPanel;
         PhotonManager.OnRoomListUpdated -= UpdateRoomList;
         PhotonManager.OnPasswordCheckRequested -= ShowPasswordPannel;
+        PhotonManager.OnRoomCreationFailed -= ShowNoticePannel;
     }
 }
