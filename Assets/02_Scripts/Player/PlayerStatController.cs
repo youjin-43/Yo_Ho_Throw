@@ -208,9 +208,12 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         CursorController.Instance.CursorDisable();
     }
 
+    [PunRPC]
     public void GameEndPlayer()
     {
         isAlive = false;
+
+        CursorController.Instance.CursorEnable();
     }
 
 
