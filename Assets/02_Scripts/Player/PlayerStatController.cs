@@ -96,7 +96,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         {
             yield return new WaitForSeconds(3f);
             BulletCount++;
-            if (BulletCount == 1)
+            if (knifeObject.activeSelf==false)
             {
                 if(photonView.IsMine) 
                     photonView.RPC("IsKnifeOn", RpcTarget.All,true);
