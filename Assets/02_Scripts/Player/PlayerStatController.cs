@@ -15,6 +15,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     public int coin = 0;
     public bool isAlive = true;
     public bool isInLobby = true;
+    public bool isGameEnd = false;
     public float dashCoolTime = 5f;
     public Animator anim;
 
@@ -211,12 +212,17 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public void GameEndPlayer()
     {
-        isAlive = false;
+        isGameEnd = true;
 
         CursorController.Instance.CursorEnable();
     }
+    [PunRPC]
+    public void GameStartPlayer()
+    {
+        isGameEnd=false;
+    }
 
-
+    
     [PunRPC]
     public void IsKnifeOn(bool onoff)
     {
@@ -276,4 +282,5 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if(coin-_coin>=0)
             coin -= _coin;
     }
+
 }

@@ -408,6 +408,7 @@ MonoBehaviour:
   coin: 0
   isAlive: 1
   isInLobby: 1
+  isGameEnd: 0
   dashCoolTime: 5
   anim: {fileID: 0}
   knifeObject: {fileID: 4168487119516495865}

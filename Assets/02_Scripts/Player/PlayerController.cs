@@ -57,6 +57,9 @@ public class PlayerController : ThirdPersonController
     {
 
         if (online && !photonView.IsMine) return;
+        
+        if (isGameEnd) return;
+        
         base.Update();
         
 
