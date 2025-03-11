@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,7 +35,8 @@ public class TreasureManager : MonoBehaviour
                 Quaternion randomRotation = Quaternion.Euler(0f, randomYRotation, 0f);
 
                 // 보물상자 생성
-                GameObject chest = Instantiate(chestPrefab, spawnPosition, randomRotation);
+                //GameObject chest = Instantiate(chestPrefab, spawnPosition, randomRotation);
+                GameObject chest = PhotonNetwork.Instantiate(chestPrefab.name, spawnPosition, randomRotation, 0);
                 treasureChests.Add(chest); // 현재 보물상자 리스트에 추가
             }
         }
