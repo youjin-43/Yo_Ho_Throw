@@ -9,11 +9,13 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 {
     const int MAX_HP = 3;
     const int MAX_BULLET_COUNT = 5;
-
+    [Header("Player Info")]
     public int playerHp = MAX_HP;
     public int bulletCount = MAX_BULLET_COUNT;
+    public int coin = 0;
     public bool isAlive = true;
     public bool isInLobby = true;
+    public bool isGameEnd = false;
     public float dashCoolTime = 5f;
     public Animator anim;
 
@@ -87,14 +89,18 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             }
         }
     }
-
+    
     IEnumerator BulletReloadOverTime()
     {
         while (BulletCount < 5)
         {
             yield return new WaitForSeconds(3f);
             BulletCount++;
-            if (BulletCount == 1) IsKnifeOn(true);
+            if (knifeObject.activeSelf==false)
+            {
+                if(photonView.IsMine) 
+                    photonView.RPC("IsKnifeOn", RpcTarget.All,true);
+            }
             
         }
         bulletReloadCoroutine = null;   
@@ -134,7 +140,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         }
     }
     [PunRPC]
-    public void HandleDeath(int killerActorNr)
+    public virtual void HandleDeath(int killerActorNr)
     {
         anim.SetTrigger("Dead");
         if (!photonView.IsMine) return;
@@ -194,7 +200,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         Vector3 cameraForward = camTransform.forward;
         cameraForward.y = 0; 
         transform.rotation = Quaternion.LookRotation(cameraForward);
-        IsKnifeOn(true);
+        if(photonView.IsMine)
+            photonView.RPC("IsKnifeOn", RpcTarget.All, true); 
         
         // 현상금 타겟으로써 죽었을 경우 플레이어 메테리얼 기존 것으로 설정
         if (isSettingColor) transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
@@ -202,16 +209,24 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         CursorController.Instance.CursorDisable();
     }
 
+    [PunRPC]
     public void GameEndPlayer()
     {
-        isAlive = false;
+        isGameEnd = true;
+
+        CursorController.Instance.CursorEnable();
+    }
+    [PunRPC]
+    public void GameStartPlayer()
+    {
+        isGameEnd=false;
     }
 
-
-
+    
+    [PunRPC]
     public void IsKnifeOn(bool onoff)
     {
-        if (!photonView.IsMine) return;
+        //if (!photonView.IsMine) return;
 
         if (onoff)
         {
@@ -226,9 +241,11 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     }
 
     bool isSettingColor = false;
+    int beforeColorSetting = 0; // 0 : default, 1 : bounty
 
     [SerializeField] Material defaultColorMaterial;
     [SerializeField] Material bountyColorMaterial;
+    [SerializeField] Material stealthMaterial;
 
     [PunRPC]
     public void DefaultColorSetting()
@@ -246,4 +263,24 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         isSettingColor = true;
     }
+    public void StealthSetting()
+    {
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = stealthMaterial;
+    }
+    public void ExposeSetting()
+    {
+
+    }
+    [PunRPC]
+    public void AddCoin(int _coin)
+    {
+        coin += _coin;
+    }
+    [PunRPC]
+    public void DeleteCoin(int _coin)
+    {
+        if(coin-_coin>=0)
+            coin -= _coin;
+    }
+
 }
