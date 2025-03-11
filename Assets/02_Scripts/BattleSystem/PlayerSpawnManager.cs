@@ -27,7 +27,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
     [SerializeField] float respawnTime = 5f;
 
-    GameObject currPlayer = null;
+    [HideInInspector] public GameObject currPlayer = null;
+
     PhotonView currPlayerPhotonView = null;
 
     private void Awake()

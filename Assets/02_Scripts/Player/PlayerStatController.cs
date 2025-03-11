@@ -134,7 +134,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         }
     }
     [PunRPC]
-    public void HandleDeath(int killerActorNr)
+    public virtual void HandleDeath(int killerActorNr)
     {
         anim.SetTrigger("Dead");
         if (!photonView.IsMine) return;
@@ -226,9 +226,11 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     }
 
     bool isSettingColor = false;
+    int beforeColorSetting = 0; // 0 : default, 1 : bounty
 
     [SerializeField] Material defaultColorMaterial;
     [SerializeField] Material bountyColorMaterial;
+    [SerializeField] Material stealthMaterial;
 
     [PunRPC]
     public void DefaultColorSetting()
@@ -245,5 +247,13 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     public void RespawnColorSetting()
     {
         isSettingColor = true;
+    }
+    public void StealthSetting()
+    {
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = stealthMaterial;
+    }
+    public void ExposeSetting()
+    {
+
     }
 }
