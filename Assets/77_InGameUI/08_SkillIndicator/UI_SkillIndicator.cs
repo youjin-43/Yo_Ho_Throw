@@ -244,7 +244,12 @@ public class UI_SkillIndicator : UI_Base
     #endregion
     public void SetItemSlotImage(Image image)
     {
+        _itemSlot.gameObject.SetActive(true);
         _itemSlot.sprite = image.sprite;
+    }
+    public void HideItemSlotImage()
+    {
+        _itemSlot.gameObject.SetActive(false);
     }
     #region ITEM
 
