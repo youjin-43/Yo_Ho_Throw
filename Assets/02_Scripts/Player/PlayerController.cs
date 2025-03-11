@@ -51,8 +51,6 @@ public class PlayerController : ThirdPersonController
         
 
     }
-    
-
     void Update()
     {
 
@@ -83,27 +81,18 @@ public class PlayerController : ThirdPersonController
         }
         if (Input.GetKeyDown(KeyCode.Mouse0) && BulletCount > 0)
         {
-
             anim.SetTrigger("Shoot");
-
         }
-       
-
         if (Input.GetKeyDown(KeyCode.Mouse1)&& BulletCount > 0)
         {
             anim.SetTrigger("Melee Attack");
-            
         }
-
-        
     }
-
     void FixedUpdate()
     {
         if (online && !photonView.IsMine) return;
         base.FixedUpdate();
     }
-
     private void OnEnable()
     {
         anim = GetComponent<Animator>();
@@ -115,7 +104,6 @@ public class PlayerController : ThirdPersonController
         yield return new WaitForSeconds(dashCoolTime);
         canDash = true;
     }
-    
     public void ThrowProjectile()
     {
         if (!isKnifeConsumed)
@@ -260,7 +248,7 @@ public class PlayerController : ThirdPersonController
     void MeleeAttack_RPC()
     {
         //if (!photonView.IsMine) return;
-
+        ExposeSetting();
         StartCoroutine(EnableCollider_RPC(meleeAttackColliderObject, 0.4f));
     }
 
@@ -271,9 +259,8 @@ public class PlayerController : ThirdPersonController
         _meleeAttackColliderObject.SetActive(false);
     }
 
-
-
     Coroutine explosionBuffCoroutine = null;
+    Coroutine infinityKnifeBuffCoroutine = null;
     public void GetExplosionBuff()
     {
         if (explosionBuffCoroutine != null) StopCoroutine(explosionBuffCoroutine);
@@ -288,9 +275,25 @@ public class PlayerController : ThirdPersonController
 
         isExplosionBuff = false;
     }
+    public void GetInfinityKnifeBuff()
+    {
+        if (infinityKnifeBuffCoroutine != null) StopCoroutine(infinityKnifeBuffCoroutine);
+
+        infinityKnifeBuffCoroutine = StartCoroutine(InfinityKnifeBuffCoroutine());
+    }
+    IEnumerator InfinityKnifeBuffCoroutine()
+    {
+        isKnifeConsumed = false;
+
+        yield return new WaitForSeconds(10f);
+
+        isKnifeConsumed = true;
+    }
     void ClearOnDeath()
     {
         if (explosionBuffCoroutine != null) StopCoroutine(explosionBuffCoroutine);
+
+        if (infinityKnifeBuffCoroutine != null) StopCoroutine(infinityKnifeBuffCoroutine);
 
         isExplosionBuff = false;
     }
@@ -301,10 +304,8 @@ public class PlayerController : ThirdPersonController
 
         base.HandleDeath(killerActorNr);
     }
-
     public void SetMouseSensitivity(float newSensitivity)
     {
         mouseSpeed = newSensitivity;
     }
-
 }

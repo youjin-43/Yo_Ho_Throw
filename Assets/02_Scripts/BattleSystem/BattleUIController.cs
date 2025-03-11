@@ -18,9 +18,9 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     [Header("플레이어의 점수 기록 패널 부모 GameObject")]
     [SerializeField] GameObject scoreboardPanel;
 
-    [Header("게임 종료 시 표시할 버튼들")]
-    [SerializeField] Button titleButton;
-    [SerializeField] Button lobbyButton;
+    [Header("게임 종료 시 표시할 UI")]
+    [SerializeField] GameObject backgroundPanel;
+    [SerializeField] GameObject interactPanel;
 
     [Header("LimitTime")]
     [SerializeField] TMP_Text limitTimeText;
@@ -29,9 +29,6 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     [SerializeField] Sprite goldMedalSprite;
     [SerializeField] Sprite silverMedalSprite;
     [SerializeField] Sprite bronzeMedalSprite;
-
-    [Header("연속 처치 텍스트")]
-    [SerializeField] TMP_Text comboKillText;
 
     [Header("전투 시작 텍스트")]
     [SerializeField] TMP_Text battleStartText;
@@ -76,11 +73,8 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         isGameRunning = true;
 
-        // 버튼 비활성화
-        titleButton.gameObject.SetActive(false);
-        lobbyButton.gameObject.SetActive(false);
-
-        comboKillText.text = string.Empty;
+        backgroundPanel.SetActive(false);
+        interactPanel.SetActive(false);
     }
     private void Update()
     {
@@ -217,9 +211,8 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         ShowScoreboard();
 
-        // 버튼 활성화
-        titleButton.gameObject.SetActive(true);
-        lobbyButton.gameObject.SetActive(true);
+        backgroundPanel.SetActive(true);
+        interactPanel.SetActive(true);
     }
     void ResetScoreboard()
     {
@@ -234,7 +227,7 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     public void SetComboKill(int combo)
     {
-        comboKillText.text = combo > 1 ? combo.ToString() + " Combo" : string.Empty;
+        InGameUIManager.Instance.SetCombokill(combo);
     }
     public void SetBattleStartText(int count)
     {
@@ -244,7 +237,8 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
             case 1: battleStartText.text = "Go"; break;
 
-            case 0: StartCoroutine(HideTextAfterTimeCoroutine(battleStartText, 1f)); break;
+            case 0: StartCoroutine(HideTextAfterTimeCoroutine(battleStartText, 1f));
+                battleStartText.text = string.Empty; break;
 
         }
     }

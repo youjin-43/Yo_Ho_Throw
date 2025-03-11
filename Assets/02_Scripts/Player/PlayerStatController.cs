@@ -241,6 +241,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     }
 
     bool isSettingColor = false;
+    bool isStealthMaterial = false;
     int beforeColorSetting = 0; // 0 : default, 1 : bounty
 
     [SerializeField] Material defaultColorMaterial;
@@ -250,27 +251,67 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public void DefaultColorSetting()
     {
-        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+        beforeColorSetting = 0;
+
+        if (!isStealthMaterial)
+        {
+            transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+        }
     }
     [PunRPC]
     public void BountyColorSetting()
     {
         isSettingColor = false;
-        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = bountyColorMaterial;
+
+        beforeColorSetting = 1;
+
+        if (!isStealthMaterial)
+        {
+            transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = bountyColorMaterial;
+        }
     }
     [PunRPC]
     public void RespawnColorSetting()
     {
         isSettingColor = true;
     }
+    Coroutine stealthCoroutine = null;
+
+    [PunRPC]
     public void StealthSetting()
     {
+        stealthCoroutine = StartCoroutine(StealthCoroutine());
+
         transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = stealthMaterial;
     }
+    [PunRPC]
     public void ExposeSetting()
     {
+        if (isStealthMaterial)
+        {
+            isStealthMaterial = false;
 
+            if (stealthCoroutine != null)
+            {
+                StopCoroutine(stealthCoroutine);
+            }
+
+            transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = beforeColorSetting == 0 ? defaultColorMaterial : bountyColorMaterial;
+        }
     }
+    IEnumerator StealthCoroutine()
+    {
+        isStealthMaterial = true;
+
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = stealthMaterial;
+
+        yield return new WaitForSeconds(10f);
+
+        isStealthMaterial = false;
+
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = beforeColorSetting == 0 ? defaultColorMaterial : bountyColorMaterial;
+    }
+
     [PunRPC]
     public void AddCoin(int _coin)
     {
@@ -279,8 +320,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public void DeleteCoin(int _coin)
     {
-        if(coin-_coin>=0)
+        if (coin - _coin >= 0)
             coin -= _coin;
     }
-
 }
