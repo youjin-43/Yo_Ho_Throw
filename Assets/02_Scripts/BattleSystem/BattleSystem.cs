@@ -104,6 +104,8 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     }
     protected virtual void EndGameByTimeout()
     {
+        PlayerSpawnManager.Instance.DeactivatePlayer();
+
         BattleUIController.Instance.EndGame();
 
         ScoreManager.Instance.EndGame();
