@@ -297,4 +297,10 @@ public class PlayerController : ThirdPersonController
 
         base.HandleDeath(killerActorNr);
     }
+
+    public void SetMouseSensitivity(float newSensitivity)
+    {
+        mouseSpeed = newSensitivity;
+    }
+
 }

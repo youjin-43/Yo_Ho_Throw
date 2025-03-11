@@ -9,9 +9,10 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 {
     const int MAX_HP = 3;
     const int MAX_BULLET_COUNT = 5;
-
+    [Header("Player Info")]
     public int playerHp = MAX_HP;
     public int bulletCount = MAX_BULLET_COUNT;
+    public int coin = 0;
     public bool isAlive = true;
     public bool isInLobby = true;
     public float dashCoolTime = 5f;
@@ -255,5 +256,16 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     public void ExposeSetting()
     {
 
+    }
+    [PunRPC]
+    public void AddCoin(int _coin)
+    {
+        coin += _coin;
+    }
+    [PunRPC]
+    public void DeleteCoin(int _coin)
+    {
+        if(coin-_coin>=0)
+            coin -= _coin;
     }
 }
