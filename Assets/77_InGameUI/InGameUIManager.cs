@@ -68,6 +68,7 @@ public class InGameUIManager : MonoBehaviour
     public UI_ItemStore          ItemStore          { get; private set; }
     public UI_GameOverPopup      GameOverPopup      { get; private set; }
     public UI_OnDamage           OnDamaged          { get; private set; }
+    public UI_ComboKillEffect    ComboKillEffect    { get; private set; }
 
     private Dictionary<string, UI_Base> UIs = new Dictionary<string, UI_Base>();
 
@@ -91,6 +92,7 @@ public class InGameUIManager : MonoBehaviour
                                      ItemStore          = transform.GetChild(12).GetComponent<UI_ItemStore>();
                                      GameOverPopup      = transform.GetChild(13).GetComponent<UI_GameOverPopup>();
                                      OnDamaged          = transform.GetChild(14).GetComponent<UI_OnDamage>();
+                                     ComboKillEffect    = transform.GetChild(15).GetComponent<UI_ComboKillEffect>();
 
         foreach (var ui in UIs)
         {
@@ -530,6 +532,21 @@ public class InGameUIManager : MonoBehaviour
     public void ToggleCrosshair(bool isActive)
     {
         Crosshair.gameObject.SetActive(isActive);
+    }
+    #endregion
+
+
+
+
+
+    #region COMBOKILL EFFECT
+    /// <summary>
+    /// 콤보킬 연결부에서 호출해 주세요
+    /// </summary>
+    /// <param name="combo"></param>
+    public void SetCombokill(int combo)
+    {
+        ComboKillEffect.SetCombokill(combo);
     }
     #endregion
 }
