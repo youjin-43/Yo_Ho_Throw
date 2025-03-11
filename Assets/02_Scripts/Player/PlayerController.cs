@@ -131,7 +131,8 @@ public class PlayerController : ThirdPersonController
 
         if (!isInLobby) BulletCount--;
 
-        if (BulletCount == 0) IsKnifeOn(false);
+        if (BulletCount == 0)
+            photonView.RPC("IsKnifeOn", RpcTarget.All, false);
 
         if (cameraTransform == null) cameraTransform = Camera.main.transform;
 

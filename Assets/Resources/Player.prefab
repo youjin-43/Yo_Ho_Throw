@@ -405,6 +405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHp: 3
   bulletCount: 5
+  coin: 0
   isAlive: 1
   isInLobby: 1
   dashCoolTime: 5
@@ -412,6 +413,7 @@ MonoBehaviour:
   knifeObject: {fileID: 4168487119516495865}
   defaultColorMaterial: {fileID: 2100000, guid: adf31e9f4e0a76b478ab67dd8dfd7643, type: 2}
   bountyColorMaterial: {fileID: 2100000, guid: 69243a0c6520b7c45b49f2f6e16ee476, type: 2}
+  stealthMaterial: {fileID: 0}
   MoveSpeed: 4
   IsDash: 0
   SprintSpeed: 5.335
@@ -442,6 +444,7 @@ MonoBehaviour:
   canDash: 1
   bulletRange: 100
   bulletPrefab: {fileID: 8430071279321725386, guid: ef534139b75564f4da410b28c1d45740, type: 3}
+  explosionBulletPrefab: {fileID: 0}
   bulletSpawnPoint: {fileID: 1625589534162421683}
   bulletSpeed: 35
   bulletArc: 5

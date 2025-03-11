@@ -88,14 +88,18 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             }
         }
     }
-
+    
     IEnumerator BulletReloadOverTime()
     {
         while (BulletCount < 5)
         {
             yield return new WaitForSeconds(3f);
             BulletCount++;
-            if (BulletCount == 1) IsKnifeOn(true);
+            if (BulletCount == 1)
+            {
+                if(photonView.IsMine) 
+                    photonView.RPC("IsKnifeOn", RpcTarget.All,true);
+            }
             
         }
         bulletReloadCoroutine = null;   
@@ -195,7 +199,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         Vector3 cameraForward = camTransform.forward;
         cameraForward.y = 0; 
         transform.rotation = Quaternion.LookRotation(cameraForward);
-        IsKnifeOn(true);
+        if(photonView.IsMine)
+            photonView.RPC("IsKnifeOn", RpcTarget.All, true); 
         
         // 현상금 타겟으로써 죽었을 경우 플레이어 메테리얼 기존 것으로 설정
         if (isSettingColor) transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
@@ -209,10 +214,10 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     }
 
 
-
+    [PunRPC]
     public void IsKnifeOn(bool onoff)
     {
-        if (!photonView.IsMine) return;
+        //if (!photonView.IsMine) return;
 
         if (onoff)
         {
