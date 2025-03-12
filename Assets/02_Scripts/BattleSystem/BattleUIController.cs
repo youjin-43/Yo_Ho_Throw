@@ -24,6 +24,12 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
 
     [Header("게임 종료 시 표시할 UI")]
     [SerializeField] GameObject gameoverPanel;
+    [SerializeField] Button goToTitleButton;
+    [SerializeField] Button goToGameReadyButton;
+
+    [Header("ExitPopup")]
+    [SerializeField] GameObject ExitPopup;
+    [SerializeField] Button ExitButton;
 
     [Header("LimitTime")]
     [SerializeField] TMP_Text limitTimeText;
@@ -77,8 +83,16 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
 
         isGameRunning = true;
 
+        // GameOverPopup
         gameoverPanel.SetActive(false);
+        goToTitleButton.onClick.AddListener(()=>PhotonManager.Instance.LeaveRoomAndGoToTitle());
+        goToTitleButton.onClick.AddListener(() => PhotonManager.Instance.GoToReadyScene()); // TODO : 포톤 네트워크 잘 연결 되는지 확인 필요
+
+        // ExitPopup
+        ExitPopup.SetActive(false);
+        ExitButton.onClick.AddListener(() => PhotonManager.Instance.LeaveRoomAndGoToTitle());
     }
+
     private void Update()
     {
         if (!isGameRunning) return;
@@ -92,7 +106,26 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
         {
             HideScoreboard();
         }
+
+        // ESC키로 ExitPopup 토글
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ToggleExitPopup();
+        }
     }
+
+    /// <summary>
+    /// ExitPopup 토글 및 마우스 상태 변경
+    /// </summary>
+    private void ToggleExitPopup()
+    {
+        bool isActive = !ExitPopup.activeSelf;
+        ExitPopup.SetActive(isActive);
+
+        if (isActive) CursorController.Instance.CursorEnable(); // 마우스 활성화
+        else CursorController.Instance.CursorDisable(); // 마우스 비활성화
+    }
+
     public void SetIsAlive(bool isAlive)
     {
         this.isAlive = isAlive;
