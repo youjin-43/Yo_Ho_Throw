@@ -21,17 +21,13 @@ public class Cutlass : MonoBehaviour
 
     Coroutine gravityTimeCoroutine = null;
 
-    bool inPool = true;
-
     private void Awake()
     {
         rb = transform.parent.GetComponent<Rigidbody>();
     }
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if (rb == null) rb = transform.parent.GetComponent<Rigidbody>();
-
-        inPool = false;
 
         rb.useGravity = false;
 
@@ -94,7 +90,7 @@ public class Cutlass : MonoBehaviour
             gravityTimeCoroutine = null;
         }
     }
-    void Push()
+    protected void Push()
     {
         returnCutlass.DeactivateKnife();
     }
