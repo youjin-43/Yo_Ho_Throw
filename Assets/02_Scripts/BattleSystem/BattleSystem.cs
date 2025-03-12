@@ -56,8 +56,6 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
         // 아이템 패널 활성화
         InGameUIManager.Instance.ItemSelect.OnShowItemPanel();
 
-        CursorController.Instance.CursorEnable();
-
         // 현재 방에 있는 사람의 수만큼 아이템 선택을 마쳤다면
         while (PhotonNetwork.CurrentRoom.PlayerCount != itemSelectedPlayerCount) yield return null;
 
