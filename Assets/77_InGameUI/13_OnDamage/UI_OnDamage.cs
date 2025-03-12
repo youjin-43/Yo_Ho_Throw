@@ -57,6 +57,8 @@ public class UI_OnDamage : UI_Base
     #region FUNCTION
     public void OnDamage()
     {
+        gameObject.SetActive(true);
+
         StopAllCoroutines();
 
         // 대미지를 입었다면
@@ -91,6 +93,8 @@ public class UI_OnDamage : UI_Base
         // 여기까지 왔다면 알파가 0까지 내려간거임
         // 그러면 이미지를 투명하게 바꾸면 될듯
         _damageEffect.color = _defaultColor;
+
+        gameObject.SetActive(false);
     }
     #endregion
 }
