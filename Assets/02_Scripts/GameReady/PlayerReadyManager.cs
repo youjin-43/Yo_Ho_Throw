@@ -11,7 +11,7 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (!PhotonNetwork.IsMasterClient  && Input.GetKeyDown(KeyCode.R))
         {
             ToggleReadyState();
         }
@@ -59,9 +59,11 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
             return; // 설정된 최대 인원보다 적으면 게임 시작 불가능!
         }
 
-        bool allReady = true; // 모든 플레이어가 레디 상태인지 체크하는 플래그
+        bool allReady = true; // 마스터 클라이언트를 제외한 모든 플레이어가 레디 상태인지 체크하는 플래그
         foreach (Player player in PhotonNetwork.PlayerList)
         {
+            if (player.IsMasterClient) continue;
+
             if (player.CustomProperties.ContainsKey(PhotonPlayerProperties.IsReady.ToString()))
             {
                 bool playerReady = (bool)player.CustomProperties[PhotonPlayerProperties.IsReady.ToString()];

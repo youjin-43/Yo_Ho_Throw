@@ -12,6 +12,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject PlayerInfoItemPrefab; // 플레이어 인포 프리팹
     [SerializeField] Transform PlayerInfoListContent; // 플레이어 목록이 추가될 부모 오브젝트
     [SerializeField] Button GameStartButton; // 게임 스타트 버튼
+    [SerializeField] Button GameReadyButton; // 게임 준비 버튼
     [SerializeField] GameObject ExitPopup; 
     [SerializeField] Button goToTitleButton;
     [SerializeField] Button stayButton;
@@ -62,7 +63,8 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            // 마스터 클라이언트에게만 게임 스타트 버튼이 보임 
+            // 마스터 클라이언트에게만 게임 스타트 버튼이 보임
+            GameReadyButton.gameObject.SetActive(false);
             GameStartButton.gameObject.SetActive(true);
             GameStartButton.interactable = false;
             GameStartButton.onClick.AddListener(gameReadyNetworkManager.GameStart); // 게임 스타트 리스너 추가 
@@ -70,9 +72,10 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         else {
             // 일반 클라이언트에게는 게임 스타트 버튼이 보이지 않도록 
             GameStartButton.gameObject.SetActive(false);
+            GameReadyButton.gameObject.SetActive(true);
         }
 
-        // 팝업 기본 비활성화
+        // Exit 팝업 기본 비활성화
         ExitPopup.SetActive(false);
 
         // 버튼 클릭 리스너 설정
@@ -100,7 +103,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         foreach (Transform child in PlayerInfoListContent) Destroy(child.gameObject);
         playerUIObjects.Clear();
 
-        // 새롭게 데이터 추가 
+        // 플레이어마다 새롭게 데이터 추가 
         foreach (var player in PhotonNetwork.CurrentRoom.Players)
         {
             Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}");
@@ -110,16 +113,26 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
             // 닉네임 설정 
             playerItem.transform.GetChild((int)PIChild.Name).GetComponentInChildren<TMP_Text>().text = player.Value.NickName;
 
-            // 마스터인지 확인
-            playerItem.transform.GetChild((int)PIChild.IsMaster).gameObject.SetActive(player.Value.IsMasterClient);
-
-            // 포톤 커스텀 프로퍼티에서 `IsReady` 값 확인하여 값에 따라 Ready UI 활성화/비활성화
-            bool isReady = false;
-            if (player.Value.CustomProperties.ContainsKey(PhotonPlayerProperties.IsReady.ToString()))
+            // 마스터인지 확인 -> 왕관으로 표시 
+            if (player.Value.IsMasterClient)
             {
-                isReady = (bool)player.Value.CustomProperties[PhotonPlayerProperties.IsReady.ToString()];
+                playerItem.transform.GetChild((int)PIChild.IsMaster).gameObject.SetActive(true);
+                playerItem.transform.GetChild((int)PIChild.IsReady).gameObject.SetActive(false);
             }
-            playerItem.transform.GetChild((int)PIChild.IsReady).gameObject.SetActive(isReady);
+            else
+            {
+                // 일반 클라이언트라면 포톤 커스텀 프로퍼티에서 `IsReady` 값 확인하여 값에 따라 Ready,Crown UI 활성화/비활성화
+                bool isReady = false;
+                if (player.Value.CustomProperties.ContainsKey(PhotonPlayerProperties.IsReady.ToString()))
+                {
+                    // 왕관 비활성화 
+                    playerItem.transform.GetChild((int)PIChild.IsMaster).gameObject.SetActive(false);
+
+                    // 레디 확인 
+                    isReady = (bool)player.Value.CustomProperties[PhotonPlayerProperties.IsReady.ToString()];
+                    playerItem.transform.GetChild((int)PIChild.IsReady).gameObject.SetActive(isReady);
+                }
+            }
 
             playerUIObjects[player.Value.ActorNumber] = playerItem;
         }

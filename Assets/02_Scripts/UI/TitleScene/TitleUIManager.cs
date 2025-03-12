@@ -142,7 +142,7 @@ public class TitleUIManager : MonoBehaviour
     void SetUserName()
     {
         GameManager.Instance.UserName = playerNameInput.text;
-        Debug.Log($"");
+        Debug.Log($"{GameManager.Instance.UserName} 로 이름 셋팅! ");
     }
 
     // 로비에 입장하면 실행될 함수
