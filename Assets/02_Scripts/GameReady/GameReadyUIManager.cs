@@ -20,7 +20,8 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
     {
         ProfileArea,
         Name,
-        IsReady
+        IsReady,
+        IsMaster
     }
 
     private void Start()
@@ -77,7 +78,12 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
             Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}");
 
             GameObject playerItem = Instantiate(PlayerInfoItemPrefab, PlayerInfoListContent);
+
+            // 닉네임 설정 
             playerItem.transform.GetChild((int)PIChild.Name).GetComponentInChildren<TMP_Text>().text = player.Value.NickName;
+
+            // 마스터인지 확인
+            playerItem.transform.GetChild((int)PIChild.IsMaster).gameObject.SetActive(player.Value.IsMasterClient);
 
             // 포톤 커스텀 프로퍼티에서 `IsReady` 값 확인하여 값에 따라 Ready UI 활성화/비활성화
             bool isReady = false;
@@ -86,6 +92,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
                 isReady = (bool)player.Value.CustomProperties[PhotonPlayerProperties.IsReady.ToString()];
             }
             playerItem.transform.GetChild((int)PIChild.IsReady).gameObject.SetActive(isReady);
+
             playerUIObjects[player.Value.ActorNumber] = playerItem;
         }
     }
