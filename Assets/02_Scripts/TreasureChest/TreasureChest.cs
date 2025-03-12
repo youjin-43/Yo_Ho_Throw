@@ -18,18 +18,21 @@ public class TreasureChest : MonoBehaviour
     private void Start()
     {
         chestAnimator = GetComponent<Animator>();
-        photonView = GetComponent<PhotonView>(); 
+        photonView = GetComponent<PhotonView>();
+        treasureManager = FindAnyObjectByType<TreasureManager>();
     }
 
+    [PunRPC]
     public void Attack()
     {
         if (!isOpen)
         {
             attackCount++;
-            if (attackCount >= 3) OpenChest();
+            if (attackCount >= 3) photonView.RPC("OpenChest", RpcTarget.All); ;
         }
     }
 
+    [PunRPC]
     private void OpenChest()
     {
         chestAnimator.SetTrigger("Open"); // 보물상자 여는 애니메이션 실행

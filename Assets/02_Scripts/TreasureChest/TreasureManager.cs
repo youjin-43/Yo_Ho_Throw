@@ -11,12 +11,16 @@ public class TreasureManager : MonoBehaviour
     private int chestCount=5;
     private List<GameObject> treasureChests = new List<GameObject>(); // 현재 스폰된 보물상자 리스트
 
-    List<Vector3> usedPosition = new List<Vector3>(); // 이미 스폰된 위치를 저장하는 리스트
+    [SerializeField] List<Vector3> usedPosition = new List<Vector3>(); // 이미 스폰된 위치를 저장하는 리스트
+
 
     void Start()
     {
-        SpawnTreasureChest();
-        StartCoroutine(ChangeTreasureChestPosition());
+        if (PhotonNetwork.IsMasterClient) // 마스터 클라이언트만 스폰 가능
+        {
+            SpawnTreasureChest();
+            StartCoroutine(ChangeTreasureChestPosition());
+        }
     }
 
     private void SpawnTreasureChest()
