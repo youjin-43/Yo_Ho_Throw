@@ -9,10 +9,12 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 {
     GameReadyNetworkManager gameReadyNetworkManager;
 
-    [Header("DeathMatch PlayerList")]
     [SerializeField] GameObject PlayerInfoItemPrefab; // 플레이어 인포 프리팹
     [SerializeField] Transform PlayerInfoListContent; // 플레이어 목록이 추가될 부모 오브젝트
-    [SerializeField] public Button GameStartButton; // 게임 스타트 버튼
+    [SerializeField] Button GameStartButton; // 게임 스타트 버튼
+    [SerializeField] GameObject ExitPopup; 
+    [SerializeField] Button goToTitleButton;
+    [SerializeField] Button stayButton;
 
     private Dictionary<int, GameObject> playerUIObjects = new Dictionary<int, GameObject>(); // 현재 입장한 플레이어들
 
@@ -39,6 +41,12 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        // Tab 키로 ExitPopup 토글
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ToggleExitPopup();
+        }
+
         // F5 키 입력 시 게임 시작 (마스터 클라이언트만 가능)
         if (PhotonNetwork.IsMasterClient && Input.GetKeyDown(KeyCode.F5))
         {
@@ -63,7 +71,27 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
             // 일반 클라이언트에게는 게임 스타트 버튼이 보이지 않도록 
             GameStartButton.gameObject.SetActive(false);
         }
+
+        // 팝업 기본 비활성화
+        ExitPopup.SetActive(false);
+
+        // 버튼 클릭 리스너 설정
+        goToTitleButton.onClick.AddListener(() => PhotonManager.Instance.LeaveRoomAndGoToTitle());
+        stayButton.onClick.AddListener(ToggleExitPopup);
     }
+
+    /// <summary>
+    /// ExitPopup 토글 및 마우스 상태 변경
+    /// </summary>
+    private void ToggleExitPopup()
+    {
+        bool isActive = !ExitPopup.activeSelf;
+        ExitPopup.SetActive(isActive);
+
+        if (isActive) CursorController.Instance.CursorEnable(); // 마우스 활성화
+        else CursorController.Instance.CursorDisable(); // 마우스 비활성화
+    }
+
 
     // GameReadyNetworkManager의 OnPlayerEnteredRoom에서 호출됨 
     public void UpdatePlayerListUI()
