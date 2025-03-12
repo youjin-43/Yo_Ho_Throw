@@ -78,6 +78,11 @@ MonoBehaviour:
   - DeactivateBountyTargetImmediate
   - ScheduleBountyTargetDeactivation
   - RespawnColorSetting
+  - AddCoin
+  - DeleteCoin
+  - GameEndPlayer
+  - GameStartPlayer
+  - IsKnifeOn
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

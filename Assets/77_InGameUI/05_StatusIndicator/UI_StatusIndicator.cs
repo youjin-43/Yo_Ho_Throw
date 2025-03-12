@@ -6,8 +6,11 @@ using UnityEngine.UI;
 public class UI_StatusIndicator : UI_Base
 {
     #region VARIABLES
+    // ID 관련 변수
+    private TextMeshProUGUI _playerID;
+
     // 체력 관련 변수
-    List<Image> _healthCounters = new List<Image>();
+    private List<Image> _healthCounters = new List<Image>();
 
     private int _maxHealth     = 3;
     private int _currentHealth = 3;
@@ -54,11 +57,13 @@ public class UI_StatusIndicator : UI_Base
     #region MONOBEHAVIOUR
     void Awake()
     {
-        _healthCounters.Add(transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>());
-        _healthCounters.Add(transform.GetChild(0).GetChild(1).GetChild(0).GetComponent<Image>());
-        _healthCounters.Add(transform.GetChild(0).GetChild(2).GetChild(0).GetComponent<Image>());
+        _playerID = transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
 
-        _CoinCounter = transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>();
+        _healthCounters.Add(transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Image>());
+        _healthCounters.Add(transform.GetChild(1).GetChild(1).GetChild(0).GetComponent<Image>());
+        _healthCounters.Add(transform.GetChild(1).GetChild(2).GetChild(0).GetComponent<Image>());
+
+        _CoinCounter = transform.GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>();
         _CoinCounter.text = "0";
     }
     #endregion
@@ -68,6 +73,13 @@ public class UI_StatusIndicator : UI_Base
 
 
     #region FUNCTION
+    #region ID
+    public void SetPlayerID(string id)
+    {
+        _playerID.text = id;
+    }
+    #endregion
+
     #region HEALTH
     public void SetHealth(int hp)
     {
@@ -139,9 +151,9 @@ public class UI_StatusIndicator : UI_Base
     #endregion
 
     #region GOLDCOIN
-    public void AddGoldCoin(int coin)
+    public void SetGoldCoin(int coin)
     {
-
+        _CoinCounter.text = coin.ToString();
     }
     #endregion
     #endregion
