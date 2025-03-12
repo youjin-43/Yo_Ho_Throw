@@ -1,11 +1,13 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class KillLogPanel : MonoBehaviour
 {
     [SerializeField] TMP_Text killerNicknameText;
     [SerializeField] TMP_Text victimNicknameText;
+    [SerializeField] Image iconImage;
 
     KillLogPanel front = null;
     KillLogPanel back = null;
@@ -27,10 +29,11 @@ public class KillLogPanel : MonoBehaviour
             back?.MoveUp(transform.position.y + padding, padding);
         }
     }
-    public void SetText(string killerNickname, string victimNickname)
+    public void SetText(string killerNickname, string victimNickname, Sprite icon)
     {
         killerNicknameText.text = killerNickname;
         victimNicknameText.text = victimNickname;
+        iconImage.sprite = icon;
 
         //TMP 크기 조절 (하지만 제거)
         //killerNicknameText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, killerNicknameText.preferredWidth);

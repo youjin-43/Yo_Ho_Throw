@@ -122,6 +122,10 @@ public class UI_UITestScript : MonoBehaviour
 
             StartCoroutine(InGameUIManager.Instance.Death(5f, 0));
         }
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            InGameUIManager.Instance.SetCombokill(2);
+        }
         if (Input.GetKey(KeyCode.Tab))
         {
             InGameUIManager.Instance.ShowScoreboardUI(true);

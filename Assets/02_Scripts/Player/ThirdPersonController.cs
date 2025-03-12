@@ -227,9 +227,9 @@ namespace StarterAssets
             if (isAlive)
             {
                 transform.Rotate(0, look.x * mouseSpeed, 0);
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0, 0);
             }
 
-            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0, 0);
         }
 
         

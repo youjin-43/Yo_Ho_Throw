@@ -68,6 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 5
+  explosionCutlass: {fileID: 0}
 --- !u!54 &8483642117375998587
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -260,7 +261,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6305566305337587259}
   - component: {fileID: 5376533943778621893}
-  - component: {fileID: 4125249310305380720}
   m_Layer: 0
   m_Name: Cutlass
   m_TagString: Bullet
@@ -311,24 +311,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!65 &4125249310305380720
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8430071279321725386}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.03519589, y: 1.0491858, z: 0.1430409}
-  m_Center: {x: 0, y: 0.01, z: -0.0056753457}

@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 2926191621875323685}
   - component: {fileID: 192739522196402997}
   - component: {fileID: 8467872853592935312}
+  - component: {fileID: 8169400560141598601}
   - component: {fileID: 152954773064983578}
   - component: {fileID: 8960680114042870991}
   - component: {fileID: 9094096662284160659}
@@ -405,6 +406,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHp: 3
   bulletCount: 5
+  coin: 0
   isAlive: 1
   isInLobby: 1
   dashCoolTime: 5
@@ -412,6 +414,11 @@ MonoBehaviour:
   knifeObject: {fileID: 4168487119516495865}
   defaultColorMaterial: {fileID: 2100000, guid: adf31e9f4e0a76b478ab67dd8dfd7643, type: 2}
   bountyColorMaterial: {fileID: 2100000, guid: 69243a0c6520b7c45b49f2f6e16ee476, type: 2}
+  stealthMaterial: {fileID: 2100000, guid: ab69327dfc4119d499e46269795a395c, type: 2}
+  eyePatch: {fileID: 7224817224731852062}
+  eyePatchDefaultMaterial: {fileID: 2100000, guid: adf31e9f4e0a76b478ab67dd8dfd7643, type: 2}
+  cutlass: {fileID: 4244338529462948571}
+  cutlassDefaultMaterial: {fileID: 2100000, guid: c904c1af9a1d49a45ba878050adf8ca0, type: 2}
   MoveSpeed: 4
   IsDash: 0
   SprintSpeed: 5.335
@@ -430,7 +437,7 @@ MonoBehaviour:
   GroundedRadius: 0.28
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 320
   CinemachineCameraTarget: {fileID: 3728001361432756594}
   TopClamp: 90
   BottomClamp: -90
@@ -440,8 +447,10 @@ MonoBehaviour:
   _input: {fileID: 0}
   online: 1
   canDash: 1
+  isAttacking: 0
   bulletRange: 100
   bulletPrefab: {fileID: 8430071279321725386, guid: ef534139b75564f4da410b28c1d45740, type: 3}
+  explosionBulletPrefab: {fileID: 8430071279321725386, guid: 118645d99db91a244924e7440b87535d, type: 3}
   bulletSpawnPoint: {fileID: 1625589534162421683}
   bulletSpeed: 35
   bulletArc: 5
@@ -450,6 +459,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   cameraTransform: {fileID: 0}
+--- !u!114 &8169400560141598601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5264226163476715299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddae4747ed8cc484da00a0acc996f9f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &152954773064983578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -645,7 +666,7 @@ Transform:
   m_GameObject: {fileID: 7625788939214566970}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.045, y: 0.212, z: 0.846}
+  m_LocalPosition: {x: 0.045, y: 0.406, z: 0.846}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2037,5 +2058,10 @@ Transform:
 --- !u!4 &6612174380396894882 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 143964638685076123, guid: 786e1af1b4d550740aacfd0d8558e33e, type: 3}
+  m_PrefabInstance: {fileID: 6502175881123086393}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7224817224731852062 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4503575984552262951, guid: 786e1af1b4d550740aacfd0d8558e33e, type: 3}
   m_PrefabInstance: {fileID: 6502175881123086393}
   m_PrefabAsset: {fileID: 0}

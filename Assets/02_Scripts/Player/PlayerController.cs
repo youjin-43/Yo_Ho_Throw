@@ -17,10 +17,12 @@ public class PlayerController : ThirdPersonController
     [Header("State")]
     public bool canDash = true;
     private StarterAssetsInputs input;
+    public bool isAttacking = false;
 
     [Header("Bullet")]
     public float bulletRange = 100f;
     public GameObject bulletPrefab;
+    public GameObject explosionBulletPrefab;
     public Transform bulletSpawnPoint;
     public float bulletSpeed = 10f;
     public float bulletArc = 5f;
@@ -39,7 +41,8 @@ public class PlayerController : ThirdPersonController
     [SerializeField]
     private Transform cameraTransform;
 
-    
+    bool isKnifeConsumed = true;
+    bool isExplosionBuff = false;
 
     void Start()
     {
@@ -49,12 +52,13 @@ public class PlayerController : ThirdPersonController
         
 
     }
-    
-
     void Update()
     {
 
         if (online && !photonView.IsMine) return;
+        
+        if (isGameEnd) return;
+        
         base.Update();
         
 
@@ -76,81 +80,94 @@ public class PlayerController : ThirdPersonController
             Dash();
             StartCoroutine(DashCooltime());
         }
+        if (isAttacking) return;
         if (Input.GetKeyDown(KeyCode.Mouse0) && BulletCount > 0)
         {
-
             anim.SetTrigger("Shoot");
-
+            StartCoroutine(AttackCoroutine(0.8f));
         }
-       
-
         if (Input.GetKeyDown(KeyCode.Mouse1)&& BulletCount > 0)
         {
             anim.SetTrigger("Melee Attack");
-            
+            StartCoroutine(AttackCoroutine(0.5f));
         }
-
-        
     }
-
     void FixedUpdate()
     {
         if (online && !photonView.IsMine) return;
         base.FixedUpdate();
     }
-
     private void OnEnable()
     {
         anim = GetComponent<Animator>();
         anim.Update(0f);
     }
+    IEnumerator AttackCoroutine(float time)
+    {
+        isAttacking = true; 
+        yield return new WaitForSeconds(time);
+        isAttacking = false;
+    }
+
     IEnumerator DashCooltime()
     {
         canDash = false;
         yield return new WaitForSeconds(dashCoolTime);
         canDash = true;
     }
-    
     public void ThrowProjectile()
     {
-        if (BulletCount <= 0) return;
-        if (bulletPrefab != null && bulletSpawnPoint != null)
+        if (!isKnifeConsumed)
         {
-            if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
-            
-            if (!isInLobby) BulletCount--;
-
-            if (BulletCount == 0) IsKnifeOn(false);
-
-            if (cameraTransform == null) cameraTransform = Camera.main.transform;
-
-            Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position+ Vector3.up*3) - bulletSpawnPoint.position).normalized;
-           
-            if (online && photonView.IsMine)
-                photonView.RPC("Throw_RPC", RpcTarget.All, throwDirection, PhotonNetwork.LocalPlayer.ActorNumber);
+            ThrowCutlass();
         }
+        else if (BulletCount <= 0) return;
+        else if (bulletPrefab != null && bulletSpawnPoint != null)
+        {
+            ThrowCutlass();
+        }
+    }
+    void ThrowCutlass()
+    {
+        if (!isInLobby) BulletCount -= isKnifeConsumed ? 1 : 0;
+
+        if (BulletCount == 0)
+            photonView.RPC("IsKnifeOn", RpcTarget.All, false);
+
+        if (cameraTransform == null) cameraTransform = Camera.main.transform;
+
+        Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position + Vector3.up * 3) - bulletSpawnPoint.position).normalized;
+
+        if (online && photonView.IsMine)
+            photonView.RPC("Throw_RPC", RpcTarget.All, throwDirection, PhotonNetwork.LocalPlayer.ActorNumber, isExplosionBuff);
     }
 
     [PunRPC]
-    void Throw_RPC(Vector3 throwDirection, int attackerActorNr)
+    void Throw_RPC(Vector3 throwDirection, int attackerActorNr, bool isExplosionBuff)
     {
-
-        
         // 칼 오브젝트 생성 
 
-        GameObject projectile = PoolManager.Instance.Pop(bulletPrefab);
+        GameObject projectile =
+            PoolManager.Instance.Pop(isExplosionBuff ? explosionBulletPrefab : bulletPrefab);
+
         projectile.transform.GetChild(0).GetComponent<Collider>().enabled = true;
+
         if (projectile == null) return;
+
         projectile.transform.position = bulletSpawnPoint.position;
+
         projectile.GetComponentInChildren<Cutlass>().attackerActorNr = attackerActorNr;
+
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
+
         if (rb != null)
         {
             rb.useGravity = false;
-            Debug.Log($"throwDir : {throwDirection}");
 
             Quaternion rotationOffset = Quaternion.Euler(-35f, 0, 0);
+
             projectile.transform.rotation = Quaternion.LookRotation(throwDirection) * rotationOffset;
+
             rb.linearVelocity = throwDirection * bulletSpeed;
         }
     }
@@ -240,7 +257,7 @@ public class PlayerController : ThirdPersonController
     void MeleeAttack_RPC()
     {
         //if (!photonView.IsMine) return;
-
+        ExposeSetting();
         StartCoroutine(EnableCollider_RPC(meleeAttackColliderObject, 0.4f));
     }
 
@@ -251,7 +268,53 @@ public class PlayerController : ThirdPersonController
         _meleeAttackColliderObject.SetActive(false);
     }
 
-    
+    Coroutine explosionBuffCoroutine = null;
+    Coroutine infinityKnifeBuffCoroutine = null;
+    public void GetExplosionBuff()
+    {
+        if (explosionBuffCoroutine != null) StopCoroutine(explosionBuffCoroutine);
 
-    
+        explosionBuffCoroutine = StartCoroutine(ExplosionBuffCoroutine());
+    }
+    IEnumerator ExplosionBuffCoroutine()
+    {
+        isExplosionBuff = true;
+
+        yield return new WaitForSeconds(10f);
+
+        isExplosionBuff = false;
+    }
+    public void GetInfinityKnifeBuff()
+    {
+        if (infinityKnifeBuffCoroutine != null) StopCoroutine(infinityKnifeBuffCoroutine);
+
+        infinityKnifeBuffCoroutine = StartCoroutine(InfinityKnifeBuffCoroutine());
+    }
+    IEnumerator InfinityKnifeBuffCoroutine()
+    {
+        isKnifeConsumed = false;
+
+        yield return new WaitForSeconds(10f);
+
+        isKnifeConsumed = true;
+    }
+    void ClearOnDeath()
+    {
+        if (explosionBuffCoroutine != null) StopCoroutine(explosionBuffCoroutine);
+
+        if (infinityKnifeBuffCoroutine != null) StopCoroutine(infinityKnifeBuffCoroutine);
+
+        isExplosionBuff = false;
+    }
+    [PunRPC]
+    public override void HandleDeath(int killerActorNr)
+    {
+        ClearOnDeath();
+
+        base.HandleDeath(killerActorNr);
+    }
+    public void SetMouseSensitivity(float newSensitivity)
+    {
+        mouseSpeed = newSensitivity;
+    }
 }

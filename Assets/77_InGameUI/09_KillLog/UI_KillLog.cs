@@ -54,9 +54,9 @@ public class UI_KillLog : UI_Base
             killLogPanel = Instantiate(killLogPanelPrefab, transform);
         }
 
-        killLogPanel.transform.localPosition = Vector3.zero;
-        killLogPanel.SetText(killerNickname, victimNickname);
-        killLogPanel.SetBack(_back);
+        //killLogPanel.transform.localPosition = Vector3.zero;
+        //killLogPanel.SetText(killerNickname, victimNickname, );
+        //killLogPanel.SetBack(_back);
 
         _back?.SetFront(killLogPanel);
         _back?.MoveUp(killLogPanel.transform.position.y + _padding, _padding);

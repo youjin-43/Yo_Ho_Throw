@@ -6,6 +6,7 @@ using Photon.Pun;
 public class UI_ItemSelect : UI_Base
 {
     #region VARIABLES
+    [SerializeField] Potion[] potions;
     private Animator animator;
     private GameObject _itemButton_1;
     private GameObject _itemButton_2;
@@ -70,6 +71,8 @@ public class UI_ItemSelect : UI_Base
     [PunRPC]
     public void OnShowItemPanelRPC()
     {
+        CursorController.Instance.CursorEnable();
+
         animator.SetTrigger("OnShowItemPanel");
     }
     public void ItemSelected(GameObject button, int index)
@@ -84,7 +87,7 @@ public class UI_ItemSelect : UI_Base
 
             isFirstItemSelect = false;
         }
-
+        ItemHandler.Instance.Equip(potions[index - 1]);
         InGameUIManager.Instance.ItemSelected(button.transform.GetChild(0).GetChild(0).GetComponent<Image>(), index);
     }
     #endregion

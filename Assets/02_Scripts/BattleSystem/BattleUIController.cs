@@ -8,7 +8,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleUIController : MonoBehaviour, IOnEventCallback
+[RequireComponent(typeof(PhotonView))]
+public class BattleUIController : MonoBehaviourPun, IOnEventCallback
 {
     public static BattleUIController Instance { get; private set; } = null;
 
@@ -18,9 +19,17 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     [Header("플레이어의 점수 기록 패널 부모 GameObject")]
     [SerializeField] GameObject scoreboardPanel;
 
-    [Header("게임 종료 시 표시할 버튼들")]
-    [SerializeField] Button titleButton;
-    [SerializeField] Button lobbyButton;
+    [Header("아이템 선택 대기 화면")]
+    [SerializeField] GameObject waitingScreenUI;
+
+    [Header("게임 종료 시 표시할 UI")]
+    [SerializeField] GameObject gameoverPanel;
+    [SerializeField] Button goToTitleButton;
+    [SerializeField] Button goToGameReadyButton;
+
+    [Header("ExitPopup")]
+    [SerializeField] GameObject ExitPopup;
+    [SerializeField] Button ExitButton;
 
     [Header("LimitTime")]
     [SerializeField] TMP_Text limitTimeText;
@@ -30,11 +39,9 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     [SerializeField] Sprite silverMedalSprite;
     [SerializeField] Sprite bronzeMedalSprite;
 
-    [Header("연속 처치 텍스트")]
-    [SerializeField] TMP_Text comboKillText;
-
     [Header("전투 시작 텍스트")]
-    [SerializeField] TMP_Text battleStartText;
+    [SerializeField] GameObject readyTexts;
+    [SerializeField] GameObject goTexts;
 
     Dictionary<int, PlayerScoreEntry> playerScoreEntries = new Dictionary<int, PlayerScoreEntry>();
 
@@ -76,12 +83,16 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         isGameRunning = true;
 
-        // 버튼 비활성화
-        titleButton.gameObject.SetActive(false);
-        lobbyButton.gameObject.SetActive(false);
+        // GameOverPopup
+        gameoverPanel.SetActive(false);
+        goToTitleButton.onClick.AddListener(()=>PhotonManager.Instance.LeaveRoomAndGoToTitle());
+        goToTitleButton.onClick.AddListener(() => PhotonManager.Instance.GoToReadyScene()); // TODO : 포톤 네트워크 잘 연결 되는지 확인 필요
 
-        comboKillText.text = string.Empty;
+        // ExitPopup
+        ExitPopup.SetActive(false);
+        ExitButton.onClick.AddListener(() => PhotonManager.Instance.LeaveRoomAndGoToTitle());
     }
+
     private void Update()
     {
         if (!isGameRunning) return;
@@ -95,7 +106,26 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
         {
             HideScoreboard();
         }
+
+        // ESC키로 ExitPopup 토글
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ToggleExitPopup();
+        }
     }
+
+    /// <summary>
+    /// ExitPopup 토글 및 마우스 상태 변경
+    /// </summary>
+    private void ToggleExitPopup()
+    {
+        bool isActive = !ExitPopup.activeSelf;
+        ExitPopup.SetActive(isActive);
+
+        if (isActive) CursorController.Instance.CursorEnable(); // 마우스 활성화
+        else CursorController.Instance.CursorDisable(); // 마우스 비활성화
+    }
+
     public void SetIsAlive(bool isAlive)
     {
         this.isAlive = isAlive;
@@ -217,9 +247,9 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
 
         ShowScoreboard();
 
-        // 버튼 활성화
-        titleButton.gameObject.SetActive(true);
-        lobbyButton.gameObject.SetActive(true);
+        CursorController.Instance.CursorEnable();
+
+        gameoverPanel.SetActive(true);
     }
     void ResetScoreboard()
     {
@@ -234,17 +264,23 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
     }
     public void SetComboKill(int combo)
     {
-        comboKillText.text = combo > 1 ? combo.ToString() + " Combo" : string.Empty;
+        InGameUIManager.Instance.SetCombokill(combo);
     }
     public void SetBattleStartText(int count)
     {
         switch (count)
         {
-            case 2: battleStartText.text = "Ready"; break;
+            case 2: readyTexts.SetActive(true);
+                goTexts.SetActive(false); break;
 
-            case 1: battleStartText.text = "Go"; break;
+            case 1:
+                readyTexts.SetActive(false);
+                goTexts.SetActive(true); break;
 
-            case 0: StartCoroutine(HideTextAfterTimeCoroutine(battleStartText, 1f)); break;
+            case 0:
+                readyTexts.SetActive(false);
+                goTexts.SetActive(false); break;
+
         }
     }
     IEnumerator HideTextAfterTimeCoroutine(TMP_Text targetTextUI, float delay)
@@ -252,6 +288,9 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
         yield return new WaitForSeconds(delay);
 
         targetTextUI.text = string.Empty;
+
+        // 카운트 끝나고 조준점 표시
+        InGameUIManager.Instance.ToggleCrosshair(true);
     }
     void SortPlayerScoreEntry()
     {
@@ -263,6 +302,16 @@ public class BattleUIController : MonoBehaviour, IOnEventCallback
         {
             entry.transform.SetAsLastSibling();
         }
+    }
+    public void ShowWaitingScreen() => waitingScreenUI.SetActive(true);
+    public void HideWaitingScreen()
+    {
+        photonView.RPC("HideWaitingScreenRPC", RpcTarget.All);
+    }
+    [PunRPC]
+    public void HideWaitingScreenRPC()
+    {
+        waitingScreenUI.SetActive(false);
     }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);

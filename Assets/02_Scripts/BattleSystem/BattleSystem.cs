@@ -11,10 +11,12 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 {
     public static BattleSystem Instance { get; private set; } = null;
 
-    [SerializeField] int timeLimit = 300;
+    int timeLimit = 15;
 
     int spawnedPlayerCount = 0;
+
     int itemSelectedPlayerCount = 0;
+
     private void Awake()
     {
         Instance = this;
@@ -23,9 +25,6 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     {
         // TODO 찬규 : UI부분에서 추후 리셋을 구현하셨을 경우 호출
         //InGameUIManager.Instance.ResetUI();
-
-        Debug.Log("현재 방 마스터 클라이언트 ID : " + PhotonNetwork.CurrentRoom.masterClientId.ToString());
-        Debug.Log("현재 클라이언트 ID : " + PhotonNetwork.LocalPlayer.ActorNumber.ToString());
 
         // 호스트가 아니라면 반환
         if (!PhotonNetwork.IsMasterClient) return;
@@ -54,11 +53,13 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 
         yield return new WaitForSeconds(0.5f);
 
-        //// 아이템 패널 활성화
-        //InGameUIManager.Instance.ItemSelect.OnShowItemPanel();
+        // 아이템 패널 활성화
+        InGameUIManager.Instance.ItemSelect.OnShowItemPanel();
 
-        //// 현재 방에 있는 사람의 수만큼 아이템 선택을 마쳤다면
-        //while (PhotonNetwork.CurrentRoom.PlayerCount != itemSelectedPlayerCount) yield return null;
+        // 현재 방에 있는 사람의 수만큼 아이템 선택을 마쳤다면
+        while (PhotonNetwork.CurrentRoom.PlayerCount != itemSelectedPlayerCount) yield return null;
+
+        BattleUIController.Instance.HideWaitingScreen();
 
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.BattleStart,
@@ -104,6 +105,10 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     }
     protected virtual void EndGameByTimeout()
     {
+        PlayerSpawnManager.Instance.currPlayerPhotonView.RPC("GameEndPlayer", RpcTarget.All);
+
+        PlayerSpawnManager.Instance.DeactivatePlayer();
+
         BattleUIController.Instance.EndGame();
 
         ScoreManager.Instance.EndGame();
@@ -160,6 +165,8 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     }
     public static void FirstItemSelect()
     {
+        BattleUIController.Instance.ShowWaitingScreen();
+
         Instance.photonView.RPC("FirstItemSelectRPC", RpcTarget.All);
     }
     [PunRPC]

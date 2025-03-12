@@ -78,9 +78,14 @@ MonoBehaviour:
   - DeactivateBountyTargetImmediate
   - ScheduleBountyTargetDeactivation
   - RespawnColorSetting
-  - SpawnCoins
-  - Attack
-  - OpenChest
+  - AddCoin
+  - DeleteCoin
+  - GameEndPlayer
+  - GameStartPlayer
+  - IsKnifeOn
+  - ExposeSetting
+  - StealthSetting
+  - HideWaitingScreenRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

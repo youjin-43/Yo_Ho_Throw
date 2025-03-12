@@ -53,6 +53,7 @@ public class InGameUIManager : MonoBehaviour
     private int _itemIndex = 0;
     #endregion
 
+    public GameObject            Crosshair;
     public UI_DeathPopup         DeathPopup         { get; private set; }
     public UI_Minimap            Minimap            { get; private set; }
     public UI_Timer              Timer              { get; private set; }
@@ -65,8 +66,9 @@ public class InGameUIManager : MonoBehaviour
     public UI_KillLog            KillLog            { get; private set; }
     public UI_ItemSelect         ItemSelect         { get; private set; }
     public UI_ItemStore          ItemStore          { get; private set; }
-    public GameObject            Crosshair;
-    public GameObject            OnDamaged;
+    public UI_GameOverPopup      GameOverPopup      { get; private set; }
+    public UI_OnDamage           OnDamaged          { get; private set; }
+    public UI_ComboKillEffect    ComboKillEffect    { get; private set; }
 
     private Dictionary<string, UI_Base> UIs = new Dictionary<string, UI_Base>();
 
@@ -88,7 +90,9 @@ public class InGameUIManager : MonoBehaviour
         UIs["KillLog"]            =  KillLog            = transform.GetChild(10).GetComponent<UI_KillLog>();
                                      ItemSelect         = transform.GetChild(11).GetComponent<UI_ItemSelect>();
                                      ItemStore          = transform.GetChild(12).GetComponent<UI_ItemStore>();
-                                     OnDamaged          = transform.GetChild(13).gameObject;
+                                     GameOverPopup      = transform.GetChild(13).GetComponent<UI_GameOverPopup>();
+                                     OnDamaged          = transform.GetChild(14).GetComponent<UI_OnDamage>();
+                                     ComboKillEffect    = transform.GetChild(15).GetComponent<UI_ComboKillEffect>();
 
         foreach (var ui in UIs)
         {
@@ -342,12 +346,21 @@ public class InGameUIManager : MonoBehaviour
 
     #region STATUS INDICATOR
     /// <summary>
+    /// 유저 ID를 설정하는 부분에서 호출해 주세요
+    /// </summary>
+    /// <param name="id"></param>
+    public void SetPlayerID(string id)
+    {
+        StatusIndicator.SetPlayerID(id);
+    }
+
+    /// <summary>
     /// 금화가 추가되는 부분에서 호출해 주세요
     /// </summary>
     /// <param name="coin"></param>
-    public void AddGoldCoin(int coin)
+    public void SetGoldCoin(int coin)
     {
-        StatusIndicator.AddGoldCoin(coin);
+        StatusIndicator.SetGoldCoin(coin);
     }
 
     /// <summary>
@@ -358,8 +371,7 @@ public class InGameUIManager : MonoBehaviour
     {
         StatusIndicator.AddDamage(damage);
 
-        OnDamaged.gameObject.SetActive(true);
-
+        OnDamaged.OnDamage();
     }
 
     /// <summary>
@@ -451,7 +463,6 @@ public class InGameUIManager : MonoBehaviour
         ToggleCursor(true);
         ItemStore.gameObject.SetActive(true);
         ItemStore.PurchaceActivation(coin);
-        Crosshair.SetActive(!Crosshair.gameObject.activeSelf);
 
         yield return DeathPopup.DeathPopupActive(respawnTime);
 
@@ -459,7 +470,6 @@ public class InGameUIManager : MonoBehaviour
         ToggleCursor(false);
         ItemStore.PurchaceDeActivation();
         ItemStore.gameObject.SetActive(false);
-        Crosshair.SetActive(!Crosshair.gameObject.activeSelf);
     }
     #endregion
 
@@ -484,7 +494,6 @@ public class InGameUIManager : MonoBehaviour
         OnAllUI();
 
         ToggleCursor(false);
-        ToggleCrosshair(true);
     }
 
     /// <summary>
@@ -531,6 +540,21 @@ public class InGameUIManager : MonoBehaviour
     public void ToggleCrosshair(bool isActive)
     {
         Crosshair.gameObject.SetActive(isActive);
+    }
+    #endregion
+
+
+
+
+
+    #region COMBOKILL EFFECT
+    /// <summary>
+    /// 콤보킬 연결부에서 호출해 주세요
+    /// </summary>
+    /// <param name="combo"></param>
+    public void SetCombokill(int combo)
+    {
+        ComboKillEffect.SetCombokill(combo);
     }
     #endregion
 }

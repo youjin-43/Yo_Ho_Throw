@@ -7,6 +7,12 @@ using UnityEngine.UI;
 
 public class TitleUIManager : MonoBehaviour
 {
+    // 인스펙터에서 할당
+
+    [Header("Notice")]
+    public GameObject NoticePannel; // 알림 패널 오브젝트 
+    public TMP_Text NoticeText; // 알림 텍스트 
+
     [Header("PlayerNameInput")]
     public GameObject PlayerNameInputArea; // 플레이어 이름을 받는 UI 영역 
     public TMP_InputField playerNameInput; // 플레이어 이름 입력 필드
@@ -37,7 +43,7 @@ public class TitleUIManager : MonoBehaviour
     public TMP_InputField roomPasswordInput; // 방 비밀번호 입력 필드
 
     // 모드 선택
-    public TMP_Dropdown modeDropdown; // 게임 모드 선택 드롭
+    //public TMP_Dropdown modeDropdown; // 게임 모드 선택 드롭
 
     // 인원 수
     public TMP_Text MaxPlayerCount;
@@ -62,8 +68,11 @@ public class TitleUIManager : MonoBehaviour
         PhotonManager.OnLobbyJoined += ShowRoomListPanel;
         PhotonManager.OnRoomListUpdated += UpdateRoomList;
         PhotonManager.OnPasswordCheckRequested += ShowPasswordPannel;
+        PhotonManager.OnRoomCreationFailed += ShowNoticePannel; // 방 생성 실패 이벤트 구독
 
         #endregion
+
+        NoticePannel.SetActive(false);
 
         #region PlayerNameInput
         PlayerNameInputArea.SetActive(false);
@@ -95,7 +104,7 @@ public class TitleUIManager : MonoBehaviour
         passwordToggle.onValueChanged.AddListener(TogglePasswordInput);
 
         // 모드 옵션 셋업 
-        SetupGameModeOptions();
+        //SetupGameModeOptions();
 
         // Max Player 증감버튼
         decMaxPlayersButton.onClick.AddListener(DecreasePlayerCount);
@@ -121,7 +130,7 @@ public class TitleUIManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(playerNameInput.text))
         {
-            Debug.LogWarning("이름을 입력해야 합니다!");
+            ShowNoticePannel("이름을 입력해야 합니다!");
             return false;
         }
         return true;
@@ -163,11 +172,11 @@ public class TitleUIManager : MonoBehaviour
             roomItem.transform.GetChild((int)roomItemChilds.PlayerCount).GetComponent<TMP_Text>().text = $"{room.PlayerCount}/{room.MaxPlayers}";
 
             // 방 모드 설정
-            if (room.CustomProperties.ContainsKey(PhotonRoomProperties.mode.ToString()))
-            {
-                string mode = (string)room.CustomProperties[PhotonRoomProperties.mode.ToString()];
-                roomItem.transform.GetChild((int)roomItemChilds.GameMode).GetComponent<TMP_Text>().text = mode;
-            }
+            //if (room.CustomProperties.ContainsKey(PhotonRoomProperties.mode.ToString()))
+            //{
+            //    string mode = (string)room.CustomProperties[PhotonRoomProperties.mode.ToString()];
+            //    roomItem.transform.GetChild((int)roomItemChilds.GameMode).GetComponent<TMP_Text>().text = mode;
+            //}
 
             // 비밀번호가 설정된 방인지 확인
             GameObject lockIcon = roomItem.transform.GetChild((int)roomItemChilds.LockIcon).gameObject;
@@ -191,18 +200,18 @@ public class TitleUIManager : MonoBehaviour
     /// <summary>
     /// GameMode enum을 기반으로 modeDropdown을 자동으로 채운다.
     /// </summary>
-    private void SetupGameModeOptions()
-    {
-        modeDropdown.ClearOptions(); // 기존 옵션 제거
-        List<string> modeNames = new List<string>();
+    //private void SetupGameModeOptions()
+    //{
+    //    modeDropdown.ClearOptions(); // 기존 옵션 제거
+    //    List<string> modeNames = new List<string>();
 
-        foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
-        {
-            modeNames.Add(mode.ToString()); // Enum 값을 문자열로 변환하여 추가
-        }
+    //    foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
+    //    {
+    //        modeNames.Add(mode.ToString()); // Enum 값을 문자열로 변환하여 추가
+    //    }
 
-        modeDropdown.AddOptions(modeNames); // 옵션 추가
-    }
+    //    modeDropdown.AddOptions(modeNames); // 옵션 추가
+    //}
 
     public void ShowCreatRoomUI()
     {
@@ -249,7 +258,7 @@ public class TitleUIManager : MonoBehaviour
         // 룸 네임이 입력됐는지 확인 
         if (string.IsNullOrEmpty(roomNameInput.text))
         {
-            Debug.LogWarning("룸 이름을 를 입력해야 합니다!");
+            ShowNoticePannel("룸 이름을 를 입력해야 합니다!");
             return; // 방 생성 중단
         }
         
@@ -264,23 +273,23 @@ public class TitleUIManager : MonoBehaviour
         {
             if (string.IsNullOrEmpty(roomPasswordInput.text))
             {
-                Debug.LogWarning("비밀번호를 입력해야 합니다!");
+                ShowNoticePannel("비밀번호를 입력해야 합니다!");
                 return; // 방 생성 중단
             }
             options.CustomRoomProperties.Add(PhotonRoomProperties.password.ToString(), roomPasswordInput.text);
         }
 
         // 게임 모드 설정
-        string selectedMode = modeDropdown.options[modeDropdown.value].text;
-        options.CustomRoomProperties.Add(PhotonRoomProperties.mode.ToString(), selectedMode);
+        //string selectedMode = modeDropdown.options[modeDropdown.value].text;
+        //options.CustomRoomProperties.Add(PhotonRoomProperties.mode.ToString(), selectedMode);
 
         // 최대 인원 수 설정 
         options.MaxPlayers = (byte)currentPlayerCount;
 
         // 로비에서 표시할 커스텀 속성 설정 -> 로비에서 방 목록을 업데이트할 때 모드와 비밀번호 정보를 포함하게 됨 
         options.CustomRoomPropertiesForLobby = new string[] {
-            PhotonRoomProperties.password.ToString(),
-            PhotonRoomProperties.mode.ToString()
+            PhotonRoomProperties.password.ToString()
+            //,PhotonRoomProperties.mode.ToString()
         }; 
 
         // 방 생성 요청
@@ -330,11 +339,18 @@ public class TitleUIManager : MonoBehaviour
     }
     #endregion
 
+
+    public void ShowNoticePannel(string message)
+    {
+        NoticePannel.SetActive(true);
+        NoticeText.text = message;
+    }
     private void OnDestroy()
     {
         // 이벤트 해제 (메모리 누수 방지)
         PhotonManager.OnLobbyJoined -= ShowRoomListPanel;
         PhotonManager.OnRoomListUpdated -= UpdateRoomList;
         PhotonManager.OnPasswordCheckRequested -= ShowPasswordPannel;
+        PhotonManager.OnRoomCreationFailed -= ShowNoticePannel;
     }
 }

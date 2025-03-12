@@ -27,8 +27,9 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
     [SerializeField] float respawnTime = 5f;
 
-    GameObject currPlayer = null;
-    PhotonView currPlayerPhotonView = null;
+    [HideInInspector] public GameObject currPlayer = null;
+
+    [HideInInspector] public PhotonView currPlayerPhotonView = null;
 
     private void Awake()
     {
@@ -100,6 +101,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
         currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
 
+        currPlayerPhotonView.RPC("GameEndPlayer", RpcTarget.All);
+
         // 카메라에 루트 셋팅 
         camaraRoot = currPlayer.GetComponent<PlayerController>().CinemachineCameraTarget.transform;
         //currPlayer.GetComponent<PlayerKnifeController>().dirTransform = camaraRoot;
@@ -110,7 +113,6 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         world_followCam.Target.TrackingTarget = camaraRoot;
         world_followCam.Target.LookAtTarget = camaraRoot;
         world_followCam.Target.CustomLookAtTarget = true;
-
 
 
         InGameUIManager.Instance.Minimap.SetPlayerTransform(currPlayer.transform);
@@ -152,7 +154,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     public void DeactivatePlayer()
     {
         // TODO 찬규 : 플레이어 동작 비활성화 (currPlayerPhotonView.RPC를 통해 수행해야할듯)
-        currPlayerPhotonView.RPC("원하는 함수명", RpcTarget.All);
+        currPlayerPhotonView.RPC("GameEndPlayer", RpcTarget.All);
     }
     public void ExecuteRPC(string functionName, int actorNumber)
     {
