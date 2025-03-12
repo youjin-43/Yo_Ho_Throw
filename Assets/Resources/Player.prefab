@@ -436,7 +436,7 @@ MonoBehaviour:
   GroundedRadius: 0.28
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 320
   CinemachineCameraTarget: {fileID: 3728001361432756594}
   TopClamp: 90
   BottomClamp: -90
@@ -446,6 +446,7 @@ MonoBehaviour:
   _input: {fileID: 0}
   online: 1
   canDash: 1
+  isAttacking: 0
   bulletRange: 100
   bulletPrefab: {fileID: 8430071279321725386, guid: ef534139b75564f4da410b28c1d45740, type: 3}
   explosionBulletPrefab: {fileID: 8430071279321725386, guid: 118645d99db91a244924e7440b87535d, type: 3}
