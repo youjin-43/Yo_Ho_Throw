@@ -35,8 +35,8 @@ public class PlayerKnifeController : MonoBehaviourPun
         {
             if (knifeCount > value)
             {
-                for (; knifeCount == value; knifeCount--)
-                    InGameUIManager.Instance.SkillIndicator.RemoveDagger();
+                //for (; knifeCount == value; knifeCount--)
+                //    InGameUIManager.Instance.SkillIndicator.RemoveDagger();
             }
             else if (knifeCount < value)
             {

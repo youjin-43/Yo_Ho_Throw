@@ -48,8 +48,6 @@ public class DeathMatchSystem : BattleSystem
         else if (victimActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
         {
             comboKill = 0;
-
-            BattleUIController.Instance.SetComboKill(comboKill);
         }
 
         // 호스트가 아닌 경우 반환시킴
@@ -125,6 +123,10 @@ public class DeathMatchSystem : BattleSystem
         yield return new WaitForSeconds(1f);
 
         BattleUIController.Instance.SetBattleStartText(startDelay);
+
+        PlayerSpawnManager.Instance.currPlayerPhotonView.RPC("GameStartPlayer", RpcTarget.All);
+
+        InGameUIManager.Instance.ToggleCrosshair(true);
 
         StartLimitedTimer();
     }

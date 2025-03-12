@@ -17,6 +17,7 @@ public class PlayerController : ThirdPersonController
     [Header("State")]
     public bool canDash = true;
     private StarterAssetsInputs input;
+    public bool isAttacking = false;
 
     [Header("Bullet")]
     public float bulletRange = 100f;
@@ -51,8 +52,6 @@ public class PlayerController : ThirdPersonController
         
 
     }
-    
-
     void Update()
     {
 
@@ -81,41 +80,41 @@ public class PlayerController : ThirdPersonController
             Dash();
             StartCoroutine(DashCooltime());
         }
+        if (isAttacking) return;
         if (Input.GetKeyDown(KeyCode.Mouse0) && BulletCount > 0)
         {
-
             anim.SetTrigger("Shoot");
-
+            StartCoroutine(AttackCoroutine(0.8f));
         }
-       
-
         if (Input.GetKeyDown(KeyCode.Mouse1)&& BulletCount > 0)
         {
             anim.SetTrigger("Melee Attack");
-            
+            StartCoroutine(AttackCoroutine(0.5f));
         }
-
-        
     }
-
     void FixedUpdate()
     {
         if (online && !photonView.IsMine) return;
         base.FixedUpdate();
     }
-
     private void OnEnable()
     {
         anim = GetComponent<Animator>();
         anim.Update(0f);
     }
+    IEnumerator AttackCoroutine(float time)
+    {
+        isAttacking = true; 
+        yield return new WaitForSeconds(time);
+        isAttacking = false;
+    }
+
     IEnumerator DashCooltime()
     {
         canDash = false;
         yield return new WaitForSeconds(dashCoolTime);
         canDash = true;
     }
-    
     public void ThrowProjectile()
     {
         if (!isKnifeConsumed)
@@ -130,9 +129,7 @@ public class PlayerController : ThirdPersonController
     }
     void ThrowCutlass()
     {
-        if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
-
-        if (!isInLobby) BulletCount--;
+        if (!isInLobby) BulletCount -= isKnifeConsumed ? 1 : 0;
 
         if (BulletCount == 0)
             photonView.RPC("IsKnifeOn", RpcTarget.All, false);
@@ -260,7 +257,7 @@ public class PlayerController : ThirdPersonController
     void MeleeAttack_RPC()
     {
         //if (!photonView.IsMine) return;
-
+        ExposeSetting();
         StartCoroutine(EnableCollider_RPC(meleeAttackColliderObject, 0.4f));
     }
 
@@ -271,9 +268,8 @@ public class PlayerController : ThirdPersonController
         _meleeAttackColliderObject.SetActive(false);
     }
 
-
-
     Coroutine explosionBuffCoroutine = null;
+    Coroutine infinityKnifeBuffCoroutine = null;
     public void GetExplosionBuff()
     {
         if (explosionBuffCoroutine != null) StopCoroutine(explosionBuffCoroutine);
@@ -288,9 +284,25 @@ public class PlayerController : ThirdPersonController
 
         isExplosionBuff = false;
     }
+    public void GetInfinityKnifeBuff()
+    {
+        if (infinityKnifeBuffCoroutine != null) StopCoroutine(infinityKnifeBuffCoroutine);
+
+        infinityKnifeBuffCoroutine = StartCoroutine(InfinityKnifeBuffCoroutine());
+    }
+    IEnumerator InfinityKnifeBuffCoroutine()
+    {
+        isKnifeConsumed = false;
+
+        yield return new WaitForSeconds(10f);
+
+        isKnifeConsumed = true;
+    }
     void ClearOnDeath()
     {
         if (explosionBuffCoroutine != null) StopCoroutine(explosionBuffCoroutine);
+
+        if (infinityKnifeBuffCoroutine != null) StopCoroutine(infinityKnifeBuffCoroutine);
 
         isExplosionBuff = false;
     }
@@ -301,10 +313,8 @@ public class PlayerController : ThirdPersonController
 
         base.HandleDeath(killerActorNr);
     }
-
     public void SetMouseSensitivity(float newSensitivity)
     {
         mouseSpeed = newSensitivity;
     }
-
 }

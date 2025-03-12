@@ -143,9 +143,8 @@ public class UI_SkillIndicator : UI_Base
         // 우클릭
         else if (button == 1)
         {
-            if(_numOfDagger != 0)
+            if (_numOfDagger != 0)
             {
-                RemoveDagger();
                 StartCoroutine(CooldownEffect(_skill_RClick_ActiveEffect, _skill_RClick_CooldownEffect, cooldownTime, true));
             }
         }
@@ -219,26 +218,22 @@ public class UI_SkillIndicator : UI_Base
         }
     }
 
-    public void RemoveDagger()
+    public void RemoveDagger(int numOfDagger)
     {
-        for(int i = 4; i >= 0; --i)
+        _numOfDagger = numOfDagger;
+
+        Debug.Log("셋팅 시도 :" + numOfDagger.ToString());
+
+        int i = 0;
+
+        for (; i < _numOfDagger; i++) _daggerCounter[i].SetActive(true);
+
+        for (; i < 5; i++) _daggerCounter[i].SetActive(false);
+
+        if (_numOfDagger == 0)
         {
-            if(_daggerCounter[i].activeSelf == true)
-            {
-                // 마지막 단검까지 카운터를 Off한다는 뜻은
-                // 전부 다 던졌다는 소리
-                // 그렇다면 우클릭은 비활성화 이펙트 ON
-                if(i == 0)
-                {
-                    _skill_RClick_ActiveEffect.SetActive(false);
-                    _skillActivation.gameObject.SetActive(true);
-                }
-
-                _numOfDagger = Mathf.Clamp(_numOfDagger -= 1, 0, 5);
-
-                _daggerCounter[i].SetActive(false);
-                return;
-            }
+            _skill_RClick_ActiveEffect.SetActive(false);
+            _skillActivation.gameObject.SetActive(true);
         }
     }
     #endregion
