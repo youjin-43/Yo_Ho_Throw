@@ -6,6 +6,8 @@ public class KillLogPanelController : MonoBehaviour
 {
     public static KillLogPanelController Instance { get; private set; } = null;
 
+    [SerializeField] Sprite[] icons;
+
     [SerializeField] KillLogPanel killLogPanelPrefab;
 
     [SerializeField] RectTransform killLogPanelParent;
@@ -35,7 +37,39 @@ public class KillLogPanelController : MonoBehaviour
 
         killLogPanel.transform.localPosition = Vector3.zero;
 
-        killLogPanel.SetText(PhotonNetwork.CurrentRoom.Players[killerActorNr].NickName, PhotonNetwork.CurrentRoom.Players[victimActorNr].NickName);
+        killLogPanel.SetText(
+            PhotonNetwork.CurrentRoom.Players[killerActorNr].NickName,
+            PhotonNetwork.CurrentRoom.Players[victimActorNr].NickName,
+            icons[0]);
+
+        killLogPanel.SetBack(back);
+
+        back?.SetFront(killLogPanel);
+
+        back?.MoveUp(killLogPanel.transform.position.y + padding, padding);
+
+        back = killLogPanel;
+    }
+    public void AddKillLog(int exitActorNr)
+    {
+        KillLogPanel killLogPanel = null;
+
+        if (queue.Count > 0)
+        {
+            killLogPanel = queue.Dequeue();
+
+            killLogPanel.gameObject.SetActive(true);
+        }
+
+        else killLogPanel = Instantiate(killLogPanelPrefab, killLogPanelParent);
+
+        killLogPanel.transform.localPosition = Vector3.zero;
+
+        // TODO 호준 : 탈주 로그 텍스트 수정 부분 (찬규)
+        killLogPanel.SetText(
+            "탈주",
+            PhotonNetwork.CurrentRoom.Players[exitActorNr].NickName,
+            icons[1]);
 
         killLogPanel.SetBack(back);
 

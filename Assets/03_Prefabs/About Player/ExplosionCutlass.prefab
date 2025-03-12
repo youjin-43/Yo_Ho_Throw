@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3615221411445391630}
   - component: {fileID: 3136163914371943998}
   - component: {fileID: 2163819328939251365}
+  - component: {fileID: 7714086437093929740}
   - component: {fileID: 8483642117375998587}
   m_Layer: 0
   m_Name: ReturnCutlass
@@ -68,7 +69,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 5
-  explosionCutlass: {fileID: 5450073757401650534}
+  explosionCutlass: {fileID: 7714086437093929740}
+--- !u!114 &7714086437093929740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125039745356387078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 267cc275506d29741a8f1cb0a9c9168d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cutlass: {fileID: 3145065431035231675}
+  radius: 2
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!54 &8483642117375998587
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -109,7 +127,7 @@ GameObject:
   - component: {fileID: 8249112354292913505}
   - component: {fileID: 1544652677274478546}
   - component: {fileID: 3089510863046660727}
-  - component: {fileID: 5450073757401650534}
+  - component: {fileID: 3145065431035231675}
   m_Layer: 0
   m_Name: default
   m_TagString: Untagged
@@ -234,7 +252,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.14304091, y: 1.0491858, z: 0.035195887}
   m_Center: {x: 0.03499072, y: 0.5164541, z: -0.0056753457}
---- !u!114 &5450073757401650534
+--- !u!114 &3145065431035231675
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -243,18 +261,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 8161965563734435907}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 267cc275506d29741a8f1cb0a9c9168d, type: 3}
+  m_Script: {fileID: 11500000, guid: aa6918ff3b591be4196e24d316945617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   returnCutlass: {fileID: 2163819328939251365}
+  explosionCutlass: {fileID: 7714086437093929740}
   rotateSpeed: 1300
   dir: {x: 1, y: 0, z: 0}
   gravityTime: 1
   attackerActorNr: -1
-  radius: 2
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!1 &8430071279321725386
 GameObject:
   m_ObjectHideFlags: 0
