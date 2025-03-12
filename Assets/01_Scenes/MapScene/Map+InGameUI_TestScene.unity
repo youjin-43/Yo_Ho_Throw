@@ -1269,10 +1269,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[X]_Crosshair'
       objectReference: {fileID: 0}
-    - target: {fileID: 108322433730162043, guid: 2b23287b38eb3c34c9e12823b0b5adc2, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4268710394112685639, guid: 2b23287b38eb3c34c9e12823b0b5adc2, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6874,7 +6870,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5353720047268075189, guid: 5e3afc2cd079cf149b962bfb50399234, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6096750610373739129, guid: 5e3afc2cd079cf149b962bfb50399234, type: 3}
       propertyPath: m_Name
@@ -6882,7 +6878,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6096750610373739129, guid: 5e3afc2cd079cf149b962bfb50399234, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7467929648573585983, guid: 5e3afc2cd079cf149b962bfb50399234, type: 3}
       propertyPath: sceneViewId
@@ -11172,7 +11168,6 @@ MonoBehaviour:
   minimapIconColor: {fileID: 0}
   playerScoreEntryPrefab: {fileID: 4162192195215474804, guid: 51372d6cefeca5d4787eff23a1024d9a, type: 3}
   KillLogPanelPrefab: {fileID: 2017045677203350615, guid: 589f8b51f9ca02f468dae0421193f76e, type: 3}
-  Crosshair: {fileID: 0}
 --- !u!114 &1471398777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13980,7 +13975,7 @@ GameObject:
   - component: {fileID: 1794008873}
   - component: {fileID: 1794008872}
   - component: {fileID: 1794008871}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16538,7 +16533,7 @@ GameObject:
   - component: {fileID: 6628457222429330258}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
