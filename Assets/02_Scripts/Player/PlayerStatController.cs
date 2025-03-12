@@ -299,11 +299,15 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             }
             eyePatch.material = eyePatchDefaultMaterial;
 
+            cutlass.material = cutlassDefaultMaterial;
+
             transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = beforeColorSetting == 0 ? defaultColorMaterial : bountyColorMaterial;
         }
     }
     [SerializeField] MeshRenderer eyePatch;
     [SerializeField] Material eyePatchDefaultMaterial;
+    [SerializeField] MeshRenderer cutlass;
+    [SerializeField] Material cutlassDefaultMaterial;
     IEnumerator StealthCoroutine()
     {
         isStealthMaterial = true;
@@ -311,6 +315,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = stealthMaterial;
 
         eyePatch.material = stealthMaterial;
+        cutlass.material = stealthMaterial;
 
         yield return new WaitForSeconds(10f);
 
@@ -319,6 +324,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = beforeColorSetting == 0 ? defaultColorMaterial : bountyColorMaterial;
 
         eyePatch.material = eyePatchDefaultMaterial;
+        cutlass.material = cutlassDefaultMaterial;
     }
 
     [PunRPC]

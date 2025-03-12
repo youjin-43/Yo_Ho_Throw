@@ -418,6 +418,8 @@ MonoBehaviour:
   stealthMaterial: {fileID: 2100000, guid: ab69327dfc4119d499e46269795a395c, type: 2}
   eyePatch: {fileID: 7224817224731852062}
   eyePatchDefaultMaterial: {fileID: 2100000, guid: adf31e9f4e0a76b478ab67dd8dfd7643, type: 2}
+  cutlass: {fileID: 4244338529462948571}
+  cutlassDefaultMaterial: {fileID: 2100000, guid: c904c1af9a1d49a45ba878050adf8ca0, type: 2}
   MoveSpeed: 4
   IsDash: 0
   SprintSpeed: 5.335
@@ -668,8 +670,7 @@ Transform:
   m_LocalPosition: {x: 0.045, y: 0.406, z: 0.846}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3273129429286584124}
+  m_Children: []
   m_Father: {fileID: 4933986420811193164}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6502175881123086393
@@ -2064,66 +2065,4 @@ Transform:
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 4503575984552262951, guid: 786e1af1b4d550740aacfd0d8558e33e, type: 3}
   m_PrefabInstance: {fileID: 6502175881123086393}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &8857915239716440327
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1625589534162421683}
-    m_Modifications:
-    - target: {fileID: 6305566305337587259, guid: 118645d99db91a244924e7440b87535d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.009
-      objectReference: {fileID: 0}
-    - target: {fileID: 6305566305337587259, guid: 118645d99db91a244924e7440b87535d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6305566305337587259, guid: 118645d99db91a244924e7440b87535d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6305566305337587259, guid: 118645d99db91a244924e7440b87535d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6305566305337587259, guid: 118645d99db91a244924e7440b87535d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6305566305337587259, guid: 118645d99db91a244924e7440b87535d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6305566305337587259, guid: 118645d99db91a244924e7440b87535d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6305566305337587259, guid: 118645d99db91a244924e7440b87535d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6305566305337587259, guid: 118645d99db91a244924e7440b87535d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6305566305337587259, guid: 118645d99db91a244924e7440b87535d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8430071279321725386, guid: 118645d99db91a244924e7440b87535d, type: 3}
-      propertyPath: m_Name
-      value: ExplosionCutlass
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 118645d99db91a244924e7440b87535d, type: 3}
---- !u!4 &3273129429286584124 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6305566305337587259, guid: 118645d99db91a244924e7440b87535d, type: 3}
-  m_PrefabInstance: {fileID: 8857915239716440327}
   m_PrefabAsset: {fileID: 0}
