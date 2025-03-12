@@ -1,4 +1,6 @@
-﻿using Photon.Pun;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +22,23 @@ public class TreasureManager : MonoBehaviour
         {
             SpawnTreasureChest();
             StartCoroutine(ChangeTreasureChestPosition());
+        }
+        // 이벤트 수신 등록
+        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+    }
+
+    private void OnDestroy()
+    {
+        // 이벤트 수신 해제
+        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+    }
+
+    private void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == 0) // 이벤트 코드가 0일 때
+        {
+            int chestViewID = (int)photonEvent.CustomData;
+            DestroyTreasureChest(chestViewID); // 보물상자 삭제
         }
     }
 
@@ -76,4 +95,30 @@ public class TreasureManager : MonoBehaviour
     {
         usedPosition.Remove(position); // 사용된 위치에서 제거. 다시 스폰 가능
     }
+
+    // RPC 메서드 추가
+    [PunRPC]
+    public void DestroyTreasureChest(int chestViewID)
+    {
+        PhotonView chestView = PhotonView.Find(chestViewID);
+        if (chestView != null)
+        {
+            Destroy(chestView.gameObject); // 보물상자 삭제
+            treasureChests.Remove(chestView.gameObject); // 리스트에서 제거
+        }
+    }
+
+    public void RequestDestroyChest(int chestViewID)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            DestroyTreasureChest(chestViewID); // 마스터 클라이언트가 직접 삭제
+        }
+        else
+        {
+            // 마스터 클라이언트에게 보물상자 삭제 요청
+            PhotonNetwork.RaiseEvent(0, chestViewID, RaiseEventOptions.Default, SendOptions.SendReliable);
+        }
+    }
+
 }

@@ -44,7 +44,16 @@ public class TreasureChest : MonoBehaviour
 
 
         treasureManager.RemovePosition(transform.position); // 위치를 다시 스폰 가능하게
-        PhotonNetwork.Destroy(gameObject); // 보물상자 삭제
+        // 보물상자 삭제
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Destroy(gameObject); // 마스터 클라이언트일때, 보물상자 삭제
+        }
+        else
+        {
+            // 다른 플레이어일 때, 마스터 클라이언트에게 보물상자 삭제 요청
+            treasureManager.RequestDestroyChest(photonView.ViewID);
+        }
     }
 
     [PunRPC]
