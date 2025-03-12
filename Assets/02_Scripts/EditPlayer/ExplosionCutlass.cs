@@ -34,6 +34,8 @@ public class ExplosionCutlass : MonoBehaviour
                 photonView.RPC("ReceiveDamage", RpcTarget.All, cutlass.attackerActorNr, 1);
             }
         }
+        EffectManager.Instance.Play(transform.position, EffectType.CutlassExplosion);
+
         cutlass.Push();
     }
 }
