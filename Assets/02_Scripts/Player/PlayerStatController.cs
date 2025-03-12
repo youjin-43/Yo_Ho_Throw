@@ -132,7 +132,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if(!isAlive) return;
         if (PhotonNetwork.LocalPlayer.ActorNumber != photonView.OwnerActorNr) return;
         
-        InGameUIManager.Instance.StatusIndicator.AddDamage(damage);
+        InGameUIManager.Instance.AddDamage(damage);
         Hp -= damage;
 
         if (Hp <= 0)
