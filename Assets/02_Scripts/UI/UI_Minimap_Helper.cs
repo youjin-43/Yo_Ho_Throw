@@ -9,5 +9,7 @@ public class UI_Minimap_Helper : MonoBehaviourPunCallbacks
         base.OnPlayerLeftRoom(otherPlayer);
 
         InGameUIManager.Instance.Minimap.RemovePlayerTransform(otherPlayer.ActorNumber);
+
+        KillLogPanelController.Instance.AddKillLog(otherPlayer.ActorNumber);
     }
 }
