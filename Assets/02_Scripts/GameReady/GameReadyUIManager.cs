@@ -30,10 +30,23 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
         // 이벤트 구독 
         PlayerReadyManager.OnPlayerReadyChanged += SetReady; //플레이어가 레디 상태가 변경될 때 UI 업데이트
-        PlayerReadyManager.OnAllPlayersReadyChanged += SetGameStartButtonInteractable;
+        PlayerReadyManager.OnAllPlayersReadyChanged += SetGameStartButtonInteractable; // 모든 플레이어가 레디 상태가 되면 게임 스타트 버튼 활성화 
 
         InitUI();
         UpdatePlayerListUI();
+    }
+
+    void Update()
+    {
+        // F5 키 입력 시 게임 시작 (마스터 클라이언트만 가능)
+        if (PhotonNetwork.IsMasterClient && Input.GetKeyDown(KeyCode.F5))
+        {
+            if (GameStartButton.interactable)
+            {
+                Debug.Log("F5 키 입력 감지 → 게임 시작!");
+                gameReadyNetworkManager.GameStart();
+            }
+        }
     }
 
     void InitUI()
