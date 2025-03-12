@@ -9,6 +9,7 @@ public class ReturnCutlass : MonoBehaviour
     bool inPool = true;
     [SerializeField] float lifeTime;
     [SerializeField] ExplosionCutlass explosionCutlass = null;
+
     private void OnEnable()
     {
         inPool = false;
@@ -45,8 +46,6 @@ public class ReturnCutlass : MonoBehaviour
     }
     void Push()
     {
-        Debug.Log("Push : " + inPool.ToString());
-
         if (inPool == false)
         {
             inPool = true;

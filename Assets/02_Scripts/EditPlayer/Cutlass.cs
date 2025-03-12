@@ -8,6 +8,7 @@ public class Cutlass : MonoBehaviour
     const int CUTLASS_THROW_DAMAGE = 1;
 
     [SerializeField] ReturnCutlass returnCutlass;
+    [SerializeField] ExplosionCutlass explosionCutlass;
 
     [SerializeField] float rotateSpeed = 180f;
 
@@ -63,6 +64,8 @@ public class Cutlass : MonoBehaviour
             // 2번 칼을 던진 사람이 아닐 경우 제외
             // if (PhotonNetwork.LocalPlayer.ActorNumber != attackerActorNr) return;
 
+            explosionCutlass?.Explosion();
+
             // EditPlayerState 에 있는 ReceiveDamage 함수 호출
             playerPhotonView.RPC("ReceiveDamage", RpcTarget.All, attackerActorNr, CUTLASS_THROW_DAMAGE);
         }
@@ -90,7 +93,7 @@ public class Cutlass : MonoBehaviour
             gravityTimeCoroutine = null;
         }
     }
-    protected void Push()
+    public void Push()
     {
         returnCutlass.DeactivateKnife();
     }
