@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using Photon.Pun; // Pun : 포톤 유니티 네트워크의 약자
 using Photon.Realtime; // 실시간 통신? 을 위해서
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum PhotonRoomProperties
 {
-    mode,
+    //mode,
     password
 }
 
@@ -60,9 +61,15 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     private List<RoomInfo> currentRoomList = new List<RoomInfo>(); // 방 목록을 저장하는 리스트
 
     #region TITLE
-
     public void ConnectToPhoton()
     {
+        if (PhotonNetwork.IsConnected)
+        {
+            Debug.LogWarning("이미 포톤에 연결된 상태입니다. 기존 연결을 끊고 다시 연결합니다.");
+            PhotonNetwork.Disconnect(); // 기존 연결 끊기 -> OnDisconnected 호출됨 
+            return; // OnDisconnected()에서 다시 ConnectToPhoton()을 호출하도록 함
+        }
+
         //지역 kr로 고정.이 부분이 없으면 자동으로 지역을 찾는데,다른 지역에 걸릴 경우 네트워크를 통해 만날 수 없다.
         PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "kr";
 
@@ -77,6 +84,17 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         
         // 포톤 서버에 연결
         PhotonNetwork.ConnectUsingSettings(); // 세팅한걸로 커넥트. PhotonNetwork를 실제 연결하며 서버 접속. 이거 하면 OnConnectedToMaster()가 호출됨
+    }
+
+    /// <summary>
+    /// 기존 연결이 끊어지면 자동으로 다시 연결
+    /// </summary>
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        Debug.LogWarning($"포톤 연결이 끊어짐: {cause}");
+        Debug.Log("🔄 재연결 시도...");
+
+        ConnectToPhoton(); // 다시 연결
     }
 
     // 포톤 서버에 접속 후 호출되는 콜백 함수
@@ -158,7 +176,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         // 중복이 없으면 정상적으로 방 생성
         Debug.Log(
             $"방 생성 요청 - 이름: {roomName}, " +
-            $"모드 : {options.CustomRoomProperties[PhotonRoomProperties.mode.ToString()]}, " +
+            //$"모드 : {options.CustomRoomProperties[PhotonRoomProperties.mode.ToString()]}, " +
             $"최대 인원: {options.MaxPlayers}"
             );
         PhotonNetwork.CreateRoom(roomName, options);
@@ -222,6 +240,44 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         {
             Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐
         }
+    }
+
+    #endregion
+
+
+    #region LeaveRoom
+    /// <summary>
+    /// 현재 룸이 있다면 나간 후 타이틀 씬으로 이동
+    /// </summary>
+    public void LeaveRoomAndGoToTitle()
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            Debug.Log("현재 포톤 룸에서 나가는 중...");
+            PhotonNetwork.LeaveRoom(); // 현재 방 나가기 -> OnLeftRoom 호출됨 
+        }
+        else
+        {
+            Debug.Log("현재 참여 중인 방이 없음 → 즉시 타이틀 씬으로 이동!");
+            GoToTitleScene(); // 즉시 타이틀 씬으로 이동
+        }
+    }
+
+    /// <summary>
+    /// 룸을 정상적으로 나간 후 호출됨
+    /// </summary>
+    public override void OnLeftRoom()
+    {
+        Debug.Log("포톤 룸에서 정상적으로 나감! 타이틀 씬으로 이동");
+        GoToTitleScene();
+    }
+
+    /// <summary>
+    /// 타이틀 씬으로 이동하는 함수
+    /// </summary>
+    private void GoToTitleScene()
+    {
+        SceneManager.LoadScene(SceneList.MainUIScene.ToString());
     }
 
     #endregion

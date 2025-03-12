@@ -346,12 +346,21 @@ public class InGameUIManager : MonoBehaviour
 
     #region STATUS INDICATOR
     /// <summary>
+    /// 유저 ID를 설정하는 부분에서 호출해 주세요
+    /// </summary>
+    /// <param name="id"></param>
+    public void SetPlayerID(string id)
+    {
+        StatusIndicator.SetPlayerID(id);
+    }
+
+    /// <summary>
     /// 금화가 추가되는 부분에서 호출해 주세요
     /// </summary>
     /// <param name="coin"></param>
-    public void AddGoldCoin(int coin)
+    public void SetGoldCoin(int coin)
     {
-        StatusIndicator.AddGoldCoin(coin);
+        StatusIndicator.SetGoldCoin(coin);
     }
 
     /// <summary>
