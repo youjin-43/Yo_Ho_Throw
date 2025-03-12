@@ -27,7 +27,7 @@ public class TitleUIManager : MonoBehaviour
     enum roomItemChilds
     {
         RoomName,
-        GameMode,
+        //GameMode,
         PlayerCount,
         LockIcon,
         JoinButton
