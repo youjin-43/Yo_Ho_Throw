@@ -17,6 +17,7 @@ public class PlayerController : ThirdPersonController
     [Header("State")]
     public bool canDash = true;
     private StarterAssetsInputs input;
+    public bool isAttacking = false;
 
     [Header("Bullet")]
     public float bulletRange = 100f;
@@ -79,13 +80,16 @@ public class PlayerController : ThirdPersonController
             Dash();
             StartCoroutine(DashCooltime());
         }
+        if (isAttacking) return;
         if (Input.GetKeyDown(KeyCode.Mouse0) && BulletCount > 0)
         {
             anim.SetTrigger("Shoot");
+            StartCoroutine(AttackCoroutine(0.8f));
         }
         if (Input.GetKeyDown(KeyCode.Mouse1)&& BulletCount > 0)
         {
             anim.SetTrigger("Melee Attack");
+            StartCoroutine(AttackCoroutine(0.5f));
         }
     }
     void FixedUpdate()
@@ -98,6 +102,13 @@ public class PlayerController : ThirdPersonController
         anim = GetComponent<Animator>();
         anim.Update(0f);
     }
+    IEnumerator AttackCoroutine(float time)
+    {
+        isAttacking = true; 
+        yield return new WaitForSeconds(time);
+        isAttacking = false;
+    }
+
     IEnumerator DashCooltime()
     {
         canDash = false;
