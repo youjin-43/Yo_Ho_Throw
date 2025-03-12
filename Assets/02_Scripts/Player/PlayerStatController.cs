@@ -214,11 +214,13 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public void GameEndPlayer()
     {
+        anim.speed = 0;
         isGameEnd = true;
     }
     [PunRPC]
     public void GameStartPlayer()
     {
+        anim.speed = 1;
         isGameEnd = false;
     }
 
