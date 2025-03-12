@@ -36,15 +36,16 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             {
                 bulletCount = value;
 
-                InGameUIManager.Instance.SkillIndicator.RemoveDagger(bulletCount);
+                if (photonView.IsMine)
+                {
+                    InGameUIManager.Instance.SkillIndicator.RemoveDagger(bulletCount);
 
-                InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
+                    InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
+                }
             }
             else if (bulletCount < value)
             {
                 InGameUIManager.Instance.SkillIndicator.AddDagger(value - bulletCount);
-
-                Debug.Log("칼 얻음");
 
                 bulletCount = value;
             }
