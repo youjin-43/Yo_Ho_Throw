@@ -7,7 +7,7 @@ using UnityEngine;
 
 public enum PhotonRoomProperties
 {
-    mode,
+    //mode,
     password
 }
 
@@ -158,7 +158,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         // 중복이 없으면 정상적으로 방 생성
         Debug.Log(
             $"방 생성 요청 - 이름: {roomName}, " +
-            $"모드 : {options.CustomRoomProperties[PhotonRoomProperties.mode.ToString()]}, " +
+            //$"모드 : {options.CustomRoomProperties[PhotonRoomProperties.mode.ToString()]}, " +
             $"최대 인원: {options.MaxPlayers}"
             );
         PhotonNetwork.CreateRoom(roomName, options);
