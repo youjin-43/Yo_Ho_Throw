@@ -280,5 +280,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         SceneManager.LoadScene(SceneList.MainUIScene.ToString());
     }
 
+    /// <summary>
+    /// 게임 레디씬으로 이동하는 함수
+    /// </summary>
+    public void GoToReadyScene()
+    {
+        SceneManager.LoadScene(SceneList.GameReadyScene_1.ToString());
+    }
     #endregion
 }
