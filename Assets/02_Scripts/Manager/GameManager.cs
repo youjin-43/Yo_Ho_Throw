@@ -4,11 +4,11 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 
-public enum GameMode
-{
-    DeathMatch,
-    ZombieMode
-}
+//public enum GameMode
+//{
+//    DeathMatch,
+//    ZombieMode
+//}
 
 public class GameManager : MonoBehaviour
 {
