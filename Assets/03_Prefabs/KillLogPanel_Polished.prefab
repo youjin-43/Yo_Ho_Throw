@@ -467,6 +467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   killerNicknameText: {fileID: 837471408363494298}
   victimNicknameText: {fileID: 7750187343342764556}
+  iconImage: {fileID: 6618821776507517462}
 --- !u!114 &3081139981989614289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -584,7 +585,7 @@ GameObject:
   - component: {fileID: 9109221246361814530}
   - component: {fileID: 6618821776507517462}
   m_Layer: 5
-  m_Name: Arrow
+  m_Name: IconImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

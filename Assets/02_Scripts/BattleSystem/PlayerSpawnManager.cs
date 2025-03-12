@@ -101,6 +101,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
         currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
 
+        currPlayerPhotonView.RPC("GameEndPlayer", RpcTarget.All);
+
         // 카메라에 루트 셋팅 
         camaraRoot = currPlayer.GetComponent<PlayerController>().CinemachineCameraTarget.transform;
         //currPlayer.GetComponent<PlayerKnifeController>().dirTransform = camaraRoot;
@@ -111,7 +113,6 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         world_followCam.Target.TrackingTarget = camaraRoot;
         world_followCam.Target.LookAtTarget = camaraRoot;
         world_followCam.Target.CustomLookAtTarget = true;
-
 
 
         InGameUIManager.Instance.Minimap.SetPlayerTransform(currPlayer.transform);

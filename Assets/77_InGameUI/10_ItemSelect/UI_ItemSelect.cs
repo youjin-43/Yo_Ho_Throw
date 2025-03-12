@@ -71,6 +71,8 @@ public class UI_ItemSelect : UI_Base
     [PunRPC]
     public void OnShowItemPanelRPC()
     {
+        CursorController.Instance.CursorEnable();
+
         animator.SetTrigger("OnShowItemPanel");
     }
     public void ItemSelected(GameObject button, int index)
