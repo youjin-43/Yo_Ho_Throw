@@ -187,7 +187,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     public void InitPlayer()
     {
         //TODO 석진 플레이어 다시 살아나는 소리
-
+        if (!photonView.IsMine) transform.gameObject.layer = LayerMask.NameToLayer("Ground");
         anim.Rebind();
         anim.Update(0f);
         if (!photonView.IsMine) return;
