@@ -494,7 +494,6 @@ public class InGameUIManager : MonoBehaviour
         OnAllUI();
 
         ToggleCursor(false);
-        ToggleCrosshair(true);
     }
 
     /// <summary>
