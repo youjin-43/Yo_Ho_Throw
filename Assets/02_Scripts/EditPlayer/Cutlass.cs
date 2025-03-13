@@ -70,11 +70,11 @@ public class Cutlass : MonoBehaviour
             playerPhotonView.RPC("ReceiveDamage", RpcTarget.All, attackerActorNr, CUTLASS_THROW_DAMAGE);
         }
 
-        // º¸¹°»óÀÚ¿¡ Ãæµ¹ÇßÀ» ¶§
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½æµ¹ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         else if (other.CompareTag("TreasureChest"))
         {
             PhotonView chestPhotonView = other.GetComponent<PhotonView>();
-            // TreasuerChest ¿¡ ÀÖ´Â Attack ÇÔ¼ö È£Ãâ
+            // TreasuerChest ï¿½ï¿½ ï¿½Ö´ï¿½ Attack ï¿½Ô¼ï¿½ È£ï¿½ï¿½
             chestPhotonView.RPC("Attack", RpcTarget.All);
         }
     }
