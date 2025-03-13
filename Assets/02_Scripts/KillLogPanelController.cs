@@ -67,8 +67,8 @@ public class KillLogPanelController : MonoBehaviour
 
         // TODO 호준 : 탈주 로그 텍스트 수정 부분 (찬규)
         killLogPanel.SetText(
-            "탈주",
             PhotonNetwork.CurrentRoom.Players[exitActorNr].NickName,
+            "접속종료",
             icons[1]);
 
         killLogPanel.SetBack(back);

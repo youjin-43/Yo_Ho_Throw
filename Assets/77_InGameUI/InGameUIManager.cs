@@ -53,7 +53,7 @@ public class InGameUIManager : MonoBehaviour
     private int _itemIndex = 0;
     #endregion
 
-    public GameObject            Crosshair;
+    public UI_Crosshair          Crosshair          { get; private set; }
     public UI_DeathPopup         DeathPopup         { get; private set; }
     public UI_Minimap            Minimap            { get; private set; }
     public UI_Timer              Timer              { get; private set; }
@@ -77,7 +77,7 @@ public class InGameUIManager : MonoBehaviour
         SingletonInitialize();
 
         // UI 할당
-                                     Crosshair          = transform.GetChild( 0).gameObject;
+                                     Crosshair          = transform.GetChild( 0).GetComponent<UI_Crosshair>();
         UIs["DeathPopup"]         =  DeathPopup         = transform.GetChild( 1).GetComponent<UI_DeathPopup>();
         UIs["Minimap"]            =  Minimap            = transform.GetChild( 2).GetComponent<UI_Minimap>();
         UIs["Timer"]              =  Timer              = transform.GetChild( 3).GetComponent<UI_Timer>();
@@ -282,7 +282,7 @@ public class InGameUIManager : MonoBehaviour
     {
         ScoreBoard?.ShowScoreboardUI(isVisible);
 
-        Crosshair.SetActive(!isVisible);
+        Crosshair.gameObject.SetActive(!isVisible);
     }
 
     /// <summary>
@@ -399,7 +399,7 @@ public class InGameUIManager : MonoBehaviour
             Menu.ToggleUI();
         }
 
-        Crosshair.SetActive(!Crosshair.gameObject.activeSelf);
+        Crosshair.gameObject.SetActive(!Crosshair.gameObject.activeSelf);
 
         ToggleCursor(IsPopupUIOpen());
     }
