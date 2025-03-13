@@ -44,8 +44,8 @@ public class SettingManager : MonoBehaviour
         masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeSliderChanged);
         effectVolumeSlider.onValueChanged.AddListener(OnEffectVolumeSliderChanged);
 
-        // 감도 슬라이더의 초기값 설정 (예: 1.0)
-        sensitivitySlider.value = 1.0f;
+        // 감도 슬라이더의 초기값 설정 (예: 4.5)
+        sensitivitySlider.value = 4.5f;
         sensitivitySlider.onValueChanged.AddListener(OnSensitivitySliderChanged);
         sensitivityText.text = sensitivitySlider.value.ToString();
 
