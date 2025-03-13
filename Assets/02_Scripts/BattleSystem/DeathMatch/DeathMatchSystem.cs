@@ -43,7 +43,7 @@ public class DeathMatchSystem : BattleSystem
         {
             comboKill++;
 
-            BattleUIController.Instance.SetComboKill(comboKill);
+            if (comboKill > 1) BattleUIController.Instance.SetComboKill(comboKill);
         }
         else if (victimActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
         {
