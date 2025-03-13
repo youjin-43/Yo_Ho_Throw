@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 
 public class TreasureChest : MonoBehaviour
 {
@@ -12,41 +13,60 @@ public class TreasureChest : MonoBehaviour
 
     Animator chestAnimator;
 
+    private PhotonView photonView;
+
     private void Start()
     {
         chestAnimator = GetComponent<Animator>();
+        photonView = GetComponent<PhotonView>();
+        treasureManager = FindAnyObjectByType<TreasureManager>();
     }
 
+    [PunRPC]
     public void Attack()
     {
         if (!isOpen)
         {
             attackCount++;
-            if (attackCount >= 3) OpenChest();
+            if (attackCount >= 3) photonView.RPC("OpenChest", RpcTarget.All); ;
         }
     }
 
+    [PunRPC]
     private void OpenChest()
     {
         chestAnimator.SetTrigger("Open"); // 보물상자 여는 애니메이션 실행
         isOpen = true;
-        int CoinCount = Random.Range(minCoin, maxCoin + 1);
+        int coinCount = Random.Range(minCoin, maxCoin + 1);
 
-        Vector3 spawnPosition = transform.position; // 현재 보물상자의 위치
-        float radius = 1.0f; // 원하는 반지름
-
-        for (int i = 0; i < CoinCount; i++)
-        {
-            Vector2 randomPoint = Random.insideUnitCircle * radius; // 랜덤한 점을 생성
-
-            // 새로운 위치. 보물상자 주변
-            Vector3 randomPosition = new Vector3(spawnPosition.x + randomPoint.x, spawnPosition.y, spawnPosition.z + randomPoint.y);
-
-            Instantiate(coinPrefab, randomPosition, Quaternion.identity); // 코인 생성
-        }
+        // RPC 호출로 코인 생성
+        photonView.RPC("SpawnCoins", RpcTarget.All, coinCount, transform.position);
 
 
         treasureManager.RemovePosition(transform.position); // 위치를 다시 스폰 가능하게
-        Destroy(gameObject); // 보물상자 삭제
+        // 보물상자 삭제
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Destroy(gameObject); // 마스터 클라이언트일때, 보물상자 삭제
+        }
+        else
+        {
+            // 다른 플레이어일 때, 마스터 클라이언트에게 보물상자 삭제 요청
+            treasureManager.RequestDestroyChest(photonView.ViewID);
+        }
+    }
+
+    [PunRPC]
+    private void SpawnCoins(int coinCount, Vector3 chestPosition)
+    {
+        float radius = 1.0f; // 원하는 반지름
+
+        for (int i = 0; i < coinCount; i++)
+        {
+            Vector2 randomPoint = Random.insideUnitCircle * radius; // 랜덤한 점을 생성
+            Vector3 randomPosition = new Vector3(chestPosition.x + randomPoint.x, chestPosition.y, chestPosition.z + randomPoint.y);
+
+            PhotonNetwork.Instantiate(coinPrefab.name, randomPosition, Quaternion.identity, 0); // 코인 생성
+        }
     }
 }

@@ -86,6 +86,10 @@ MonoBehaviour:
   - ExposeSetting
   - StealthSetting
   - HideWaitingScreenRPC
+  - Attack
+  - OpenChest
+  - SpawnCoins
+  - DestroyTreasureChest
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
