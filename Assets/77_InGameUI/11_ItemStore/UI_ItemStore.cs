@@ -4,6 +4,8 @@ using UnityEngine.UI;
 public class UI_ItemStore : UI_Base
 {
     #region VARIABLES
+    [SerializeField] Potion[] potions;
+
     private GameObject _itemButton_1;
     private GameObject _itemButton_2;
     private GameObject _itemButton_3;
@@ -67,8 +69,12 @@ public class UI_ItemStore : UI_Base
     // 이 버튼을 누르면 아이템이 구매가 
     public void ItemPurchace(GameObject button, int index)
     {
+        // if 골드가 충분하다면
+        // 골드를 깎고 구매가능하게 하면 될듯
+
         Debug.Log(index + "번 아이템 구매");
 
+        ItemHandler.Instance.Equip(potions[index - 1]);
         InGameUIManager.Instance.ItemPurchase(button.transform.GetChild(0).GetChild(0).GetComponent<Image>(), index);
 
         PurchaceDeActivation();
