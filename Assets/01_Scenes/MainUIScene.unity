@@ -987,6 +987,14 @@ PrefabInstance:
       propertyPath: buttonSound
       value: 
       objectReference: {fileID: 2103043657}
+    - target: {fileID: 5493093148633072755, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
+      propertyPath: sensitivity
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493093148633072755, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 8467872853592935312, guid: adcde7277b6a5467499f0c76f2c2303a, type: 3}
     - target: {fileID: 6860584860268112138, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1603,11 +1611,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5735420554297332748, guid: f55b2b531ccf9804a9b3372fbf7ba532, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 290
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5735420554297332748, guid: f55b2b531ccf9804a9b3372fbf7ba532, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5735420554297332748, guid: f55b2b531ccf9804a9b3372fbf7ba532, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1675,11 +1683,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6538632845987374938, guid: f55b2b531ccf9804a9b3372fbf7ba532, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6538632845987374938, guid: f55b2b531ccf9804a9b3372fbf7ba532, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6538632845987374938, guid: f55b2b531ccf9804a9b3372fbf7ba532, type: 3}
       propertyPath: m_AnchoredPosition.x
