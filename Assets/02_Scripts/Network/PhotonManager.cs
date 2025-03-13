@@ -294,7 +294,15 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public void GoToReadyScene()
     {
 
-        if (PhotonNetwork.IsMasterClient) PhotonNetwork.AutomaticallySyncScene = false; // 포톤 씬 동기화 비활성화 
+        if (PhotonNetwork.IsMasterClient) {
+            PhotonNetwork.AutomaticallySyncScene = false; // 포톤 씬 동기화 비활성화
+        }
+
+        // 룸 다시 열기
+        // TODO : 모든 플레이어가 할 필요는 없을것 같은데 ..
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+
         SceneManager.LoadScene(SceneList.GameReadyScene_1.ToString());
     }
     #endregion
