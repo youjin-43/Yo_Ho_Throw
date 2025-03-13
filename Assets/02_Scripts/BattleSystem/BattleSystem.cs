@@ -64,7 +64,7 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.BattleStart,
             Time.unscaledTime,
-            new RaiseEventOptions { Receivers = ReceiverGroup.All },
+            new RaiseEventOptions { CachingOption = EventCaching.DoNotCache, Receivers = ReceiverGroup.All },
             SendOptions.SendReliable);
     }
     /// <summary>
