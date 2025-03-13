@@ -69,6 +69,14 @@ public class Cutlass : MonoBehaviour
             // EditPlayerState 에 있는 ReceiveDamage 함수 호출
             playerPhotonView.RPC("ReceiveDamage", RpcTarget.All, attackerActorNr, CUTLASS_THROW_DAMAGE);
         }
+
+        // �������ڿ� �浹���� ��
+        else if (other.CompareTag("TreasureChest"))
+        {
+            PhotonView chestPhotonView = other.GetComponent<PhotonView>();
+            // TreasuerChest �� �ִ� Attack �Լ� ȣ��
+            chestPhotonView.RPC("Attack", RpcTarget.All);
+        }
     }
     IEnumerator ApplyGravity()
     {

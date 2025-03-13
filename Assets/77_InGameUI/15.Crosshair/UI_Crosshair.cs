@@ -68,24 +68,24 @@ public class UI_Crosshair : UI_Base
     {
         _ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
 
-        if (Physics.Raycast(_ray, out RaycastHit hit, 500f))
+        if (Physics.Raycast(_ray, out RaycastHit hit, 500f) && hit.collider.CompareTag("Player"))
         {
-            Debug.Log(hit.collider.name);
-
-            if (hit.collider.CompareTag("Player"))
+            PhotonView targetPhotonView = hit.collider.GetComponent<PhotonView>();
+            if (targetPhotonView != null)
             {
+                string playerName = targetPhotonView.Owner.NickName;
 
                 _outlineText.gameObject.SetActive(true);
                 _innerText.gameObject.SetActive(true);
 
-                // _outlineText.text = 플레이어 아이디 가져오는 함수가 필요할듯
-                // _innerText  .text = 플레이어 아이디 가져오는 함수가 필요할듯
+                _outlineText.text = playerName;
+                _innerText.text = playerName;
             }
-            else
-            {
-                _outlineText.gameObject.SetActive(false);
-                _innerText.gameObject.SetActive(false);
-            }
+        }
+        else
+        {
+            _outlineText.gameObject.SetActive(false);
+            _innerText.gameObject.SetActive(false);
         }
     }
     #endregion

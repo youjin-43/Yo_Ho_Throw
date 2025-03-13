@@ -427,6 +427,7 @@ GameObject:
   - component: {fileID: 17035422}
   - component: {fileID: 17035421}
   - component: {fileID: 17035424}
+  - component: {fileID: 17035425}
   m_Layer: 5
   m_Name: Minimap
   m_TagString: Untagged
@@ -529,6 +530,18 @@ MonoBehaviour:
   sceneViewId: 5
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &17035425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 17035419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93b70efa6f85e2b46928fd82bee82634, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &25896441
 GameObject:
   m_ObjectHideFlags: 0
@@ -37914,6 +37927,8 @@ MonoBehaviour:
   minimapIconColor: {fileID: 11400000, guid: 1edef92a65e7e874d8590194e4b5248a, type: 2}
   playerScoreEntryPrefab: {fileID: 4162192195215474804, guid: 51372d6cefeca5d4787eff23a1024d9a, type: 3}
   KillLogPanelPrefab: {fileID: 2017045677203350615, guid: 589f8b51f9ca02f468dae0421193f76e, type: 3}
+  Crosshair: {fileID: 0}
+  OnDamaged: {fileID: 0}
 --- !u!114 &1195368747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45002,7 +45017,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd30e08a920b384cadab13d0f821f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chestPrefab: {fileID: 9217902311041147608, guid: 0d405d604a44c2a448f1639442a60606, type: 3}
+  chestPrefab: {fileID: 9217902311041147608, guid: 0041a5c0cdd4faf43b15c2acb036d1b7, type: 3}
   spawnPoints:
   - {fileID: 548382339}
   - {fileID: 183997153}

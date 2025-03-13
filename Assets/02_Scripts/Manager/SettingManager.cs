@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class SettingManager : MonoBehaviour
 { 
-    [SerializeField] Sprite buttonImage; // 기본 저튼 이미지
+    [SerializeField] Sprite buttonImage; // 기본 버튼 이미지
     [SerializeField] Sprite pressedButtonImg; // 버튼을 눌렀을 때 바뀌는 이미지
 
     public Button soundButton; // 사운드 설정 버튼
@@ -26,6 +26,9 @@ public class SettingManager : MonoBehaviour
 
     [SerializeField] ButtonSound buttonSound;
 
+    [SerializeField] PlayerController playerController;
+    [SerializeField] float sensitivity;
+    float clampedValue;
 
     private void Awake()
     {
@@ -41,13 +44,14 @@ public class SettingManager : MonoBehaviour
         masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeSliderChanged);
         effectVolumeSlider.onValueChanged.AddListener(OnEffectVolumeSliderChanged);
 
-        // 감도 슬라이더의 초기값 설정 (예: 1.0)
-        sensitivitySlider.value = 1.0f;
+        // 감도 슬라이더의 초기값 설정 (예: 4.5)
+        sensitivitySlider.value = 4.5f;
         sensitivitySlider.onValueChanged.AddListener(OnSensitivitySliderChanged);
         sensitivityText.text = sensitivitySlider.value.ToString();
 
         masterVolume = AudioManager.Instance.bgmVolume;
         effectVolume = AudioManager.Instance.sfxVolume;
+        sensitivity = playerController.mouseSpeed;
 
         // 버튼&토글에 소리 연결
         buttonSound.RegisterButtonSounds();
@@ -113,9 +117,10 @@ public class SettingManager : MonoBehaviour
     private void OnSensitivitySliderChanged(float value)
     {
         // 감도 값을 0.1에서 10 사이로 제한
-        float clampedValue = Mathf.Clamp(value, 0.1f, 10f);
+        clampedValue = Mathf.Clamp(value, 0.1f, 10f);
 
-        // TODO: 플레이어 마우스 감도 설정 
+        // 플레이어 마우스 감도 설정 
+        playerController.SetMouseSensitivity(clampedValue);
 
         sensitivityText.text = clampedValue.ToString("F1"); // 소수점 한자리까지 표시
     }
@@ -126,16 +131,18 @@ public class SettingManager : MonoBehaviour
         AudioManager.Instance.bgmVolume = masterVolumeToggle.isOn ? masterVolumeSlider.value : 0;
         AudioManager.Instance.sfxVolume = effectVolumeToggle.isOn ? effectVolumeSlider.value : 0;
 
-        // TODO : 감도 저장
+        // 감도 저장
+        sensitivity = clampedValue;
         Debug.Log("Settings Saved");
     }
 
     public void OnCloseButtonClick()
     {
-        // CommonButtonManager.cs에 없는 내용들
         // 소리 & 키 정상화
         AudioManager.Instance.SetBgmVolume(AudioManager.Instance.bgmVolume);
         AudioManager.Instance.SetSfxVolume(AudioManager.Instance.sfxVolume);
+
+        playerController.SetMouseSensitivity(sensitivity);
 
         gameObject.SetActive(false); // 패널 비활성화
     }

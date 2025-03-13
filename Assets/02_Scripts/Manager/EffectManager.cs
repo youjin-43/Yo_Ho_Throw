@@ -1,27 +1,48 @@
+ï»¿using System;
+using System.Collections.Generic;
 using UnityEngine;
-using VInspector;
 
 public class EffectManager : MonoBehaviour
 {
     public static EffectManager Instance { get; private set; } = null;
 
-    [SerializeField] SerializedDictionary<EffectType, ParticleSystem> effectList;
+    [SerializeField] EffectKeyValuePair[] effectList;
+
+    Dictionary<EffectType, ParticleSystem> effectDictionary = new Dictionary<EffectType, ParticleSystem>();
 
     private void Awake()
     {
-        Instance = this;
+        Init();
     }
     public void Play(Vector3 pos, EffectType effectType)
     {
-        if (!effectList.ContainsKey(effectType))
-            Debug.LogWarning("Àç»ıÇÏ·Á´Â ÀÌÆåÆ®°¡ ¼³Á¤µÇ¾î ÀÖÁö ¾ÊÀ½ : " + effectType.ToString());
+        if (effectDictionary.ContainsKey(effectType))
+        {
+            effectDictionary[effectType].transform.position = pos;
 
-        effectList[effectType].transform.position = pos;
+            effectDictionary[effectType].GetComponent<ParticleSystem>().Play();
+        }
+        else
+        {
+            Debug.LogWarning("ì¬ìƒí•˜ë ¤ëŠ” ì´í™íŠ¸ê°€ ì„¤ì •ë˜ì–´ ìˆì§€ ì•ŠìŒ : " + effectType.ToString());
+        }
+    }
+    void Init()
+    {
+        Instance = this;
 
-        effectList[effectType].Play();
+        foreach (EffectKeyValuePair pair in effectList)
+        {
+            effectDictionary[pair.effectType] = pair.particleSystem;
+        }
     }
 }
-
+[Serializable]
+public struct EffectKeyValuePair
+{
+    public EffectType effectType;
+    public ParticleSystem particleSystem;
+}
 public enum EffectType
 {
     CutlassExplosion

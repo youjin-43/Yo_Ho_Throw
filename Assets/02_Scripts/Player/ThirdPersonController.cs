@@ -33,7 +33,7 @@ namespace StarterAssets
         public float RotationSmoothTime = 0.12f;
 
         [Tooltip("Acceleration and deceleration")]
-        public float SpeedChangeRate = 1000.0f;
+        public float SpeedChangeRate = 5000.0f;
 
         public AudioClip LandingAudioClip;
         public AudioClip[] FootstepAudioClips;

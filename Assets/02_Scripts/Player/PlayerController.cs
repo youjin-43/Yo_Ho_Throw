@@ -95,6 +95,8 @@ public class PlayerController : ThirdPersonController
     void FixedUpdate()
     {
         if (online && !photonView.IsMine) return;
+
+        if (isGameEnd) return;
         base.FixedUpdate();
     }
     private void OnEnable()
