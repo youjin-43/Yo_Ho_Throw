@@ -77,17 +77,17 @@ public class UI_ItemSelect : UI_Base
     }
     public void ItemSelected(GameObject button, int index)
     {
-        //Debug.Log(index + "번 아이템 선택");
+        Debug.Log(index + "번 아이템 선택");
 
-        //if (isFirstItemSelect)
-        //{
-        //    BattleSystem.FirstItemSelect();
+        if (isFirstItemSelect)
+        {
+            BattleSystem.FirstItemSelect();
 
-        //    animator.SetTrigger("OnHideItemPanel");
+            animator.SetTrigger("OnHideItemPanel");
 
-        //    isFirstItemSelect = false;
-        //}
-        //ItemHandler.Instance.Equip(potions[index - 1]);
+            isFirstItemSelect = false;
+        }
+        ItemHandler.Instance.Equip(potions[index - 1]);
         InGameUIManager.Instance.ItemSelected(button.transform.GetChild(0).GetChild(0).GetComponent<Image>(), index);
     }
     #endregion
