@@ -14,11 +14,14 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject player;
     [SerializeField] Transform camaraRoot;
 
+    public static event System.Action OnGameStart;
+
     // 마스터 클라이언트만 실행됨 
     void Start()
     {
+        if (PhotonNetwork.IsMasterClient) PhotonNetwork.AutomaticallySyncScene = true; // 자동 동기화 활성화 (이후 씬 이동 시 동기화됨)
+
         gameReadyUIManager = GetComponent<GameReadyUIManager>();
-        // TODO : 유진 -  UI 모든 클라이언트에게 갱신되는지 확인해야함 
 
         if (PhotonNetwork.InRoom)
         {
@@ -29,37 +32,17 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        base.OnJoinedRoom();
-
-        Debug.Log("방 입장 성공!");
-
-        //내가 방장인지 확인
-        if (PhotonNetwork.IsMasterClient) Debug.Log("내가 방장이다!!!");
-        else Debug.Log("나는 클라이언트다!!");
-
-        // 디버그
-        Debug.Log($"룸 입장 여부 = {PhotonNetwork.InRoom}");
-        Debug.Log($"현재 룸의 인원수 = {PhotonNetwork.CurrentRoom.PlayerCount}");
-        foreach (var player in PhotonNetwork.CurrentRoom.Players) Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐
-
-        // 플레이어 프리팹을 생성
+        Debug.Log("[GameReadyNetworkManager] OnJoinedRoom 실행됨 ");
+        // 마스터 클라이언트는 여기 실행이 안됨 
+        //OnJoinedRoom()은 방에 처음 입장할 때만 실행되는 콜백 함수 
+        //마스터 클라이언트는 PhotonNetwork.LoadLevel을 통해 씬을 이동하지만, 이미 방에 들어와 있는 상태이므로 OnJoinedRoom()이 다시 호출되지 않음 .
         SpawnPlayer();
     }
 
     private void SpawnPlayer()
     {
-        // TODO : 중복 처리가 필요할까? 
-        //if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("spawned") == false)
-        //{
-        //    PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
-
-        //    // 중복 생성을 방지하기 위해, 로컬 플레이어에 "spawned" 값을 저장
-        //    PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "spawned", true } });
-        //    Debug.Log($"SpawnPlayer - {PhotonNetwork.LocalPlayer.ActorNumber}");
-        //}
-
         player = PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
-        Debug.Log($"Spawned Player: {player}");
+        Debug.Log($"{PhotonNetwork.NickName} 플레이어를 스폰했습니다");
 
         // 카메라에 루트 셋팅 
         camaraRoot = player.GetComponent<PlayerController>().CinemachineCameraTarget.transform;
@@ -90,24 +73,26 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
 
     public void GameStart()
     {
+        OnGameStart?.Invoke(); // 게임 시작 이벤트 발생
+
         //룸 닫고
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
+
         Debug.Log("현재 방 오픈 여부: " + PhotonNetwork.CurrentRoom.IsOpen);
         Debug.Log("게임 시작!");
-        PhotonNetwork.LoadLevel("Test_BattleSystem");
+
+        PhotonNetwork.LoadLevel(SceneList.Test_BattleSystem.ToString());
     }
 
     // 새로운 플레이어가 들어오면 OnPlayerEnteredRoom()이 호출됨
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.Log($"{newPlayer.ActorNumber}.{newPlayer.NickName} 플레이어가 방에 들어옴!");
         gameReadyUIManager.UpdatePlayerListUI();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log($"{otherPlayer.ActorNumber}.{otherPlayer.NickName} 플레이어가 방에서 나감!");
         gameReadyUIManager.UpdatePlayerListUI();
     }
 }

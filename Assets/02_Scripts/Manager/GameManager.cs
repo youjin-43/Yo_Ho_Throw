@@ -45,4 +45,9 @@ public class GameManager : MonoBehaviour
     }
 
     public string UserName { get; set; } = "soldier";
+
+    private void Start()
+    {
+        CursorController.Instance.CursorEnable();
+    }
 }

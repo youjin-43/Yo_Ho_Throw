@@ -86,7 +86,7 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
         // GameOverPopup
         gameoverPanel.SetActive(false);
         goToTitleButton.onClick.AddListener(()=>PhotonManager.Instance.LeaveRoomAndGoToTitle());
-        goToTitleButton.onClick.AddListener(() => PhotonManager.Instance.GoToReadyScene()); // TODO : 포톤 네트워크 잘 연결 되는지 확인 필요
+        goToGameReadyButton.onClick.AddListener(() => PhotonManager.Instance.GoToReadyScene()); // TODO : 포톤 네트워크 잘 연결 되는지 확인 필요
 
         // ExitPopup
         ExitPopup.SetActive(false);
