@@ -229,7 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 672a0753e477d1648b29b405ba33f06a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinPrefab: {fileID: 734281266027733366, guid: 99db425ef2a718643b8a4f87ca1b9112, type: 3}
+  coinPrefab: {fileID: 734281266027733366, guid: d152052f82b764f469974ba18b0b9ff4, type: 3}
   treasureManager: {fileID: 0}
 --- !u!65 &8405220864265075505
 BoxCollider:
