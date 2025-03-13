@@ -58,6 +58,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(gameObject);
     }
 
+    private void Update()
+    {
+        // ESC키로 ExitPopup 토글
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            DebugPlayerList();
+        }
+    }
     private List<RoomInfo> currentRoomList = new List<RoomInfo>(); // 방 목록을 저장하는 리스트
 
     #region TITLE
@@ -221,31 +229,29 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         //내가 방장인지 확인
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log("내가 방장이다!!!");
-            //PhotonNetwork.LoadLevel("GameReadyScene");
+            Debug.Log("[PhotonManager] 내가 방장이다!!!"); // - 방장 실행됨 
             PhotonNetwork.LoadLevel("GameReadyScene_1");
             // AutomaticallySyncScene를 true로 설정했기 때문에, 새로 들어온 클라이언트도 자동으로 방장이 이동한 씬(GameReadyScene)으로 이동
         }
         else
         {
-            Debug.Log("나는 클라이언트다!!"); // 여기 스크립트에서는 실행 안돼야 정상 
+            Debug.Log("[PhotonManager] 나는 클라이언트다!!"); // - 클라이언트 실행
         }
 
-        Debug.Log($"룸 입장 여부 = {PhotonNetwork.InRoom}");
-        Debug.Log($"현재 룸의 인원수 = {PhotonNetwork.CurrentRoom.PlayerCount}"); // 방장 1명으로 떠야 정상 
+        Debug.Log($"룸 입장 여부 = {PhotonNetwork.InRoom}"); // - 방장, 클라이언트 모두 실행됨 
+        Debug.Log($"현재 룸의 인원수 = {PhotonNetwork.CurrentRoom.PlayerCount}"); // - 방장, 클라이언트 모두 실행됨 
 
 
         //for 문 처럼 Player 마다 실행 
         foreach (var player in PhotonNetwork.CurrentRoom.Players)
         {
-            Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐
+            Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐 - 방장, 클라이언트 모두 실행됨 
         }
     }
 
     #endregion
 
-
-    #region LeaveRoom
+    #region LeaveRoomAndGoToTitle
     /// <summary>
     /// 현재 룸이 있다면 나간 후 타이틀 씬으로 이동
     /// </summary>
@@ -279,13 +285,51 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         SceneManager.LoadScene(SceneList.MainUIScene.ToString());
     }
+    #endregion
 
+    #region GoToReadyScene
     /// <summary>
     /// 게임 레디씬으로 이동하는 함수
     /// </summary>
     public void GoToReadyScene()
     {
+
+        if (PhotonNetwork.IsMasterClient) PhotonNetwork.AutomaticallySyncScene = false; // 포톤 씬 동기화 비활성화 
         SceneManager.LoadScene(SceneList.GameReadyScene_1.ToString());
     }
     #endregion
+
+
+    // 새로운 플레이어가 들어오면 OnPlayerEnteredRoom()이 호출됨
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log($"🚪 플레이어 입장: {newPlayer.NickName} (ActorNumber: {newPlayer.ActorNumber})");
+
+        Debug.Log("📌 현재 포톤 룸 정보:"
+            + $"\n 룸 이름: {PhotonNetwork.CurrentRoom.Name}"
+            + $"\n 현재 인원: {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}"
+            + $"\n 방장 (마스터 클라이언트): {PhotonNetwork.MasterClient.NickName}"
+            );
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log($"🚪 플레이어 퇴장: {otherPlayer.NickName} (ActorNumber: {otherPlayer.ActorNumber})");
+
+        Debug.Log("📌 현재 포톤 룸 정보:"
+            + $"\n 룸 이름: {PhotonNetwork.CurrentRoom.Name}"
+            + $"\n 현재 인원: {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}"
+            + $"\n 방장 (마스터 클라이언트): {PhotonNetwork.MasterClient.NickName}"
+            );
+    }
+
+    public void DebugPlayerList()
+    {
+
+        Debug.Log("🎮 현재 방에 있는 플레이어 목록:");
+        foreach (var player in PhotonNetwork.PlayerList)
+        {
+            Debug.Log($" - {player.NickName} (ActorNumber: {player.ActorNumber}, 마스터: {player.IsMasterClient})");
+        }
+    }
 }

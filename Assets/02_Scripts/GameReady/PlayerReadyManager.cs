@@ -9,6 +9,18 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
     public static event System.Action<int,bool> OnPlayerReadyChanged; // 특정 플레이어의 레디 상태가 변경될 때 실행될 이벤트 (ActorNumber 전달)
     public static event System.Action<bool> OnAllPlayersReadyChanged; // 모든 플레이어의 레디 상태 변경 이벤트 (버튼 활성화/비활성화)
 
+    private void Start()
+    {
+        GameReadyNetworkManager.OnGameStart += ResetAllPlayersReadyState; // 게임 시작시 플레이어 레디 정보를 초기화 하도록 
+    }
+
+    void OnDestroy()
+    {
+        // 이벤트 구독 해제 (메모리 누수 방지)
+        GameReadyNetworkManager.OnGameStart -= ResetAllPlayersReadyState;
+    }
+
+
     void Update()
     {
         if (!PhotonNetwork.IsMasterClient  && Input.GetKeyDown(KeyCode.R))
@@ -84,5 +96,22 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
 
         Debug.Log($"모든 플레이어 레디 상태: {allReady}");
         OnAllPlayersReadyChanged?.Invoke(allReady); // UI 매니저에 이벤트 전달
+    }
+
+    /// <summary>
+    /// 모든 플레이어의 레디 상태를 초기화
+    /// </summary>
+    public void ResetAllPlayersReadyState()
+    {
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable
+            {
+                { PhotonPlayerProperties.IsReady.ToString(), false } // 모든 플레이어의 레디 상태를 false로 설정
+            };
+            player.SetCustomProperties(props);
+        }
+
+        Debug.Log($"🔄 모든 플레이어의 레디 상태 초기화 완료!");
     }
 }

@@ -29,7 +29,6 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        Debug.Log(PhotonNetwork.CurrentRoom.MaxPlayers);
         gameReadyNetworkManager = GetComponent<GameReadyNetworkManager>();
 
         // 이벤트 구독 
@@ -106,7 +105,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         // 플레이어마다 새롭게 데이터 추가 
         foreach (var player in PhotonNetwork.CurrentRoom.Players)
         {
-            Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}");
+            //Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}");
 
             GameObject playerItem = Instantiate(PlayerInfoItemPrefab, PlayerInfoListContent);
 
