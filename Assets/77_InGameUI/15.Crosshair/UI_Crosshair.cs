@@ -80,8 +80,6 @@ public class UI_Crosshair : UI_Base
 
                 _outlineText.text = playerName;
                 _innerText.text = playerName;
-
-                InGameUIManager.Instance.SetPlayerID(playerName);
             }
         }
         else
