@@ -43,6 +43,10 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
     [SerializeField] GameObject readyTexts;
     [SerializeField] GameObject goTexts;
 
+    [Header("알림 요소")]
+    [SerializeField] CanvasGroup notificationCanvasGroup;
+    [SerializeField] TMP_Text notificationText;
+
     Dictionary<int, PlayerScoreEntry> playerScoreEntries = new Dictionary<int, PlayerScoreEntry>();
 
     List<RealtimePlayerScoreEntry> realtimeScoreEntry = new List<RealtimePlayerScoreEntry>();
@@ -318,4 +322,40 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
     }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
+
+    Coroutine notificationCoroutine = null;
+    public void Notification(string str)
+    {
+        if (notificationCoroutine != null)
+            StopCoroutine(notificationCoroutine);
+
+        notificationCoroutine = StartCoroutine(NotificationCoroutine());
+    }
+    IEnumerator NotificationCoroutine()
+    {
+        float fadeSpeed = 5f;
+        float duration = 2f;
+
+        float t = 0;
+
+        while(t < 1f)
+        {
+            t += Time.deltaTime * fadeSpeed;
+
+            notificationCanvasGroup.alpha = t;
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        while (t > 0f)
+        {
+            t -= Time.deltaTime * fadeSpeed;
+
+            notificationCanvasGroup.alpha = t;
+
+            yield return null;
+        }
+    }
 }
