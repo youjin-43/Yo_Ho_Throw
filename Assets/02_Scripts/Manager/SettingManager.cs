@@ -27,7 +27,7 @@ public class SettingManager : MonoBehaviour
     [SerializeField] ButtonSound buttonSound;
 
     [SerializeField] PlayerController playerController;
-    [SerializeField] float sensitivity = 4.5f; // 감도 초기값 = 4.5f
+    [SerializeField] static float sensitivity = 4.5f; // 감도
     float clampedValue;
 
     private void Awake()
@@ -45,12 +45,16 @@ public class SettingManager : MonoBehaviour
         effectVolumeSlider.onValueChanged.AddListener(OnEffectVolumeSliderChanged);
 
         // 감도 슬라이더의 연결
-        sensitivitySlider.value = sensitivity;
         sensitivitySlider.onValueChanged.AddListener(OnSensitivitySliderChanged);
         sensitivityText.text = sensitivitySlider.value.ToString();
 
+        // 저장된 값으로 가져오기
         masterVolume = AudioManager.Instance.bgmVolume;
         effectVolume = AudioManager.Instance.sfxVolume;
+        masterVolumeSlider.value = AudioManager.Instance.bgmVolume;
+        effectVolumeSlider.value = AudioManager.Instance.sfxVolume;
+
+        sensitivitySlider.value = sensitivity;
 
         // 버튼&토글에 소리 연결
         buttonSound.RegisterButtonSounds();

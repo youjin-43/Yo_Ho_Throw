@@ -1,4 +1,4 @@
-using Photon.Pun;
+ï»¿using Photon.Pun;
 using UnityEngine;
 
 public class Coin : MonoBehaviour
@@ -7,10 +7,10 @@ public class Coin : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) // ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹ ½Ã
+        if (other.CompareTag("Player")) // í”Œë ˆì´ì–´ì™€ ì¶©ëŒ ì‹œ
         {
-            //player.AddCoins(); // ÇÃ·¹ÀÌ¾îÀÇ ÄÚÀÎ ¼ö Áõ°¡
-            Destroy(gameObject); // ÄÚÀÎ »èÁ¦
+            player.AddCoin(1); // í”Œë ˆì´ì–´ì˜ ì½”ì¸ ìˆ˜ ì¦ê°€
+            Destroy(gameObject); // ì½”ì¸ ì‚­ì œ
         }
     }
 }
