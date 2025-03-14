@@ -1,16 +1,19 @@
-using Photon.Pun;
+ï»¿using Photon.Pun;
 using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    public PlayerController player;
-
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.CompareTag("Player")) // ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹ ½Ã
+        if (collision.gameObject.CompareTag("Player")) // í”Œë ˆì´ì–´ì™€ ì¶©ëŒ ì‹œ
         {
-            //player.AddCoins(); // ÇÃ·¹ÀÌ¾îÀÇ ÄÚÀÎ ¼ö Áõ°¡
-            Destroy(gameObject); // ÄÚÀÎ »èÁ¦
+            Debug.Log("ì¶©ëŒë°œìƒ");
+            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
+            if (playerController != null)
+            {
+                playerController.AddCoin(1); // ì½”ì¸ ì¶”ê°€
+                PhotonNetwork.Destroy(gameObject); // ë„¤íŠ¸ì›Œí¬ì—ì„œ ì½”ì¸ ì‚­ì œ
+            }
         }
     }
 }

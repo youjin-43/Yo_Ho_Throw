@@ -130,6 +130,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_4 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2711007913131954389, guid: f34962a783cdefc47b47f3584f87a4e0, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3374533100316953199, guid: f34962a783cdefc47b47f3584f87a4e0, type: 3}
+      propertyPath: m_RootOrder
+      value: 91
+      objectReference: {fileID: 0}
+    - target: {fileID: 3374533100316953199, guid: f34962a783cdefc47b47f3584f87a4e0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3374533100316953199, guid: f34962a783cdefc47b47f3584f87a4e0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3374533100316953199, guid: f34962a783cdefc47b47f3584f87a4e0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.756314
@@ -191,6 +207,14 @@ PrefabInstance:
     - target: {fileID: 6249605063833431605, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
       propertyPath: m_Name
       value: Palm_8 Variant (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249605063833431605, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6769154456122979471, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: m_RootOrder
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 6769154456122979471, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
       propertyPath: m_LocalPosition.x
@@ -363,46 +387,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1361033172}
   m_LocalEulerAnglesHint: {x: 0, y: 210.9, z: 0}
---- !u!21 &67867858
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Default UI Material
-  m_Shader: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Stencil: 0
-    - _StencilComp: 3
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1001 &77545782
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -530,6 +514,14 @@ PrefabInstance:
     - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_Name
       value: Palm_9 Variant (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1083,6 +1075,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_8 Variant (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6249605063833431605, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6769154456122979471, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: m_RootOrder
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 6769154456122979471, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
       propertyPath: m_LocalPosition.x
       value: 23.701794
@@ -1386,6 +1386,14 @@ PrefabInstance:
     - target: {fileID: 202579162367895766, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
       propertyPath: m_Name
       value: Palm_6 Variant (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 202579162367895766, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 685782995929789036, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
+      propertyPath: m_RootOrder
+      value: 33
       objectReference: {fileID: 0}
     - target: {fileID: 685782995929789036, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1948,6 +1956,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_9 Variant (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.2711213
@@ -2106,9 +2122,9 @@ MonoBehaviour:
   ExitPopup: {fileID: 4010542336510713767}
   ExitButton: {fileID: 4010542336510713768}
   limitTimeText: {fileID: 1801017743}
-  goldMedalSprite: {fileID: 21300000, guid: d52185aabb0ab0b499375444a73fd435, type: 3}
-  silverMedalSprite: {fileID: 21300000, guid: 37b0a18b391c6ae468b5bcc74bba2c1a, type: 3}
-  bronzeMedalSprite: {fileID: 21300000, guid: 9587663c4d27e47b19a118aabaac4a08, type: 3}
+  goldMedalSprite: {fileID: 21300000, guid: ec2c14e7eb835594883ccf50fd52ac4c, type: 3}
+  silverMedalSprite: {fileID: 21300000, guid: 74a711984b497e9419b3f615ca36261e, type: 3}
+  bronzeMedalSprite: {fileID: 21300000, guid: 061aac0d869572146934c328debd4800, type: 3}
   readyTexts: {fileID: 2006618925}
   goTexts: {fileID: 1199122364}
 --- !u!4 &220023721
@@ -2493,6 +2509,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_5 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 570827713969367610, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 909775935248003200, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
+      propertyPath: m_RootOrder
+      value: 46
+      objectReference: {fileID: 0}
     - target: {fileID: 909775935248003200, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.27847
@@ -2533,6 +2557,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2083760043831331823, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 598a829e34c235045a4752392232fe2c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3302,6 +3330,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_3 Variant (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5118645067425190702, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5495170262517107092, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5495170262517107092, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.46886
+      objectReference: {fileID: 0}
     - target: {fileID: 5495170262517107092, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
       propertyPath: m_LocalPosition.x
       value: -14.95
@@ -3440,9 +3480,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
+    - target: {fileID: 5601337475242495968, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a401fd119dc4764449990a13d9245dab, type: 2}
     - target: {fileID: 6249605063833431605, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
       propertyPath: m_Name
       value: Palm_8 Variant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249605063833431605, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6769154456122979471, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: m_RootOrder
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 6769154456122979471, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3503,6 +3555,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 3826512572797228062, guid: 4886f089f1adf674292e23523f6541ac, type: 3}
+      propertyPath: m_RootOrder
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826512572797228062, guid: 4886f089f1adf674292e23523f6541ac, type: 3}
       propertyPath: m_LocalPosition.x
       value: 27.764202
       objectReference: {fileID: 0}
@@ -3545,6 +3601,10 @@ PrefabInstance:
     - target: {fileID: 4490458564448833188, guid: 4886f089f1adf674292e23523f6541ac, type: 3}
       propertyPath: m_Name
       value: Palm_7 Variant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4490458564448833188, guid: 4886f089f1adf674292e23523f6541ac, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4386,6 +4446,22 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_RootOrder
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.0515993
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.4169
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
       propertyPath: m_LocalPosition.x
       value: 29.466
       objectReference: {fileID: 0}
@@ -4428,6 +4504,10 @@ PrefabInstance:
     - target: {fileID: 5585327714065340302, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
       propertyPath: m_Name
       value: Rock_6 Variant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5585327714065340302, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4530,6 +4610,14 @@ PrefabInstance:
     - target: {fileID: 570827713969367610, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
       propertyPath: m_Name
       value: Palm_5 Variant (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 570827713969367610, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 909775935248003200, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
+      propertyPath: m_RootOrder
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 909775935248003200, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5054,9 +5142,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
+    - target: {fileID: 5460956008283000385, guid: 16a414836d0d2c0408dce5be8470001f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a401fd119dc4764449990a13d9245dab, type: 2}
     - target: {fileID: 5821407187386363796, guid: 16a414836d0d2c0408dce5be8470001f, type: 3}
       propertyPath: m_Name
       value: Palm_2 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5821407187386363796, guid: 16a414836d0d2c0408dce5be8470001f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6593861748000929070, guid: 16a414836d0d2c0408dce5be8470001f, type: 3}
+      propertyPath: m_RootOrder
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6593861748000929070, guid: 16a414836d0d2c0408dce5be8470001f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5116,9 +5216,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
+    - target: {fileID: 5601337475242495968, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 18a91162c17daaf4ca32b11b3bcfcd71, type: 2}
     - target: {fileID: 6249605063833431605, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
       propertyPath: m_Name
       value: Palm_8 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249605063833431605, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6769154456122979471, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: m_RootOrder
+      value: 104
       objectReference: {fileID: 0}
     - target: {fileID: 6769154456122979471, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5181,6 +5293,14 @@ PrefabInstance:
     - target: {fileID: 202579162367895766, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
       propertyPath: m_Name
       value: Palm_6 Variant (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 202579162367895766, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 685782995929789036, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
+      propertyPath: m_RootOrder
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 685782995929789036, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5502,6 +5622,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 2752595138156427838, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
+      propertyPath: m_RootOrder
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 2752595138156427838, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
       propertyPath: m_LocalPosition.x
       value: 27.081211
       objectReference: {fileID: 0}
@@ -5544,6 +5668,10 @@ PrefabInstance:
     - target: {fileID: 3276648130073305220, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
       propertyPath: m_Name
       value: Palm_3 Variant (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276648130073305220, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6505,6 +6633,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_9 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 103
+      objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.20139
@@ -7213,6 +7349,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 3789883777017604398, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
+      propertyPath: m_RootOrder
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3789883777017604398, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.9386857
       objectReference: {fileID: 0}
@@ -7255,6 +7395,10 @@ PrefabInstance:
     - target: {fileID: 4599177543438185364, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
       propertyPath: m_Name
       value: Palm_4 Variant (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4599177543438185364, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7794,6 +7938,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 8314677931452264607, guid: bda068e7f1c094d4c929b2e50da986ac, type: 3}
+      propertyPath: m_RootOrder
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8314677931452264607, guid: bda068e7f1c094d4c929b2e50da986ac, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.9388382
       objectReference: {fileID: 0}
@@ -7837,6 +7985,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_10 Variant (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8658305704329587237, guid: bda068e7f1c094d4c929b2e50da986ac, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7858,6 +8010,14 @@ PrefabInstance:
     - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_Name
       value: Palm_10 Variant (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8024,6 +8184,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_1 Variant (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4017983534686119695, guid: 3fad8d74afdb9e64da9163235366eabd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362138729232858549, guid: 3fad8d74afdb9e64da9163235366eabd, type: 3}
+      propertyPath: m_RootOrder
+      value: 105
+      objectReference: {fileID: 0}
     - target: {fileID: 4362138729232858549, guid: 3fad8d74afdb9e64da9163235366eabd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.0700026
@@ -8091,6 +8259,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_10 Variant (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 43
+      objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.449178
@@ -8131,6 +8307,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1947801117094655029, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 18a91162c17daaf4ca32b11b3bcfcd71, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8360,6 +8540,14 @@ PrefabInstance:
     - target: {fileID: 165920268538129378, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
       propertyPath: m_Name
       value: Palm_1 Variant (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 165920268538129378, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 650391048483303768, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: m_RootOrder
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 650391048483303768, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8940,6 +9128,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_10 Variant (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 44
+      objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.579997
@@ -8980,6 +9176,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1947801117094655029, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 18a91162c17daaf4ca32b11b3bcfcd71, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9169,6 +9369,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 2752595138156427838, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
+      propertyPath: m_RootOrder
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 2752595138156427838, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.672406
       objectReference: {fileID: 0}
@@ -9212,6 +9416,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_3 Variant (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3276648130073305220, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9233,6 +9441,14 @@ PrefabInstance:
     - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_Name
       value: Palm_10 Variant (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 44
       objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9274,6 +9490,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1947801117094655029, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 18a91162c17daaf4ca32b11b3bcfcd71, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9295,6 +9515,14 @@ PrefabInstance:
     - target: {fileID: 165920268538129378, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
       propertyPath: m_Name
       value: Palm_1 Variant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 165920268538129378, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 650391048483303768, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: m_RootOrder
+      value: 96
       objectReference: {fileID: 0}
     - target: {fileID: 650391048483303768, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9358,6 +9586,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_10 Variant (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 39
+      objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.1377456
@@ -9417,6 +9653,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 2752595138156427838, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
+      propertyPath: m_RootOrder
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 2752595138156427838, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.573506
       objectReference: {fileID: 0}
@@ -9459,6 +9699,10 @@ PrefabInstance:
     - target: {fileID: 3276648130073305220, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
       propertyPath: m_Name
       value: Palm_3 Variant (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276648130073305220, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9894,6 +10138,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_10 Variant (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 43
+      objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.449178
@@ -9934,6 +10186,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1947801117094655029, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 18a91162c17daaf4ca32b11b3bcfcd71, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10173,6 +10429,14 @@ PrefabInstance:
     - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_Name
       value: Palm_9 Variant (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 31
       objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10647,6 +10911,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_1 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4017983534686119695, guid: 3fad8d74afdb9e64da9163235366eabd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362138729232858549, guid: 3fad8d74afdb9e64da9163235366eabd, type: 3}
+      propertyPath: m_RootOrder
+      value: 105
+      objectReference: {fileID: 0}
     - target: {fileID: 4362138729232858549, guid: 3fad8d74afdb9e64da9163235366eabd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.951793
@@ -11030,7 +11302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69125c8255c7baf418f83bc79f0cdc86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 67867858}
+  m_Material: {fileID: 2056283339}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -11217,6 +11489,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_10 Variant (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 44
+      objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
       value: -14.490001
@@ -11257,6 +11537,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1947801117094655029, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 18a91162c17daaf4ca32b11b3bcfcd71, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11847,6 +12131,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 1445370697798738481, guid: c9bed54e384ab0b44b3a17143cb343d6, type: 3}
+      propertyPath: m_RootOrder
+      value: 88
+      objectReference: {fileID: 0}
+    - target: {fileID: 1445370697798738481, guid: c9bed54e384ab0b44b3a17143cb343d6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 20.85522
       objectReference: {fileID: 0}
@@ -11890,6 +12178,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_7 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2253255917015218315, guid: c9bed54e384ab0b44b3a17143cb343d6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11911,6 +12203,14 @@ PrefabInstance:
     - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_Name
       value: Palm_10 Variant (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 43
       objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11952,6 +12252,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1947801117094655029, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 18a91162c17daaf4ca32b11b3bcfcd71, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12170,6 +12474,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_9 Variant (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.2711213
@@ -12229,6 +12541,22 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_RootOrder
+      value: 89
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5.7613983
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5.7613983
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 5.7614
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.8699996
       objectReference: {fileID: 0}
@@ -12272,6 +12600,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_6 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 5585327714065340302, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12290,6 +12622,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
+    - target: {fileID: 2752595138156427838, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
+      propertyPath: m_RootOrder
+      value: 95
+      objectReference: {fileID: 0}
     - target: {fileID: 2752595138156427838, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
       propertyPath: m_LocalPosition.x
       value: -8.871821
@@ -12334,6 +12670,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_3 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 3276648130073305220, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12355,6 +12695,14 @@ PrefabInstance:
     - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_Name
       value: Palm_9 Variant (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12634,6 +12982,18 @@ PrefabInstance:
     - target: {fileID: 5118645067425190702, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
       propertyPath: m_Name
       value: Rock_3 Variant (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5118645067425190702, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5495170262517107092, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5495170262517107092, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.46886
       objectReference: {fileID: 0}
     - target: {fileID: 5495170262517107092, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12954,6 +13314,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 3789883777017604398, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
+      propertyPath: m_RootOrder
+      value: 37
+      objectReference: {fileID: 0}
+    - target: {fileID: 3789883777017604398, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.28935
       objectReference: {fileID: 0}
@@ -12996,6 +13360,10 @@ PrefabInstance:
     - target: {fileID: 4599177543438185364, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
       propertyPath: m_Name
       value: Palm_4 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4599177543438185364, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13127,6 +13495,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_10 Variant (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
       value: 18.51289
@@ -13188,6 +13564,14 @@ PrefabInstance:
     - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_Name
       value: Palm_10 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 101
       objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
@@ -13492,7 +13876,6 @@ MonoBehaviour:
   minimapIconColor: {fileID: 11400000, guid: 1edef92a65e7e874d8590194e4b5248a, type: 2}
   playerScoreEntryPrefab: {fileID: 4162192195215474804, guid: 51372d6cefeca5d4787eff23a1024d9a, type: 3}
   KillLogPanelPrefab: {fileID: 2017045677203350615, guid: 589f8b51f9ca02f468dae0421193f76e, type: 3}
-  Crosshair: {fileID: 0}
 --- !u!114 &1474191677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13638,6 +14021,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_10 Variant (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 39
+      objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.1377456
@@ -13697,6 +14088,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 2752595138156427838, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
+      propertyPath: m_RootOrder
+      value: 47
+      objectReference: {fileID: 0}
+    - target: {fileID: 2752595138156427838, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.091207
       objectReference: {fileID: 0}
@@ -13740,6 +14135,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_3 Variant (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3276648130073305220, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3924889742702281041, guid: dc4e4b6572c951a4783424cf5baf3653, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 18a91162c17daaf4ca32b11b3bcfcd71, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14071,8 +14474,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectList:
-  - effectType: 0
-    particleSystem: {fileID: 2092672528}
+    serializedKvps:
+    - Key: 0
+      Value: {fileID: 2092672528}
+      index: 0
+      isKeyRepeated: 0
+      isKeyNull: 0
+    dividerPos: 0.33
 --- !u!4 &1501876103
 Transform:
   m_ObjectHideFlags: 0
@@ -14219,6 +14627,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_8 Variant (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6249605063833431605, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6769154456122979471, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
+      propertyPath: m_RootOrder
+      value: 34
+      objectReference: {fileID: 0}
     - target: {fileID: 6769154456122979471, guid: d3ad6e0da3e20894cbd4d4ec014df578, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.1320999
@@ -14325,6 +14741,14 @@ PrefabInstance:
     - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_Name
       value: Palm_10 Variant (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14554,7 +14978,6 @@ MonoBehaviour:
   - {fileID: 585918426}
   - {fileID: 635655672}
   - {fileID: 776704786}
-  usedPosition: []
 --- !u!4 &1568618083
 Transform:
   m_ObjectHideFlags: 0
@@ -14871,6 +15294,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_9 Variant (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x
       value: -11.250003
@@ -15158,6 +15589,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_9 Variant (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 42
+      objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.6400024
@@ -15364,6 +15803,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_9 Variant (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 29
+      objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x
       value: 18.75124
@@ -15566,6 +16013,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
+    - target: {fileID: 2689119800079871857, guid: 4886f089f1adf674292e23523f6541ac, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a401fd119dc4764449990a13d9245dab, type: 2}
+    - target: {fileID: 2689119800079871857, guid: 4886f089f1adf674292e23523f6541ac, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 18a91162c17daaf4ca32b11b3bcfcd71, type: 2}
+    - target: {fileID: 3826512572797228062, guid: 4886f089f1adf674292e23523f6541ac, type: 3}
+      propertyPath: m_RootOrder
+      value: 99
+      objectReference: {fileID: 0}
     - target: {fileID: 3826512572797228062, guid: 4886f089f1adf674292e23523f6541ac, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.042264
@@ -15610,6 +16069,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_7 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4490458564448833188, guid: 4886f089f1adf674292e23523f6541ac, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15639,10 +16102,6 @@ PrefabInstance:
     - target: {fileID: 8944336655422409496, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: orthographic size
       value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 8944336655422409496, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 1919
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409498, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_Name
@@ -16579,6 +17038,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 8314677931452264607, guid: bda068e7f1c094d4c929b2e50da986ac, type: 3}
+      propertyPath: m_RootOrder
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8314677931452264607, guid: bda068e7f1c094d4c929b2e50da986ac, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.5600004
       objectReference: {fileID: 0}
@@ -16621,6 +17084,10 @@ PrefabInstance:
     - target: {fileID: 8658305704329587237, guid: bda068e7f1c094d4c929b2e50da986ac, type: 3}
       propertyPath: m_Name
       value: Rock_10 Variant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8658305704329587237, guid: bda068e7f1c094d4c929b2e50da986ac, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16758,6 +17225,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 3831753616992921305, guid: f70bd144aba7374408146df837b62c0b, type: 3}
+      propertyPath: m_RootOrder
+      value: 87
+      objectReference: {fileID: 0}
+    - target: {fileID: 3831753616992921305, guid: f70bd144aba7374408146df837b62c0b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 20.301144
       objectReference: {fileID: 0}
@@ -16800,6 +17271,10 @@ PrefabInstance:
     - target: {fileID: 4496509084872096867, guid: f70bd144aba7374408146df837b62c0b, type: 3}
       propertyPath: m_Name
       value: Rock_8 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4496509084872096867, guid: f70bd144aba7374408146df837b62c0b, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17003,7 +17478,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icons:
   - {fileID: 21300000, guid: 2df18cd5ba118d14f84e5f9d0b9f95c6, type: 3}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 2a7a8d0cf646132498012228a7bb1df6, type: 3}
   killLogPanelPrefab: {fileID: 2017045677203350615, guid: 589f8b51f9ca02f468dae0421193f76e, type: 3}
   killLogPanelParent: {fileID: 1783490134}
   padding: 60
@@ -17054,6 +17529,14 @@ PrefabInstance:
     - target: {fileID: 165920268538129378, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
       propertyPath: m_Name
       value: Palm_1 Variant (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 165920268538129378, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 650391048483303768, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: m_RootOrder
+      value: 48
       objectReference: {fileID: 0}
     - target: {fileID: 650391048483303768, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -17225,6 +17708,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_5 Variant (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 570827713969367610, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 909775935248003200, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
+      propertyPath: m_RootOrder
+      value: 27
+      objectReference: {fileID: 0}
     - target: {fileID: 909775935248003200, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
       propertyPath: m_LocalPosition.x
       value: 22.247562
@@ -17298,6 +17789,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_10 Variant (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 44
+      objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.398732
@@ -17338,6 +17837,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1947801117094655029, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 18a91162c17daaf4ca32b11b3bcfcd71, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17359,6 +17862,14 @@ PrefabInstance:
     - target: {fileID: 202579162367895766, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
       propertyPath: m_Name
       value: Palm_6 Variant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 202579162367895766, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 685782995929789036, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
+      propertyPath: m_RootOrder
+      value: 41
       objectReference: {fileID: 0}
     - target: {fileID: 685782995929789036, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -17422,6 +17933,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_1 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 165920268538129378, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 650391048483303768, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: m_RootOrder
+      value: 97
+      objectReference: {fileID: 0}
     - target: {fileID: 650391048483303768, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.300595
@@ -17462,6 +17981,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1823267265016957495, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 598a829e34c235045a4752392232fe2c, type: 2}
+    - target: {fileID: 1823267265016957495, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 18a91162c17daaf4ca32b11b3bcfcd71, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17987,6 +18514,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_9 Variant (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 42
+      objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.335858
@@ -18049,6 +18584,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_3 Variant (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5118645067425190702, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5495170262517107092, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5495170262517107092, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.46886
+      objectReference: {fileID: 0}
     - target: {fileID: 5495170262517107092, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
       propertyPath: m_LocalPosition.x
       value: 42.23
@@ -18110,6 +18657,14 @@ PrefabInstance:
     - target: {fileID: 570827713969367610, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
       propertyPath: m_Name
       value: Palm_5 Variant (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 570827713969367610, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 909775935248003200, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
+      propertyPath: m_RootOrder
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 909775935248003200, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
       propertyPath: m_LocalPosition.x
@@ -18386,6 +18941,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 3789883777017604398, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
+      propertyPath: m_RootOrder
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 3789883777017604398, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
       propertyPath: m_LocalPosition.x
       value: 20.211002
       objectReference: {fileID: 0}
@@ -18428,6 +18987,10 @@ PrefabInstance:
     - target: {fileID: 4599177543438185364, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
       propertyPath: m_Name
       value: Palm_4 Variant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4599177543438185364, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18519,7 +19082,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_Name
-      value: lm_10 Variant (14)4)
+      value: Palm_10 Variant (14)
       objectReference: {fileID: 0}
     - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_Layer
@@ -18569,8 +19132,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 5347125359875999208, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -19157,6 +19719,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_9 Variant (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 26
+      objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x
       value: 27.83234
@@ -19219,6 +19789,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_10 Variant (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 98
+      objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.33999938
@@ -19280,6 +19858,14 @@ PrefabInstance:
     - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_Name
       value: Palm_10 Variant (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977729279235552, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
+      propertyPath: m_RootOrder
+      value: 39
       objectReference: {fileID: 0}
     - target: {fileID: 814261028557082458, guid: 38282ac7690da8440994a98e5f1eee24, type: 3}
       propertyPath: m_LocalPosition.x
@@ -19578,6 +20164,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_1 Variant (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 165920268538129378, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 650391048483303768, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
+      propertyPath: m_RootOrder
+      value: 17
+      objectReference: {fileID: 0}
     - target: {fileID: 650391048483303768, guid: 518a5c2e5dacc6e458a2398cab70679b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.0600023
@@ -19637,6 +20231,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 8314677931452264607, guid: bda068e7f1c094d4c929b2e50da986ac, type: 3}
+      propertyPath: m_RootOrder
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8314677931452264607, guid: bda068e7f1c094d4c929b2e50da986ac, type: 3}
       propertyPath: m_LocalPosition.x
       value: 14.696538
       objectReference: {fileID: 0}
@@ -19679,6 +20277,10 @@ PrefabInstance:
     - target: {fileID: 8658305704329587237, guid: bda068e7f1c094d4c929b2e50da986ac, type: 3}
       propertyPath: m_Name
       value: Rock_10 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8658305704329587237, guid: bda068e7f1c094d4c929b2e50da986ac, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -19835,6 +20437,22 @@ PrefabInstance:
     m_TransformParent: {fileID: 222266643}
     m_Modifications:
     - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_RootOrder
+      value: 89
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5.7613983
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5.7613983
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 5.7614
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.9699967
       objectReference: {fileID: 0}
@@ -19878,6 +20496,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_6 Variant (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5585327714065340302, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19888,6 +20510,46 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5100539171189165364, guid: 8c8094ecce82a154a8f36015a526a732, type: 3}
   m_PrefabInstance: {fileID: 2055023238}
   m_PrefabAsset: {fileID: 0}
+--- !u!21 &2056283339
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Default UI Material
+  m_Shader: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 3
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &2057766945
 GameObject:
   m_ObjectHideFlags: 0
@@ -20070,6 +20732,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_3 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 5118645067425190702, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5495170262517107092, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
+      propertyPath: m_RootOrder
+      value: 86
+      objectReference: {fileID: 0}
     - target: {fileID: 5495170262517107092, guid: de09becd7ac541e4d935d67b43ee4b75, type: 3}
       propertyPath: m_LocalPosition.x
       value: -20.990002
@@ -20131,6 +20801,14 @@ PrefabInstance:
     - target: {fileID: 202579162367895766, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
       propertyPath: m_Name
       value: Palm_6 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 202579162367895766, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 685782995929789036, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
+      propertyPath: m_RootOrder
+      value: 102
       objectReference: {fileID: 0}
     - target: {fileID: 685782995929789036, guid: 5bd55c16b5b292445a9f1446b2ccfce3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -20382,8 +21060,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1166160449237680039, guid: 85a5f51aca7cc5448afd1dcf88a14065, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -20409,6 +21086,14 @@ PrefabInstance:
     - target: {fileID: 570827713969367610, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
       propertyPath: m_Name
       value: Palm_5 Variant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 570827713969367610, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 909775935248003200, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
+      propertyPath: m_RootOrder
+      value: 38
       objectReference: {fileID: 0}
     - target: {fileID: 909775935248003200, guid: a654c6b412986fa4c9242c469c7d0c57, type: 3}
       propertyPath: m_LocalPosition.x
@@ -20876,6 +21561,14 @@ PrefabInstance:
     - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_Name
       value: Palm_9 Variant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521978303640142547, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
+      propertyPath: m_RootOrder
+      value: 42
       objectReference: {fileID: 0}
     - target: {fileID: 9011692620513990761, guid: ada7a4b9f8c4ceb43adb73783e3d71da, type: 3}
       propertyPath: m_LocalPosition.x

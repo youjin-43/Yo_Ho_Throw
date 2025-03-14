@@ -27,7 +27,7 @@ public class SettingManager : MonoBehaviour
     [SerializeField] ButtonSound buttonSound;
 
     [SerializeField] PlayerController playerController;
-    [SerializeField] float sensitivity;
+    [SerializeField] static float sensitivity = 3f; // 감도
     float clampedValue;
 
     private void Awake()
@@ -40,18 +40,21 @@ public class SettingManager : MonoBehaviour
         masterVolumeToggle.onValueChanged.AddListener(OnMasterVolumeToggleChanged);
         effectVolumeToggle.onValueChanged.AddListener(OnEffectVolumeToggleChanged);
 
-        // 슬라이더 연결
+        // 소리 슬라이더 연결
         masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeSliderChanged);
         effectVolumeSlider.onValueChanged.AddListener(OnEffectVolumeSliderChanged);
 
-        // 감도 슬라이더의 초기값 설정 (예: 4.5)
-        sensitivitySlider.value = 4.5f;
+        // 감도 슬라이더의 연결
         sensitivitySlider.onValueChanged.AddListener(OnSensitivitySliderChanged);
         sensitivityText.text = sensitivitySlider.value.ToString();
 
+        // 저장된 값으로 가져오기
         masterVolume = AudioManager.Instance.bgmVolume;
         effectVolume = AudioManager.Instance.sfxVolume;
-        sensitivity = playerController.mouseSpeed;
+        masterVolumeSlider.value = AudioManager.Instance.bgmVolume;
+        effectVolumeSlider.value = AudioManager.Instance.sfxVolume;
+
+        sensitivitySlider.value = sensitivity;
 
         // 버튼&토글에 소리 연결
         buttonSound.RegisterButtonSounds();
@@ -143,6 +146,12 @@ public class SettingManager : MonoBehaviour
         AudioManager.Instance.SetSfxVolume(AudioManager.Instance.sfxVolume);
 
         playerController.SetMouseSensitivity(sensitivity);
+
+        // 슬라이더도 원위치로
+        masterVolumeSlider.value = AudioManager.Instance.bgmVolume;
+        effectVolumeSlider.value = AudioManager.Instance.sfxVolume;
+
+        sensitivitySlider.value = sensitivity;
 
         gameObject.SetActive(false); // 패널 비활성화
     }

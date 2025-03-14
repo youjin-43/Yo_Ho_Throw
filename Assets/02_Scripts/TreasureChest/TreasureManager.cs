@@ -74,7 +74,7 @@ public class TreasureManager : MonoBehaviour
             // 모든 보물상자 삭제
             foreach (GameObject chest in treasureChests)
             {
-                Destroy(chest);
+                PhotonNetwork.Destroy(chest); // 네트워크에서 보물상자 삭제
             }
             treasureChests.Clear(); // 보물상자 리스트 초기화
             usedPosition.Clear(); // 사용된 위치 초기화
