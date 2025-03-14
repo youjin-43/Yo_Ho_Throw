@@ -46,7 +46,7 @@ public class Cutlass : MonoBehaviour
     }
     IEnumerator ClearCoroutine()
     {
-        TrailRenderer trail = GetComponent<TrailRenderer>();
+        TrailRenderer trail = GetComponentInChildren<TrailRenderer>();
 
         // TrailRenderer의 모든 점을 제거 (초기화)
         Vector3[] emptyPositions = new Vector3[0];
