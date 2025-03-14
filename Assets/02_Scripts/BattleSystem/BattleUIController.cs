@@ -324,8 +324,11 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
     private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
 
     Coroutine notificationCoroutine = null;
+    [PunRPC]
     public void Notification(string str)
     {
+        notificationText.text = str;
+
         if (notificationCoroutine != null)
             StopCoroutine(notificationCoroutine);
 

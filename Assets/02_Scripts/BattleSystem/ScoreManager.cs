@@ -62,6 +62,11 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
                 int targetActorNr = bountyTargetActorNumber;
 
+                BattleUIController.Instance.photonView.RPC(
+                    "Notification",
+                    RpcTarget.All,
+                    PhotonNetwork.CurrentRoom.Players[targetActorNr].NickName + "님이 처치되었습니다");
+
                 foreach (var kvp in PhotonNetwork.CurrentRoom.Players)
                 {
                     InGameUIManager.HidePlayerIcon(kvp.Key, targetActorNr, MinimapIconType.Other_Player);
