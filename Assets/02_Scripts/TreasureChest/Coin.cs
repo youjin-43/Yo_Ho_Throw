@@ -3,11 +3,12 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.CompareTag("Player")) // 플레이어와 충돌 시
+        if (collision.gameObject.CompareTag("Player")) // 플레이어와 충돌 시
         {
-            PlayerController playerController = other.GetComponent<PlayerController>();
+            Debug.Log("충돌발생");
+            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
             if (playerController != null)
             {
                 playerController.AddCoin(1); // 코인 추가
