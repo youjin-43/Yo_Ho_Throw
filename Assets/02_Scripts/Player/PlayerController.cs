@@ -157,9 +157,7 @@ public class PlayerController : ThirdPersonController
 
         if (projectile == null) return;
 
-        projectile.transform.position = bulletSpawnPoint.position;
-
-        projectile.GetComponentInChildren<Cutlass>().attackerActorNr = attackerActorNr;
+        projectile.GetComponentInChildren<Cutlass>().Setting(attackerActorNr, bulletSpawnPoint.position);
 
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
