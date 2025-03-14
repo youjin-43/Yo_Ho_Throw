@@ -27,7 +27,7 @@ public class SettingManager : MonoBehaviour
     [SerializeField] ButtonSound buttonSound;
 
     [SerializeField] PlayerController playerController;
-    [SerializeField] static float sensitivity = 4.5f; // 감도
+    [SerializeField] static float sensitivity = 3f; // 감도
     float clampedValue;
 
     private void Awake()

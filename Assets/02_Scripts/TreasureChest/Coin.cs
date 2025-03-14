@@ -3,14 +3,16 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    public PlayerController player;
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player")) // 플레이어와 충돌 시
         {
-            player.AddCoin(1); // 플레이어의 코인 수 증가
-            Destroy(gameObject); // 코인 삭제
+            PlayerController playerController = other.GetComponent<PlayerController>();
+            if (playerController != null)
+            {
+                playerController.AddCoin(1); // 코인 추가
+                PhotonNetwork.Destroy(gameObject); // 네트워크에서 코인 삭제
+            }
         }
     }
 }
