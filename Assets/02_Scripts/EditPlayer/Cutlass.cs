@@ -48,20 +48,20 @@ public class Cutlass : MonoBehaviour
     {
         TrailRenderer trail = GetComponent<TrailRenderer>();
 
-        trail.Clear();
-
         // TrailRenderer의 모든 점을 제거 (초기화)
         Vector3[] emptyPositions = new Vector3[0];
 
-        trail.SetPositions(emptyPositions);
+        trail.gameObject.SetActive(false);
 
-        trail.Clear();
+        trail.SetPositions(emptyPositions);
 
         yield return null; // 한 프레임 대기 (필수)
 
         trail.SetPositions(emptyPositions);
 
         trail.Clear();
+
+        trail.gameObject.SetActive(true);
     }
     protected virtual void OnTriggerEnter(Collider other)
     {
