@@ -76,5 +76,10 @@ public class UI_Menu : UI_Base
     {
         // SceneManager.LoadSceneAsync()
     }
+
+    private void OnEnable()
+    {
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIClick);
+    }
     #endregion
 }
