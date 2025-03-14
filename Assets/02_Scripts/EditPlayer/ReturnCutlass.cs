@@ -27,12 +27,9 @@ public class ReturnCutlass : MonoBehaviour
         if (other.gameObject.GetInstanceID() ==
             transform.parent.gameObject.GetInstanceID()) return;
 
-        if (!other.CompareTag("Player"))
-        {
-            explosionCutlass?.Explosion();
+        explosionCutlass?.Explosion();
 
-            DeactivateKnife();
-        }
+        DeactivateKnife();
     }
     public void DeactivateKnife()
     {

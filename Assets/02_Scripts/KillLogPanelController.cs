@@ -1,4 +1,4 @@
-using Photon.Pun;
+ï»¿using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -50,7 +50,7 @@ public class KillLogPanelController : MonoBehaviour
 
         back = killLogPanel;
     }
-    public void AddKillLog(int exitActorNr)
+    public void AddKillLog(string exitPlayerNickName)
     {
         KillLogPanel killLogPanel = null;
 
@@ -65,10 +65,10 @@ public class KillLogPanelController : MonoBehaviour
 
         killLogPanel.transform.localPosition = Vector3.zero;
 
-        // TODO È£ÁØ : Å»ÁÖ ·Î±× ÅØ½ºÆ® ¼öÁ¤ ºÎºĞ (Âù±Ô)
+        // TODO í˜¸ì¤€ : íƒˆì£¼ ë¡œê·¸ í…ìŠ¤íŠ¸ ìˆ˜ì • ë¶€ë¶„ (ì°¬ê·œ)
         killLogPanel.SetText(
-            "Å»ÁÖ",
-            PhotonNetwork.CurrentRoom.Players[exitActorNr].NickName,
+            exitPlayerNickName,
+            "ì ‘ì†ì¢…ë£Œ",
             icons[1]);
 
         killLogPanel.SetBack(back);

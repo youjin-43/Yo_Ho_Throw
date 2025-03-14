@@ -10,6 +10,6 @@ public class UI_Minimap_Helper : MonoBehaviourPunCallbacks
 
         InGameUIManager.Instance.Minimap.RemovePlayerTransform(otherPlayer.ActorNumber);
 
-        KillLogPanelController.Instance.AddKillLog(otherPlayer.ActorNumber);
+        KillLogPanelController.Instance.AddKillLog(otherPlayer.NickName);
     }
 }

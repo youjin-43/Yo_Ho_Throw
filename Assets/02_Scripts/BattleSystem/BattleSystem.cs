@@ -11,7 +11,7 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 {
     public static BattleSystem Instance { get; private set; } = null;
 
-    int timeLimit = 15;
+    int timeLimit = 300;
 
     int spawnedPlayerCount = 0;
 
@@ -64,7 +64,7 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.BattleStart,
             Time.unscaledTime,
-            new RaiseEventOptions { Receivers = ReceiverGroup.All },
+            new RaiseEventOptions { CachingOption = EventCaching.DoNotCache, Receivers = ReceiverGroup.All },
             SendOptions.SendReliable);
     }
     /// <summary>
