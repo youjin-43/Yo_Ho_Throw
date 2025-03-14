@@ -49,8 +49,9 @@ public class PlayerController : ThirdPersonController
         base.Start();
         cameraTransform = Camera.main.transform;
         photonTransformView = GetComponent<PhotonTransformView>();
-        
 
+        if (InGameUIManager.Instance != null)
+            InGameUIManager.Instance.SetPlayerID(PhotonNetwork.NickName);
     }
     void Update()
     {
@@ -156,9 +157,7 @@ public class PlayerController : ThirdPersonController
 
         if (projectile == null) return;
 
-        projectile.transform.position = bulletSpawnPoint.position;
-
-        projectile.GetComponentInChildren<Cutlass>().attackerActorNr = attackerActorNr;
+        projectile.GetComponentInChildren<Cutlass>().Setting(attackerActorNr, bulletSpawnPoint.position);
 
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
