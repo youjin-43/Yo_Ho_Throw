@@ -203,11 +203,11 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
     }
     public void SetBountyTarget()
     {
-        bountyTargetActorNumber = GetTopScorerActorNumber();
+        int setBountyTargetActorNumber = GetTopScorerActorNumber();
 
-        Debug.Log("바운티 타겟 설정 : " + bountyTargetActorNumber.ToString());
+        Debug.Log("바운티 타겟 설정 : " + setBountyTargetActorNumber);
 
-        photonView.RPC("SetBountyTargetActorNumber", RpcTarget.All, bountyTargetActorNumber);
+        photonView.RPC("SetBountyTargetActorNumber", RpcTarget.All, setBountyTargetActorNumber);
     }
     [PunRPC]
     public void SetBountyTargetActorNumber(int targetActorNr)
@@ -217,6 +217,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             InGameUIManager.ShowPlayerIcon(targetActorNr, MinimapIconType.Bounty_Hunter);
 
+            // 이전 타겟에 대해 현상금을 제거한다
             if (bountyTargetActorNumber != -1)
             {
                 PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.DeactivateBountyTargetImmediate.ToString(), bountyTargetActorNumber);

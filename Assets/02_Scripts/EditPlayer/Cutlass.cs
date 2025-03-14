@@ -38,7 +38,31 @@ public class Cutlass : MonoBehaviour
 
         gravityTimeCoroutine = StartCoroutine(ApplyGravity());
     }
+    public void Setting(int attackerActorNr, Vector3 position)
+    {
+        this.attackerActorNr = attackerActorNr;
+        transform.position = position;
+        StartCoroutine(ClearCoroutine());
+    }
+    IEnumerator ClearCoroutine()
+    {
+        TrailRenderer trail = GetComponent<TrailRenderer>();
 
+        trail.Clear();
+
+        // TrailRenderer의 모든 점을 제거 (초기화)
+        Vector3[] emptyPositions = new Vector3[0];
+
+        trail.SetPositions(emptyPositions);
+
+        trail.Clear();
+
+        yield return null; // 한 프레임 대기 (필수)
+
+        trail.SetPositions(emptyPositions);
+
+        trail.Clear();
+    }
     protected virtual void OnTriggerEnter(Collider other)
     {
         // 플레이어에게 충돌했을 때
