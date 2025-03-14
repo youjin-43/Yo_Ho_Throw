@@ -49,8 +49,9 @@ public class PlayerController : ThirdPersonController
         base.Start();
         cameraTransform = Camera.main.transform;
         photonTransformView = GetComponent<PhotonTransformView>();
-        
 
+        if (InGameUIManager.Instance != null)
+            InGameUIManager.Instance.SetPlayerID(PhotonNetwork.NickName);
     }
     void Update()
     {

@@ -154,8 +154,20 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
         CursorController.Instance.CursorEnable();
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
+        StartCoroutine(ApplyGravityAfterDeath());
     }
+    private IEnumerator ApplyGravityAfterDeath()
+    {
+        PlayerController pc = GetComponent<PlayerController>();
 
+        while (!transform.GetComponent<PlayerController>().Grounded)
+        {
+            pc._controller.Move(new Vector3(0, -9.81f * Time.deltaTime, 0));
+            Debug.Log("공중죽음");
+            yield return null;
+        }
+        anim.SetTrigger("Dead");
+    }
     [PunRPC]
     private IEnumerator HealOverTime()
     {
