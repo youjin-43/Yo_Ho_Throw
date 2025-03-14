@@ -87,6 +87,8 @@ public class UI_SkillIndicator : UI_Base
             _skill_LClick_ActiveEffect = transform.GetChild(1).transform.GetChild(0).gameObject;
             _skill_RClick_ActiveEffect = transform.GetChild(2).transform.GetChild(0).gameObject;
             _skill_Item_ActiveEffect   = transform.GetChild(3).transform.GetChild(0).gameObject;
+
+            _skill_Item_ActiveEffect.gameObject.SetActive(false);
         }
         // 쿨타임 이펙트
         {
@@ -117,7 +119,8 @@ public class UI_SkillIndicator : UI_Base
         }
         // 아이템 슬롯
         {
-            _itemSlot = transform.GetChild(3).GetChild(1).GetComponent<Image>();
+            _itemSlot = transform.GetChild(3).GetChild(1).GetChild(0).GetComponent<Image>();
+            _itemSlot.gameObject.SetActive(false);
         }
     }
     #endregion
@@ -157,6 +160,9 @@ public class UI_SkillIndicator : UI_Base
             _itemActivation.gameObject.SetActive(true);
             // 파티클은 끄고
             _skill_Item_ActiveEffect.SetActive(false);
+
+            // 이미지도 없에면 좋을듯
+            _itemSlot.gameObject.SetActive(false);
         }
     }
 
@@ -167,7 +173,7 @@ public class UI_SkillIndicator : UI_Base
         coolDownImage.fillAmount = 1f;
 
         float elapsedTime = 0f;
-
+        
         while(elapsedTime < cooldownTime)
         {
             elapsedTime += Time.deltaTime;
@@ -237,18 +243,20 @@ public class UI_SkillIndicator : UI_Base
         }
     }
     #endregion
+
+    #region ITEM
     public void SetItemSlotImage(Image image)
     {
         _itemSlot.gameObject.SetActive(true);
+        _skill_Item_ActiveEffect.gameObject.SetActive(true);
         _itemSlot.sprite = image.sprite;
     }
     public void HideItemSlotImage()
     {
         _itemSlot.gameObject.SetActive(false);
+        _skill_Item_ActiveEffect.gameObject.SetActive(false);
+        _itemActivation.gameObject.SetActive(true);
     }
-    #region ITEM
-
-
     #endregion
     #endregion
 }
