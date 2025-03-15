@@ -18,6 +18,8 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
     [SerializeField] Button goToTitleButton;
     [SerializeField] Button stayButton;
 
+    [SerializeField] SettingManager SettingPopup;
+
     // Player Info
     string currentScene;
     Dictionary<int, GameObject> playerUIObjects = new Dictionary<int, GameObject>(); // 현재 입장한 플레이어들
@@ -45,6 +47,12 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        // F4키로 SettingPanel 토글
+        if(Input.GetKeyDown(KeyCode.F4))
+        {
+            SettingPopup.ToggleSettingUI();
+        }
+
         // Tab 키로 ExitPopup 토글
         if (Input.GetKeyDown(KeyCode.Escape))
         {
