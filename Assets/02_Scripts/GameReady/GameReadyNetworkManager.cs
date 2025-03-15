@@ -2,6 +2,7 @@ using UnityEngine;
 using Photon.Pun; // Pun : 포톤 유니티 네트워크의 약자
 using Photon.Realtime; // 실시간 통신? 을 위해서
 using Unity.Cinemachine;
+using ExitGames.Client.Photon; // Photon CustomProperties 사용
 
 public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
 {
@@ -19,6 +20,8 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
     // 마스터 클라이언트만 실행됨 
     void Start()
     {
+        PhotonManager.Instance.UpdatePlayerSceneProperty();
+
         if (PhotonNetwork.IsMasterClient) PhotonNetwork.AutomaticallySyncScene = true; // 자동 동기화 활성화 (이후 씬 이동 시 동기화됨)
 
         gameReadyUIManager = GetComponent<GameReadyUIManager>();
@@ -97,5 +100,17 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         gameReadyUIManager.UpdatePlayerListUI();
+    }
+
+    // using ExitGames.Client.Photon; 필요 
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        Debug.Log("[GameReadyNetworkManager] OnPlayerPropertiesUpdate 호출됨");
+
+        if (changedProps.ContainsKey("CurrentScene"))
+        {
+            Debug.Log($"🎯 {targetPlayer.NickName}의 씬 변경: {changedProps["CurrentScene"]}");
+            gameReadyUIManager.UpdatePlayerListUI(); // 🔄 UI 업데이트 (씬 변경 감지 시)
+        }
     }
 }

@@ -11,7 +11,7 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 {
     public static BattleSystem Instance { get; private set; } = null;
 
-    int timeLimit = 300;
+    int timeLimit =10;
 
     int spawnedPlayerCount = 0;
 
@@ -23,6 +23,9 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     }
     private void Start()
     {
+        // 플레이어의 현재 씬 정보 저장 
+        PhotonManager.Instance.UpdatePlayerSceneProperty();
+
         // TODO 찬규 : UI부분에서 추후 리셋을 구현하셨을 경우 호출
         //InGameUIManager.Instance.ResetUI();
 
