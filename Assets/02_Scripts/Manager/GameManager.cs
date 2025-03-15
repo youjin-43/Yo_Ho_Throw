@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
+using Photon.Realtime;
 
 //public enum GameMode
 //{
@@ -55,18 +56,17 @@ public class GameManager : MonoBehaviour
 
 
     // 마우스 민감도 설정값 저장
-    private float _sensitivity = 0;
+    private GameObject _player;
+    private float      _sensitivity = 4.5f;
 
-    public void StoreSensitivityValue(float value)
-    {
-        _sensitivity = value;
-    }
     public float GetStoreSensitivityValue()
     {
         return _sensitivity;
     }
-
-    private GameObject _player;
+    public void StoreSensitivityValue(float value)
+    {
+        SetSensitivity(_sensitivity = value);
+    }
 
     public void CachePlayer(GameObject player)
     {
@@ -74,10 +74,37 @@ public class GameManager : MonoBehaviour
         {
             _player = player;
 
-            if(_sensitivity != 0)
-            {
-                player.GetComponent<PlayerController>().SetMouseSensitivity(_sensitivity);
-            }
+            SetSensitivity(_sensitivity);
         }
+    }
+
+    private void SetSensitivity(float value)
+    {
+        if(_player != null)
+        {
+            _player.GetComponent<PlayerController>().SetMouseSensitivity(_sensitivity);
+        }
+    }
+
+    // 소리 설정값 저장
+    private bool _masterVolumeOn = true;
+    private bool _EffectVolumeOn = true;
+
+    public void StoreIsMasterVolumeOn(bool isOn)
+    {
+        _masterVolumeOn = isOn;
+    }
+    public bool IsMasterVolumeOn()
+    {
+        return _masterVolumeOn;
+    }
+
+    public void StoreIsEffectVolumeOn(bool isOn)
+    {
+        _EffectVolumeOn = isOn;
+    }
+    public bool IsEffectVolumeOn()
+    {
+        return _EffectVolumeOn;
     }
 }
