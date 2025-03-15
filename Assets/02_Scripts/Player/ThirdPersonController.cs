@@ -333,6 +333,8 @@ namespace StarterAssets
                     {
                         _animator.SetBool(_animIDJump, true);
                     }
+                    //TODO 석진 점프 사운드
+                    //AudioManager.Instance.PlaySfx(AudioManager.Sfx.점프)
                 }
 
                 // jump timeout
@@ -354,10 +356,17 @@ namespace StarterAssets
                 else
                 {
                     // update animator if using character
-                    if (_hasAnimator)
+                    if (_hasAnimator )
                     {
-                        _animator.SetBool(_animIDFreeFall, true);
+                        if(isAlive)
+                            _animator.SetBool(_animIDFreeFall, true);
+                        else
+                        {
+                            _animator.SetBool(_animIDFreeFall, false);
+                            anim.SetTrigger("Dead");
+                        }
                     }
+                    
                 }
 
                 // if we are not grounded, do not jump
@@ -394,14 +403,21 @@ namespace StarterAssets
 
         private void OnFootstep(AnimationEvent animationEvent)
         {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
+
+            if (FootstepAudioClips.Length > 0)
             {
-                if (FootstepAudioClips.Length > 0)
+
+                var index = Random.Range(0, FootstepAudioClips.Length);
+                AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                if (animationEvent.animatorClipInfo.weight == 0.5f)
                 {
-                    var index = Random.Range(0, FootstepAudioClips.Length);
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume/2);
                 }
+                else
+                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
+
             }
+        
         }
 
         private void OnLand(AnimationEvent animationEvent)

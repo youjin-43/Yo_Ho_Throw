@@ -41,27 +41,7 @@ public class Cutlass : MonoBehaviour
     public void Setting(int attackerActorNr, Vector3 position)
     {
         this.attackerActorNr = attackerActorNr;
-        transform.position = position;
-        StartCoroutine(ClearCoroutine());
-    }
-    IEnumerator ClearCoroutine()
-    {
-        TrailRenderer trail = GetComponentInChildren<TrailRenderer>();
-
-        // TrailRenderer의 모든 점을 제거 (초기화)
-        Vector3[] emptyPositions = new Vector3[0];
-
-        trail.gameObject.SetActive(false);
-
-        trail.SetPositions(emptyPositions);
-
-        yield return null; // 한 프레임 대기 (필수)
-
-        trail.SetPositions(emptyPositions);
-
-        trail.Clear();
-
-        trail.gameObject.SetActive(true);
+        transform.parent.position = position;
     }
     protected virtual void OnTriggerEnter(Collider other)
     {
@@ -70,8 +50,7 @@ public class Cutlass : MonoBehaviour
         {
             PhotonView playerPhotonView = other.GetComponent<PhotonView>();
             //데미지 받을 때 애니메이션 출력
-            PlayerController pc = other.GetComponent<PlayerController>();
-            pc.OnDamagedAnim();
+            
             // 자신에 대한 공격일 경우 제외
             if (attackerActorNr == playerPhotonView.OwnerActorNr) return;
 
@@ -92,6 +71,8 @@ public class Cutlass : MonoBehaviour
 
             // EditPlayerState 에 있는 ReceiveDamage 함수 호출
             playerPhotonView.RPC("ReceiveDamage", RpcTarget.All, attackerActorNr, CUTLASS_THROW_DAMAGE);
+            PlayerController pc = other.GetComponent<PlayerController>();
+            pc.OnDamagedAnim();
         }
 
         // �������ڿ� �浹���� ��

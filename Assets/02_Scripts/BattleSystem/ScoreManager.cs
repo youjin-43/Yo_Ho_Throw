@@ -62,6 +62,11 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
                 int targetActorNr = bountyTargetActorNumber;
 
+                BattleUIController.Instance.photonView.RPC(
+                    "Notification",
+                    RpcTarget.All,
+                    PhotonNetwork.CurrentRoom.Players[targetActorNr].NickName + "님이 처치되었습니다");
+
                 foreach (var kvp in PhotonNetwork.CurrentRoom.Players)
                 {
                     InGameUIManager.HidePlayerIcon(kvp.Key, targetActorNr, MinimapIconType.Other_Player);
@@ -222,6 +227,10 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.DeactivateBountyTargetImmediate.ToString(), bountyTargetActorNumber);
             }
+
+            AudioManager.Instance.PlaySfx(AudioManager.Sfx.Bounty);
+
+            BattleUIController.Instance.Notification(PhotonNetwork.CurrentRoom.Players[targetActorNr].NickName + "님이 현상금 대상으로 지정되었습니다 !");
 
             PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.ActivateBountyTarget.ToString(), targetActorNr);
         }

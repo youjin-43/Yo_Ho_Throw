@@ -42,6 +42,7 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
     // Photon에서 플레이어 `CustomProperties`가 변경될 때 호출됨
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
+        Debug.Log("[PlayerReadyManager] OnPlayerPropertiesUpdate 호출됨");
         string isReadyKey = PhotonPlayerProperties.IsReady.ToString();
 
         if (changedProps.ContainsKey(isReadyKey))

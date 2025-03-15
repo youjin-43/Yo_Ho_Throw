@@ -32,22 +32,25 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         get => bulletCount;
         set
         {
-            if (bulletCount > value)
+            if (photonView.IsMine)
             {
-                bulletCount = value;
-
-                if (photonView.IsMine)
+                if (bulletCount > value)
                 {
+                    bulletCount = value;
+
+
+
                     InGameUIManager.Instance.SkillIndicator.RemoveDagger(bulletCount);
 
-                    InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
-                }
-            }
-            else if (bulletCount < value)
-            {
-                InGameUIManager.Instance.SkillIndicator.AddDagger(value - bulletCount);
+                    InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 1f);
 
-                bulletCount = value;
+                }
+                else if (bulletCount < value)
+                {
+                    InGameUIManager.Instance.SkillIndicator.AddDagger(value - bulletCount);
+
+                    bulletCount = value;
+                }
             }
         }
     }
@@ -79,7 +82,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             if (healingCoroutine == null)
             {
 
-                healingCoroutine = StartCoroutine(HealOverTime());
+
+                photonView.RPC("StartHeal_RPC", RpcTarget.All);
             }
         }
 
@@ -87,9 +91,31 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         {
             if(bulletReloadCoroutine == null)
             {
-                bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
+                if (photonView.IsMine)
+
+                    photonView.RPC("BulletReloadOverTime_RPC", RpcTarget.All);
             }
         }
+    }
+    [PunRPC]
+    public void StartHeal_RPC()
+    {
+        if (healingCoroutine == null) 
+        {
+            healingCoroutine = StartCoroutine(HealOverTime());
+        }
+    }
+
+    [PunRPC]
+    public void SyncLastDamageTime(float damageTime)
+    {
+        lastDamageTime = damageTime; //모든 클라이언트에서 lastDamageTime 동기화
+    }
+
+    [PunRPC]
+    public void BulletReloadOverTime_RPC()
+    {  
+            bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
     }
     
     IEnumerator BulletReloadOverTime()
@@ -113,7 +139,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         if (isInLobby) return;
 
-        //AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerHit);
+        
 
         anim.SetTrigger("Hit");
         lastDamageTime = Time.time;
@@ -123,8 +149,26 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             StopCoroutine(healingCoroutine);
             healingCoroutine = null; // 체력 회복 중이면 중단
         }
+        if (Hp > 0)
+        {
+            Debug.Log("맞는 소리");
+            photonView.RPC("PlaySfxAtPosition_RPC", RpcTarget.All, (int)AudioManager.Sfx.PlayerHit, transform.position);
+            //AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerHit, transform.position);
 
+        }
+        else
+        {
+            Debug.Log("죽는 소리");
+            photonView.RPC("PlaySfxAtPosition_RPC", RpcTarget.All, (int)AudioManager.Sfx.PlayerDead, transform.position);
+
+        }
     }
+    [PunRPC]
+    public void PlaySfxAtPosition_RPC(int sfx, Vector3 position  )
+    {
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerDead, transform.position);
+    }
+
     [PunRPC]
     public void ReceiveDamage(int attackerActorNr, int damage)
     {
@@ -135,10 +179,17 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         InGameUIManager.Instance.AddDamage(damage);
         Hp -= damage;
 
+        photonView.RPC("SyncLastDamageTime", RpcTarget.All, Time.time);
+
         if (Hp <= 0)
         {
             
             photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
+
+        }
+        else
+        {
+            //AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerHit, transform.position);
         }
     }
     [PunRPC]
@@ -151,7 +202,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
         // 이동 비활성화
         isAlive = false;
-
+        
         CursorController.Instance.CursorEnable();
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
         StartCoroutine(ApplyGravityAfterDeath());
@@ -350,4 +401,6 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if (coin - _coin >= 0)
             coin -= _coin;
     }
+
+    
 }
