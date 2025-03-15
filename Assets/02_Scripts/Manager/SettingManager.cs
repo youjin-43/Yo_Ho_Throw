@@ -26,8 +26,15 @@ public class SettingManager : MonoBehaviour
 
     [SerializeField] ButtonSound buttonSound;
 
-    [SerializeField] PlayerController playerController;
-    [SerializeField] static float sensitivity = 3f; // 감도
+
+
+    // ㅇㅎㅈ
+    // 여기에 Player 프리펩을 넣고 MainUIScene에서 감도설정을 하면 모든 클라이언트가 동일한 값을 가져서
+    // 민감도 값을 따로 저장해놓고 플레이어가 생성된 이후에 적용시켜주면 좋을 것 같아요
+    // 민감도 값을 GameManager에 저장해놓고 꺼내서 쓰는 구조로 바꿨어요.
+
+    //[SerializeField] PlayerController playerController;
+    [SerializeField] float sensitivity = 1f;
     float clampedValue;
 
     private void Awake()
@@ -40,23 +47,32 @@ public class SettingManager : MonoBehaviour
         masterVolumeToggle.onValueChanged.AddListener(OnMasterVolumeToggleChanged);
         effectVolumeToggle.onValueChanged.AddListener(OnEffectVolumeToggleChanged);
 
-        // 소리 슬라이더 연결
+        // 슬라이더 연결
         masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeSliderChanged);
         effectVolumeSlider.onValueChanged.AddListener(OnEffectVolumeSliderChanged);
 
-        // 감도 슬라이더의 연결
+        // 감도 슬라이더의 초기값 설정 (예: 4.5)
+        sensitivitySlider.value = 4.5f;
         sensitivitySlider.onValueChanged.AddListener(OnSensitivitySliderChanged);
         sensitivityText.text = sensitivitySlider.value.ToString();
 
-        // 저장된 값으로 가져오기
+        // ㅇㅎㅈ
+        GameManager.Instance.StoreSensitivityValue(sensitivitySlider.value);
+
+
         masterVolume = AudioManager.Instance.bgmVolume;
         effectVolume = AudioManager.Instance.sfxVolume;
-        masterVolumeSlider.value = AudioManager.Instance.bgmVolume;
-        effectVolumeSlider.value = AudioManager.Instance.sfxVolume;
 
-        sensitivitySlider.value = sensitivity;
+        // ㅇㅎㅈ
+        // sensitivity = playerController.mouseSpeed;
+
 
         // 버튼&토글에 소리 연결
+        if(buttonSound == null)
+        {
+            buttonSound = AudioManager.Instance.GetComponent<ButtonSound>();
+        }
+
         buttonSound.RegisterButtonSounds();
         buttonSound.RegisterToggleSounds();
     }
@@ -122,8 +138,12 @@ public class SettingManager : MonoBehaviour
         // 감도 값을 0.1에서 10 사이로 제한
         clampedValue = Mathf.Clamp(value, 0.1f, 10f);
 
+
+        // ㅇㅎㅈ
         // 플레이어 마우스 감도 설정 
-        playerController.SetMouseSensitivity(clampedValue);
+        // playerController.SetMouseSensitivity(clampedValue);
+        GameManager.Instance.StoreSensitivityValue(clampedValue);
+
 
         sensitivityText.text = clampedValue.ToString("F1"); // 소수점 한자리까지 표시
     }
@@ -145,14 +165,16 @@ public class SettingManager : MonoBehaviour
         AudioManager.Instance.SetBgmVolume(AudioManager.Instance.bgmVolume);
         AudioManager.Instance.SetSfxVolume(AudioManager.Instance.sfxVolume);
 
-        playerController.SetMouseSensitivity(sensitivity);
+        //playerController.SetMouseSensitivity(sensitivity);
 
-        // 슬라이더도 원위치로
-        masterVolumeSlider.value = AudioManager.Instance.bgmVolume;
-        effectVolumeSlider.value = AudioManager.Instance.sfxVolume;
-
-        sensitivitySlider.value = sensitivity;
+        GameManager.Instance.StoreSensitivityValue(clampedValue);
 
         gameObject.SetActive(false); // 패널 비활성화
+    }
+
+    private void OnEnable()
+    {
+        sensitivitySlider.value = GameManager.Instance.GetStoreSensitivityValue();
+        sensitivityText  .text  = GameManager.Instance.GetStoreSensitivityValue().ToString("F1");
     }
 }

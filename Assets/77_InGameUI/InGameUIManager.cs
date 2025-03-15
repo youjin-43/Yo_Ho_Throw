@@ -178,6 +178,18 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
+    public bool IsSettingUIOpen()
+    {
+        if (Setting.gameObject.activeSelf == true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public bool IsStoreUIOpen()
     {
         if(ItemSelect.gameObject.activeSelf == true)

@@ -50,4 +50,34 @@ public class GameManager : MonoBehaviour
     {
         CursorController.Instance.CursorEnable();
     }
+
+
+
+
+    // 마우스 민감도 설정값 저장
+    private float _sensitivity = 0;
+
+    public void StoreSensitivityValue(float value)
+    {
+        _sensitivity = value;
+    }
+    public float GetStoreSensitivityValue()
+    {
+        return _sensitivity;
+    }
+
+    private GameObject _player;
+
+    public void CachePlayer(GameObject player)
+    {
+        if(player.GetComponent<PhotonView>().IsMine == true)
+        {
+            _player = player;
+
+            if(_sensitivity != 0)
+            {
+                player.GetComponent<PlayerController>().SetMouseSensitivity(_sensitivity);
+            }
+        }
+    }
 }

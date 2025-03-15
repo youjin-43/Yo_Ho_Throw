@@ -109,11 +109,13 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
 
         // ESC키로 ExitPopup 토글
 
-        // ㅇㅎㅈ 추가 : 설정창이 떠있는 상태에서는 메뉴창(ExitPopup) 토글이 막혀야 할듯
-
-        if (Input.GetKeyDown(KeyCode.Escape) && InGameUIManager.Instance.IsPopupUIOpen() == false)
+        if (Input.GetKeyDown(KeyCode.Escape) && InGameUIManager.Instance.IsSettingUIOpen() == false)
         {
-            ToggleExitPopup();
+            InGameUIManager.Instance.ToggleMenuUI();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape) && InGameUIManager.Instance.IsSettingUIOpen() == true)
+        {
+            InGameUIManager.Instance.ToggleSettingUI();
         }
     }
 

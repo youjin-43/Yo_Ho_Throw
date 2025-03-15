@@ -61,6 +61,9 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         //player.GetComponent<PlayerController>().cameraTransform = mainCamera.transform;
 
 
+
+        // ㅇㅎㅈ
+        GameManager.Instance.CachePlayer(player);
     }
 
     // 랜덤한 위치에서 스폰하도록 설정
