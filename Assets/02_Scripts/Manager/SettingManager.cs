@@ -204,4 +204,9 @@ public class SettingManager : MonoBehaviour
         }
 
     }
+
+    public void ToggleSettingUI()
+    {
+        gameObject.SetActive(!gameObject.activeSelf);
+    }
 }

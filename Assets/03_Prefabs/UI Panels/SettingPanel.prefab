@@ -1227,6 +1227,7 @@ MonoBehaviour:
   sensitivitySlider: {fileID: 2591409672415541897}
   sensitivityText: {fileID: 7077916928793044464}
   buttonSound: {fileID: 0}
+  sensitivity: 1
 --- !u!1 &2630025092253797949
 GameObject:
   m_ObjectHideFlags: 0
