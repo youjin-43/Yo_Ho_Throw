@@ -81,9 +81,9 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             
             if (healingCoroutine == null)
             {
-                
 
-                healingCoroutine = StartCoroutine(HealOverTime());
+
+                photonView.RPC("StartHeal_RPC", RpcTarget.All);
             }
         }
 
@@ -97,6 +97,21 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             }
         }
     }
+    [PunRPC]
+    public void StartHeal_RPC()
+    {
+        if (healingCoroutine == null) // 
+        {
+            healingCoroutine = StartCoroutine(HealOverTime());
+        }
+    }
+
+    [PunRPC]
+    public void SyncLastDamageTime(float damageTime)
+    {
+        lastDamageTime = damageTime; //모든 클라이언트에서 lastDamageTime 동기화
+    }
+
     [PunRPC]
     public void BulletReloadOverTime_RPC()
     {  
@@ -155,6 +170,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         
         InGameUIManager.Instance.AddDamage(damage);
         Hp -= damage;
+
+        photonView.RPC("SyncLastDamageTime", RpcTarget.All, Time.time);
 
         if (Hp <= 0)
         {
