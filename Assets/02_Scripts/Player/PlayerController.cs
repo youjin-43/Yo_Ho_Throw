@@ -87,14 +87,14 @@ public class PlayerController : ThirdPersonController
         {
             anim.SetTrigger("Shoot");
             
-            StartCoroutine(AttackCoroutine(0.8333f));
+            StartCoroutine(AttackCoroutine(1f));
         }
         if (Input.GetKeyDown(KeyCode.Mouse1)&& BulletCount > 0)
         {
             anim.SetTrigger("Melee Attack");
             //TODO 석진 근접 공격 휘두르는 사운드 
             
-            StartCoroutine(AttackCoroutine(0.5f));
+            StartCoroutine(AttackCoroutine(0.6f));
         }
     }
     void FixedUpdate()
@@ -261,7 +261,7 @@ public class PlayerController : ThirdPersonController
     
     public void MeleeAttack()
     {
-        if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(0, 0.5f);
+        if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(0, 0.6f);
 
         if (online && photonView.IsMine)
             photonView.RPC("MeleeAttack_RPC", RpcTarget.All);

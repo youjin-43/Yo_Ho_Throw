@@ -14,12 +14,13 @@ public class MeleeAttackOnTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
+        /*
         if (other.CompareTag("Bullet"))
         {
             other.transform.GetChild(0).GetComponent<Collider>().enabled = false;
             Debug.Log("패링 성공");
-            Rigidbody rb = other.GetComponentInChildren<Rigidbody>();
+            Rigidbody rb = other.GetComponent<Rigidbody>();
+            other.GetComponent<Cutlass>().isParry = true;
             other.transform.position = rb.transform.position+new Vector3(0f,0f,1f);
             if (rb != null)
             {
@@ -51,7 +52,7 @@ public class MeleeAttackOnTrigger : MonoBehaviour
             AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.Block, transform.position);
             Debug.Log("패링 성공");
         }
-
+        */
         if (other.CompareTag("Player"))
         {
             //TODO 석진 근접공격 성공 사운드

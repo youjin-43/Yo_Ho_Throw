@@ -42,7 +42,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
                     InGameUIManager.Instance.SkillIndicator.RemoveDagger(bulletCount);
 
-                    InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
+                    InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 1f);
 
                 }
                 else if (bulletCount < value)
@@ -189,7 +189,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         }
         else
         {
-            AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerHit, transform.position);
+            //AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerHit, transform.position);
         }
     }
     [PunRPC]
@@ -402,22 +402,5 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             coin -= _coin;
     }
 
-    public void PlaySound(AudioManager.Sfx sfx)
-    {
-        if (photonView.IsMine) 
-        {
-            photonView.RPC("PlaySound_RPC", RpcTarget.All, (int)sfx, transform.position);
-        }
-    }
-
-    [PunRPC]
-    void PlaySound_RPC(int sfxIndex, Vector3 soundPosition)
-    {
-        AudioClip clip = AudioManager.Instance.sfxClips[sfxIndex];
-
-        if (clip != null)
-        {
-            AudioSource.PlayClipAtPoint(clip, soundPosition);
-        }
-    }
+    
 }
