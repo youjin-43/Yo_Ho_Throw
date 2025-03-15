@@ -207,6 +207,17 @@ public class SettingManager : MonoBehaviour
 
     public void ToggleSettingUI()
     {
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIToggle);
+
         gameObject.SetActive(!gameObject.activeSelf);
+
+        if(gameObject.activeSelf == true)
+        {
+            CursorController.Instance.CursorEnable();
+        }
+        else
+        {
+            CursorController.Instance.CursorDisable();
+        }
     }
 }
