@@ -359,7 +359,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log("🎮 현재 방에 있는 플레이어 목록:");
         foreach (var player in PhotonNetwork.PlayerList)
         {
-            Debug.Log($" - {player.NickName} (ActorNumber: {player.ActorNumber}, 마스터: {player.IsMasterClient})");
+            Debug.Log($" - {player.NickName} (ActorNumber: {player.ActorNumber}, 마스터: {player.IsMasterClient}), 씬 : {player.CustomProperties[PhotonPlayerProperties.CurrentScene.ToString()]}");
         }
     }
 }
