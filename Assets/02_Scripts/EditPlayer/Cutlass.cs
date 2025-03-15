@@ -41,27 +41,7 @@ public class Cutlass : MonoBehaviour
     public void Setting(int attackerActorNr, Vector3 position)
     {
         this.attackerActorNr = attackerActorNr;
-        transform.position = position;
-        StartCoroutine(ClearCoroutine());
-    }
-    IEnumerator ClearCoroutine()
-    {
-        TrailRenderer trail = GetComponentInChildren<TrailRenderer>();
-
-        // TrailRenderer의 모든 점을 제거 (초기화)
-        Vector3[] emptyPositions = new Vector3[0];
-
-        trail.gameObject.SetActive(false);
-
-        trail.SetPositions(emptyPositions);
-
-        yield return null; // 한 프레임 대기 (필수)
-
-        trail.SetPositions(emptyPositions);
-
-        trail.Clear();
-
-        trail.gameObject.SetActive(true);
+        transform.parent.position = position;
     }
     protected virtual void OnTriggerEnter(Collider other)
     {
