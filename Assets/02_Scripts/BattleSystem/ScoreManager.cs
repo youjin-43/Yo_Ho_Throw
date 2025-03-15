@@ -228,6 +228,8 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.DeactivateBountyTargetImmediate.ToString(), bountyTargetActorNumber);
             }
 
+            AudioManager.Instance.PlaySfx(AudioManager.Sfx.Bounty);
+
             BattleUIController.Instance.Notification(PhotonNetwork.CurrentRoom.Players[targetActorNr].NickName + "님이 현상금 대상으로 지정되었습니다 !");
 
             PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.ActivateBountyTarget.ToString(), targetActorNr);
