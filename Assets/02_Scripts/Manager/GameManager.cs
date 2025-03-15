@@ -45,9 +45,15 @@ public class GameManager : MonoBehaviour
     }
 
     public string UserName { get; set; } = "soldier";
+    public GameObject MyPlayerObj;
 
     private void Start()
     {
         CursorController.Instance.CursorEnable();
+    }
+
+    public void SetMyPlayerObj(GameObject obj)
+    {
+        MyPlayerObj = obj;
     }
 }
