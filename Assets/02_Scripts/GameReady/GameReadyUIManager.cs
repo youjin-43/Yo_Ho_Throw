@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class GameReadyUIManager : MonoBehaviourPunCallbacks
 {
@@ -17,7 +18,9 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
     [SerializeField] Button goToTitleButton;
     [SerializeField] Button stayButton;
 
-    private Dictionary<int, GameObject> playerUIObjects = new Dictionary<int, GameObject>(); // 현재 입장한 플레이어들
+    // Player Info
+    string currentScene;
+    Dictionary<int, GameObject> playerUIObjects = new Dictionary<int, GameObject>(); // 현재 입장한 플레이어들
 
     enum PIChild
     {
@@ -30,6 +33,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         gameReadyNetworkManager = GetComponent<GameReadyNetworkManager>();
+        currentScene = SceneManager.GetActiveScene().name;
 
         // 이벤트 구독 
         PlayerReadyManager.OnPlayerReadyChanged += SetReady; //플레이어가 레디 상태가 변경될 때 UI 업데이트
@@ -94,6 +98,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         else CursorController.Instance.CursorDisable(); // 마우스 비활성화
     }
 
+    
 
     // GameReadyNetworkManager의 OnPlayerEnteredRoom에서 호출됨 
     public void UpdatePlayerListUI()
@@ -133,6 +138,16 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
                 }
             }
 
+            // 플레이어가 어디씬에 있는지 확인 
+            string playerScene = player.Value.CustomProperties.ContainsKey("CurrentScene")
+              ? (string)player.Value.CustomProperties["CurrentScene"]
+              : "Unknown";
+
+            Image panelBackground = playerItem.GetComponent<Image>();
+            if (playerScene == currentScene) panelBackground.color = new Color(1f, 1f, 1f, 1f); // 현재 씬 플레이어 → 불투명
+            else panelBackground.color = new Color(1f, 1f, 1f, 0.5f); // 다른 씬 플레이어 → 투명 처리
+
+            // 딕셔너리에 등록 
             playerUIObjects[player.Value.ActorNumber] = playerItem;
         }
     }
