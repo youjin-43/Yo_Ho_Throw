@@ -47,18 +47,15 @@ public class MeleeAttackOnTrigger : MonoBehaviour
                 rb.AddTorque(randomTorque, ForceMode.Impulse);
             }
 
-            // TODO 석진 패링 성공 사운드 추가
+            // TODO 석진 패링 성공 사운드 추가 사운드 - 확인해야함
+            AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.Block, transform.position);
             Debug.Log("패링 성공");
         }
 
         if (other.CompareTag("Player"))
         {
             //TODO 석진 근접공격 성공 사운드
-            PlayerController pc = other.GetComponent<PlayerController>();
-            if (pc != null)
-            {
-                pc.OnDamagedAnim();
-            }
+            
 
             PhotonView playerPhotonView = other.GetComponent<PhotonView>();
 
@@ -79,6 +76,11 @@ public class MeleeAttackOnTrigger : MonoBehaviour
 
             // EditPlayerState 에 있는 ReceiveDamage 함수 호출
             playerPhotonView.RPC("ReceiveDamage", RpcTarget.All, photonView.OwnerActorNr, MELEE_ATTACK_DAMAGE);
+            PlayerController pc = other.GetComponent<PlayerController>();
+            if (pc != null)
+            {
+                pc.OnDamagedAnim();
+            }
         }
     }
     

@@ -32,22 +32,25 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         get => bulletCount;
         set
         {
-            if (bulletCount > value)
+            if (photonView.IsMine)
             {
-                bulletCount = value;
-
-                if (photonView.IsMine)
+                if (bulletCount > value)
                 {
+                    bulletCount = value;
+
+
+
                     InGameUIManager.Instance.SkillIndicator.RemoveDagger(bulletCount);
 
                     InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 0.8f);
-                }
-            }
-            else if (bulletCount < value)
-            {
-                InGameUIManager.Instance.SkillIndicator.AddDagger(value - bulletCount);
 
-                bulletCount = value;
+                }
+                else if (bulletCount < value)
+                {
+                    InGameUIManager.Instance.SkillIndicator.AddDagger(value - bulletCount);
+
+                    bulletCount = value;
+                }
             }
         }
     }
@@ -78,6 +81,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             
             if (healingCoroutine == null)
             {
+                
 
                 healingCoroutine = StartCoroutine(HealOverTime());
             }
@@ -87,9 +91,16 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         {
             if(bulletReloadCoroutine == null)
             {
-                bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
+                if (photonView.IsMine)
+
+                    photonView.RPC("BulletReloadOverTime_RPC", RpcTarget.All);
             }
         }
+    }
+    [PunRPC]
+    public void BulletReloadOverTime_RPC()
+    {  
+            bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
     }
     
     IEnumerator BulletReloadOverTime()
@@ -113,7 +124,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         if (isInLobby) return;
 
-        //AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerHit);
+        
 
         anim.SetTrigger("Hit");
         lastDamageTime = Time.time;
@@ -123,7 +134,17 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             StopCoroutine(healingCoroutine);
             healingCoroutine = null; // 체력 회복 중이면 중단
         }
+        if (Hp > 0)
+        {
+            Debug.Log("맞는 소리");
+            AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerHit, transform.position);
 
+        }
+        else
+        {
+            Debug.Log("죽는 소리");
+            AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerDead, transform.position);
+        }
     }
     [PunRPC]
     public void ReceiveDamage(int attackerActorNr, int damage)
@@ -139,6 +160,11 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         {
             
             photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
+
+        }
+        else
+        {
+            AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerHit, transform.position);
         }
     }
     [PunRPC]
@@ -151,7 +177,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
         // 이동 비활성화
         isAlive = false;
-
+        
         CursorController.Instance.CursorEnable();
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
         StartCoroutine(ApplyGravityAfterDeath());
@@ -349,5 +375,24 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         if (coin - _coin >= 0)
             coin -= _coin;
+    }
+
+    public void PlaySound(AudioManager.Sfx sfx)
+    {
+        if (photonView.IsMine) 
+        {
+            photonView.RPC("PlaySound_RPC", RpcTarget.All, (int)sfx, transform.position);
+        }
+    }
+
+    [PunRPC]
+    void PlaySound_RPC(int sfxIndex, Vector3 soundPosition)
+    {
+        AudioClip clip = AudioManager.Instance.sfxClips[sfxIndex];
+
+        if (clip != null)
+        {
+            AudioSource.PlayClipAtPoint(clip, soundPosition);
+        }
     }
 }

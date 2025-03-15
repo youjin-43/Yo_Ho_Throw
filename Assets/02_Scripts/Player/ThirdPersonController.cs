@@ -333,6 +333,8 @@ namespace StarterAssets
                     {
                         _animator.SetBool(_animIDJump, true);
                     }
+                    //TODO 석진 점프 사운드
+                    //AudioManager.Instance.PlaySfx(AudioManager.Sfx.점프)
                 }
 
                 // jump timeout
@@ -401,10 +403,12 @@ namespace StarterAssets
 
         private void OnFootstep(AnimationEvent animationEvent)
         {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            if (animationEvent.animatorClipInfo.weight > 0)
             {
+                
                 if (FootstepAudioClips.Length > 0)
                 {
+                    
                     var index = Random.Range(0, FootstepAudioClips.Length);
                     AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
                 }
