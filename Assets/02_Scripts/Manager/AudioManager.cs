@@ -1,6 +1,7 @@
 using UnityEngine;
+using Photon.Pun;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : MonoBehaviourPun
 {
     public static AudioManager Instance;
 
@@ -126,6 +127,34 @@ public class AudioManager : MonoBehaviour
         foreach (var sfxPlayer in sfxPlayers)
         {
             sfxPlayer.volume = volume; // 모든 SFX의 볼륨을 설정
+        }
+    }
+
+    [PunRPC]
+    public void PlaySfxAtPosition(Sfx sfx, Vector3 position)
+    {
+        for (int index = 0; index < sfxPlayers.Length; index++)
+        {
+            //채널 인덱스는 마지막에 플레이된 클립이다
+            int loopIndex = (index + channelIndex) % sfxPlayers.Length;//넘어가지않게하기위해 모듈러 사용
+
+            /*
+            //여러 소리가 중첩되는 경우 랜덤으로 둘중에 하나 나옴
+            int ranIndex = 0;
+            if (sfx == Sfx.Hit || sfx == Sfx.Melee)
+                ranIndex = Random.Range(0, 2);
+            */
+            if (sfxPlayers[loopIndex].isPlaying)//재생 되는 효과음이 있다면 넘어감
+                continue;
+            channelIndex = loopIndex;
+            sfxPlayers[loopIndex].clip = sfxClips[(int)sfx];
+            sfxPlayers[loopIndex].transform.position = position;
+            sfxPlayers[loopIndex].spatialBlend = 1.0f;
+            sfxPlayers[loopIndex].Play();
+            
+            break;
+
+            
         }
     }
 }

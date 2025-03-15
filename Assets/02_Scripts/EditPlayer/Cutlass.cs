@@ -50,8 +50,7 @@ public class Cutlass : MonoBehaviour
         {
             PhotonView playerPhotonView = other.GetComponent<PhotonView>();
             //데미지 받을 때 애니메이션 출력
-            PlayerController pc = other.GetComponent<PlayerController>();
-            pc.OnDamagedAnim();
+            
             // 자신에 대한 공격일 경우 제외
             if (attackerActorNr == playerPhotonView.OwnerActorNr) return;
 
@@ -72,6 +71,8 @@ public class Cutlass : MonoBehaviour
 
             // EditPlayerState 에 있는 ReceiveDamage 함수 호출
             playerPhotonView.RPC("ReceiveDamage", RpcTarget.All, attackerActorNr, CUTLASS_THROW_DAMAGE);
+            PlayerController pc = other.GetComponent<PlayerController>();
+            pc.OnDamagedAnim();
         }
 
         // �������ڿ� �浹���� ��

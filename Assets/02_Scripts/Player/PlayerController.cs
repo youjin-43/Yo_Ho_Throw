@@ -1,5 +1,6 @@
 using Photon.Pun;
 using StarterAssets;
+using System;
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEditor;
@@ -85,12 +86,15 @@ public class PlayerController : ThirdPersonController
         if (Input.GetKeyDown(KeyCode.Mouse0) && BulletCount > 0)
         {
             anim.SetTrigger("Shoot");
-            StartCoroutine(AttackCoroutine(0.8f));
+            
+            StartCoroutine(AttackCoroutine(1f));
         }
         if (Input.GetKeyDown(KeyCode.Mouse1)&& BulletCount > 0)
         {
             anim.SetTrigger("Melee Attack");
-            StartCoroutine(AttackCoroutine(0.5f));
+            //TODO 석진 근접 공격 휘두르는 사운드 
+            
+            StartCoroutine(AttackCoroutine(0.6f));
         }
     }
     void FixedUpdate()
@@ -142,7 +146,15 @@ public class PlayerController : ThirdPersonController
         Vector3 throwDirection = ((cameraTransform.forward * bulletRange + cameraTransform.position + Vector3.up * 3) - bulletSpawnPoint.position).normalized;
 
         if (online && photonView.IsMine)
+        {
             photonView.RPC("Throw_RPC", RpcTarget.All, throwDirection, PhotonNetwork.LocalPlayer.ActorNumber, isExplosionBuff);
+        }
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerAttack, transform.position);
+
+
+        //AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerAttack,transform.position);
+
+        
     }
 
     [PunRPC]
@@ -206,6 +218,8 @@ public class PlayerController : ThirdPersonController
         }
         else
             Dash_RPC(input_X, input_Y);
+        //TODO 석진 플레이어 대쉬 소리
+        //AudioManager.Instance.PlaySfx(AudioManager.Sfx.Player);
     }
 
     [PunRPC]
@@ -247,11 +261,12 @@ public class PlayerController : ThirdPersonController
     
     public void MeleeAttack()
     {
-        if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(0, 0.5f);
+        if (!isInLobby && photonView.IsMine) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(0, 0.6f);
 
         if (online && photonView.IsMine)
             photonView.RPC("MeleeAttack_RPC", RpcTarget.All);
 
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerAttack, transform.position);
     }
 
     [PunRPC]
