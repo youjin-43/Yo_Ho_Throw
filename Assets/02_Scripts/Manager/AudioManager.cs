@@ -1,6 +1,7 @@
 using UnityEngine;
+using Photon.Pun;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : MonoBehaviourPun
 {
     public static AudioManager Instance;
 
@@ -129,6 +130,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    [PunRPC]
     public void PlaySfxAtPosition(Sfx sfx, Vector3 position)
     {
         for (int index = 0; index < sfxPlayers.Length; index++)

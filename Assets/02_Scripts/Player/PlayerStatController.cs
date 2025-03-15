@@ -100,7 +100,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public void StartHeal_RPC()
     {
-        if (healingCoroutine == null) // 
+        if (healingCoroutine == null) 
         {
             healingCoroutine = StartCoroutine(HealOverTime());
         }
@@ -152,15 +152,23 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if (Hp > 0)
         {
             Debug.Log("맞는 소리");
-            AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerHit, transform.position);
+            photonView.RPC("PlaySfxAtPosition_RPC", RpcTarget.All, (int)AudioManager.Sfx.PlayerHit, transform.position);
+            //AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerHit, transform.position);
 
         }
         else
         {
             Debug.Log("죽는 소리");
-            AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerDead, transform.position);
+            photonView.RPC("PlaySfxAtPosition_RPC", RpcTarget.All, (int)AudioManager.Sfx.PlayerDead, transform.position);
+
         }
     }
+    [PunRPC]
+    public void PlaySfxAtPosition_RPC(int sfx, Vector3 position  )
+    {
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerDead, transform.position);
+    }
+
     [PunRPC]
     public void ReceiveDamage(int attackerActorNr, int damage)
     {
