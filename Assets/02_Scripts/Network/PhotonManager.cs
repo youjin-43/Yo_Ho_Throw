@@ -27,6 +27,7 @@ public enum PhotonPlayerProperties
 */
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
+    #region 싱글턴 
     private static PhotonManager _instance;
     public static PhotonManager Instance
     {
@@ -58,6 +59,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         }
         DontDestroyOnLoad(gameObject);
     }
+    #endregion
 
     private void Update()
     {
@@ -67,6 +69,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             DebugPlayerList();
         }
     }
+
     private List<RoomInfo> currentRoomList = new List<RoomInfo>(); // 방 목록을 저장하는 리스트
 
     #region Lobby & Room
@@ -273,7 +276,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         }
     }
 
-    #region LeaveRoomAndGoToTitle
+    #region LeaveRoomAndLoadToTitle
     /// <summary>
     /// 현재 룸이 있다면 나간 후 타이틀 씬으로 이동
     /// </summary>
@@ -287,7 +290,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         else
         {
             Debug.Log("현재 참여 중인 방이 없음 → 즉시 타이틀 씬으로 이동!");
-            GoToTitleScene(); // 즉시 타이틀 씬으로 이동
+            LoadTitleScene(); // 즉시 타이틀 씬으로 이동
         }
     }
 
@@ -297,13 +300,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         Debug.Log("포톤 룸에서 정상적으로 나감! 타이틀 씬으로 이동");
-        GoToTitleScene();
+        LoadTitleScene();
     }
 
     /// <summary>
     /// 타이틀 씬으로 이동하는 함수
     /// </summary>
-    private void GoToTitleScene()
+    private void LoadTitleScene()
     {
         SceneManager.LoadScene(SceneList.MainUIScene.ToString());
     }
@@ -315,16 +318,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void GoToReadyScene()
     {
-
-        if (PhotonNetwork.IsMasterClient) {
-            PhotonNetwork.AutomaticallySyncScene = false; // 포톤 씬 동기화 비활성화
-        }
-
-        // 룸 다시 열기
-        // TODO : 모든 플레이어가 할 필요는 없을것 같은데 ..
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
-
         SceneManager.LoadScene(SceneList.GameReadyScene_1.ToString());
     }
     #endregion

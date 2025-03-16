@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
+using Photon.Realtime;
 
 public class GameReadyUIManager : MonoBehaviourPunCallbacks
 {
@@ -64,19 +65,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
     void InitUI()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            // 마스터 클라이언트에게만 게임 스타트 버튼이 보임
-            GameReadyButton.gameObject.SetActive(false);
-            GameStartButton.gameObject.SetActive(true);
-            GameStartButton.interactable = false;
-            GameStartButton.onClick.AddListener(gameReadyNetworkManager.GameStart); // 게임 스타트 리스너 추가 
-        }
-        else {
-            // 일반 클라이언트에게는 게임 스타트 버튼이 보이지 않도록 
-            GameStartButton.gameObject.SetActive(false);
-            GameReadyButton.gameObject.SetActive(true);
-        }
+        SetReadyAndStartUI();
 
         // Exit 팝업 기본 비활성화
         ExitPopup.SetActive(false);
@@ -98,7 +87,28 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         else CursorController.Instance.CursorDisable(); // 마우스 비활성화
     }
 
-    
+    public void SetReadyAndStartUI()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // 마스터 클라이언트에게만 게임 스타트 버튼이 보임
+            GameReadyButton.gameObject.SetActive(false);
+            GameStartButton.gameObject.SetActive(true);
+            //GameStartButton.interactable = false;
+            //GameStartButton.onClick.AddListener(gameReadyNetworkManager.GameStart); // 게임 스타트 리스너 추가 
+        }
+        else
+        {
+            // 일반 클라이언트에게는 게임 스타트 버튼이 보이지 않도록 
+            GameStartButton.gameObject.SetActive(false);
+            GameReadyButton.gameObject.SetActive(true);
+        }
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        SetReadyAndStartUI();
+    }
 
     // GameReadyNetworkManager의 OnPlayerEnteredRoom에서 호출됨 
     public void UpdatePlayerListUI()
