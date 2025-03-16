@@ -15,7 +15,7 @@ public enum PhotonRoomProperties
 public enum PhotonPlayerProperties
 {
     IsReady,
-    CurrentScene //  각 플레이어가 현재 어떤 씬에 있는지
+    //CurrentScene //  각 플레이어가 현재 어떤 씬에 있는지
 }
 /*
            
@@ -230,7 +230,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     // 룸에 입장한 후 호출되는 콜백 함수
     public override void OnJoinedRoom()
     {
-        UpdatePlayerSceneProperty();
+        //UpdatePlayerSceneProperty(); // 클라이언트 마다 현재 어디 씬에 있는지 저장
 
         //내가 방장인지 확인
         if (PhotonNetwork.IsMasterClient)
@@ -260,21 +260,21 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     /// <summary>
     /// 플레이어가 있는 씬 저장
     /// </summary>
-    public void UpdatePlayerSceneProperty()
-    {
-        if (PhotonNetwork.InRoom)
-        {
-            string currentScene = SceneManager.GetActiveScene().name;
+    //public void UpdatePlayerSceneProperty()
+    //{
+    //    if (PhotonNetwork.InRoom)
+    //    {
+    //        string currentScene = SceneManager.GetActiveScene().name;
 
-            ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable
-            {
-                { "CurrentScene", currentScene } 
-            };
-            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+    //        ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable
+    //        {
+    //            { PhotonPlayerProperties.CurrentScene.ToString() , currentScene } 
+    //        };
+    //        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
-            Debug.Log($"{PhotonNetwork.NickName}의 현재 씬을 '{currentScene}'로 설정");
-        }
-    }
+    //        Debug.Log($"{PhotonNetwork.NickName}의 현재 씬을 '{currentScene}'로 설정");
+    //    }
+    //}
 
     #region LeaveRoomAndLoadToTitle
     /// <summary>
@@ -352,7 +352,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log("🎮 현재 방에 있는 플레이어 목록:");
         foreach (var player in PhotonNetwork.PlayerList)
         {
-            Debug.Log($" - {player.NickName} (ActorNumber: {player.ActorNumber}, 마스터: {player.IsMasterClient}), 씬 : {player.CustomProperties[PhotonPlayerProperties.CurrentScene.ToString()]}");
+            Debug.Log($" - {player.NickName} (ActorNumber: {player.ActorNumber}, " 
+                + $"마스터: {player.IsMasterClient}), "
+                //+ $"씬 : {player.CustomProperties[PhotonPlayerProperties.CurrentScene.ToString()]}"
+                );
         }
     }
 }
