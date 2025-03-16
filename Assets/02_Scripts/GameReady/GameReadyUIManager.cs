@@ -42,6 +42,8 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
         InitUI();
         UpdatePlayerListUI();
+
+        ScreenTransition.Instance.FadeInRPC();
     }
 
     void Update()

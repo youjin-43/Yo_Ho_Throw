@@ -112,11 +112,15 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 
         PlayerSpawnManager.Instance.DeactivatePlayer();
 
-        BattleUIController.Instance.EndGame();
+        //BattleUIController.Instance.EndGame();
 
         ScoreManager.Instance.EndGame();
 
         PlayerSpawnManager.Instance.EndGame();
+
+        ScreenTransition.FadeOut();
+
+        PhotonManager.Instance.GoToReadyScene();
     }
     private IEnumerator LimitedTimerCoroutine()
     {
