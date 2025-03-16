@@ -265,6 +265,7 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
             playerScoreEntry.ResetPlayerScoreEntry();
         }
     }
+    [PunRPC]
     public void SetLimitTimeText(int seconds)
     {
         limitTimeText.text = $"{(seconds / 60).ToString()} : {(seconds % 60).ToString("00")}";

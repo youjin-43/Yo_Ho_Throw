@@ -50,9 +50,9 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
             yield return new WaitForSeconds(0.5f);
         }
         // 화면 활성화 함
-        ScreenTransition.FadeOut();
+        ScreenTransition.FadeIn();
 
-        BattleUIController.Instance.SetLimitTimeText(timeLimit);
+        BattleUIController.Instance.photonView.RPC("SetLimitTimeText", RpcTarget.All, timeLimit);
 
         yield return new WaitForSeconds(0.5f);
 
@@ -118,9 +118,10 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 
         PlayerSpawnManager.Instance.EndGame();
 
-        ScreenTransition.FadeOut();
+        ScreenTransition.Instance.FadeOutRPC();
 
-        PhotonManager.Instance.GoToReadyScene();
+        if (PhotonNetwork.IsMasterClient)
+            ScreenTransition.Instance.FadeActionSetting(() => PhotonManager.Instance.GoToReadyScene());
     }
     private IEnumerator LimitedTimerCoroutine()
     {

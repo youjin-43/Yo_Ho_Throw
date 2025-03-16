@@ -62,8 +62,11 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         {
             if (GameStartButton.interactable)
             {
-                Debug.Log("F5 키 입력 감지 → 게임 시작!");
-                gameReadyNetworkManager.GameStart();
+                ScreenTransition.Instance.FadeActionSetting(() => gameReadyNetworkManager.GameStart());
+
+                ScreenTransition.FadeOut();
+
+                GameStartButton.interactable = false;
             }
         }
     }

@@ -10,16 +10,7 @@ public class ScreenTransition : MonoBehaviourPun
     [SerializeField] Animator alphaMaskController;
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
+        Instance = this;
     }
     public static void FadeIn()
     {
@@ -28,6 +19,10 @@ public class ScreenTransition : MonoBehaviourPun
     public static void FadeOut()
     {
         Instance.photonView.RPC("FadeOutRPC", RpcTarget.All);
+    }
+    public void FadeActionSetting(Action action)
+    {
+        fadeAction = action;
     }
     [PunRPC]
     public void FadeInRPC()
