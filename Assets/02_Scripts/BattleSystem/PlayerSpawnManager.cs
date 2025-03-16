@@ -90,11 +90,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         Vector3 position = (Vector3)spawnInfo[0];
         Quaternion rotation = (Quaternion)spawnInfo[1];
 
-        Debug.Log("수정 전 위치 : " + position.ToString());
-
         position.y = GetHighestCollisionY(position);
-
-        Debug.Log("수정 후 위치 : " + position.ToString());
 
         // 각자의 클라이언트에서 PhotonNetwork를 통한 Instantiate를 하기 때문에 별도의 RPC는 없어도 된다
         currPlayer = PhotonNetwork.Instantiate(playerObject.name, position, rotation);
@@ -198,8 +194,6 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         RaycastHit hit;
 
         Physics.Raycast(ray, out hit, 150f);
-
-        Debug.Log("충돌 위치 : " + hit.point.ToString());
 
         return hit.point.y;
     }

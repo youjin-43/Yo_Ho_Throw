@@ -151,14 +151,12 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         }
         if (Hp > 0)
         {
-            Debug.Log("맞는 소리");
             photonView.RPC("PlaySfxAtPosition_RPC", RpcTarget.All, (int)AudioManager.Sfx.PlayerHit, transform.position);
             //AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerHit, transform.position);
 
         }
         else
         {
-            Debug.Log("죽는 소리");
             photonView.RPC("PlaySfxAtPosition_RPC", RpcTarget.All, (int)AudioManager.Sfx.PlayerDead, transform.position);
 
         }
@@ -214,7 +212,6 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         while (!transform.GetComponent<PlayerController>().Grounded)
         {
             pc._controller.Move(new Vector3(0, -9.81f * Time.deltaTime, 0));
-            Debug.Log("공중죽음");
             yield return null;
         }
         anim.SetTrigger("Dead");
@@ -224,7 +221,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         //Debug.Log("회복");
         while (Hp < MAX_HP)
-        { Debug.Log("체력 회복");
+        {
 
             InGameUIManager.Instance.AddHealth(1);
             playerHp += 1; // 체력 1씩 회복
@@ -296,12 +293,10 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if (onoff)
         {
             knifeObject.gameObject.SetActive(true);
-            Debug.Log("나이프 켜짐");
         }
         else
         {
             knifeObject.gameObject.SetActive(false);
-            Debug.Log("나이프 꺼짐");
         }
     }
 
