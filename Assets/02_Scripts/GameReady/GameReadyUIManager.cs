@@ -19,6 +19,9 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
     [SerializeField] Button goToTitleButton;
     [SerializeField] Button stayButton;
 
+    [SerializeField] private TextMeshProUGUI plyaerJoinLeaveText; // 누가 들어오고 나갔는지 
+
+
     // Player Info
     string currentScene;
     Dictionary<int, GameObject> playerUIObjects = new Dictionary<int, GameObject>(); // 현재 입장한 플레이어들
@@ -96,7 +99,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
             // 마스터 클라이언트에게만 게임 스타트 버튼이 보임
             GameReadyButton.gameObject.SetActive(false);
             GameStartButton.gameObject.SetActive(true);
-            //GameStartButton.interactable = false;
+            GameStartButton.interactable = false;
             //GameStartButton.onClick.AddListener(gameReadyNetworkManager.GameStart); // 게임 스타트 리스너 추가 
         }
         else
@@ -187,4 +190,38 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         PlayerReadyManager.OnPlayerReadyChanged -= SetReady;
         PlayerReadyManager.OnAllPlayersReadyChanged -= SetGameStartButtonInteractable;
     }
+
+
+    #region plyaerJoinLeaveText
+    public void ShowPlayerLeftMessage(string playerName)
+    {
+        if (plyaerJoinLeaveText == null) return; // 메시지 텍스트가 없으면 무시
+
+        plyaerJoinLeaveText.text = $"{playerName}님이 나갔습니다!";
+        plyaerJoinLeaveText.GetComponentInParent<Animator>().SetTrigger("Show");
+
+        HideMessage();
+    }
+
+    public void ShowPlayerJoinMessage(string playerName)
+    {
+        if (plyaerJoinLeaveText == null) return; // 메시지 텍스트가 없으면 무시
+
+        plyaerJoinLeaveText.text = $"{playerName}님이 입장했습니다!";
+        plyaerJoinLeaveText.GetComponentInParent<Animator>().SetTrigger("Show");
+
+        HideMessage();
+    }
+
+    void HideMessage()
+    {
+        // 2초 후 메시지 자동 사라짐
+        Invoke(nameof(ShowHideAnim), 2f);
+    }
+
+    void ShowHideAnim()
+    {
+        plyaerJoinLeaveText.GetComponentInParent<Animator>().SetTrigger("Hide");
+    }
+    #endregion
 }
