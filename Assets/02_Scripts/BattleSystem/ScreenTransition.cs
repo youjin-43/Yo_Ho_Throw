@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
@@ -9,11 +10,16 @@ public class ScreenTransition : MonoBehaviourPun
     [SerializeField] Animator alphaMaskController;
     private void Awake()
     {
-        if (Instance != null) Destroy(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
 
-        Instance = this;
-
-        DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
     public static void FadeIn()
     {
@@ -34,5 +40,13 @@ public class ScreenTransition : MonoBehaviourPun
     {
         Debug.Log("FadeOut");
         alphaMaskController.SetTrigger("FadeOut");
+    }
+
+    Action fadeAction = null;
+    public void FadeAction()
+    {
+        fadeAction?.Invoke();
+
+        fadeAction = null;
     }
 }
