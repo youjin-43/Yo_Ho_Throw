@@ -40,6 +40,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         // 호스트가 아니라면 코루틴을 빠져나온다
         if (!PhotonNetwork.IsMasterClient) yield break;
 
+        Debug.Log("스폰 실행");
+
         // TODO 찬규 : 각 플레이어의 연결 상태를 파악할 필요가 있을 지 고민 더 해야함
         /* while (!PhotonNetwork.IsConnectedAndReady)
         {
@@ -55,6 +57,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
             Transform spawnPosition = spawnPositions[0];
 
             spawnPositions.RemoveAt(0);
+
+            Debug.Log("플레이어 스폰 호출 ActorNumber : " + actorNumber.ToString() + " / 닉넴 : " + PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
 
             // 타 플레이어의 플레이어 오브젝트 생성 시
             if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber)
@@ -110,6 +114,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         world_followCam.Target.LookAtTarget = camaraRoot;
         world_followCam.Target.CustomLookAtTarget = true;
 
+
+        Debug.Log("스폰 성공 : " + PhotonNetwork.LocalPlayer.NickName);
 
         InGameUIManager.Instance.Minimap.SetPlayerTransform(currPlayer.transform);
 
@@ -171,8 +177,6 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     [PunRPC]
     public void ActivateBountyTarget()
     {
-        Debug.Log("ActivateBountyTarget 주인 : " + photonView.OwnerActorNr.ToString());
-
         // TODO 찬규 : 현상금 타겟 지정 이펙트 활성화
         currPlayerPhotonView.RPC("BountyColorSetting", RpcTarget.All);
     }
