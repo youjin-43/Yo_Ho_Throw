@@ -188,10 +188,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8405759783007451234}
-  - component: {fileID: 7755544045652649861}
   - component: {fileID: 8405220864265075505}
-  - component: {fileID: 5271928201065359096}
-  - component: {fileID: 1320958553816650589}
   - component: {fileID: -4142342225671361878}
   m_Layer: 0
   m_Name: Treasure Chest
@@ -217,20 +214,6 @@ Transform:
   - {fileID: 7058094969903656258}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7755544045652649861
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9217902311041147608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 672a0753e477d1648b29b405ba33f06a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  coinPrefab: {fileID: 734281266027733366, guid: 99db425ef2a718643b8a4f87ca1b9112, type: 3}
-  treasureManager: {fileID: 0}
 --- !u!65 &8405220864265075505
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -252,55 +235,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.83475363, y: 0.6137691, z: 0.5926801}
   m_Center: {x: -0.027341902, y: 0.31603417, z: 0.0087944865}
---- !u!54 &5271928201065359096
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9217902311041147608}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 122
-  m_CollisionDetection: 0
---- !u!95 &1320958553816650589
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9217902311041147608}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8a3fc35174f5e0d49b7abf35bca494ad, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &-4142342225671361878
 MonoBehaviour:
   m_ObjectHideFlags: 0
