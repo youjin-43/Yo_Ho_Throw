@@ -63,7 +63,7 @@ public class KillLogPanel : MonoBehaviour
         }
         alpha = 1f;
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         while (alpha > 0f)
         {

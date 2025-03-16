@@ -1,23 +1,28 @@
 using Photon.Pun;
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
 public class ScreenTransition : MonoBehaviourPun
 {
-    static ScreenTransition instance = null;
+    public static ScreenTransition Instance { get; private set; } = null;
 
     [SerializeField] Animator alphaMaskController;
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
     public static void FadeIn()
     {
-        instance.photonView.RPC("FadeInRPC", RpcTarget.All);
+        Instance.photonView.RPC("FadeInRPC", RpcTarget.All);
     }
     public static void FadeOut()
     {
-        instance.photonView.RPC("FadeOutRPC", RpcTarget.All);
+        Instance.photonView.RPC("FadeOutRPC", RpcTarget.All);
+    }
+    public void FadeActionSetting(Action action)
+    {
+        fadeAction = action;
     }
     [PunRPC]
     public void FadeInRPC()
@@ -30,5 +35,13 @@ public class ScreenTransition : MonoBehaviourPun
     {
         Debug.Log("FadeOut");
         alphaMaskController.SetTrigger("FadeOut");
+    }
+
+    Action fadeAction = null;
+    public void FadeAction()
+    {
+        fadeAction?.Invoke();
+
+        fadeAction = null;
     }
 }
