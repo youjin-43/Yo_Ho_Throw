@@ -4,20 +4,24 @@ using UnityEngine;
 [RequireComponent(typeof(PhotonView))]
 public class ScreenTransition : MonoBehaviourPun
 {
-    static ScreenTransition instance = null;
+    public static ScreenTransition Instance { get; private set; } = null;
 
     [SerializeField] Animator alphaMaskController;
     private void Awake()
     {
-        instance = this;
+        if (Instance != null) Destroy(gameObject);
+
+        Instance = this;
+
+        DontDestroyOnLoad(gameObject);
     }
     public static void FadeIn()
     {
-        instance.photonView.RPC("FadeInRPC", RpcTarget.All);
+        Instance.photonView.RPC("FadeInRPC", RpcTarget.All);
     }
     public static void FadeOut()
     {
-        instance.photonView.RPC("FadeOutRPC", RpcTarget.All);
+        Instance.photonView.RPC("FadeOutRPC", RpcTarget.All);
     }
     [PunRPC]
     public void FadeInRPC()
