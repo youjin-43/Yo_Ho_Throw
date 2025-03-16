@@ -20,7 +20,7 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
     // 마스터 클라이언트만 실행됨 
     void Start()
     {
-        PhotonManager.Instance.UpdatePlayerSceneProperty();
+        //PhotonManager.Instance.UpdatePlayerSceneProperty(); // 클라이언트 마다 어떤 씬에 있는지 저장
 
         if (PhotonNetwork.IsMasterClient) PhotonNetwork.AutomaticallySyncScene = true; // 자동 동기화 활성화 (이후 씬 이동 시 동기화됨)
 
