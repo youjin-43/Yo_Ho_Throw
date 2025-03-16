@@ -92,11 +92,13 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         gameReadyUIManager.UpdatePlayerListUI();
+        gameReadyUIManager.ShowPlayerJoinMessage(newPlayer.NickName);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         gameReadyUIManager.UpdatePlayerListUI();
+        gameReadyUIManager.ShowPlayerLeftMessage (otherPlayer.NickName);
     }
 
     // using ExitGames.Client.Photon; 필요 
@@ -110,4 +112,5 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
             gameReadyUIManager.UpdatePlayerListUI(); // 🔄 UI 업데이트 (씬 변경 감지 시)
         }
     }
+
 }
