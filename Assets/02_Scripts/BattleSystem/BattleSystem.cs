@@ -46,13 +46,16 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
         // 플레이어 스폰
         yield return PlayerSpawnManager.Instance.SpawnCoroutine();
 
-        Debug.Log("플레이어 스폰 완료");
 
         // 모든 플레이어가 스폰되어 준비가 될 때까지 대기
         while (PhotonNetwork.CurrentRoom.PlayerCount != spawnedPlayerCount)
         {
+            Debug.Log("스폰 대기, 현재 스폰 수 : " + spawnedPlayerCount.ToString() + ", 대기 중 플레이어 수 : " + PhotonNetwork.CurrentRoom.PlayerCount.ToString());
             yield return new WaitForSeconds(0.5f);
         }
+
+        Debug.Log("플레이어 스폰 완료");
+
         // 화면 활성화 함
         ScreenTransition.FadeIn();
 
@@ -167,13 +170,19 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     }
     public static void SpawnCheck()
     {
+        Debug.Log("SpawnCheck Static 함수 호출");
+
         Instance.photonView.RPC("SpawnCheckRPC", RpcTarget.All);
     }
     
     [PunRPC]
     public void SpawnCheckRPC()
     {
+        Debug.Log("SpawnCheckRPC RPC 함수 호출");
+
         spawnedPlayerCount++;
+
+        Debug.Log("currentCount : " + spawnedPlayerCount);
     }
     public static void FirstItemSelect()
     {
@@ -187,5 +196,5 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
         itemSelectedPlayerCount++;
     }
     virtual protected void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
-    virtual protected void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
+    virtual protected void OnDisable() => PhotonNetwork.RemoveCallbackTarget(this);
 }

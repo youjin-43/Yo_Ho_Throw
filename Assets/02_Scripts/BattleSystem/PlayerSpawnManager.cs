@@ -34,6 +34,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     private void Awake()
     {
         Instance = this;
+
+        gameObject.name += Random.Range(0, 10f);
     }
     public IEnumerator SpawnCoroutine()
     {
@@ -63,11 +65,12 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
             // 타 플레이어의 플레이어 오브젝트 생성 시
             if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber)
             {
-                PhotonNetwork.RaiseEvent(
-                    (byte)RaiseEventCode.SpawnPlayer,
-                    new object[] { spawnPosition.position, spawnPosition.rotation },
-                    new RaiseEventOptions { TargetActors = new int[] { actorNumber } },
-                    SendOptions.SendReliable);
+                //PhotonNetwork.RaiseEvent(
+                //    (byte)RaiseEventCode.SpawnPlayer,
+                //    new object[] { spawnPosition.position, spawnPosition.rotation },
+                //    new RaiseEventOptions { TargetActors = new int[] { actorNumber }, CachingOption = EventCaching.DoNotCache },
+                //    SendOptions.SendReliable);
+                photonView.RPC("SpawnPlayerRPC", RpcTarget.All, actorNumber, spawnPosition.position, spawnPosition.rotation);
             }
 
             // 호스트의 플레이어 오브젝트 생성 시
@@ -114,6 +117,39 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         world_followCam.Target.LookAtTarget = camaraRoot;
         world_followCam.Target.CustomLookAtTarget = true;
 
+
+        Debug.Log("스폰 성공 : " + PhotonNetwork.LocalPlayer.NickName);
+
+        InGameUIManager.Instance.Minimap.SetPlayerTransform(currPlayer.transform);
+
+        BattleSystem.SpawnCheck();
+
+        ActivatePlayer();
+    }
+    [PunRPC]
+    void SpawnPlayerRPC(int actorNumber, Vector3 position, Quaternion rotation)
+    {
+        if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber) return;
+
+        position.y = GetHighestCollisionY(position);
+
+        // 각자의 클라이언트에서 PhotonNetwork를 통한 Instantiate를 하기 때문에 별도의 RPC는 없어도 된다
+        currPlayer = PhotonNetwork.Instantiate(playerObject.name, position, rotation);
+
+        currPlayerPhotonView = currPlayer.GetComponent<PhotonView>();
+
+        currPlayerPhotonView.RPC("GameEndPlayer", RpcTarget.All);
+
+        // 카메라에 루트 셋팅 
+        camaraRoot = currPlayer.GetComponent<PlayerController>().CinemachineCameraTarget.transform;
+        //currPlayer.GetComponent<PlayerKnifeController>().dirTransform = camaraRoot;
+        //currPlayer.GetComponent<PlayerKnifeController>().cameraTransform = world_followCam.transform;
+
+        currPlayer.GetComponent<PhotonView>().RPC("OnOutLobby", RpcTarget.All);
+
+        world_followCam.Target.TrackingTarget = camaraRoot;
+        world_followCam.Target.LookAtTarget = camaraRoot;
+        world_followCam.Target.CustomLookAtTarget = true;
 
         Debug.Log("스폰 성공 : " + PhotonNetwork.LocalPlayer.NickName);
 
@@ -203,7 +239,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     }
     Transform GetRandomTransform() => spawnPositions[Random.Range(0, spawnPositions.Length)].GetRandomTransform();
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
-    private void OnDisable() => PhotonNetwork.AddCallbackTarget(this);
+    private void OnDisable() => PhotonNetwork.RemoveCallbackTarget(this);
 }
 
 [Serializable]
