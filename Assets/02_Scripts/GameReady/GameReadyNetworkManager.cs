@@ -6,7 +6,6 @@ using ExitGames.Client.Photon; // Photon CustomProperties 사용
 
 public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
 {
-    GameReadyUIManager gameReadyUIManager;
     [SerializeField] GameObject playerPrefab; // 인스펙터에서 할당
 
     [SerializeField] Transform mainCamera;
@@ -15,17 +14,13 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject player;
     [SerializeField] Transform camaraRoot;
 
-    public static event System.Action OnGameStart;
-
-    // 마스터 클라이언트만 실행됨 
     void Start()
     {
         //PhotonManager.Instance.UpdatePlayerSceneProperty(); // 클라이언트 마다 어떤 씬에 있는지 저장
 
-        if (PhotonNetwork.IsMasterClient) PhotonNetwork.AutomaticallySyncScene = true; // 자동 동기화 활성화 (이후 씬 이동 시 동기화됨)
-
-        gameReadyUIManager = GetComponent<GameReadyUIManager>();
-
+        PhotonNetwork.CurrentRoom.IsOpen = true;
+        PhotonNetwork.CurrentRoom.IsVisible = true; 
+        
         if (PhotonNetwork.InRoom)
         {
             // 네트워크를 통해 플레이어 생성 (모든 클라이언트에게 공유됨)
@@ -77,6 +72,10 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
 
     #endregion
 
+    #region GameStart
+
+    public static event System.Action OnGameStart;
+
     public void GameStart()
     {
         OnGameStart?.Invoke(); // 게임 시작 이벤트 발생
@@ -91,38 +90,37 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel(SceneList.Test_BattleSystem.ToString());
     }
 
+    #endregion
+
+    #region Player Enter Left
+
     public static event System.Action<string> OnPlayerEnter; // 플레이어가 들어왔을 때 발생할 이벤트 
 
     // 새로운 플레이어가 들어오면 OnPlayerEnteredRoom()이 호출됨
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        //gameReadyUIManager.UpdatePlayerListUI();
-        //gameReadyUIManager.ShowPlayerJoinMessage(newPlayer.NickName);
-
-        OnPlayerEnter?.Invoke(newPlayer.NickName);
+        OnPlayerEnter?.Invoke(newPlayer.NickName); 
     }
 
     public static event System.Action<string> OnPlayerLeft; // 플레이어가 나갔을떄 발생할 이벤트 
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        //gameReadyUIManager.UpdatePlayerListUI();
-        //gameReadyUIManager.ShowPlayerLeftMessage (otherPlayer.NickName);
-
-        // 플레이어가 방을 나갈 때 이벤트 발생
         OnPlayerLeft?.Invoke(otherPlayer.NickName);
     }
 
+    #endregion
+
     // using ExitGames.Client.Photon; 필요 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
-    {
-        Debug.Log("[GameReadyNetworkManager] OnPlayerPropertiesUpdate 호출됨");
+    //public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    //{
+    //    Debug.Log("[GameReadyNetworkManager] OnPlayerPropertiesUpdate 호출됨");
 
         //if (changedProps.ContainsKey("CurrentScene"))
         //{
         //    Debug.Log($"🎯 {targetPlayer.NickName}의 씬 변경: {changedProps["CurrentScene"]}");
         //    gameReadyUIManager.UpdatePlayerListUI(); // 🔄 UI 업데이트 (씬 변경 감지 시)
         //}
-    }
+    //}
 
 }
