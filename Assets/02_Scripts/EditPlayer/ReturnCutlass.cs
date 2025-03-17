@@ -27,6 +27,7 @@ public class ReturnCutlass : MonoBehaviour
         if (other.gameObject.GetInstanceID() ==
             transform.parent.gameObject.GetInstanceID()) return;
 
+        explosionCutlass?.ExplosionVFX();
         explosionCutlass?.Explosion();
 
         DeactivateKnife();

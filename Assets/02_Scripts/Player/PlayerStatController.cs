@@ -253,6 +253,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if (!photonView.IsMine) return;
 
         playerHp = MAX_HP;
+        InGameUIManager.Instance.StatusIndicator.SetHealth(playerHp);
         isAlive = true;
 
         BulletCount = 5;
