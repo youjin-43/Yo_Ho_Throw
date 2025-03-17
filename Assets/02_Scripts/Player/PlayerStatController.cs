@@ -30,10 +30,10 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     float heightDeadOffset = 1.57f;
 
     private float lastDamageTime = 0f; // 마지막으로 데미지를 받은 시간
-    private float healDelay = 5f; // 체력 회복 시작까지의 지연 시간
-    private float healInterval = 1f; // 체력 회복 간격
+    //private float healDelay = 5f; // 체력 회복 시작까지의 지연 시간
+    //private float healInterval = 1f; // 체력 회복 간격
 
-    private Coroutine healingCoroutine;
+    //private Coroutine healingCoroutine;
     private Coroutine bulletReloadCoroutine;
 
     public GameObject knifeObject;
@@ -120,14 +120,15 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
             }
         }
     }
-    [PunRPC]
-    public void StartHeal_RPC()
-    {
-        if (healingCoroutine == null) 
-        {
-            healingCoroutine = StartCoroutine(HealOverTime());
-        }
-    }
+
+    //[PunRPC]
+    //public void StartHeal_RPC()
+    //{
+    //    if (healingCoroutine == null) 
+    //    {
+    //        healingCoroutine = StartCoroutine(HealOverTime());
+    //    }
+    //}
 
     [PunRPC]
     public void SyncLastDamageTime(float damageTime)
@@ -162,16 +163,15 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     {
         if (isInLobby) return;
 
-        
-
         anim.SetTrigger("Hit");
         lastDamageTime = Time.time;
 
-        if (healingCoroutine != null)
-        {
-            StopCoroutine(healingCoroutine);
-            healingCoroutine = null; // 체력 회복 중이면 중단
-        }
+        //if (healingCoroutine != null)
+        //{
+        //    StopCoroutine(healingCoroutine);
+        //    healingCoroutine = null; // 체력 회복 중이면 중단
+        //}
+
         if (Hp > 0)
         {
             photonView.RPC("PlaySfxAtPosition_RPC", RpcTarget.All, (int)AudioManager.Sfx.PlayerHit, transform.position);
@@ -187,7 +187,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     [PunRPC]
     public void PlaySfxAtPosition_RPC(int sfx, Vector3 position  )
     {
-        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerDead, transform.position);
+        AudioManager.Instance.PlaySfxAtPosition((AudioManager.Sfx)sfx, position);
     }
 
     [PunRPC]
@@ -270,19 +270,20 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
             yield return null;
         }
     }
-    private IEnumerator HealOverTime()
-    {
-        //Debug.Log("회복");
-        while (Hp < MAX_HP)
-        {
 
-            InGameUIManager.Instance.AddHealth(1);
-            playerHp += 1; // 체력 1씩 회복
-            playerHp = Mathf.Min(Hp, MAX_HP); // 최대 체력 초과 방지
-            yield return new WaitForSeconds(healInterval);
-        }
-        healingCoroutine = null; // 체력 다 차면 종료
-    }
+    //private IEnumerator HealOverTime()
+    //{
+    //    //Debug.Log("회복");
+    //    while (Hp < MAX_HP)
+    //    {
+
+    //        InGameUIManager.Instance.AddHealth(1);
+    //        playerHp += 1; // 체력 1씩 회복
+    //        playerHp = Mathf.Min(Hp, MAX_HP); // 최대 체력 초과 방지
+    //        yield return new WaitForSeconds(healInterval);
+    //    }
+    //    healingCoroutine = null; // 체력 다 차면 종료
+    //}
     
     
     [PunRPC]
