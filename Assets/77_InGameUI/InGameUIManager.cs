@@ -371,9 +371,9 @@ public class InGameUIManager : MonoBehaviour
     /// 현재 금화를 표시하는 부분입니다.
     /// </summary>
     /// <param name="coin"></param>
-    public void SetGoldCoin(int coin)
+    public void SetGoldCoin(int coin, int actorNumber)
     {
-        StatusIndicator.SetGoldCoin(coin);
+        StatusIndicator.SetGoldCoin(coin, actorNumber);
         ItemStore.PurchaceActivation(coin);
     }
 
