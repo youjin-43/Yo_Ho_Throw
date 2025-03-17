@@ -480,7 +480,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.EditClientCoin,
-            new object[] { _coin, photonView.OwnerActorNr },
+            new object[] { coin, photonView.OwnerActorNr },
             new RaiseEventOptions { Receivers = ReceiverGroup.All, CachingOption = EventCaching.DoNotCache },
             SendOptions.SendReliable
             );
@@ -513,7 +513,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.EditHostCoin,
-            _coin,
+            coin,
             new RaiseEventOptions { Receivers = ReceiverGroup.All, CachingOption = EventCaching.DoNotCache },
             SendOptions.SendReliable
             );
