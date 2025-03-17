@@ -131,11 +131,13 @@ public class SettingManager : MonoBehaviour
     private void OnMasterVolumeSliderChanged(float value)
     {
         AudioManager.Instance.SetBgmVolume(value); // 슬라이더 값으로 변화
+        GameManager.Instance.StoreBgmValue(value);
     }
 
     private void OnEffectVolumeSliderChanged(float value)
     {
         AudioManager.Instance.SetSfxVolume(value); // 슬라이더 값으로 변화
+        GameManager.Instance.StoreSfxValue(value);
     }
 
     private void OnSensitivitySliderChanged(float value)
