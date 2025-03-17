@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour
     {
         _sensitivity = sensitivity;
 
+        Debug.Log("@@@@@@@@저장된 민감도 : " + _sensitivity.ToString());
+
         SetSensitivity();
     }
     public float GetSensitivity()
@@ -70,6 +72,8 @@ public class GameManager : MonoBehaviour
         if (_player != null)
         {
             _player.GetComponent<PlayerController>().SetMouseSensitivity(_sensitivity);
+
+            Debug.Log("@@@@@@@@적용한 민감도 : " + _sensitivity.ToString());
         }
     }
 
@@ -78,11 +82,11 @@ public class GameManager : MonoBehaviour
 
     public void StorePlayer(GameObject player)
     {
-        if(player.GetComponent<PhotonView>().IsMine == true)
+        if(player.GetComponent<PhotonView>().OwnerActorNr == PhotonNetwork.LocalPlayer.ActorNumber)
         {
             _player = player;
-        }
 
-        SetSensitivity();
+            SetSensitivity();
+        }
     }
 }

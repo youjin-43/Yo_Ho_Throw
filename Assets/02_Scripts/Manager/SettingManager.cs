@@ -54,7 +54,7 @@ public class SettingManager : MonoBehaviour
         masterVolumeSlider.value = AudioManager.Instance.bgmVolume;
         effectVolumeSlider.value = AudioManager.Instance.sfxVolume;
 
-        sensitivitySlider.value = sensitivity;
+        sensitivitySlider.value = GameManager.Instance.GetSensitivity();
 
         // 버튼&토글에 소리 연결
 
@@ -147,6 +147,13 @@ public class SettingManager : MonoBehaviour
         // 감도 저장
         sensitivity = clampedValue;
         Debug.Log("Settings Saved");
+
+        float clamp = Mathf.Clamp(sensitivitySlider.value, 0.1f, 10f);
+
+
+        GameManager.Instance.StoreSensitivity(clamp);
+
+
         // gameObject.SetActive(false); // 패널 비활성화
     }
 
@@ -157,7 +164,6 @@ public class SettingManager : MonoBehaviour
         AudioManager.Instance.SetSfxVolume(AudioManager.Instance.sfxVolume);
 
         //playerController.SetMouseSensitivity(sensitivity);
-        GameManager.Instance.StoreSensitivity(sensitivitySlider.value);
 
 
         // 슬라이더도 원위치로
