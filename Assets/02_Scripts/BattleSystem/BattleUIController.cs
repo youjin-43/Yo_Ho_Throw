@@ -252,11 +252,11 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
     {
         isGameRunning = false;
 
-        ShowScoreboard();
+        //ShowScoreboard();
 
-        CursorController.Instance.CursorEnable();
+        //CursorController.Instance.CursorEnable();
 
-        gameoverPanel.SetActive(true);
+        //gameoverPanel.SetActive(true);
     }
     void ResetScoreboard()
     {

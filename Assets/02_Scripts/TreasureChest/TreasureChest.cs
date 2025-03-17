@@ -27,6 +27,7 @@ public class TreasureChest : MonoBehaviour
     {
         if (!isOpen)
         {
+            chestAnimator.SetTrigger("Hit"); // 보물상자 덜컹이는 애니메이션 실행
             attackCount++;
             if (attackCount >= 3) photonView.RPC("OpenChest", RpcTarget.All); ;
         }

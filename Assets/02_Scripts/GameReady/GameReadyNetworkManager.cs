@@ -42,6 +42,7 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         SpawnPlayer();
     }
 
+    #region PlayerSpawn
     private void SpawnPlayer()
     {
         player = PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
@@ -74,6 +75,8 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         return new Vector3(x, 10f, z);
     }
 
+    #endregion
+
     public void GameStart()
     {
         OnGameStart?.Invoke(); // 게임 시작 이벤트 발생
@@ -88,17 +91,26 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel(SceneList.Test_BattleSystem.ToString());
     }
 
+    public static event System.Action<string> OnPlayerEnter; // 플레이어가 들어왔을 때 발생할 이벤트 
+
     // 새로운 플레이어가 들어오면 OnPlayerEnteredRoom()이 호출됨
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        gameReadyUIManager.UpdatePlayerListUI();
-        gameReadyUIManager.ShowPlayerJoinMessage(newPlayer.NickName);
+        //gameReadyUIManager.UpdatePlayerListUI();
+        //gameReadyUIManager.ShowPlayerJoinMessage(newPlayer.NickName);
+
+        OnPlayerEnter?.Invoke(newPlayer.NickName);
     }
+
+    public static event System.Action<string> OnPlayerLeft; // 플레이어가 나갔을떄 발생할 이벤트 
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        gameReadyUIManager.UpdatePlayerListUI();
-        gameReadyUIManager.ShowPlayerLeftMessage (otherPlayer.NickName);
+        //gameReadyUIManager.UpdatePlayerListUI();
+        //gameReadyUIManager.ShowPlayerLeftMessage (otherPlayer.NickName);
+
+        // 플레이어가 방을 나갈 때 이벤트 발생
+        OnPlayerLeft?.Invoke(otherPlayer.NickName);
     }
 
     // using ExitGames.Client.Photon; 필요 
@@ -106,11 +118,11 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("[GameReadyNetworkManager] OnPlayerPropertiesUpdate 호출됨");
 
-        if (changedProps.ContainsKey("CurrentScene"))
-        {
-            Debug.Log($"🎯 {targetPlayer.NickName}의 씬 변경: {changedProps["CurrentScene"]}");
-            gameReadyUIManager.UpdatePlayerListUI(); // 🔄 UI 업데이트 (씬 변경 감지 시)
-        }
+        //if (changedProps.ContainsKey("CurrentScene"))
+        //{
+        //    Debug.Log($"🎯 {targetPlayer.NickName}의 씬 변경: {changedProps["CurrentScene"]}");
+        //    gameReadyUIManager.UpdatePlayerListUI(); // 🔄 UI 업데이트 (씬 변경 감지 시)
+        //}
     }
 
 }
