@@ -226,8 +226,8 @@ public class PlayerController : ThirdPersonController
         anim.SetFloat("VerticalRaw", Mathf.Round(input_Y));
 
         StartCoroutine(DashMovement_RPC(direction.normalized));
-        canDash = true;
-        //StartCoroutine(DashCooldown());
+        //canDash = true;
+        StartCoroutine(DashCooldown());
     }
 
     IEnumerator DashCooldown()
