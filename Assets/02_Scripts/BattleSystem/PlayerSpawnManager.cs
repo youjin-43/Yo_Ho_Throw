@@ -117,9 +117,6 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         world_followCam.Target.LookAtTarget = camaraRoot;
         world_followCam.Target.CustomLookAtTarget = true;
 
-
-        Debug.Log("스폰 성공 : " + PhotonNetwork.LocalPlayer.NickName);
-
         InGameUIManager.Instance.Minimap.SetPlayerTransform(currPlayer.transform);
 
         BattleSystem.SpawnCheck();
@@ -151,9 +148,9 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         world_followCam.Target.LookAtTarget = camaraRoot;
         world_followCam.Target.CustomLookAtTarget = true;
 
-        Debug.Log("스폰 성공 : " + PhotonNetwork.LocalPlayer.NickName);
-
         InGameUIManager.Instance.Minimap.SetPlayerTransform(currPlayer.transform);
+
+        GameManager.Instance.StorePlayer(currPlayer);
 
         BattleSystem.SpawnCheck();
 
@@ -202,6 +199,23 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     {
         photonView.RPC(functionName, RpcTarget.All);
     }
+    [PunRPC]
+    public void FullKnife()
+    {
+        currPlayerPhotonView.RPC("FullKnife", RpcTarget.All);
+    }
+    [PunRPC]
+    public void KillSound(int actorNumber)
+    {
+        if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber) return;
+
+        photonView.RPC("KillSoundRPC", RpcTarget.All, currPlayer.transform.position);
+    }
+    [PunRPC]
+    void KillSoundRPC(Vector3 position)
+    {
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerKill, position);
+    }
     public void ExecutePlayerRPC(string functionName)
     {
         currPlayerPhotonView.RPC(functionName, RpcTarget.All);
@@ -225,6 +239,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     [PunRPC]
     public void ScheduleBountyTargetDeactivation()
     {
+        Debug.Log("ScheduleBountyTargetDeactivation : ActorNumber(" + PhotonNetwork.LocalPlayer.ActorNumber);
+
         currPlayerPhotonView.RPC("RespawnColorSetting", RpcTarget.All);
     }
     float GetHighestCollisionY(Vector3 position)

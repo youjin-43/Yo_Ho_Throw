@@ -86,15 +86,11 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 bountyTargetActorNumber = -1;
             }
 
-            Debug.Log("획득 전 점수 : " + playerScoreEntryDict[killerActorNumber].Score.ToString());
-            Debug.Log("얻어야 하는 점수 : " + (KILL_SCORE_REWARD + bonusReward).ToString());
-
             playerScoreEntryDict[killerActorNumber].SetScore(
             playerScoreEntryDict[killerActorNumber].Score +
             (KILL_SCORE_REWARD + bonusReward) *
             (isFinalMinute ? 2 : 1)
             );
-            Debug.Log("현재 점수 : " + playerScoreEntryDict[killerActorNumber].Score.ToString());
 
             playerScoreEntryDict[killerActorNumber].SetKill(playerScoreEntryDict[killerActorNumber].Kill + 1);
 
