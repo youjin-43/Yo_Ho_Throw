@@ -73,7 +73,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         // Esc 키로 ExitPopup 토글
         if (Input.GetKeyDown(KeyCode.Escape) && SettingPanel.IsOpened() == false)
         {
-            GameManager.Instance.PlayerStop(true);
+            //GameManager.Instance.PlayerStop(true);
             ToggleExitPopup();
         }
 
@@ -97,7 +97,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
         // Exit 팝업 기본 비활성화
         ExitPopup.SetActive(false);
-
+        CursorController.Instance.CursorDisable();
         // 버튼 클릭 리스너 설정
         goToTitleButton.onClick.AddListener(() => PhotonManager.Instance.LeaveRoomAndGoToTitle());
         stayButton.onClick.AddListener(ToggleExitPopup);
