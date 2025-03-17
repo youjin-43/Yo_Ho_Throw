@@ -486,12 +486,19 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
         coin = _coin;
     }
+    [PunRPC]
+    void EditHostCoinRPC_2(Vector2 data)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        coin = (int)data.x;
+    }
 
     public void DeleteCoin(int _coin)
     {
         if (coin - _coin >= 0) coin -= _coin;
 
-        photonView.RPC("EditHostCoinRPC", RpcTarget.All, coin);
+        photonView.RPC("EditHostCoinRPC_2", RpcTarget.All, new Vector2(coin, 0f));
 
         PlayerSpawnManager.Instance.coin = coin;
 

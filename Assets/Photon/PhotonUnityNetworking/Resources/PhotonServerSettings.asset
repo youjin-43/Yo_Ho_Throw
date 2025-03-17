@@ -94,6 +94,7 @@ MonoBehaviour:
   - SyncLastDamageTime
   - Throw_RPC
   - ThrowKnifeRPC
+  - EditClientCoinRPC_2
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
