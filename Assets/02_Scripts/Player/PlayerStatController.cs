@@ -444,14 +444,15 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         coin += _coin;
 
-        if (photonView.IsMine) InGameUIManager.Instance.SetGoldCoin(coin);
+        InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
     }
     
     public void DeleteCoin(int _coin)
     {
         if (coin - _coin >= 0)
             coin -= _coin;
-        InGameUIManager.Instance.SetGoldCoin(coin);
+
+        InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
     }
 
     [PunRPC]
