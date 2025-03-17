@@ -30,6 +30,8 @@ public class LayerWeightController : StateMachineBehaviour
         {
             t += Time.deltaTime * fadeSpeed;
 
+            if (animator == null) yield break;
+
             animator.SetLayerWeight(layerIndex, t);
 
             yield return null;
