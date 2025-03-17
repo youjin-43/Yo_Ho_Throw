@@ -47,7 +47,7 @@ public class TreasureChest : MonoBehaviourPun
     }
     IEnumerator OpenChestCoroutine()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.48f);
 
         int coinCount = Random.Range(minCoin, maxCoin + 1);
 
