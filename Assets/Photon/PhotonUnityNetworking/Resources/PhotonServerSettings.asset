@@ -91,6 +91,15 @@ MonoBehaviour:
   - SpawnCoins
   - DestroyTreasureChest
   - Notification
+  - BulletReloadOverTime_RPC
+  - DestroyCoin
+  - PlayDeathAnimation_RPC
+  - PlaySfxAtPosition
+  - PlaySfxAtPosition_RPC
+  - SetLimitTimeText
+  - SpawnPlayerRPC
+  - StartHeal_RPC
+  - SyncLastDamageTime
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
