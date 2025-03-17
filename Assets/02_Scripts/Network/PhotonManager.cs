@@ -257,6 +257,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     #endregion
 
+
+    #region PlayerProperty
     /// <summary>
     /// 플레이어가 있는 씬 저장
     /// </summary>
@@ -275,6 +277,15 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     //        Debug.Log($"{PhotonNetwork.NickName}의 현재 씬을 '{currentScene}'로 설정");
     //    }
     //}
+
+    public void SetPlayerReayProperty(bool isReady)
+    {
+        // Photon CustomProperties에 저장 (모든 플레이어에게 동기화됨)
+        ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
+        properties[PhotonPlayerProperties.IsReady.ToString()] = isReady;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
+    }
+    #endregion
 
     #region LeaveRoomAndLoadToTitle
     /// <summary>
