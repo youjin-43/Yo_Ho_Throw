@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/03_Prefabs/UI Panels/SettingButton.prefab.meta
+guid: 6fa6be899ebb1064bb8725562a974c1b
+========
+guid: b409db62a9faef84184c5e6e25ef0370
+>>>>>>>> develop:Assets/03_Prefabs/UI Panels/ManualPanel.prefab.meta
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
