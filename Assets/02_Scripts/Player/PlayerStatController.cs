@@ -443,7 +443,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     public void AddCoin(int _coin)
     {
         coin += _coin;
-        InGameUIManager.Instance.SetGoldCoin(coin);
+
+        if (photonView.IsMine) InGameUIManager.Instance.SetGoldCoin(coin);
     }
     
     public void DeleteCoin(int _coin)
