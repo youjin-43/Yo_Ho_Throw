@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool isPlayerStop;
+
     void Awake()
     {
         if (_instance == null)
@@ -84,5 +86,10 @@ public class GameManager : MonoBehaviour
         }
 
         SetSensitivity();
+    }
+
+    public void PlayerStop(bool _isPlayerStop)
+    {
+        isPlayerStop = _isPlayerStop;
     }
 }

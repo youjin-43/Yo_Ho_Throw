@@ -324,12 +324,14 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         CursorController.Instance.CursorEnable();
+        GameManager.Instance.PlayerStop(true);
     }
     public void RemoveScoreManager()
     {
         ScreenTransition.Instance.FadeInRPC();
 
         CursorController.Instance.CursorDisable();
+        GameManager.Instance.PlayerStop(false);
 
         Destroy(gameObject);
     }
