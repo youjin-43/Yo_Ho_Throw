@@ -80,6 +80,9 @@ public class Cutlass : MonoBehaviour
         // �������ڿ� �浹���� ��
         else if (other.CompareTag("TreasureChest"))
         {
+            // 1번 호스트가 아닐 경우 제외
+            if (!PhotonNetwork.IsMasterClient) return;
+
             PhotonView chestPhotonView = other.GetComponent<PhotonView>();
             // TreasuerChest �� �ִ� Attack �Լ� ȣ��
             chestPhotonView.RPC("Attack", RpcTarget.All);

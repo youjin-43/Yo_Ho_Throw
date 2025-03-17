@@ -1,18 +1,20 @@
-﻿using Photon.Pun;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.Processors;
 using UnityEngine.Windows;
 
-public class PlayerStatController : MonoBehaviourPun , IDamagable
+public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallback
 {
     const int MAX_HP = 3;
     const int MAX_BULLET_COUNT = 5;
     [Header("Player Info")]
     public int playerHp = MAX_HP;
     public int bulletCount = MAX_BULLET_COUNT;
-    public int coin = 0;
+    int coin = 0;
     public bool isAlive = true;
     public bool isInLobby = true;
     protected bool isGameEnd = false;
@@ -36,7 +38,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
     public GameObject knifeObject;
     public bool isEsc = false;
-    
+
     public int BulletCount
     {
         get => bulletCount;
@@ -80,6 +82,22 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     void Start()
     {
         anim = GetComponent<Animator>();
+    }
+    public virtual void OnEnable()
+    {
+        Debug.Log("AddCallbackTarget");
+        Debug.Log("AddCallbackTarget");
+        Debug.Log("AddCallbackTarget");
+
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+    public void OnDisable()
+    {
+        Debug.Log("RemoveCallbackTarget");
+        Debug.Log("RemoveCallbackTarget");
+        Debug.Log("RemoveCallbackTarget");
+
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     // Update is called once per frame
@@ -257,7 +275,6 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             yield return null;
         }
     }
-    [PunRPC]
     private IEnumerator HealOverTime()
     {
         //Debug.Log("회복");
@@ -283,7 +300,6 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         isInLobby = false;
     }
-
     [PunRPC]
     public void InitPlayer()
     {
@@ -439,24 +455,77 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         cutlass.material = cutlassDefaultMaterial;
     }
 
-    
-    public void AddCoin(int _coin)
-    {
-        coin += _coin;
-        InGameUIManager.Instance.SetGoldCoin(coin);
-    }
-    
-    public void DeleteCoin(int _coin)
-    {
-        if (coin - _coin >= 0)
-            coin -= _coin;
-        InGameUIManager.Instance.SetGoldCoin(coin);
-    }
-
     [PunRPC]
     public void FullKnife()
     {
         BulletCount = 5;
     }
 
+    public void OnEvent(EventData photonEvent)
+    {
+        switch ((RaiseEventCode)photonEvent.Code)
+        {
+            case RaiseEventCode.EditClientCoin:
+                EditClientCoin((object[])photonEvent.CustomData); break;
+
+            case RaiseEventCode.EditHostCoin:
+                EditHostCoin((object[])photonEvent.CustomData); break;
+        }
+    }
+    public void AddCoin(int _coin)
+    {
+        coin += _coin;
+
+        PhotonNetwork.RaiseEvent(
+            (byte)RaiseEventCode.EditClientCoin,
+            new object[] { coin, photonView.OwnerActorNr },
+            new RaiseEventOptions { Receivers = ReceiverGroup.All, CachingOption = EventCaching.DoNotCache },
+            SendOptions.SendReliable
+            );
+
+        InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
+    }
+    void EditClientCoin(object[] data)
+    {
+        if (photonView.OwnerActorNr != (int)data[1]) return;
+
+        if (PhotonNetwork.LocalPlayer.ActorNumber != (int)data[1]) return;
+
+        Debug.Log("내 AN: " + ((int)data[1]).ToString() + " / 코인 갱신 수: " + (int)data[0]);
+
+        int coin = (int)data[0];
+
+        PlayerSpawnManager.Instance.coin = coin;
+
+        this.coin = coin;
+    }
+    void EditHostCoin(object[] data)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        if (photonView.OwnerActorNr != (int)data[1]) return;
+
+        Debug.Log("호스트. 적용 코인 : " + (int)data[0]);
+
+        coin = (int)data[0];
+    }
+    public void DeleteCoin(int _coin)
+    {
+        Debug.Log("이전 코인 : " + coin.ToString());
+
+        if (coin - _coin >= 0) coin -= _coin;
+
+        Debug.Log("지불 후 코인 : " + coin.ToString());
+
+        PhotonNetwork.RaiseEvent(
+            (byte)RaiseEventCode.EditHostCoin,
+            new object[] { coin, photonView.OwnerActorNr },
+            new RaiseEventOptions { Receivers = ReceiverGroup.All, CachingOption = EventCaching.DoNotCache },
+            SendOptions.SendReliable
+            );
+
+        PlayerSpawnManager.Instance.coin = coin;
+
+        InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
+    }
 }
