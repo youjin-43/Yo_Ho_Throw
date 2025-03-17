@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7058094969903656258}
   - component: {fileID: 7032402367938309963}
   - component: {fileID: 6484079808594095113}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Treasure Chest Lid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 674822637605557271}
   - component: {fileID: 8764186437637070837}
   - component: {fileID: 3500095797490686710}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Treasure Chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,7 +193,7 @@ GameObject:
   - component: {fileID: 5271928201065359096}
   - component: {fileID: 1320958553816650589}
   - component: {fileID: -4142342225671361878}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Treasure Chest
   m_TagString: TreasureChest
   m_Icon: {fileID: 0}
