@@ -173,6 +173,7 @@ namespace StarterAssets
             if (isAlive)
             {
                 JumpAndGravity();
+                
                 Move();
 
             }
@@ -237,6 +238,14 @@ namespace StarterAssets
         
         private void Move()
         {
+            if (GameManager.Instance.isPlayerStop)
+            {
+                _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+                _animator.SetFloat("Horizontal", 0);
+                _animator.SetFloat("Vertical", 0);
+                return;
+            }
+
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = MoveSpeed;
             float horizontalInput = Input.GetAxis("Horizontal");
@@ -300,6 +309,26 @@ namespace StarterAssets
         
         private void JumpAndGravity()
         {
+
+            if (GameManager.Instance.isPlayerStop)
+            {
+                
+                if (_verticalVelocity < _terminalVelocity)
+                {
+                    _verticalVelocity += Gravity * Time.deltaTime;
+                }
+                _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+                if (Grounded)
+                {
+                    if (_hasAnimator)
+                    {
+                        _animator.SetBool(_animIDJump, false);
+                        _animator.SetBool(_animIDFreeFall, false);
+                    }
+                }
+                return;
+            }
+
             if (IsDash) return;
 
             if (Grounded)
@@ -323,6 +352,7 @@ namespace StarterAssets
                 _jumpTimeoutDelta = 0f;
                 
                 // Jump
+                
                 if (Input.GetAxis("Jump")>0 && _jumpTimeoutDelta <= 0.0f)
                 {
                     // the square root of H * -2 * G = how much velocity needed to reach desired height

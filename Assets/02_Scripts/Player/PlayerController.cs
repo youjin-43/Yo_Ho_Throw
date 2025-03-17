@@ -16,8 +16,8 @@ public class PlayerController : ThirdPersonController
     public bool online = true;
 
     [Header("State")]
-    [SerializeField] public bool canDash = true;
-    [SerializeField] bool isDashing = false;
+    public bool canDash = true;
+    bool isDashing = false;
 
     private StarterAssetsInputs input;
     public bool isAttacking = false;
@@ -63,7 +63,7 @@ public class PlayerController : ThirdPersonController
         
         if (isGameEnd) return;
 
-        if(GameManager.Instance.isPlayerStop) return;
+        
 
         base.Update();
         
@@ -76,7 +76,7 @@ public class PlayerController : ThirdPersonController
         */
         
         if (!isAlive) return;
-
+        if(GameManager.Instance.isPlayerStop) return;
         if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded   && canDash)
         {
             if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0) return; // 현재 정지하고 있으면 대쉬 못하도록 

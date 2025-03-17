@@ -117,12 +117,16 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
 
         if (Input.GetKeyDown(KeyCode.Escape) && InGameUIManager.Instance.IsSettingUIOpen() == false)
         {
-            InGameUIManager.Instance.ToggleMenuUI();
+            //InGameUIManager.Instance.ToggleMenuUI();
+            ToggleExitPopup();
+
+
         }
         
         if(Input.GetKeyDown(KeyCode.Escape) && InGameUIManager.Instance.IsSettingUIOpen() == true)
         {
             InGameUIManager.Instance.ToggleSettingUI();
+            
         }
     }
 
