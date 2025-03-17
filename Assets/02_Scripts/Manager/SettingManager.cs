@@ -137,6 +137,7 @@ public class SettingManager : MonoBehaviour
         // 감도 저장
         sensitivity = clampedValue;
         Debug.Log("Settings Saved");
+        gameObject.SetActive(false); // 패널 비활성화
     }
 
     public void OnCloseButtonClick()
