@@ -233,32 +233,26 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         }
        
 
-        photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
         isAlive = false;
-        CharacterControllerOffset(false);
+        photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
+        
     }
     [PunRPC]
     public void PlayDeathAnimation_RPC()
     {
-        anim.SetTrigger("Dead");
-    }
-
-    void CharacterControllerOffset(bool isAlive)
-    {
-        if (isAlive)
-        {
-            transform.GetComponent<CharacterController>().center = centerOffset;
-            transform.GetComponent<CharacterController>().radius = radiusOffset;
-            transform.GetComponent<CharacterController>().height = heightOffset;
-
+        StartCoroutine(PlayDeathAnimationCorutine());
         
-        }
-        else
-        {
-            transform.GetComponent<CharacterController>().height = heightDeadOffset;
-            transform.GetComponent<CharacterController>().center = centerDeadOffset;
-            transform.GetComponent<CharacterController>().radius = radiusDeadOffset;
+    }
+    IEnumerator PlayDeathAnimationCorutine()
+    {
+        float duration = 1f;
+        float elapsedTime = 0f;
 
+        while (elapsedTime < duration)
+        {
+            anim.SetTrigger("Dead"); 
+            elapsedTime += Time.deltaTime;
+            yield return null;
         }
     }
     [PunRPC]
@@ -298,7 +292,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if (!photonView.IsMine) return;
         //콜라이더 오프셋
 
-        CharacterControllerOffset(true);
+       
 
         playerHp = MAX_HP;
         InGameUIManager.Instance.StatusIndicator.SetHealth(playerHp);
