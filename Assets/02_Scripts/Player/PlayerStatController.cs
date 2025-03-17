@@ -103,25 +103,20 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     // Update is called once per frame
     public void Update()
     {
-        //Debug.Log(Time.time);   
-        if (isAlive && !isInLobby && Time.time - lastDamageTime >= healDelay)
-       {
-            
-            if (healingCoroutine == null)
-            {
+        // 자동 힐 안되도록 
+        //if (isAlive && !isInLobby && Time.time - lastDamageTime >= healDelay)
+        //{
+        //    if (healingCoroutine == null)
+        //    {
+        //        photonView.RPC("StartHeal_RPC", RpcTarget.All);
+        //    }
+        //}
 
-
-                photonView.RPC("StartHeal_RPC", RpcTarget.All);
-            }
-        }
-
-        if(isAlive && !isInLobby && BulletCount<5 )
+        if(photonView.IsMine && isAlive && !isInLobby && BulletCount<5 )
         {
             if(bulletReloadCoroutine == null)
             {
-                if (photonView.IsMine)
-
-                    photonView.RPC("BulletReloadOverTime_RPC", RpcTarget.All);
+                bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
             }
         }
     }
