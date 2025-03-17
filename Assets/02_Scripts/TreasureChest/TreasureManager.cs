@@ -10,11 +10,12 @@ public class TreasureManager : MonoBehaviour
     [SerializeField] GameObject chestPrefab;
     [SerializeField] Transform[] spawnPoints; // 스폰될 위치 리스트
 
-    private int chestCount=5;
+    private int maxChestCount=5;
+    private int currChestCount = 0;
+
     private List<GameObject> treasureChests = new List<GameObject>(); // 현재 스폰된 보물상자 리스트
 
     [SerializeField] List<Vector3> usedPosition = new List<Vector3>(); // 이미 스폰된 위치를 저장하는 리스트
-
 
     void Start()
     {
@@ -23,34 +24,21 @@ public class TreasureManager : MonoBehaviour
             SpawnTreasureChest();
             StartCoroutine(ChangeTreasureChestPosition());
         }
-        // 이벤트 수신 등록
-        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
     }
-
-    private void OnDestroy()
-    {
-        // 이벤트 수신 해제
-        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
-    }
+    private void OnEnable() => PhotonNetwork.NetworkingClient.EventReceived += OnEvent; // 이벤트 수신 
+    private void OnDisable() => PhotonNetwork.NetworkingClient.EventReceived -= OnEvent; // 이벤트 수신 해제
 
     private void OnEvent(EventData photonEvent)
     {
         if (photonEvent.Code == 0) // 이벤트 코드가 0일 때 (보물상자 삭제)
         {
-            int chestViewID = (int)photonEvent.CustomData;
-            DestroyTreasureChest(chestViewID); // 보물상자 삭제
+            DestroyTreasureChest(); // 보물상자 삭제
         }
-        else if (photonEvent.Code == 1) // 이벤트 코드가 1일 때 (코인 삭제) 
-        {
-            int coinViewID = (int)photonEvent.CustomData;
-            DestroyCoin(coinViewID);
-        }
-
     }
 
     private void SpawnTreasureChest()
     {
-        while (treasureChests.Count < chestCount) 
+        while (currChestCount < maxChestCount) 
         {
             // 미리 정해둔 위치 중 랜덤으로 한 곳 가져오기
             Vector3 spawnPosition = GetRandomSpawnPoint();
@@ -66,7 +54,10 @@ public class TreasureManager : MonoBehaviour
                 // 보물상자 생성
                 //GameObject chest = Instantiate(chestPrefab, spawnPosition, randomRotation);
                 GameObject chest = PhotonNetwork.Instantiate(chestPrefab.name, spawnPosition, randomRotation, 0);
-                treasureChests.Add(chest); // 현재 보물상자 리스트에 추가
+
+                treasureChests.Add(chest);
+
+                currChestCount++;
             }
         }
     }
@@ -80,10 +71,14 @@ public class TreasureManager : MonoBehaviour
             // 모든 보물상자 삭제
             foreach (GameObject chest in treasureChests)
             {
-                PhotonNetwork.Destroy(chest); // 네트워크에서 보물상자 삭제
+                if (chest != null)
+                {
+                    PhotonNetwork.Destroy(chest); // 네트워크에서 보물상자 삭제
+                }
             }
             treasureChests.Clear(); // 보물상자 리스트 초기화
             usedPosition.Clear(); // 사용된 위치 초기화
+            currChestCount = 0;
 
             // 새로운 보물상자 스폰
             SpawnTreasureChest();
@@ -101,25 +96,8 @@ public class TreasureManager : MonoBehaviour
     {
         usedPosition.Remove(position); // 사용된 위치에서 제거. 다시 스폰 가능
     }
-
-    [PunRPC]
-    public void DestroyTreasureChest(int chestViewID)
+    public void DestroyTreasureChest()
     {
-        PhotonView chestView = PhotonView.Find(chestViewID);
-        if (chestView != null)
-        {
-            Destroy(chestView.gameObject); // 보물상자 삭제
-            treasureChests.Remove(chestView.gameObject); // 리스트에서 제거
-        }
-    }
-
-    [PunRPC]
-    private void DestroyCoin(int coinViewID)
-    {
-        PhotonView coinView = PhotonView.Find(coinViewID);
-        if (coinView != null)
-        {
-            PhotonNetwork.Destroy(coinView.gameObject); // 코인 삭제
-        }
+        currChestCount--;
     }
 }
