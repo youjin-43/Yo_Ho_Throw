@@ -9,17 +9,23 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
     public static event System.Action<int,bool> OnPlayerReadyChanged; // 특정 플레이어의 레디 상태가 변경될 때 실행될 이벤트 (ActorNumber 전달)
     public static event System.Action<bool> OnAllPlayersReadyChanged; // 모든 플레이어의 레디 상태 변경 이벤트 (버튼 활성화/비활성화)
 
+
+    #region SubscribeEvent
     private void Start()
     {
+        // 이벤트 구독 
+        if (PhotonNetwork.IsMasterClient) GameReadyNetworkManager.OnPlayerLeft += (playerName) => CheckAllPlayersReadyAndIsMaxPlayer();
         GameReadyNetworkManager.OnGameStart += ResetAllPlayersReadyState; // 게임 시작시 플레이어 레디 정보를 초기화 하도록 
     }
 
     void OnDestroy()
     {
         // 이벤트 구독 해제 (메모리 누수 방지)
+        if (PhotonNetwork.IsMasterClient) GameReadyNetworkManager.OnPlayerLeft -= (playerName) => CheckAllPlayersReadyAndIsMaxPlayer();
+
         GameReadyNetworkManager.OnGameStart -= ResetAllPlayersReadyState;
     }
-
+    #endregion
 
     void Update()
     {
@@ -29,14 +35,16 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public override void OnJoinedRoom()
+    {
+        // 일단 룸에 입장하면 레디상태는 false로 초기화 
+        PhotonManager.Instance.SetPlayerReayProperty(false);
+    }
+
     void ToggleReadyState()
     {
         isReady = !isReady; // 레디 상태 토글
-
-        // Photon CustomProperties에 저장 (모든 플레이어에게 동기화됨)
-        ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
-        properties[PhotonPlayerProperties.IsReady.ToString()] = isReady;
-        PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
+        PhotonManager.Instance.SetPlayerReayProperty(isReady);
     }
 
     // Photon에서 플레이어 `CustomProperties`가 변경될 때 호출됨
@@ -53,14 +61,14 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
             // 이벤트 발생 → GameReadyUIManager에서 이걸 듣고 UI 업데이트!
             OnPlayerReadyChanged?.Invoke(targetPlayer.ActorNumber, isReady);
 
-            CheckAllPlayersReady();
+            CheckAllPlayersReadyAndIsMaxPlayer();
         }
     }
 
     /// <summary>
     /// 모든 플레이어의 레디 상태 체크 후 게임 시작 가능 여부 확인
     /// </summary>
-    void CheckAllPlayersReady()
+    void CheckAllPlayersReadyAndIsMaxPlayer()
     {
         int maxPlayers = PhotonNetwork.CurrentRoom.MaxPlayers; // 설정된 최대 플레이어 수
         int currentPlayers = PhotonNetwork.PlayerList.Length; // 현재 방에 있는 플레이어 수
