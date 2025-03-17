@@ -100,4 +100,21 @@ public class TreasureManager : MonoBehaviour
     {
         currChestCount--;
     }
+
+
+
+    [SerializeField] GameObject coinPrefab;
+
+    public void SpawnCoins(int coinCount, Vector3 chestPosition)
+    {
+        float radius = 1.0f; // 원하는 반지름
+
+        for (int i = 0; i < coinCount; i++)
+        {
+            Vector2 randomPoint = Random.insideUnitCircle * radius; // 랜덤한 점을 생성
+            Vector3 randomPosition = new Vector3(chestPosition.x + randomPoint.x, chestPosition.y + 0.5f, chestPosition.z + randomPoint.y);
+
+            PhotonNetwork.Instantiate(coinPrefab.name, randomPosition, Quaternion.identity, 0); // 코인 생성
+        }
+    }
 }

@@ -86,6 +86,9 @@ public class MeleeAttackOnTrigger : MonoBehaviour
 
         else if (other.CompareTag("TreasureChest"))
         {
+            // 1번 호스트가 아닐 경우 제외
+            if (!PhotonNetwork.IsMasterClient) return;
+
             PhotonView chestPhotonView = other.GetComponent<PhotonView>();
             // TreasureChest에 있는 Attack 함수 호출
             chestPhotonView.RPC("Attack", RpcTarget.All);
