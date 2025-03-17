@@ -207,7 +207,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         gameObject.name += Random.value.ToString();
 
         // 이동 비활성화
-        isAlive = false;
+        
         //캐릭터 컨트롤러 오프셋 크기
         CharacterController cc = transform.GetComponent<CharacterController>();
         if (cc == null) Debug.Log("aa");
@@ -227,13 +227,14 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
         while (!transform.GetComponent<PlayerController>().Grounded)
         {
+            Debug.Log("여기");
             pc._controller.Move(new Vector3(0, -9.81f * Time.deltaTime, 0));
             yield return null;
         }
        
 
         photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
-
+        isAlive = false;
         CharacterControllerOffset(false);
     }
     [PunRPC]
