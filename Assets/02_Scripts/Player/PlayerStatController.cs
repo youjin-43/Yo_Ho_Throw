@@ -444,7 +444,12 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         InGameUIManager.Instance.SetGoldCoin(coin);
     }
 
-    //파티클
+    [PunRPC]
+    public void FullKnife()
+    {
+        if(!photonView.IsMine) return;
+            BulletCount = 5;
 
+    }
     
 }
