@@ -11,7 +11,7 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 {
     public static BattleSystem Instance { get; private set; } = null;
 
-    int timeLimit =60;
+    int timeLimit =120;
 
     int spawnedPlayerCount = 0;
 
