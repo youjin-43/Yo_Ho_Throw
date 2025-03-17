@@ -12,7 +12,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [Header("Player Info")]
     public int playerHp = MAX_HP;
     public int bulletCount = MAX_BULLET_COUNT;
-    public int coin = 0;
+    int coin = 0;
     public bool isAlive = true;
     public bool isInLobby = true;
     protected bool isGameEnd = false;
@@ -444,6 +444,10 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         coin += _coin;
 
+        if (photonView == null) Debug.Log("NULL");
+
+        Debug.Log("photonView.OwnerActorNr : " + photonView.OwnerActorNr.ToString());
+
         photonView.RPC("EditClientCoin", RpcTarget.All, coin, photonView.OwnerActorNr);
 
         InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
@@ -452,6 +456,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     void EditClientCoin(int _coin, int actorNumber)
     {
+        Debug.Log("EditClientCoinasdasdsad");
+
         if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber) return;
 
         PlayerSpawnManager.Instance.coin = coin;
