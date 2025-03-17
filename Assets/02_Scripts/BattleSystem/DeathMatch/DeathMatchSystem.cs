@@ -89,6 +89,7 @@ public class DeathMatchSystem : BattleSystem
         if (seconds == 60) // 제한시간이 1분 밖에 안 남았을 때
         {
             ScoreManager.Instance.SetIsFinalMinute(true);
+            PlayerSpawnManager.Instance.SetIsFinalMinute();
         }
 
         if (seconds % 60 == 0 && seconds != 0)  // TODO 찬규 : 1분마다 현상금 이벤트 발생

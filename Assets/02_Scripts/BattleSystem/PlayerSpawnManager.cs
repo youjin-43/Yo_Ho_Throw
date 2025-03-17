@@ -166,7 +166,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     }
     IEnumerator RespawnPlayerCoroutine()
     {
-        yield return InGameUIManager.Instance.Death(respawnTime);
+        yield return InGameUIManager.Instance.Death(isFinalMinute ? respawnTime * 0.5f : respawnTime);
 
         BattleUIController.Instance.SetIsAlive(true);
 
@@ -238,6 +238,11 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         return hit.point.y;
     }
     Transform GetRandomTransform() => spawnPositions[Random.Range(0, spawnPositions.Length)].GetRandomTransform();
+    bool isFinalMinute = false;
+    public void SetIsFinalMinute()
+    {
+        isFinalMinute = true;
+    }
     private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
     private void OnDisable() => PhotonNetwork.RemoveCallbackTarget(this);
 }
