@@ -18,6 +18,14 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     protected bool isGameEnd = false;
     public float dashCoolTime = 5f;
     public Animator anim;
+    //살아있을때 캐릭터 컨트롤러 offset
+    Vector3 centerOffset = new Vector3(0, 0.56f, 0);
+    float radiusOffset = 0.28f;
+    float heightOffset = 1.12f;
+    //죽었을때 캐릭터 컨트롤러 offset
+    Vector3 centerDeadOffset = new Vector3(0, 0.12f, -0.6f);
+    float radiusDeadOffset = 0.28f;
+    float heightDeadOffset = 1.57f;
 
     private float lastDamageTime = 0f; // 마지막으로 데미지를 받은 시간
     private float healDelay = 5f; // 체력 회복 시작까지의 지연 시간
@@ -200,7 +208,13 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
         // 이동 비활성화
         isAlive = false;
-        
+        //캐릭터 컨트롤러 오프셋 크기
+        CharacterController cc = transform.GetComponent<CharacterController>();
+        if (cc == null) Debug.Log("aa");
+        transform.GetComponent<CharacterController>().center = centerDeadOffset;
+        transform.GetComponent<CharacterController>().radius = radiusDeadOffset;
+        transform.GetComponent<CharacterController>().height = heightDeadOffset;
+
         CursorController.Instance.CursorEnable();
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
         StartCoroutine(ApplyGravityAfterDeath());
@@ -251,6 +265,10 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         anim.Rebind();
         anim.Update(0f);
         if (!photonView.IsMine) return;
+        //콜라이더 오프셋
+        transform.GetComponent<CharacterController>().center = centerOffset;
+        transform.GetComponent <CharacterController>().radius = radiusOffset;
+        transform.GetComponent<CharacterController>().height = heightOffset;    
 
         playerHp = MAX_HP;
         InGameUIManager.Instance.StatusIndicator.SetHealth(playerHp);
