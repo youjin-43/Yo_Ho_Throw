@@ -469,7 +469,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
                 EditClientCoin((object[])photonEvent.CustomData); break;
 
             case RaiseEventCode.EditHostCoin:
-                EditHostCoin((int)photonEvent.CustomData); break;
+                EditHostCoin((object[])photonEvent.CustomData); break;
         }
     }
     public void AddCoin(int _coin)
@@ -499,13 +499,15 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
         this.coin = coin;
     }
-    void EditHostCoin(int _coin)
+    void EditHostCoin(object[] data)
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        Debug.Log("호스트. 적용 코인 : " + _coin);
+        if (photonView.OwnerActorNr != (int)data[1]) return;
 
-        coin = _coin;
+        Debug.Log("호스트. 적용 코인 : " + (int)data[0]);
+
+        coin = (int)data[0];
     }
     public void DeleteCoin(int _coin)
     {
@@ -517,7 +519,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.EditHostCoin,
-            coin,
+            new object[] { coin, photonView.OwnerActorNr },
             new RaiseEventOptions { Receivers = ReceiverGroup.All, CachingOption = EventCaching.DoNotCache },
             SendOptions.SendReliable
             );
