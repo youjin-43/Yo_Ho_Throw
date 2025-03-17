@@ -133,6 +133,8 @@ public class SettingManager : MonoBehaviour
 
         GameManager.Instance.StoreSensitivity(clampedValue);
 
+
+
         sensitivityText.text = clampedValue.ToString("F1"); // 소수점 한자리까지 표시
     }
 
@@ -145,7 +147,7 @@ public class SettingManager : MonoBehaviour
         // 감도 저장
         sensitivity = clampedValue;
         Debug.Log("Settings Saved");
-        gameObject.SetActive(false); // 패널 비활성화
+        // gameObject.SetActive(false); // 패널 비활성화
     }
 
     public void OnCloseButtonClick()
@@ -155,14 +157,15 @@ public class SettingManager : MonoBehaviour
         AudioManager.Instance.SetSfxVolume(AudioManager.Instance.sfxVolume);
 
         //playerController.SetMouseSensitivity(sensitivity);
-        GameManager.Instance.StoreSensitivity(clampedValue);
+        GameManager.Instance.StoreSensitivity(sensitivitySlider.value);
 
 
         // 슬라이더도 원위치로
         masterVolumeSlider.value = AudioManager.Instance.bgmVolume;
         effectVolumeSlider.value = AudioManager.Instance.sfxVolume;
 
-        sensitivitySlider.value = sensitivity;
+        //sensitivitySlider.value = sensitivity;
+        sensitivitySlider.value = GameManager.Instance.GetSensitivity();
 
         gameObject.SetActive(false); // 패널 비활성화
     }

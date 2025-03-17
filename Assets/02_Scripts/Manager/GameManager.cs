@@ -53,20 +53,24 @@ public class GameManager : MonoBehaviour
 
 
     // 감도 저장
-    private float _sensitivity;
+    private float _sensitivity = 3f;
 
     public void StoreSensitivity(float sensitivity)
     {
         _sensitivity = sensitivity;
 
-        if(_player != null)
-        {
-            _player.GetComponent<PlayerController>().SetMouseSensitivity(_sensitivity);
-        }
+        SetSensitivity();
     }
     public float GetSensitivity()
     {
         return _sensitivity;
+    }
+    public void SetSensitivity()
+    {
+        if (_player != null)
+        {
+            _player.GetComponent<PlayerController>().SetMouseSensitivity(_sensitivity);
+        }
     }
 
     // 플레이어 저장
@@ -76,7 +80,9 @@ public class GameManager : MonoBehaviour
     {
         if(player.GetComponent<PhotonView>().IsMine == true)
         {
-            _player = player; 
+            _player = player;
         }
+
+        SetSensitivity();
     }
 }
