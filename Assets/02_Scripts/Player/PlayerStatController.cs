@@ -201,34 +201,59 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public virtual void HandleDeath(int killerActorNr)
     {
-        anim.SetTrigger("Dead");
+        
         if (!photonView.IsMine) return;
         //AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerDead);
         gameObject.name += Random.value.ToString();
 
         // 이동 비활성화
-        isAlive = false;
+        
         //캐릭터 컨트롤러 오프셋 크기
         CharacterController cc = transform.GetComponent<CharacterController>();
         if (cc == null) Debug.Log("aa");
-        transform.GetComponent<CharacterController>().center = centerDeadOffset;
-        transform.GetComponent<CharacterController>().radius = radiusDeadOffset;
-        transform.GetComponent<CharacterController>().height = heightDeadOffset;
+        
 
         CursorController.Instance.CursorEnable();
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
         StartCoroutine(ApplyGravityAfterDeath());
+
+        photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
+
     }
+    
     private IEnumerator ApplyGravityAfterDeath()
     {
         PlayerController pc = GetComponent<PlayerController>();
 
         while (!transform.GetComponent<PlayerController>().Grounded)
         {
+            Debug.Log("여기");
             pc._controller.Move(new Vector3(0, -9.81f * Time.deltaTime, 0));
             yield return null;
         }
-        anim.SetTrigger("Dead");
+       
+
+        isAlive = false;
+        photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
+        
+    }
+    [PunRPC]
+    public void PlayDeathAnimation_RPC()
+    {
+        StartCoroutine(PlayDeathAnimationCorutine());
+        
+    }
+    IEnumerator PlayDeathAnimationCorutine()
+    {
+        float duration = 1f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            anim.SetTrigger("Dead"); 
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
     }
     [PunRPC]
     private IEnumerator HealOverTime()
@@ -266,9 +291,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         anim.Update(0f);
         if (!photonView.IsMine) return;
         //콜라이더 오프셋
-        transform.GetComponent<CharacterController>().center = centerOffset;
-        transform.GetComponent <CharacterController>().radius = radiusOffset;
-        transform.GetComponent<CharacterController>().height = heightOffset;    
+
+       
 
         playerHp = MAX_HP;
         InGameUIManager.Instance.StatusIndicator.SetHealth(playerHp);

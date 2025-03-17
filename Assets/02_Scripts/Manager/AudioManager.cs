@@ -22,9 +22,9 @@ public class AudioManager : MonoBehaviourPun
     {
         UIClick, UIToggle,
 
-        PlayerDead, PlayerKill, PlayerHit, PlayerAttack, PlayerWalk, PlayerJump, PlayerDash, PlayerRevive,
+        PlayerDead, PlayerKill, PlayerHit, PlayerAttack, PlayerMelee, PlayerWalk, PlayerJump, PlayerDash, PlayerRevive,
 
-        Knife, Block, Bounty
+        Knife, Block, Bounty, CountDown
     }
 
     void Awake()

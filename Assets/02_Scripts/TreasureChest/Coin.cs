@@ -1,18 +1,38 @@
-﻿using Photon.Pun;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision collision)
+    [SerializeField] TreasureManager treasureManager;
+    private PhotonView photonView;
+
+    private void Start()
     {
-        if (collision.gameObject.CompareTag("Player")) // 플레이어와 충돌 시
+        treasureManager = FindAnyObjectByType<TreasureManager>();
+        photonView = GetComponent<PhotonView>();
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player")) // 플레이어와 충돌 시
         {
-            Debug.Log("충돌발생");
-            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
+            PlayerController playerController = other.GetComponent<PlayerController>();
             if (playerController != null)
             {
                 playerController.AddCoin(1); // 코인 추가
-                PhotonNetwork.Destroy(gameObject); // 네트워크에서 코인 삭제
+                Debug.Log("코인획득");
+
+                // 소유권 확인 후 삭제
+                if (photonView.IsMine)
+                {
+                    PhotonNetwork.Destroy(gameObject); // 소유자일 때, 코인 삭제
+                }
+                else
+                {
+                    // 다른 클라이언트일 때, 마스터 클라이언트에게 삭제 요청
+                    PhotonNetwork.RaiseEvent(1, photonView.ViewID, RaiseEventOptions.Default, SendOptions.SendReliable);
+                }
             }
         }
     }

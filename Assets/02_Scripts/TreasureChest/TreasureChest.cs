@@ -1,4 +1,6 @@
-﻿using Photon.Pun;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 public class TreasureChest : MonoBehaviour
@@ -53,7 +55,7 @@ public class TreasureChest : MonoBehaviour
         else
         {
             // 다른 플레이어일 때, 마스터 클라이언트에게 보물상자 삭제 요청
-            treasureManager.RequestDestroyChest(photonView.ViewID);
+            PhotonNetwork.RaiseEvent(0, photonView.ViewID, RaiseEventOptions.Default, SendOptions.SendReliable);
         }
     }
 

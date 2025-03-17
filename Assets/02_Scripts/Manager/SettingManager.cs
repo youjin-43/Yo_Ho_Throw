@@ -57,6 +57,12 @@ public class SettingManager : MonoBehaviour
         sensitivitySlider.value = sensitivity;
 
         // 버튼&토글에 소리 연결
+
+        if(buttonSound == null)
+        {
+            buttonSound = AudioManager.Instance.GetComponent<ButtonSound>();
+        }
+
         buttonSound.RegisterButtonSounds();
         buttonSound.RegisterToggleSounds();
     }
@@ -123,7 +129,11 @@ public class SettingManager : MonoBehaviour
         clampedValue = Mathf.Clamp(value, 0.1f, 10f);
 
         // 플레이어 마우스 감도 설정 
-        playerController.SetMouseSensitivity(clampedValue);
+        //playerController.SetMouseSensitivity(clampedValue);
+
+        GameManager.Instance.StoreSensitivity(clampedValue);
+
+
 
         sensitivityText.text = clampedValue.ToString("F1"); // 소수점 한자리까지 표시
     }
@@ -137,7 +147,7 @@ public class SettingManager : MonoBehaviour
         // 감도 저장
         sensitivity = clampedValue;
         Debug.Log("Settings Saved");
-        gameObject.SetActive(false); // 패널 비활성화
+        // gameObject.SetActive(false); // 패널 비활성화
     }
 
     public void OnCloseButtonClick()
@@ -146,14 +156,38 @@ public class SettingManager : MonoBehaviour
         AudioManager.Instance.SetBgmVolume(AudioManager.Instance.bgmVolume);
         AudioManager.Instance.SetSfxVolume(AudioManager.Instance.sfxVolume);
 
-        playerController.SetMouseSensitivity(sensitivity);
+        //playerController.SetMouseSensitivity(sensitivity);
+        GameManager.Instance.StoreSensitivity(sensitivitySlider.value);
+
 
         // 슬라이더도 원위치로
         masterVolumeSlider.value = AudioManager.Instance.bgmVolume;
         effectVolumeSlider.value = AudioManager.Instance.sfxVolume;
 
-        sensitivitySlider.value = sensitivity;
+        //sensitivitySlider.value = sensitivity;
+        sensitivitySlider.value = GameManager.Instance.GetSensitivity();
 
         gameObject.SetActive(false); // 패널 비활성화
+    }
+
+    public void ToggleSettingPanel()
+    {
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.UIToggle);
+
+        gameObject.SetActive(!gameObject.activeSelf);
+
+        if(gameObject.activeSelf == true)
+        {
+            CursorController.Instance.CursorEnable();
+        }
+        else
+        {
+            CursorController.Instance.CursorDisable();
+        }
+    }
+
+    public bool IsOpened()
+    {
+        return gameObject.activeSelf;
     }
 }

@@ -35,11 +35,17 @@ public class TreasureManager : MonoBehaviour
 
     private void OnEvent(EventData photonEvent)
     {
-        if (photonEvent.Code == 0) // 이벤트 코드가 0일 때
+        if (photonEvent.Code == 0) // 이벤트 코드가 0일 때 (보물상자 삭제)
         {
             int chestViewID = (int)photonEvent.CustomData;
             DestroyTreasureChest(chestViewID); // 보물상자 삭제
         }
+        else if (photonEvent.Code == 1) // 이벤트 코드가 1일 때 (코인 삭제) 
+        {
+            int coinViewID = (int)photonEvent.CustomData;
+            DestroyCoin(coinViewID);
+        }
+
     }
 
     private void SpawnTreasureChest()
@@ -96,7 +102,6 @@ public class TreasureManager : MonoBehaviour
         usedPosition.Remove(position); // 사용된 위치에서 제거. 다시 스폰 가능
     }
 
-    // RPC 메서드 추가
     [PunRPC]
     public void DestroyTreasureChest(int chestViewID)
     {
@@ -108,17 +113,13 @@ public class TreasureManager : MonoBehaviour
         }
     }
 
-    public void RequestDestroyChest(int chestViewID)
+    [PunRPC]
+    private void DestroyCoin(int coinViewID)
     {
-        if (PhotonNetwork.IsMasterClient)
+        PhotonView coinView = PhotonView.Find(coinViewID);
+        if (coinView != null)
         {
-            DestroyTreasureChest(chestViewID); // 마스터 클라이언트가 직접 삭제
-        }
-        else
-        {
-            // 마스터 클라이언트에게 보물상자 삭제 요청
-            PhotonNetwork.RaiseEvent(0, chestViewID, RaiseEventOptions.Default, SendOptions.SendReliable);
+            PhotonNetwork.Destroy(coinView.gameObject); // 코인 삭제
         }
     }
-
 }
