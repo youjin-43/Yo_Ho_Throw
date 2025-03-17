@@ -2,6 +2,10 @@
 
 public enum RaiseEventCode
 {
+    #region 플레이어 코인 관리 이벤트
+    EditClientCoin = 20,
+    EditHostCoin = 21,
+
     #region BattleSystem 이벤트
 
     BattleStart = 30,

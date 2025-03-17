@@ -1,11 +1,13 @@
-﻿using Photon.Pun;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.Processors;
 using UnityEngine.Windows;
 
-public class PlayerStatController : MonoBehaviourPun , IDamagable
+public class PlayerStatController : MonoBehaviourPun , IDamagable, IOnEventCallback
 {
     const int MAX_HP = 3;
     const int MAX_BULLET_COUNT = 5;
@@ -81,6 +83,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         anim = GetComponent<Animator>();
     }
+    private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
+    private void OnDisable() => PhotonNetwork.RemoveCallbackTarget(this);
 
     // Update is called once per frame
     public void Update()
@@ -437,78 +441,65 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         cutlass.material = cutlassDefaultMaterial;
     }
 
-    
-    public void AddCoin(int _coin)
-    {
-        coin += _coin;
-
-        if (photonView == null) Debug.Log("NULL");
-
-        Debug.Log(photonView.gameObject.name.ToString());
-
-        PlayerStatController a = photonView.GetComponent<PlayerStatController>();
-
-        if (a == null) Debug.Log(" 이새기 널임");
-
-        //photonView.RPC("EditClientCoinRPC", RpcTarget.All, coin, photonView.OwnerActorNr);
-
-        photonView.RPC("EditClientCoinRPC_2", RpcTarget.All, new Vector2(coin, photonView.OwnerActorNr));
-
-        InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
-    }
-
-    [PunRPC]
-    void EditClientCoinRPC(int _coin, int actorNumber)
-    {
-        Debug.Log("EditClientCoinasdasdsad");
-
-        if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber) return;
-
-        PlayerSpawnManager.Instance.coin = coin;
-
-        coin = _coin;
-    }
-    [PunRPC]
-    public void EditClientCoinRPC_2(Vector2 data)
-    {
-        Debug.Log("EditClientCoinasdasdsad");
-
-        if (PhotonNetwork.LocalPlayer.ActorNumber != (int)data.y) return;
-
-        PlayerSpawnManager.Instance.coin = coin;
-
-        coin = (int)data.x;
-    }
-    [PunRPC]
-    void EditHostCoinRPC(int _coin)
-    {
-        if (!PhotonNetwork.IsMasterClient) return;
-
-        coin = _coin;
-    }
-    [PunRPC]
-    void EditHostCoinRPC_2(Vector2 data)
-    {
-        if (!PhotonNetwork.IsMasterClient) return;
-
-        coin = (int)data.x;
-    }
-
-    public void DeleteCoin(int _coin)
-    {
-        if (coin - _coin >= 0) coin -= _coin;
-
-        photonView.RPC("EditHostCoinRPC_2", RpcTarget.All, new Vector2(coin, 0f));
-
-        PlayerSpawnManager.Instance.coin = coin;
-
-        InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
-    }
-
     [PunRPC]
     public void FullKnife()
     {
         BulletCount = 5;
     }
 
+    public void OnEvent(EventData photonEvent)
+    {
+        switch ((RaiseEventCode)photonEvent.Code)
+        {
+            case RaiseEventCode.EditClientCoin:
+                EditClientCoin((object[])photonEvent.CustomData); break;
+
+            case RaiseEventCode.EditHostCoin:
+                EditHostCoin((int)photonEvent.CustomData); break;
+        }
+    }
+    public void AddCoin(int _coin)
+    {
+        coin += _coin;
+
+        PhotonNetwork.RaiseEvent(
+            (byte)RaiseEventCode.EditClientCoin,
+            new object[] { _coin, photonView.OwnerActorNr },
+            new RaiseEventOptions { Receivers = ReceiverGroup.All, CachingOption = EventCaching.DoNotCache },
+            SendOptions.SendReliable
+            );
+
+        InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
+    }
+    void EditClientCoin(object[] data)
+    {
+        if (PhotonNetwork.LocalPlayer.ActorNumber != (int)data[1]) return;
+
+        int coin = (int)data[0];
+
+        PlayerSpawnManager.Instance.coin = coin;
+
+        this.coin = coin;
+    }
+    void EditHostCoin(int _coin)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        coin = _coin;
+    }
+    public void DeleteCoin(int _coin)
+    {
+        if (coin - _coin >= 0) coin -= _coin;
+
+        PhotonNetwork.RaiseEvent(
+            (byte)RaiseEventCode.EditHostCoin,
+            _coin,
+            new RaiseEventOptions { Receivers = ReceiverGroup.All, CachingOption = EventCaching.DoNotCache },
+            SendOptions.SendReliable
+            );
+
+        PlayerSpawnManager.Instance.coin = coin;
+
+        InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
+    }
 }
