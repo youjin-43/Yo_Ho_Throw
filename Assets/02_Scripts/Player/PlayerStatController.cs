@@ -308,11 +308,15 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         cameraForward.y = 0; 
         transform.rotation = Quaternion.LookRotation(cameraForward);
         if(photonView.IsMine)
-            photonView.RPC("IsKnifeOn", RpcTarget.All, true); 
-        
-        // 현상금 타겟으로써 죽었을 경우 플레이어 메테리얼 기존 것으로 설정
-        if (isSettingColor) transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+            photonView.RPC("IsKnifeOn", RpcTarget.All, true);
 
+        // 현상금 타겟으로써 죽었을 경우 플레이어 메테리얼 기존 것으로 설정
+        if (isSettingColor)
+        {
+            photonView.RPC("RespawnDefaultColorSetting", RpcTarget.All);
+
+            isSettingColor = false;
+        }
         CursorController.Instance.CursorDisable();
     }
 
@@ -362,6 +366,11 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         {
             transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
         }
+    }
+    [PunRPC]
+    public void RespawnDefaultColorSetting()
+    {
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
     }
     [PunRPC]
     public void BountyColorSetting()
@@ -447,9 +456,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public void FullKnife()
     {
-        if(!photonView.IsMine) return;
-            BulletCount = 5;
-
+        BulletCount = 5;
     }
     
 }
