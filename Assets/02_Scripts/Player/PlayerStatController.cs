@@ -35,7 +35,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     private Coroutine bulletReloadCoroutine;
 
     public GameObject knifeObject;
-
+    public bool isEsc = false;
     
     public int BulletCount
     {
@@ -458,5 +458,13 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         BulletCount = 5;
     }
-    
+    public void OnEsc()
+    {
+        isEsc = true;
+    }
+
+    public void OffEsc()
+    {
+        isEsc = false;
+    }
 }
