@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.Processors;
 using UnityEngine.Windows;
 
-public class PlayerStatController : MonoBehaviourPun , IDamagable, IOnEventCallback
+public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallback
 {
     const int MAX_HP = 3;
     const int MAX_BULLET_COUNT = 5;
@@ -38,7 +38,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable, IOnEventCallb
 
     public GameObject knifeObject;
     public bool isEsc = false;
-    
+
     public int BulletCount
     {
         get => bulletCount;
@@ -83,8 +83,22 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable, IOnEventCallb
     {
         anim = GetComponent<Animator>();
     }
-    private void OnEnable() => PhotonNetwork.AddCallbackTarget(this);
-    private void OnDisable() => PhotonNetwork.RemoveCallbackTarget(this);
+    public void OnEnable()
+    {
+        Debug.Log("AddCallbackTarget");
+        Debug.Log("AddCallbackTarget");
+        Debug.Log("AddCallbackTarget");
+
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+    public void OnDisable()
+    {
+        Debug.Log("RemoveCallbackTarget");
+        Debug.Log("RemoveCallbackTarget");
+        Debug.Log("RemoveCallbackTarget");
+
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
 
     // Update is called once per frame
     public void Update()
@@ -449,6 +463,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable, IOnEventCallb
 
     public void OnEvent(EventData photonEvent)
     {
+        Debug.Log("OnEventOnEventOnEventOnEventOnEventOnEventOnEventOnEventOnEventOnEventOnEvent");
+        Debug.Log(((RaiseEventCode)photonEvent.Code).ToString());
         switch ((RaiseEventCode)photonEvent.Code)
         {
             case RaiseEventCode.EditClientCoin:
