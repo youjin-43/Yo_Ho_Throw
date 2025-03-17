@@ -156,8 +156,6 @@ public class UI_StatusIndicator : UI_Base
     public void SetGoldCoin(int coin, int actorNumber)
     {
         GetComponent<PhotonView>().RPC("SetGoldCoinRPC", PhotonNetwork.CurrentRoom.Players[actorNumber], coin);
-
-        _CoinCounter.text = coin.ToString();
     }
     [PunRPC]
     public void SetGoldCoinRPC(int coin)
