@@ -53,6 +53,44 @@ public class GameManager : MonoBehaviour
         CursorController.Instance.CursorEnable();
     }
 
+    // 음량 세팅 저장
+    private bool _isBgmOn = true;
+    private bool _isSfxOn = true;
+    private float _bgmValue;
+    private float _sfxValue;
+
+    public void StoreBgmCheckState(bool state)
+    {
+        _isBgmOn = state;
+    }
+    public void StoreSfxCheckState(bool state)
+    {
+        _isSfxOn = state;
+    }
+    public bool GetBgmCheckState()
+    {
+        return _isBgmOn;
+    }
+    public bool GetSfxCheckState()
+    {
+        return _isSfxOn;
+    }
+    public void StoreBgmValue(float value)
+    {
+        _bgmValue = value; 
+    }
+    public float GetBgmValue()
+    {
+        return _bgmValue;
+    }
+    public void StoreSfxValue(float value)
+    {
+        _sfxValue = value;
+    }
+    public float GetSfxValue()
+    {
+        return _sfxValue;
+    }
 
     // 감도 저장
     private float _sensitivity = 3f;
@@ -60,8 +98,6 @@ public class GameManager : MonoBehaviour
     public void StoreSensitivity(float sensitivity)
     {
         _sensitivity = sensitivity;
-
-        Debug.Log("@@@@@@@@저장된 민감도 : " + _sensitivity.ToString());
 
         SetSensitivity();
     }
@@ -74,8 +110,6 @@ public class GameManager : MonoBehaviour
         if (_player != null)
         {
             _player.GetComponent<PlayerController>().SetMouseSensitivity(_sensitivity);
-
-            Debug.Log("@@@@@@@@적용한 민감도 : " + _sensitivity.ToString());
         }
     }
 
