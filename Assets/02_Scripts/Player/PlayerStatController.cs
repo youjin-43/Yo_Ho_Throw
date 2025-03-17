@@ -240,9 +240,21 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public void PlayDeathAnimation_RPC()
     {
-        anim.SetTrigger("Dead");
+        StartCoroutine(PlayDeathAnimationCorutine());
+        
     }
+    IEnumerator PlayDeathAnimationCorutine()
+    {
+        float duration = 1f;
+        float elapsedTime = 0f;
 
+        while (elapsedTime < duration)
+        {
+            anim.SetTrigger("Dead"); 
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+    }
     [PunRPC]
     private IEnumerator HealOverTime()
     {
