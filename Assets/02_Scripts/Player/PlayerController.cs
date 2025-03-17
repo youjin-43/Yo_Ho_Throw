@@ -152,7 +152,7 @@ public class PlayerController : ThirdPersonController
         AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerAttack, transform.position);
 
 
-        //AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerAttack,transform.position);
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerMelee,transform.position);
 
         
     }
@@ -246,6 +246,8 @@ public class PlayerController : ThirdPersonController
         float elapsedTime = 0f;
         Vector3 velocity = direction * (dashDistance / dashTime);
 
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerDash, transform.position);
+        
         while (elapsedTime < dashTime)
         {
             _controller.Move(velocity * Time.deltaTime);
@@ -267,6 +269,7 @@ public class PlayerController : ThirdPersonController
             photonView.RPC("MeleeAttack_RPC", RpcTarget.All);
 
         AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerAttack, transform.position);
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerMelee, transform.position);
     }
 
     [PunRPC]
