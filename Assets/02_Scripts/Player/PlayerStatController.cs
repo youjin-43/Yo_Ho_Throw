@@ -257,7 +257,6 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             yield return null;
         }
     }
-    [PunRPC]
     private IEnumerator HealOverTime()
     {
         //Debug.Log("회복");
@@ -283,7 +282,6 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         isInLobby = false;
     }
-
     [PunRPC]
     public void InitPlayer()
     {
