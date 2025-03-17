@@ -83,7 +83,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     {
         anim = GetComponent<Animator>();
     }
-    public void OnEnable()
+    public virtual void OnEnable()
     {
         Debug.Log("AddCallbackTarget");
         Debug.Log("AddCallbackTarget");
