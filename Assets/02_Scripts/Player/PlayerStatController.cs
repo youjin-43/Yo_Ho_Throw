@@ -473,6 +473,10 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable, IOnEventCallb
     }
     void EditClientCoin(object[] data)
     {
+        Debug.Log("-EditClientCoin-");
+        Debug.Log("나 : " + PhotonNetwork.LocalPlayer.ActorNumber.ToString() + " / 받은 액터 : " + (int)data[1]);
+        Debug.Log("받은 점수 : " + ((int)data[0]).ToString());
+
         if (PhotonNetwork.LocalPlayer.ActorNumber != (int)data[1]) return;
 
         int coin = (int)data[0];

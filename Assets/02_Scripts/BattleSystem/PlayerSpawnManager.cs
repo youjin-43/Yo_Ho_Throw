@@ -166,6 +166,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     }
     IEnumerator RespawnPlayerCoroutine()
     {
+        Debug.Log("리스폰 코인 개수 : " + coin);
+
         yield return InGameUIManager.Instance.Death(isFinalMinute ? respawnTime * 0.5f : respawnTime, coin);
 
         BattleUIController.Instance.SetIsAlive(true);
