@@ -22,7 +22,6 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
     [SerializeField] Transform camaraRoot;
 
-
     [SerializeField] float offsetY = 0.5f;
 
     [SerializeField] float respawnTime = 5f;
@@ -30,6 +29,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     [HideInInspector] public GameObject currPlayer = null;
 
     [HideInInspector] public PhotonView currPlayerPhotonView = null;
+
+    [HideInInspector] public int coin = 0;
 
     private void Awake()
     {
@@ -165,7 +166,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     }
     IEnumerator RespawnPlayerCoroutine()
     {
-        yield return InGameUIManager.Instance.Death(isFinalMinute ? respawnTime * 0.5f : respawnTime);
+        yield return InGameUIManager.Instance.Death(isFinalMinute ? respawnTime * 0.5f : respawnTime, coin);
 
         BattleUIController.Instance.SetIsAlive(true);
 

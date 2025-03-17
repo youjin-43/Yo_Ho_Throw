@@ -444,13 +444,35 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         coin += _coin;
 
+        photonView.RPC("EditClientCoin", RpcTarget.All, coin, photonView.OwnerActorNr);
+
         InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
     }
-    
+
+    [PunRPC]
+    void EditClientCoin(int _coin, int actorNumber)
+    {
+        if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber) return;
+
+        PlayerSpawnManager.Instance.coin = coin;
+
+        coin = _coin;
+    }
+    [PunRPC]
+    void EditHostCoin(int _coin)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        coin = _coin;
+    }
+
     public void DeleteCoin(int _coin)
     {
-        if (coin - _coin >= 0)
-            coin -= _coin;
+        if (coin - _coin >= 0) coin -= _coin;
+
+        photonView.RPC("EditHostCoin", RpcTarget.All, coin);
+
+        PlayerSpawnManager.Instance.coin = coin;
 
         InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
     }
