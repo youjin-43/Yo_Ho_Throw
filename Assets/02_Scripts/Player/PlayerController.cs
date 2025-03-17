@@ -60,7 +60,7 @@ public class PlayerController : ThirdPersonController
         if (online && !photonView.IsMine) return;
         
         if (isGameEnd) return;
-        
+        if(GameManager.Instance.isPlayerStop) return;
         base.Update();
         
 
@@ -102,6 +102,7 @@ public class PlayerController : ThirdPersonController
         if (online && !photonView.IsMine) return;
 
         if (isGameEnd) return;
+        if (GameManager.Instance.isPlayerStop) return;
         base.FixedUpdate();
     }
     private void OnEnable()
