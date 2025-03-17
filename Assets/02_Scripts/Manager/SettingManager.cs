@@ -90,12 +90,14 @@ public class SettingManager : MonoBehaviour
         masterVolumeSlider.interactable = isOn; // 슬라이더 활성화/비활성화
         if (!isOn)
         {
-            masterVolumeSlider.value = 0; // 체크 해제 시 0으로 설정
+            //masterVolumeSlider.value = 0; // 체크 해제 시 0으로 설정
+            masterVolume = AudioManager.Instance.GetBgmVolume();
             AudioManager.Instance.SetBgmVolume(0); // BGM 볼륨 0으로 설정
         }
         else
         {
-            masterVolumeSlider.value = masterVolume; // 체크 시 현재 볼륨으로 설정
+            //masterVolumeSlider.value = masterVolume; // 체크 시 현재 볼륨으로 설정
+            AudioManager.Instance.SetBgmVolume(masterVolume); // BGM 볼륨 0으로 설정
         }
     }
 
@@ -104,12 +106,14 @@ public class SettingManager : MonoBehaviour
         effectVolumeSlider.interactable = isOn; // 슬라이더 활성화/비활성화
         if (!isOn)
         {
-            effectVolumeSlider.value = 0; // 체크 해제 시 0으로 설정
+            //effectVolumeSlider.value = 0; // 체크 해제 시 0으로 설정
+            effectVolume = AudioManager.Instance.GetSfxVolume();
             AudioManager.Instance.SetSfxVolume(0); // SFX 볼륨 0으로 설정
         }
         else
         {
-            effectVolumeSlider.value = effectVolume; // 체크 시 현재 볼륨으로 설정
+            //effectVolumeSlider.value = effectVolume; // 체크 시 현재 볼륨으로 설정
+            AudioManager.Instance.SetSfxVolume(effectVolume); // BGM 볼륨 0으로 설정
         }
     }
 
