@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
@@ -73,11 +73,14 @@ public class UI_ItemSelect : UI_Base
     {
         CursorController.Instance.CursorEnable();
 
+        BattleUIController.Instance.SelectRandomPotionAfterDelay();
+
         animator.SetTrigger("OnShowItemPanel");
     }
+    [SerializeField] Image[] potionImages;
     public void ItemSelected(GameObject button, int index)
     {
-        Debug.Log(index + "π¯ æ∆¿Ã≈€ º±≈√");
+        Debug.Log(index + "Î≤à ÏïÑÏù¥ÌÖú ÏÑ†ÌÉù");
 
         if (isFirstItemSelect)
         {
@@ -86,9 +89,28 @@ public class UI_ItemSelect : UI_Base
             animator.SetTrigger("OnHideItemPanel");
 
             isFirstItemSelect = false;
+
+            BattleUIController.Instance.StopRandomPotionSelect();
         }
         ItemHandler.Instance.Equip(potions[index - 1]);
         InGameUIManager.Instance.ItemSelected(button.transform.GetChild(0).GetChild(0).GetComponent<Image>(), index);
+    }
+    public void ItemSelected(int index)
+    {
+        Debug.Log(index + "Î≤à ÏïÑÏù¥ÌÖú ÏÑ†ÌÉù");
+
+        if (isFirstItemSelect)
+        {
+            BattleSystem.FirstItemSelect();
+
+            animator.SetTrigger("OnHideItemPanel");
+
+            isFirstItemSelect = false;
+
+            BattleUIController.Instance.StopRandomPotionSelect();
+        }
+        ItemHandler.Instance.Equip(potions[index - 1]);
+        InGameUIManager.Instance.ItemSelected(potionImages[index-1], index);
     }
     #endregion
 }
