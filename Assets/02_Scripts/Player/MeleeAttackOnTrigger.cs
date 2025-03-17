@@ -84,10 +84,10 @@ public class MeleeAttackOnTrigger : MonoBehaviour
             }
         }
 
-        else if (other.CompareTag("TreasuerChest"))
+        else if (other.CompareTag("TreasureChest"))
         {
             PhotonView chestPhotonView = other.GetComponent<PhotonView>();
-            // TreasuerChest에 있는 Attack 함수 호출
+            // TreasureChest에 있는 Attack 함수 호출
             chestPhotonView.RPC("Attack", RpcTarget.All);
         }
     }
