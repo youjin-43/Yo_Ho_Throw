@@ -233,9 +233,9 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         }
        
 
-        photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
         isAlive = false;
-        CharacterControllerOffset(false);
+        photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
+        
     }
     [PunRPC]
     public void PlayDeathAnimation_RPC()
@@ -243,24 +243,6 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         anim.SetTrigger("Dead");
     }
 
-    void CharacterControllerOffset(bool isAlive)
-    {
-        if (isAlive)
-        {
-            transform.GetComponent<CharacterController>().center = centerOffset;
-            transform.GetComponent<CharacterController>().radius = radiusOffset;
-            transform.GetComponent<CharacterController>().height = heightOffset;
-
-        
-        }
-        else
-        {
-            transform.GetComponent<CharacterController>().height = heightDeadOffset;
-            transform.GetComponent<CharacterController>().center = centerDeadOffset;
-            transform.GetComponent<CharacterController>().radius = radiusDeadOffset;
-
-        }
-    }
     [PunRPC]
     private IEnumerator HealOverTime()
     {
