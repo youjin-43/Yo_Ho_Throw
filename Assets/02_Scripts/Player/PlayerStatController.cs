@@ -9,25 +9,19 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 {
     const int MAX_HP = 3;
     const int MAX_BULLET_COUNT = 5;
-
     [Header("Player Info")]
     public int playerHp = MAX_HP;
     public int bulletCount = MAX_BULLET_COUNT;
     public int coin = 0;
-
-    [Header("Player Condition")]
     public bool isAlive = true;
     public bool isInLobby = true;
     protected bool isGameEnd = false;
-
     public float dashCoolTime = 5f;
     public Animator anim;
-
     //살아있을때 캐릭터 컨트롤러 offset
     Vector3 centerOffset = new Vector3(0, 0.56f, 0);
     float radiusOffset = 0.28f;
     float heightOffset = 1.12f;
-
     //죽었을때 캐릭터 컨트롤러 offset
     Vector3 centerDeadOffset = new Vector3(0, 0.12f, -0.6f);
     float radiusDeadOffset = 0.28f;
@@ -103,16 +97,16 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
             }
         }
 
-        if(photonView.IsMine && isAlive && !isInLobby && BulletCount < 5 )
+        if(isAlive && !isInLobby && BulletCount<5 )
         {
             if(bulletReloadCoroutine == null)
             {
-                //photonView.RPC("BulletReloadOverTime_RPC", RpcTarget.All);
-                bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
+                if (photonView.IsMine)
+
+                    photonView.RPC("BulletReloadOverTime_RPC", RpcTarget.All);
             }
         }
     }
-
     [PunRPC]
     public void StartHeal_RPC()
     {
@@ -129,25 +123,24 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     }
 
     [PunRPC]
-    //public void BulletReloadOverTime_RPC()
-    //{  
-    //        bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
-    //}
+    public void BulletReloadOverTime_RPC()
+    {  
+            bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
+    }
     
     IEnumerator BulletReloadOverTime()
     {
         while (BulletCount < 5)
         {
             yield return new WaitForSeconds(3f);
-
             BulletCount++;
-
             if (knifeObject.activeSelf==false)
             {
-                if(photonView.IsMine) photonView.RPC("IsKnifeOn", RpcTarget.All, true);
+                if(photonView.IsMine) 
+                    photonView.RPC("IsKnifeOn", RpcTarget.All,true);
             }
+            
         }
-
         bulletReloadCoroutine = null;   
     }
 
