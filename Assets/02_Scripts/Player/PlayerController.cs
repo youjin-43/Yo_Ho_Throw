@@ -16,7 +16,9 @@ public class PlayerController : ThirdPersonController
     public bool online = true;
 
     [Header("State")]
-    public bool canDash = true;
+    [SerializeField] public bool canDash = true;
+    [SerializeField] bool isDashing = false;
+
     private StarterAssetsInputs input;
     public bool isAttacking = false;
 
@@ -60,7 +62,9 @@ public class PlayerController : ThirdPersonController
         if (online && !photonView.IsMine) return;
         
         if (isGameEnd) return;
+
         if(GameManager.Instance.isPlayerStop) return;
+
         base.Update();
         
 
@@ -75,41 +79,49 @@ public class PlayerController : ThirdPersonController
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded   && canDash)
         {
-            if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
-                return;
+            if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0) return; // 현재 정지하고 있으면 대쉬 못하도록 
 
-            anim.SetTrigger("Dash");
-            Dash();
-            StartCoroutine(DashCooltime());
+            //anim.SetTrigger("Dash");
+            //Dash();
+            //StartCoroutine(DashCooltime()); // 쿨타임 적용
+
+            Optimal_Dash();
         }
+
         if (isAttacking) return;
+
         if (Input.GetKeyDown(KeyCode.Mouse0) && BulletCount > 0)
         {
             anim.SetTrigger("Shoot");
             
             StartCoroutine(AttackCoroutine(1f));
         }
+
         if (Input.GetKeyDown(KeyCode.Mouse1)&& BulletCount > 0)
         {
             anim.SetTrigger("Melee Attack");
             //TODO 석진 근접 공격 휘두르는 사운드 
-            
             StartCoroutine(AttackCoroutine(0.6f));
         }
     }
+
     void FixedUpdate()
     {
         if (online && !photonView.IsMine) return;
 
         if (isGameEnd) return;
+
         if (GameManager.Instance.isPlayerStop) return;
+
         base.FixedUpdate();
     }
+
     private void OnEnable()
     {
         anim = GetComponent<Animator>();
         anim.Update(0f);
     }
+
     IEnumerator AttackCoroutine(float time)
     {
         isAttacking = true; 
@@ -117,12 +129,14 @@ public class PlayerController : ThirdPersonController
         isAttacking = false;
     }
 
-    IEnumerator DashCooltime()
-    {
-        canDash = false;
-        yield return new WaitForSeconds(dashCoolTime);
-        canDash = true;
-    }
+    //IEnumerator DashCooltime()
+    //{
+    //    canDash = false;
+    //    yield return new WaitForSeconds(dashCoolTime);
+    //    canDash = true;
+    //}
+
+    #region Throw
     public void ThrowProjectile()
     {
         if (!isKnifeConsumed)
@@ -135,6 +149,7 @@ public class PlayerController : ThirdPersonController
             ThrowCutlass();
         }
     }
+
     void ThrowCutlass()
     {
         if (!isInLobby) BulletCount -= isKnifeConsumed ? 1 : 0;
@@ -185,20 +200,42 @@ public class PlayerController : ThirdPersonController
             rb.linearVelocity = throwDirection * bulletSpeed;
         }
     }
-    
-    
- 
+    #endregion
+
     public void LayerReset()
     {
         anim.SetLayerWeight(0, 1);
         anim.SetLayerWeight(1, 1);
     }
 
-    
+    public void Optimal_Dash()
+    {
+        if (!canDash || isDashing) return; // 현재 쿨이거나 대쉬중이면 뇹 
 
+        canDash = false;
+        isDashing = true;
 
+        anim.SetTrigger("Dash"); // 애니메이션 실행
 
-    
+        float input_Y = Input.GetAxisRaw("Vertical");
+        float input_X = input_Y == -1 ? 0 : Input.GetAxisRaw("Horizontal");
+
+        Vector3 direction = transform.forward * input_Y + transform.right * input_X;
+
+        anim.SetFloat("HorizontalRaw", Mathf.Round(input_X));
+        anim.SetFloat("VerticalRaw", Mathf.Round(input_Y));
+
+        StartCoroutine(DashMovement_RPC(direction.normalized));
+        //canDash = true;
+        StartCoroutine(DashCooldown());
+    }
+
+    IEnumerator DashCooldown()
+    {
+        yield return new WaitForSeconds(dashCoolTime);
+        canDash = true;
+    }
+
     public void Dash()
     {
         anim.SetLayerWeight(1, 0);
@@ -239,7 +276,6 @@ public class PlayerController : ThirdPersonController
         StartCoroutine(DashMovement_RPC(dashDirection));
     }
 
-    [PunRPC]
     IEnumerator DashMovement_RPC(Vector3 direction)
     {
         float dashDistance = 3f;
@@ -255,10 +291,8 @@ public class PlayerController : ThirdPersonController
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        if (photonTransformView != null)
-        {
-            photonTransformView.enabled = true; 
-        }
+
+        isDashing = false;
     }
 
     
