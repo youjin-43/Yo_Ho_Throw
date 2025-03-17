@@ -444,9 +444,15 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
 
         if (photonView == null) Debug.Log("NULL");
 
-        Debug.Log("photonView.OwnerActorNr : " + photonView.OwnerActorNr.ToString());
+        Debug.Log(photonView.gameObject.name.ToString());
 
-        photonView.RPC("EditClientCoinRPC", RpcTarget.All, coin, photonView.OwnerActorNr);
+        PlayerStatController a = photonView.GetComponent<PlayerStatController>();
+
+        if (a == null) Debug.Log(" 이새기 널임");
+
+        //photonView.RPC("EditClientCoinRPC", RpcTarget.All, coin, photonView.OwnerActorNr);
+
+        photonView.RPC("EditClientCoinRPC_2", RpcTarget.All, new Vector2(coin, photonView.OwnerActorNr));
 
         InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
     }
@@ -461,6 +467,17 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         PlayerSpawnManager.Instance.coin = coin;
 
         coin = _coin;
+    }
+    [PunRPC]
+    public void EditClientCoinRPC_2(Vector2 data)
+    {
+        Debug.Log("EditClientCoinasdasdsad");
+
+        if (PhotonNetwork.LocalPlayer.ActorNumber != (int)data.y) return;
+
+        PlayerSpawnManager.Instance.coin = coin;
+
+        coin = (int)data.x;
     }
     [PunRPC]
     void EditHostCoinRPC(int _coin)

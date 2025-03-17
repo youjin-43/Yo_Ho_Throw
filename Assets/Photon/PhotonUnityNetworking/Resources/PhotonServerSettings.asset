@@ -48,8 +48,8 @@ MonoBehaviour:
   - DefaultColorSetting
   - DestroyRpc
   - DestroySpaceship
-  - EditClientCoin
-  - EditHostCoin
+  - EditClientCoinRPC
+  - EditHostCoinRPC
   - ExposeSetting
   - FadeInRPC
   - FadeOutRPC
