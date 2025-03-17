@@ -11,7 +11,7 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 {
     public static BattleSystem Instance { get; private set; } = null;
 
-    int timeLimit =60;
+    int timeLimit =120;
 
     int spawnedPlayerCount = 0;
 
@@ -119,13 +119,15 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 
         PlayerSpawnManager.Instance.DeactivatePlayer();
 
-        //BattleUIController.Instance.EndGame();
+        BattleUIController.Instance.EndGame();
 
         ScoreManager.Instance.EndGame();
 
         PlayerSpawnManager.Instance.EndGame();
 
         ScreenTransition.Instance.FadeOutRPC();
+
+        GameReadyUIManager.IsStartFade = false;
 
         if (PhotonNetwork.IsMasterClient)
             ScreenTransition.Instance.FadeActionSetting(() => PhotonManager.Instance.GoToReadyScene());

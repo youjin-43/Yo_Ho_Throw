@@ -21,6 +21,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
     [SerializeField] private TextMeshProUGUI plyaerJoinLeaveText; // 누가 들어오고 나갔는지 
 
+    [SerializeField] private SettingManager SettingPanel;
 
     // Player Info
     string currentScene;
@@ -34,6 +35,8 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         IsMaster
     }
 
+    public static bool IsStartFade = true;
+
     private void Start()
     {
         gameReadyNetworkManager = GetComponent<GameReadyNetworkManager>();
@@ -43,16 +46,32 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         PlayerReadyManager.OnPlayerReadyChanged += SetReady; //플레이어가 레디 상태가 변경될 때 UI 업데이트
         PlayerReadyManager.OnAllPlayersReadyChanged += SetGameStartButtonInteractable; // 모든 플레이어가 레디 상태가 되면 게임 스타트 버튼 활성화 
 
+        GameReadyNetworkManager.OnPlayerEnter += HandlePlayerEnter; // 플레이어가 들어왔을 떄 이벤트 
+        GameReadyNetworkManager.OnPlayerLeft += HandlePlayerLeft; // 플레이어가 나갔을때 이벤트
+
         InitUI();
         UpdatePlayerListUI();
 
-        ScreenTransition.Instance.FadeInRPC();
+        if (IsStartFade)
+        {
+            ScreenTransition.Instance.FadeInRPC();
+        }
+        else
+        {
+            IsStartFade = true;
+        }
     }
 
     void Update()
     {
+        // F4 키로 SettingPanel 토글
+        if(Input.GetKeyDown(KeyCode.F4))
+        {
+            SettingPanel.ToggleSettingPanel();
+        }
+
         // Tab 키로 ExitPopup 토글
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && SettingPanel.IsOpened() == false)
         {
             ToggleExitPopup();
         }
@@ -187,15 +206,19 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         }
     }
 
+
+
     private void OnDestroy()
     {
         // 이벤트 구독 해제 (메모리 누수 방지)
         PlayerReadyManager.OnPlayerReadyChanged -= SetReady;
         PlayerReadyManager.OnAllPlayersReadyChanged -= SetGameStartButtonInteractable;
+        GameReadyNetworkManager.OnPlayerEnter -= HandlePlayerEnter; 
+        GameReadyNetworkManager.OnPlayerLeft -= HandlePlayerLeft;
     }
 
 
-    #region plyaerJoinLeaveText
+    #region plyaer Join Leave
     public void ShowPlayerLeftMessage(string playerName)
     {
         if (plyaerJoinLeaveText == null) return; // 메시지 텍스트가 없으면 무시
@@ -226,5 +249,20 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
     {
         plyaerJoinLeaveText.GetComponentInParent<Animator>().SetTrigger("Hide");
     }
+
+    private void HandlePlayerEnter(string playerName)
+    {
+        UpdatePlayerListUI();
+        ShowPlayerJoinMessage(playerName);
+    }
+
+    private void HandlePlayerLeft(string playerName)
+    {
+        UpdatePlayerListUI();
+        ShowPlayerLeftMessage(playerName);
+    }
+
     #endregion
+
+
 }
