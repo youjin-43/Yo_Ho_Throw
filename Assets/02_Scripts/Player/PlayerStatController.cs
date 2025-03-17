@@ -292,7 +292,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if (!photonView.IsMine) return;
         //콜라이더 오프셋
 
-        CharacterControllerOffset(true);
+       
 
         playerHp = MAX_HP;
         InGameUIManager.Instance.StatusIndicator.SetHealth(playerHp);
