@@ -463,8 +463,6 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
     public void OnEvent(EventData photonEvent)
     {
-        Debug.Log("OnEventOnEventOnEventOnEventOnEventOnEventOnEventOnEventOnEventOnEventOnEvent");
-        Debug.Log(((RaiseEventCode)photonEvent.Code).ToString());
         switch ((RaiseEventCode)photonEvent.Code)
         {
             case RaiseEventCode.EditClientCoin:
@@ -489,11 +487,9 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     }
     void EditClientCoin(object[] data)
     {
-        Debug.Log("-EditClientCoin-");
-        Debug.Log("나 : " + PhotonNetwork.LocalPlayer.ActorNumber.ToString() + " / 받은 액터 : " + (int)data[1]);
-        Debug.Log("받은 점수 : " + ((int)data[0]).ToString());
-
         if (PhotonNetwork.LocalPlayer.ActorNumber != (int)data[1]) return;
+
+        Debug.Log("내 AN: " + ((int)data[1]).ToString() + " / 코인 갱신 수: " + (int)data[0]);
 
         int coin = (int)data[0];
 
@@ -504,6 +500,8 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     void EditHostCoin(int _coin)
     {
         if (!PhotonNetwork.IsMasterClient) return;
+
+        Debug.Log("호스트. 적용 코인 : " + _coin);
 
         coin = _coin;
     }
