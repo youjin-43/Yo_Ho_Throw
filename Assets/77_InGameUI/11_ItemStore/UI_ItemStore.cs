@@ -57,6 +57,9 @@ public class UI_ItemStore : UI_Base
         _disablePanel = transform.GetChild(5).gameObject;
 
         _disablePanel.SetActive(false);
+
+        // 맨 처음은 우선 구매를 제한함
+        PurchaceDeActivation();
     }
     #endregion
 
@@ -77,7 +80,8 @@ public class UI_ItemStore : UI_Base
         ItemHandler.Instance.Equip(potions[index - 1]);
         ItemHandler.Instance.playerController.DeleteCoin(5);
         InGameUIManager.Instance.ItemPurchase(button.transform.GetChild(0).GetChild(0).GetComponent<Image>(), index);
-
+    
+        // 물약은 한번만 구매 가능
         PurchaceDeActivation();
     }
 
