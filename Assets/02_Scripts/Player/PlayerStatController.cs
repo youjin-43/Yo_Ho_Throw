@@ -487,6 +487,8 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     }
     void EditClientCoin(object[] data)
     {
+        if (photonView.OwnerActorNr != (int)data[1]) return;
+
         if (PhotonNetwork.LocalPlayer.ActorNumber != (int)data[1]) return;
 
         Debug.Log("내 AN: " + ((int)data[1]).ToString() + " / 코인 갱신 수: " + (int)data[0]);
@@ -507,7 +509,11 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     }
     public void DeleteCoin(int _coin)
     {
+        Debug.Log("이전 코인 : " + coin.ToString());
+
         if (coin - _coin >= 0) coin -= _coin;
+
+        Debug.Log("지불 후 코인 : " + coin.ToString());
 
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.EditHostCoin,
