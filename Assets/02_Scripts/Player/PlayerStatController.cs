@@ -35,6 +35,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     private Coroutine bulletReloadCoroutine;
 
     public GameObject knifeObject;
+
+    
     public int BulletCount
     {
         get => bulletCount;
@@ -428,17 +430,21 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         cutlass.material = cutlassDefaultMaterial;
     }
 
-    [PunRPC]
+    
     public void AddCoin(int _coin)
     {
         coin += _coin;
+        InGameUIManager.Instance.SetGoldCoin(coin);
     }
-    [PunRPC]
+    
     public void DeleteCoin(int _coin)
     {
         if (coin - _coin >= 0)
             coin -= _coin;
+        InGameUIManager.Instance.SetGoldCoin(coin);
     }
+
+    //파티클
 
     
 }
