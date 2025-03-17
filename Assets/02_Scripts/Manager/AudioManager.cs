@@ -7,13 +7,13 @@ public class AudioManager : MonoBehaviourPun
 
     [Header("BGM")]
     public AudioClip bgmClip;
-    public float bgmVolume = 1.0f; // 기본값 설정
+    public float bgmVolume = 1f; // 기본값 설정
     AudioSource bgmPlayer;
     AudioHighPassFilter bgmEffect;
 
     [Header("SFX")]
     public AudioClip[] sfxClips;
-    public float sfxVolume = 1.0f; // 기본값 설정
+    public float sfxVolume = 1f; // 기본값 설정
     public int channels;//동시 다발적으로 많은 사운드를 내기 위해 (조절필요)
     AudioSource[] sfxPlayers;
     int channelIndex;//현재 재생중인 채널 인덱스
@@ -120,6 +120,10 @@ public class AudioManager : MonoBehaviourPun
     {
         bgmPlayer.volume = volume; // BGM의 볼륨을 설정
     }
+    public float GetBgmVolume()
+    {
+        return bgmPlayer.volume;
+    }
 
     // SFX 볼륨 설정
     public void SetSfxVolume(float volume)
@@ -129,6 +133,11 @@ public class AudioManager : MonoBehaviourPun
             sfxPlayer.volume = volume; // 모든 SFX의 볼륨을 설정
         }
     }
+    public float GetSfxVolume()
+    {
+        return sfxPlayers[0].volume;
+    }
+
 
     [PunRPC]
     public void PlaySfxAtPosition(Sfx sfx, Vector3 position)
