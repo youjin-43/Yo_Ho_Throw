@@ -201,34 +201,65 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     [PunRPC]
     public virtual void HandleDeath(int killerActorNr)
     {
-        anim.SetTrigger("Dead");
+        
         if (!photonView.IsMine) return;
         //AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerDead);
         gameObject.name += Random.value.ToString();
 
         // 이동 비활성화
-        isAlive = false;
+        
         //캐릭터 컨트롤러 오프셋 크기
         CharacterController cc = transform.GetComponent<CharacterController>();
         if (cc == null) Debug.Log("aa");
-        transform.GetComponent<CharacterController>().center = centerDeadOffset;
-        transform.GetComponent<CharacterController>().radius = radiusDeadOffset;
-        transform.GetComponent<CharacterController>().height = heightDeadOffset;
+        
 
         CursorController.Instance.CursorEnable();
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
         StartCoroutine(ApplyGravityAfterDeath());
+
+        photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
+
     }
+    
     private IEnumerator ApplyGravityAfterDeath()
     {
         PlayerController pc = GetComponent<PlayerController>();
 
         while (!transform.GetComponent<PlayerController>().Grounded)
         {
+            Debug.Log("여기");
             pc._controller.Move(new Vector3(0, -9.81f * Time.deltaTime, 0));
             yield return null;
         }
+       
+
+        photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
+        isAlive = false;
+        CharacterControllerOffset(false);
+    }
+    [PunRPC]
+    public void PlayDeathAnimation_RPC()
+    {
         anim.SetTrigger("Dead");
+    }
+
+    void CharacterControllerOffset(bool isAlive)
+    {
+        if (isAlive)
+        {
+            transform.GetComponent<CharacterController>().center = centerOffset;
+            transform.GetComponent<CharacterController>().radius = radiusOffset;
+            transform.GetComponent<CharacterController>().height = heightOffset;
+
+        
+        }
+        else
+        {
+            transform.GetComponent<CharacterController>().height = heightDeadOffset;
+            transform.GetComponent<CharacterController>().center = centerDeadOffset;
+            transform.GetComponent<CharacterController>().radius = radiusDeadOffset;
+
+        }
     }
     [PunRPC]
     private IEnumerator HealOverTime()
@@ -266,9 +297,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         anim.Update(0f);
         if (!photonView.IsMine) return;
         //콜라이더 오프셋
-        transform.GetComponent<CharacterController>().center = centerOffset;
-        transform.GetComponent <CharacterController>().radius = radiusOffset;
-        transform.GetComponent<CharacterController>().height = heightOffset;    
+
+        CharacterControllerOffset(true);
 
         playerHp = MAX_HP;
         InGameUIManager.Instance.StatusIndicator.SetHealth(playerHp);

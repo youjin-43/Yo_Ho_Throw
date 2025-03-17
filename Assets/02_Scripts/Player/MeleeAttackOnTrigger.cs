@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MeleeAttackOnTrigger : MonoBehaviour
 {
-    const int MELEE_ATTACK_DAMAGE = 2;
+    const int MELEE_ATTACK_DAMAGE = 1;
 
     PhotonView photonView;
 
