@@ -1,8 +1,10 @@
+using Photon.Pun;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(PhotonView))]
 public class UI_StatusIndicator : UI_Base
 {
     #region VARIABLES
@@ -151,8 +153,15 @@ public class UI_StatusIndicator : UI_Base
     #endregion
 
     #region GOLDCOIN
-    public void SetGoldCoin(int coin)
+    public void SetGoldCoin(int coin, int actorNumber)
     {
+        GetComponent<PhotonView>().RPC("SetGoldCoinRPC", PhotonNetwork.CurrentRoom.Players[actorNumber], coin);
+    }
+    [PunRPC]
+    public void SetGoldCoinRPC(int coin)
+    {
+        Debug.Log("-----------SetGoldCoinRPC-----------");
+
         _CoinCounter.text = coin.ToString();
     }
     #endregion

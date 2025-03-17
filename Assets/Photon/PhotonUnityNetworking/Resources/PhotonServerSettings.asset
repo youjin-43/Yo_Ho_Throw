@@ -34,73 +34,68 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
-  - ClickRpc
-  - DestroyRpc
-  - DestroySpaceship
-  - Fire
-  - RespawnSpaceship
-  - FireBullet_RPC
-  - ApplyUpwardForce_RPC
   - ActivateBountyTarget
   - ActivatePlayer
-  - DeactivateBountyTarget
-  - DeactivatePlayer
-  - RespawnPlayer
-  - SetBountyTargetActorNumber
-  - ThrowProjectile_RPC
-  - FadeIn
-  - FadeOut
-  - SpawnCheckRPC
+  - ApplyUpwardForce_RPC
+  - Attack
+  - BountyColorSetting
+  - BulletReloadOverTime_RPC
+  - ClickRpc
   - Dash_RPC
   - DashMovement_RPC
-  - EnableMeleeAttackCollider_RPC
-  - MeleeAttack_RPC
-  - Throw_RPC
-  - HidePlayerIcon
-  - ShowPlayerIcon
-  - KnifeSwingRPC
-  - ThrowKnifeRPC
-  - ReceiveDamage
-  - OnInLobby
-  - OnOutLobby
-  - HandleDeath
-  - RegisterKillRPC
-  - HealOverTime
-  - BountyColorSetting
+  - DeactivateBountyTargetImmediate
+  - DeactivatePlayer
   - DefaultColorSetting
-  - InitPlayer
-  - SetPlayerIconRPC
-  - SetRevengeTargetIconRPC
-  - FirstItemSelectRPC
-  - OnShowItemPanelRPC
+  - DestroyRpc
+  - DestroySpaceship
+  - EditClientCoinRPC
+  - EditHostCoinRPC
+  - ExposeSetting
   - FadeInRPC
   - FadeOutRPC
-  - DeactivateBountyTargetImmediate
-  - ScheduleBountyTargetDeactivation
-  - RespawnColorSetting
-  - AddCoin
-  - DeleteCoin
+  - Fire
+  - FirstItemSelectRPC
+  - FullKnife
   - GameEndPlayer
   - GameStartPlayer
-  - IsKnifeOn
-  - ExposeSetting
-  - StealthSetting
+  - HandleDeath
+  - HidePlayerIcon
   - HideWaitingScreenRPC
-  - Attack
-  - OpenChest
-  - SpawnCoins
-  - DestroyTreasureChest
+  - InitPlayer
+  - IsKnifeOn
+  - KillSound
+  - KillSoundRPC
+  - MeleeAttack_RPC
   - Notification
-  - BulletReloadOverTime_RPC
-  - DestroyCoin
+  - OnInLobby
+  - OnOutLobby
+  - OnShowItemPanelRPC
+  - OpenChest
   - PlayDeathAnimation_RPC
   - PlaySfxAtPosition
   - PlaySfxAtPosition_RPC
+  - ReceiveDamage
+  - RegisterKillRPC
+  - RespawnColorSetting
+  - RespawnDefaultColorSetting
+  - RespawnPlayer
+  - RespawnSpaceship
+  - ScheduleBountyTargetDeactivation
+  - SetBountyTargetActorNumber
+  - SetGoldCoinRPC
   - SetLimitTimeText
+  - SetPlayerIconRPC
+  - SetRevengeTargetIconRPC
+  - ShowPlayerIcon
+  - SpawnCheckRPC
   - SpawnPlayerRPC
   - StartHeal_RPC
+  - StealthSetting
   - SyncLastDamageTime
-  - FullKnife
+  - Throw_RPC
+  - ThrowKnifeRPC
+  - EditClientCoinRPC_2
+  - EditHostCoinRPC_2
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

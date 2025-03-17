@@ -116,8 +116,10 @@ public class PlayerController : ThirdPersonController
         base.FixedUpdate();
     }
 
-    private void OnEnable()
+    public override void OnEnable()
     {
+        base.OnEnable();
+
         anim = GetComponent<Animator>();
         anim.Update(0f);
     }
