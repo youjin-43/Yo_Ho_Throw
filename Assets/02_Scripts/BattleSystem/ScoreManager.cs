@@ -6,6 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using static UnityEngine.EventSystems.EventTrigger;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
@@ -23,12 +26,12 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void Awake()
     {
-        Instance = this;
-
         Init();
     }
     public void Init()
     {
+        Instance = this;
+
         playerScoreEntryDict.Clear();
 
         // 모든 플레이어의 ActorNumber를 가져온다
@@ -39,7 +42,13 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         isFinalMinute = false;
         isGameRunning = true;
+
+        SceneManager.sceneLoaded += SceneLoadedFunction;
+
+        DontDestroyOnLoad(gameObject);
     }
+
+
     public void AddScore(int killerActorNumber, int victimActorNumber, int bonusReward = 0)
     {
         if (!isGameRunning) return;
@@ -274,6 +283,56 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
             }
         }
+    }
+    private void SceneLoadedFunction(Scene arg0, LoadSceneMode arg1)
+    {
+        if (arg0.name == SceneList.GameReadyScene_1.ToString())
+        {
+            ShowEndGameScoreBoard();
+
+            SceneManager.sceneLoaded -= SceneLoadedFunction;
+        }
+    }
+    [SerializeField] PlayerScoreEntry playerScoreEntryPrefab;
+    [SerializeField] Transform scoreboardParent;
+    [SerializeField] Button confirmButton;
+    [SerializeField] Sprite[] medalIcons;
+    void ShowEndGameScoreBoard()
+    {
+        scoreboardParent.gameObject.SetActive(true);
+        confirmButton.gameObject.SetActive(true);
+
+        Dictionary<int, PlayerScoreEntry> playerScoreEntries = new Dictionary<int, PlayerScoreEntry>();
+
+        foreach (var kvp in playerScoreEntryDict.Values)
+        {
+            PlayerScoreEntry entry = Instantiate(playerScoreEntryPrefab, scoreboardParent);
+
+            entry.Init(PhotonNetwork.CurrentRoom.Players[kvp.ActorNumber].NickName);
+
+            entry.SetScore(kvp.Score);
+            entry.SetDeathCount(kvp.Death);
+            entry.SetKillCount(kvp.Kill);
+
+            playerScoreEntries[kvp.ActorNumber] = entry;
+        }
+
+        var sortedList = playerScoreEntries.Values
+                                       .OrderByDescending(entry => entry.score)
+                                       .ToList();
+
+        for (int i = 0; i < sortedList.Count; i++)
+        {
+            sortedList[i].transform.SetAsLastSibling();
+
+            if (i < 3) sortedList[i].SetIconImage(medalIcons[i]);
+        }
+    }
+    public void RemoveScoreManager()
+    {
+        ScreenTransition.Instance.FadeInRPC();
+
+        Destroy(gameObject);
     }
 }
 
