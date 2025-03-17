@@ -21,6 +21,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
     [SerializeField] private TextMeshProUGUI plyaerJoinLeaveText; // 누가 들어오고 나갔는지 
 
+    [SerializeField] private SettingManager SettingPanel;
 
     // Player Info
     string currentScene;
@@ -51,8 +52,14 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        // F4 키로 SettingPanel 토글
+        if(Input.GetKeyDown(KeyCode.F4))
+        {
+            SettingPanel.ToggleSettingPanel();
+        }
+
         // Tab 키로 ExitPopup 토글
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && SettingPanel.IsOpened() == false)
         {
             ToggleExitPopup();
         }

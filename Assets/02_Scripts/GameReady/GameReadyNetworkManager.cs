@@ -63,7 +63,7 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         //player.GetComponent<PlayerController>().aimCam = world_aimCam;
         //player.GetComponent<PlayerController>().cameraTransform = mainCamera.transform;
 
-
+        GameManager.Instance.StorePlayer(player);
     }
 
     // 랜덤한 위치에서 스폰하도록 설정
