@@ -412,6 +412,7 @@ MonoBehaviour:
   dashCoolTime: 5
   anim: {fileID: 0}
   knifeObject: {fileID: 4168487119516495865}
+  isEsc: 0
   defaultColorMaterial: {fileID: 2100000, guid: adf31e9f4e0a76b478ab67dd8dfd7643, type: 2}
   bountyColorMaterial: {fileID: 2100000, guid: 69243a0c6520b7c45b49f2f6e16ee476, type: 2}
   stealthMaterial: {fileID: 2100000, guid: ab69327dfc4119d499e46269795a395c, type: 2}
@@ -428,7 +429,7 @@ MonoBehaviour:
   LandingAudioClip: {fileID: 0}
   FootstepAudioClips:
   - {fileID: 8300000, guid: fca6f6ee62ca8774aa75ed6c9549841f, type: 3}
-  FootstepAudioVolume: 0.5
+  FootstepAudioVolume: 0.1
   JumpHeight: 1.2
   Gravity: -15
   JumpTimeout: 0.5
@@ -438,7 +439,7 @@ MonoBehaviour:
   GroundedRadius: 0.28
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 320
+    m_Bits: 2368
   CinemachineCameraTarget: {fileID: 3728001361432756594}
   TopClamp: 90
   BottomClamp: -90
@@ -472,6 +473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddae4747ed8cc484da00a0acc996f9f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
 --- !u!114 &152954773064983578
 MonoBehaviour:
   m_ObjectHideFlags: 0
