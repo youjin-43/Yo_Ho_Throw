@@ -34,6 +34,8 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         IsMaster
     }
 
+    public static bool IsStartFade = true;
+
     private void Start()
     {
         gameReadyNetworkManager = GetComponent<GameReadyNetworkManager>();
@@ -49,7 +51,14 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         InitUI();
         UpdatePlayerListUI();
 
-        ScreenTransition.Instance.FadeInRPC();
+        if (IsStartFade)
+        {
+            ScreenTransition.Instance.FadeInRPC();
+        }
+        else
+        {
+            IsStartFade = true;
+        }
     }
 
     void Update()
