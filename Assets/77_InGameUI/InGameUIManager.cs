@@ -368,12 +368,13 @@ public class InGameUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 금화가 추가되는 부분에서 호출해 주세요
+    /// 현재 금화를 표시하는 부분입니다.
     /// </summary>
     /// <param name="coin"></param>
     public void SetGoldCoin(int coin)
     {
         StatusIndicator.SetGoldCoin(coin);
+        ItemStore.PurchaceActivation(coin);
     }
 
     /// <summary>

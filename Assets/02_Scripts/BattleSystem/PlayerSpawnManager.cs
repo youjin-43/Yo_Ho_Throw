@@ -119,6 +119,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
 
         InGameUIManager.Instance.Minimap.SetPlayerTransform(currPlayer.transform);
 
+        GameManager.Instance.StorePlayer(currPlayer);
+
         BattleSystem.SpawnCheck();
 
         ActivatePlayer();
