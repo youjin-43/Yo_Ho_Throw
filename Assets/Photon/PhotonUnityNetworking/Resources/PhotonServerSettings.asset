@@ -100,6 +100,7 @@ MonoBehaviour:
   - SpawnPlayerRPC
   - StartHeal_RPC
   - SyncLastDamageTime
+  - FullKnife
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

@@ -15,7 +15,7 @@ MonoBehaviour:
   my_Player_Color: {r: 0, g: 1, b: 0, a: 1}
   other_Player_Color: {r: 0.2688679, g: 0.40854585, b: 1, a: 1}
   bounty_Hunter_Color: {r: 1, g: 0.19339621, b: 0.39463753, a: 1}
-  revenge_Target_Color: {r: 1, g: 0.47757196, b: 0, a: 1}
+  revenge_Target_Color: {r: 1, g: 0.8612033, b: 0, a: 1}
   treasure_Box_Color: {r: 0, g: 0.13333334, b: 1, a: 1}
   my_Player_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   other_Player_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}

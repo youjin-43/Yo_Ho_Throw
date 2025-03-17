@@ -6,7 +6,7 @@ public class ItemHandler : MonoBehaviourPun
     public static ItemHandler Instance { get; private set; } = null;
 
     Potion selectedPotion = null;
-    PlayerController playerController = null;
+    public PlayerController playerController = null;
 
     private void Awake()
     {

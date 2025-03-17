@@ -185,6 +185,8 @@ public class UI_Minimap : UI_Base
 
         if (myActorNr == targetActorNr) return;
 
+        if (!playerIndicatorDict.ContainsKey(targetActorNr) || playerIndicatorDict[targetActorNr] == null) return;
+
         switch (iconType)
         {
             case MinimapIconType.Other_Player:

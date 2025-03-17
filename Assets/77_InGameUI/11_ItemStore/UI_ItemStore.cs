@@ -75,6 +75,7 @@ public class UI_ItemStore : UI_Base
         Debug.Log(index + "번 아이템 구매");
 
         ItemHandler.Instance.Equip(potions[index - 1]);
+        ItemHandler.Instance.playerController.DeleteCoin(5);
         InGameUIManager.Instance.ItemPurchase(button.transform.GetChild(0).GetChild(0).GetComponent<Image>(), index);
 
         PurchaceDeActivation();

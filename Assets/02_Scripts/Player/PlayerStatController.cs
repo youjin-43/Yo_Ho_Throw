@@ -35,6 +35,8 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     private Coroutine bulletReloadCoroutine;
 
     public GameObject knifeObject;
+    public bool isEsc = false;
+    
     public int BulletCount
     {
         get => bulletCount;
@@ -292,7 +294,7 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         if (!photonView.IsMine) return;
         //콜라이더 오프셋
 
-       
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerRevive, transform.position);
 
         playerHp = MAX_HP;
         InGameUIManager.Instance.StatusIndicator.SetHealth(playerHp);
@@ -306,11 +308,15 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         cameraForward.y = 0; 
         transform.rotation = Quaternion.LookRotation(cameraForward);
         if(photonView.IsMine)
-            photonView.RPC("IsKnifeOn", RpcTarget.All, true); 
-        
-        // 현상금 타겟으로써 죽었을 경우 플레이어 메테리얼 기존 것으로 설정
-        if (isSettingColor) transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+            photonView.RPC("IsKnifeOn", RpcTarget.All, true);
 
+        // 현상금 타겟으로써 죽었을 경우 플레이어 메테리얼 기존 것으로 설정
+        if (isSettingColor)
+        {
+            photonView.RPC("RespawnDefaultColorSetting", RpcTarget.All);
+
+            isSettingColor = false;
+        }
         CursorController.Instance.CursorDisable();
     }
 
@@ -360,6 +366,11 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         {
             transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
         }
+    }
+    [PunRPC]
+    public void RespawnDefaultColorSetting()
+    {
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
     }
     [PunRPC]
     public void BountyColorSetting()
@@ -428,17 +439,32 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
         cutlass.material = cutlassDefaultMaterial;
     }
 
-    [PunRPC]
+    
     public void AddCoin(int _coin)
     {
         coin += _coin;
+        InGameUIManager.Instance.SetGoldCoin(coin);
     }
-    [PunRPC]
+    
     public void DeleteCoin(int _coin)
     {
         if (coin - _coin >= 0)
             coin -= _coin;
+        InGameUIManager.Instance.SetGoldCoin(coin);
     }
 
-    
+    [PunRPC]
+    public void FullKnife()
+    {
+        BulletCount = 5;
+    }
+    public void OnEsc()
+    {
+        isEsc = true;
+    }
+
+    public void OffEsc()
+    {
+        isEsc = false;
+    }
 }

@@ -88,14 +88,15 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
         // 킬로그 발생
         KillLogPanelController.Instance.AddKillLog(killerActorNumber, victimActorNumber);
 
-        if (victimActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+        if (PhotonNetwork.LocalPlayer.ActorNumber == killerActorNumber)
         {
-            // TODO 찬규 : 죽어 있을 때 Tab 키를 눌러도 패널 안보이게 하기
-            //BattleUIController.Instance.SetIsAlive(false);
+            PlayerSpawnManager.Instance.photonView.RPC("FullKnife", RpcTarget.All);
         }
 
         // 마스터 클라이언트가 아닐 때는 반환
         if (!PhotonNetwork.IsMasterClient) return;
+
+        PlayerSpawnManager.Instance.photonView.RPC("KillSound", RpcTarget.All, killerActorNumber);
 
         // 리스폰 시킴 ( 물론 내부적으로 필요할 때만 리스폰 시킴 )
         PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.RespawnPlayer.ToString(), victimActorNumber);

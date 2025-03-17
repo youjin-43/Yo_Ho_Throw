@@ -2363,6 +2363,7 @@ MonoBehaviour:
   goTexts: {fileID: 1199122364}
   notificationCanvasGroup: {fileID: 481042527}
   notificationText: {fileID: 481042524}
+  potionSelectRemainingTime: {fileID: 6490763152997038561}
 --- !u!4 &220023721
 Transform:
   m_ObjectHideFlags: 0
@@ -5146,7 +5147,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: NotificationText
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3118065050973727423, guid: c6cbf36188d1e0048bf742ec1749ef7c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -7920,6 +7922,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3789883777017604398, guid: 23e1812ee092a974287a25343c5b8d45, type: 3}
   m_PrefabInstance: {fileID: 702296078}
   m_PrefabAsset: {fileID: 0}
+--- !u!21 &716682898
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All
+    AlphaClip:False (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1,
+    ColorMask:All AlphaClip:False (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0,
+    ReadMask:1, ColorMask:All AlphaClip:False (Stencil Id:1, Op:Keep, Comp:Equal,
+    WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False (Stencil Id:1, Op:Keep,
+    Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False (Stencil Id:1,
+    Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False (Stencil
+    Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Stencil Id:1, Op:Keep, Comp:Equal, WriteMask:0, ReadMask:1, ColorMask:All AlphaClip:False
+    (Default UI Material)))))))))))))))))))))
+  m_Shader: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 1
+    - _StencilComp: 6
+    - _StencilOp: 0
+    - _StencilReadMask: 1
+    - _StencilWriteMask: 0
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &717553252
 GameObject:
   m_ObjectHideFlags: 0
@@ -26774,6 +26838,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4042d0a09c349864aa84a5d987507c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6490763152997038561 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6626357106297215757, guid: 5e3afc2cd079cf149b962bfb50399234, type: 3}
+  m_PrefabInstance: {fileID: 6490763152997038556}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6598287914530068535

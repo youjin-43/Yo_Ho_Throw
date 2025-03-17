@@ -367,4 +367,40 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
             yield return null;
         }
     }
+    
+    [SerializeField] Slider potionSelectRemainingTime;
+    Coroutine selectRandomPotionAfterDelayCoroutine = null;
+    public void SelectRandomPotionAfterDelay()
+    {
+        if (selectRandomPotionAfterDelayCoroutine != null)
+            StopCoroutine(selectRandomPotionAfterDelayCoroutine);
+
+        selectRandomPotionAfterDelayCoroutine = StartCoroutine(SelectRandomPotionAfterDelayCoroutine());
+    }
+    public void StopRandomPotionSelect()
+    {
+        if (selectRandomPotionAfterDelayCoroutine != null)
+        {
+            StopCoroutine(selectRandomPotionAfterDelayCoroutine);
+        }
+    }
+    public IEnumerator SelectRandomPotionAfterDelayCoroutine()
+    {
+        float t = 5f;
+        
+        while (t > 0f)
+        {
+            t -= Time.deltaTime;
+
+            potionSelectRemainingTime.value = t;
+
+            yield return null;
+        }
+
+        potionSelectRemainingTime.value = 0;
+
+        selectRandomPotionAfterDelayCoroutine = null;
+
+        InGameUIManager.Instance.ItemSelect.ItemSelected(Random.Range(0, 2));
+    }
 }
