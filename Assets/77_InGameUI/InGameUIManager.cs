@@ -189,6 +189,19 @@ public class InGameUIManager : MonoBehaviour
             return false;
         }
     }
+
+    public bool IsSettingUIOpen()
+    {
+        if (Setting.gameObject.activeSelf == true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
     #endregion
 
 
