@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b11715912ece9478c61176f79eeaf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  treasureManager: {fileID: 0}
 --- !u!95 &6190292429292539466
 Animator:
   serializedVersion: 7
