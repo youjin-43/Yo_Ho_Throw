@@ -24,12 +24,13 @@ public class Coin : MonoBehaviour
                 Debug.Log("코인획득");
 
                 // 소유권 확인 후 삭제
-                if (PhotonNetwork.IsMasterClient)
+                if (photonView.IsMine)
                 {
-                    PhotonNetwork.Destroy(gameObject); // 마스터 클라이언트일 때, 코인 삭제
+                    PhotonNetwork.Destroy(gameObject); // 소유자일 때, 코인 삭제
                 }
                 else
                 {
+                    // 다른 클라이언트일 때, 마스터 클라이언트에게 삭제 요청
                     PhotonNetwork.RaiseEvent(1, photonView.ViewID, RaiseEventOptions.Default, SendOptions.SendReliable);
                 }
             }
