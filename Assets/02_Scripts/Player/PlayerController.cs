@@ -76,7 +76,9 @@ public class PlayerController : ThirdPersonController
         */
         
         if (!isAlive) return;
+
         if(GameManager.Instance.isPlayerStop) return;
+
         if (Input.GetKeyDown(KeyCode.LeftShift) && Grounded   && canDash)
         {
             if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0) return; // 현재 정지하고 있으면 대쉬 못하도록 
@@ -212,7 +214,9 @@ public class PlayerController : ThirdPersonController
 
     public void Optimal_Dash()
     {
-        if (!canDash || isDashing) return; // 현재 쿨이거나 대쉬중이면 뇹 
+        if (!canDash || isDashing) return; // 현재 쿨이거나 대쉬중이면 뇹
+
+        if (!isInLobby) InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(2, dashCoolTime);
 
         canDash = false;
         isDashing = true;
