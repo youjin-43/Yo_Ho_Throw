@@ -70,9 +70,10 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
             SettingPanel.ToggleSettingPanel();
         }
 
-        // Tab 키로 ExitPopup 토글
+        // Esc 키로 ExitPopup 토글
         if (Input.GetKeyDown(KeyCode.Escape) && SettingPanel.IsOpened() == false)
         {
+            GameManager.Instance.PlayerStop(true);
             ToggleExitPopup();
         }
 
@@ -110,9 +111,17 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
         bool isActive = !ExitPopup.activeSelf;
         ExitPopup.SetActive(isActive);
 
-        if (isActive) CursorController.Instance.CursorEnable(); // 마우스 활성화
-        else CursorController.Instance.CursorDisable(); // 마우스 비활성화
-    }
+        if (isActive)
+        {
+            CursorController.Instance.CursorEnable(); // 마우스 활성화
+            GameManager.Instance.PlayerStop(true);
+        }
+        else
+        {
+            CursorController.Instance.CursorDisable(); // 마우스 비활성화
+            GameManager.Instance.PlayerStop(false);
+        }
+        }
 
     public void SetReadyAndStartUI()
     {

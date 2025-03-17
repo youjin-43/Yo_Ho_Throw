@@ -185,10 +185,12 @@ public class SettingManager : MonoBehaviour
         if(gameObject.activeSelf == true)
         {
             CursorController.Instance.CursorEnable();
+            GameManager.Instance.PlayerStop(true);
         }
         else
         {
             CursorController.Instance.CursorDisable();
+            GameManager.Instance.PlayerStop(false);
         }
     }
 

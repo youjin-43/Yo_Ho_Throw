@@ -134,8 +134,16 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
         bool isActive = !ExitPopup.activeSelf;
         ExitPopup.SetActive(isActive);
 
-        if (isActive) CursorController.Instance.CursorEnable(); // 마우스 활성화
-        else CursorController.Instance.CursorDisable(); // 마우스 비활성화
+        if (isActive)
+        {
+            CursorController.Instance.CursorEnable(); // 마우스 활성화
+            GameManager.Instance.PlayerStop(true);
+        }
+        else
+        {
+            CursorController.Instance.CursorDisable(); // 마우스 비활성화
+            GameManager.Instance.PlayerStop(false);
+        }
     }
 
     public void SetIsAlive(bool isAlive)

@@ -458,13 +458,5 @@ public class PlayerStatController : MonoBehaviourPun , IDamagable
     {
         BulletCount = 5;
     }
-    public void OnEsc()
-    {
-        isEsc = true;
-    }
 
-    public void OffEsc()
-    {
-        isEsc = false;
-    }
 }
