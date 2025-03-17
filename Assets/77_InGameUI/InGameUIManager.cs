@@ -473,6 +473,8 @@ public class InGameUIManager : MonoBehaviour
     /// <param name="coin">소지하고 있는 금화</param>
     public IEnumerator Death(float respawnTime, int coin = 0)
     {
+        Debug.Log("현재 코인 개수 확인 ::: " + coin.ToString());
+
         ToggleCrosshair(false);
         ToggleCursor(true);
         ItemStore.gameObject.SetActive(true);
