@@ -38,7 +38,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         foreach (int actorNumber in PhotonNetwork.CurrentRoom.Players.Keys)
         {
             // ActorNumber와 매칭해서 플레이어의 기록 초기화
-            playerScoreEntryDict[actorNumber] = new PlayerScoreEntryData(0, 0, 0, actorNumber, string.Empty);
+            playerScoreEntryDict[actorNumber] = new PlayerScoreEntryData(0, 0, 0, actorNumber, PhotonNetwork.CurrentRoom.Players[actorNumber].NickName);
         }
         isFinalMinute = false;
         isGameRunning = true;
