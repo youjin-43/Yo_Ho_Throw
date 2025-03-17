@@ -146,13 +146,9 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -70
       objectReference: {fileID: 0}
-    - target: {fileID: 1688931413212330386, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2866219652940917707, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0001671933
+      value: 0.000040114555
       objectReference: {fileID: 0}
     - target: {fileID: 3099762600388934159, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchorMax.x
@@ -188,7 +184,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5540154885613728077, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.98714375
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6091198727280793112, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchorMax.y
@@ -209,10 +205,6 @@ PrefabInstance:
     - target: {fileID: 6091198727280793112, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -70
-      objectReference: {fileID: 0}
-    - target: {fileID: 6354817737907928582, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8146479364929453586, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: m_AnchorMax.y
@@ -774,7 +766,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 529181753175106850, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 529181753175106850, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -890,7 +882,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2364454582879356380, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 170
       objectReference: {fileID: 0}
     - target: {fileID: 2364454582879356380, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -922,19 +914,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2623181100325190157, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 192.13
       objectReference: {fileID: 0}
     - target: {fileID: 2623181100325190157, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2882650504930187361, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4012447440138659537, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+      value: 0.5104103
       objectReference: {fileID: 0}
     - target: {fileID: 5493093148633072755, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: buttonSound
@@ -962,11 +946,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6860584860268112138, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 192.13
       objectReference: {fileID: 0}
     - target: {fileID: 6860584860268112138, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.5104103
       objectReference: {fileID: 0}
     - target: {fileID: 7432206374980111163, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_AnchorMax.y
@@ -978,11 +962,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432206374980111163, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 7432206374980111163, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7432206374980111163, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1002,11 +986,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8814197137340769835, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8814197137340769835, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8814197137340769835, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1294,7 +1278,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -2339,7 +2323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bgmClip: {fileID: 8300000, guid: 5374dfab708cd2e46ab1e9aded3b996d, type: 3}
-  bgmVolume: 0.2
+  bgmVolume: 1
   sfxClips:
   - {fileID: 8300000, guid: 9d0113dd16699ce4ea3c58dd422fdc1f, type: 3}
   - {fileID: 8300000, guid: 1abb37b32c849be44a7a5628d1e6f8b6, type: 3}
@@ -2356,7 +2340,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 37ca1055e23afe4408226342d60582f7, type: 3}
   - {fileID: 8300000, guid: 8e2e2c5ab6483fe46ab432a71bf0775f, type: 3}
   - {fileID: 8300000, guid: 19e2b436d403fcf469e705d076184a15, type: 3}
-  sfxVolume: 0.5
+  sfxVolume: 1
   channels: 0
 --- !u!4 &2103043659
 Transform:
