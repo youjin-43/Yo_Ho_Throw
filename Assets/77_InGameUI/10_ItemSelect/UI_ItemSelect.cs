@@ -109,8 +109,8 @@ public class UI_ItemSelect : UI_Base
 
             BattleUIController.Instance.StopRandomPotionSelect();
         }
-        ItemHandler.Instance.Equip(potions[index - 1]);
-        InGameUIManager.Instance.ItemSelected(potionImages[index-1], index);
+        ItemHandler.Instance.Equip(potions[index]);
+        InGameUIManager.Instance.ItemSelected(potionImages[index], index+1);
     }
     #endregion
 }

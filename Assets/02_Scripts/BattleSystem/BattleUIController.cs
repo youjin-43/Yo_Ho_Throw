@@ -396,6 +396,6 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
 
         selectRandomPotionAfterDelayCoroutine = null;
 
-        InGameUIManager.Instance.ItemSelect.ItemSelected(Random.Range(1, 3));
+        InGameUIManager.Instance.ItemSelect.ItemSelected(Random.Range(0, 2));
     }
 }

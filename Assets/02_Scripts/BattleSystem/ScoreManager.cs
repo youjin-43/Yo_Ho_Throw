@@ -38,7 +38,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         foreach (int actorNumber in PhotonNetwork.CurrentRoom.Players.Keys)
         {
             // ActorNumber와 매칭해서 플레이어의 기록 초기화
-            playerScoreEntryDict[actorNumber] = new PlayerScoreEntryData(0, 0, 0, actorNumber);
+            playerScoreEntryDict[actorNumber] = new PlayerScoreEntryData(0, 0, 0, actorNumber, string.Empty);
         }
         isFinalMinute = false;
         isGameRunning = true;
@@ -47,8 +47,6 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         DontDestroyOnLoad(gameObject);
     }
-
-
     public void AddScore(int killerActorNumber, int victimActorNumber, int bonusReward = 0)
     {
         if (!isGameRunning) return;
@@ -278,7 +276,8 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
                         (int)data["kill"],
                         (int)data["death"],
                         (int)data["score"],
-                        (int)data["actorNumber"]
+                        (int)data["actorNumber"],
+                        (string)data["nickName"]
                     );
                 }
             }
@@ -308,7 +307,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             PlayerScoreEntry entry = Instantiate(playerScoreEntryPrefab, scoreboardParent);
 
-            entry.Init(PhotonNetwork.CurrentRoom.Players[kvp.ActorNumber].NickName);
+            entry.Init(kvp.nickName);
 
             entry.SetScore(kvp.Score);
             entry.SetDeathCount(kvp.Death);
@@ -327,10 +326,14 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
             if (i < 3) sortedList[i].SetIconImage(medalIcons[i]);
         }
+
+        CursorController.Instance.CursorEnable();
     }
     public void RemoveScoreManager()
     {
         ScreenTransition.Instance.FadeInRPC();
+
+        CursorController.Instance.CursorDisable();
 
         Destroy(gameObject);
     }
@@ -347,16 +350,19 @@ public class PlayerScoreEntryData
     public int Death { get => death; }
     public int Score { get => score; }
     public int ActorNumber { get => actorNumber; }
-    public PlayerScoreEntryData(int kill, int death, int score, int actorNumber)
+    public string nickName;
+    public PlayerScoreEntryData(int kill, int death, int score, int actorNumber, string nickName)
     {
         this.kill = kill;
         this.death = death;
         this.score = score;
         this.actorNumber = actorNumber;
+        this.nickName = nickName;
     }
     public void SetKill(int kill) => this.kill = kill;
     public void SetDeath(int death) => this.death = death;
     public void SetScore(int score) => this.score = score;
+    public void SetNickName(string nickName) => this.nickName = nickName;
     public static Hashtable ToHashtable(Dictionary<int, PlayerScoreEntryData> dict)
     {
         Hashtable hashtable = new Hashtable();
@@ -367,7 +373,8 @@ public class PlayerScoreEntryData
             { "kill", kvp.Value.Kill },
             { "death", kvp.Value.Death },
             { "score", kvp.Value.Score },
-            { "actorNumber", kvp.Value.ActorNumber }
+            { "actorNumber", kvp.Value.ActorNumber },
+            { "nickName", kvp.Value.nickName }
         };
 
             hashtable[kvp.Key] = entryData; // key(int) - value(Hashtable) 형태로 저장
@@ -388,7 +395,8 @@ public class PlayerScoreEntryData
                 (int)data["kill"],
                 (int)data["death"],
                 (int)data["score"],
-                (int)data["actorNumber"]
+                (int)data["actorNumber"],
+                (string)data["nickName"]
             );
 
             dict[key] = playerData;
