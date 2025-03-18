@@ -86,7 +86,7 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     public virtual void RegisterKill(int killerActorNumber, int victimActorNumber)
     {
         // 킬로그 발생
-        KillLogPanelController.Instance.AddKillLog(killerActorNumber, victimActorNumber);
+        //KillLogPanelController.Instance.AddKillLog(killerActorNumber, victimActorNumber);
 
         if (PhotonNetwork.LocalPlayer.ActorNumber == killerActorNumber)
         {

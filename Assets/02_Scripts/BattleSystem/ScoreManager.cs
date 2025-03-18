@@ -86,6 +86,17 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 bountyTargetActorNumber = -1;
             }
 
+            KillLogPanelController.Instance.photonView.RPC(
+                "AddKillLog_ScoreVersion",
+                RpcTarget.All,
+                killerActorNumber,
+                victimActorNumber,
+                (KILL_SCORE_REWARD + bonusReward) * (isFinalMinute ? 2 : 1));
+
+            //KillLogPanelController.Instance.AddKillLog_ScoreVersion(killerActorNumber,
+            //    victimActorNumber,
+            //    (KILL_SCORE_REWARD + bonusReward) * (isFinalMinute ? 2 : 1));
+
             playerScoreEntryDict[killerActorNumber].SetScore(
             playerScoreEntryDict[killerActorNumber].Score +
             (KILL_SCORE_REWARD + bonusReward) *

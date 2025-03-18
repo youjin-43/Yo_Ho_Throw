@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KillLogPanelController : MonoBehaviour
+[RequireComponent(typeof(PhotonView))]
+public class KillLogPanelController : MonoBehaviourPun
 {
     public static KillLogPanelController Instance { get; private set; } = null;
 
@@ -41,6 +42,36 @@ public class KillLogPanelController : MonoBehaviour
             PhotonNetwork.CurrentRoom.Players[killerActorNr].NickName,
             PhotonNetwork.CurrentRoom.Players[victimActorNr].NickName,
             icons[0]);
+
+        killLogPanel.SetBack(back);
+
+        back?.SetFront(killLogPanel);
+
+        back?.MoveUp(killLogPanel.transform.position.y + padding, padding);
+
+        back = killLogPanel;
+    }
+    [PunRPC]
+    public void AddKillLog_ScoreVersion(int killerActorNr, int victimActorNr, int addScore)
+    {
+        KillLogPanel killLogPanel = null;
+
+        if (queue.Count > 0)
+        {
+            killLogPanel = queue.Dequeue();
+
+            killLogPanel.gameObject.SetActive(true);
+        }
+
+        else killLogPanel = Instantiate(killLogPanelPrefab, killLogPanelParent);
+
+        killLogPanel.transform.localPosition = Vector3.zero;
+
+        killLogPanel.SetText(
+            PhotonNetwork.CurrentRoom.Players[killerActorNr].NickName,
+            PhotonNetwork.CurrentRoom.Players[victimActorNr].NickName,
+            icons[0],
+            addScore);
 
         killLogPanel.SetBack(back);
 
