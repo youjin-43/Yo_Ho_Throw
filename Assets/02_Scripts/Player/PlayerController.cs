@@ -5,6 +5,8 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.VFX;
+using static AudioManager;
 
 
 public class PlayerController : ThirdPersonController
@@ -112,6 +114,8 @@ public class PlayerController : ThirdPersonController
     public override void OnEnable()
     {
         base.OnEnable();
+        //slashEffect.enabled = false; // 시작 시 비활성화
+        slashEffect.Stop();
 
         anim = GetComponent<Animator>();
         anim.Update(0f);
@@ -304,12 +308,15 @@ public class PlayerController : ThirdPersonController
         AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerMelee, transform.position);
     }
 
+    [SerializeField] VisualEffect slashEffect;
+
     [PunRPC]
     void MeleeAttack_RPC()
     {
         //if (!photonView.IsMine) return;
         ExposeSetting();
         StartCoroutine(EnableCollider_RPC(meleeAttackColliderObject, 0.4f));
+        slashEffect.Play();
     }
 
     private IEnumerator EnableCollider_RPC(GameObject _meleeAttackColliderObject, float time)
