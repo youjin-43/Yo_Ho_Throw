@@ -212,7 +212,7 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     [PunRPC]
     public void KillSound(int actorNumber)
     {
-        if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber) return;
+        //if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber) return;
 
         photonView.RPC("KillSoundRPC", RpcTarget.All, currPlayer.transform.position);
     }

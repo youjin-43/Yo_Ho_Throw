@@ -63,6 +63,7 @@ public class UI_Menu : UI_Base
     public void Resume()
     {
         InGameUIManager.Instance.ToggleMenuUI();
+        GameManager.Instance.isPlayerStop= false;
     }
 
     public void ToggleSettingUI()
