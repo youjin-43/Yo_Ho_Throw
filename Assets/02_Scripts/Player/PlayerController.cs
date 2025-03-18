@@ -315,7 +315,7 @@ public class PlayerController : ThirdPersonController
     {
         //if (!photonView.IsMine) return;
         ExposeSetting();
-        StartCoroutine(EnableCollider_RPC(meleeAttackColliderObject, 0.4f));
+        StartCoroutine(EnableCollider_RPC(meleeAttackColliderObject, 0.15f));
     }
 
     private IEnumerator EnableCollider_RPC(GameObject _meleeAttackColliderObject, float time)
