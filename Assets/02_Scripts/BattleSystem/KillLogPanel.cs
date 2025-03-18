@@ -7,6 +7,7 @@ public class KillLogPanel : MonoBehaviour
 {
     [SerializeField] TMP_Text killerNicknameText;
     [SerializeField] TMP_Text victimNicknameText;
+    [SerializeField] TMP_Text addScoreText;
     [SerializeField] Image iconImage;
 
     KillLogPanel front = null;
@@ -29,7 +30,7 @@ public class KillLogPanel : MonoBehaviour
             back?.MoveUp(transform.position.y + padding, padding);
         }
     }
-    public void SetText(string killerNickname, string victimNickname, Sprite icon)
+    public void SetText(string killerNickname, string victimNickname, Sprite icon, int addScore = 1)
     {
         killerNicknameText.text = killerNickname;
         victimNicknameText.text = victimNickname;
@@ -41,7 +42,10 @@ public class KillLogPanel : MonoBehaviour
 
         canvasGroup.alpha = 0;
 
+        addScoreText.text = "+" + addScore.ToString();
+
         StartCoroutine(FadeCoroutine());
+        StartCoroutine(AddScoreFadeCoroutine());
     }
     public void ClearFrontBack()
     {
@@ -75,5 +79,23 @@ public class KillLogPanel : MonoBehaviour
         }
         //KillLogPanelController.Instance.ReturnPanel(this);
         InGameUIManager.Instance.ReturnPanel(this);
+    }
+    IEnumerator AddScoreFadeCoroutine()
+    {
+        Color addScoreTextColor = Color.white;
+        addScoreTextColor.a = 0f;
+        addScoreText.color = addScoreTextColor;
+
+        yield return new WaitForSeconds(0.3f);
+
+        float t = 0;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime * 3f;
+            addScoreTextColor.a = t;
+            addScoreText.color = addScoreTextColor;
+            yield return null;
+        }
     }
 }

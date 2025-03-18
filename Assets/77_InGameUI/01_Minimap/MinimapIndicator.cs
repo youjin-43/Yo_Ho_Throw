@@ -34,7 +34,7 @@ public class MinimapIndicator : MonoBehaviour
         // ValueTuple<Transform, Transform> pair = new ValueTuple<Transform, Transform>(transform, indicator.transform);
         // InGameUIManager.Instance.BindIndicator(pair, IsPlayer);
 
-        int actorNumber = 0;
+        int actorNumber = -1;
 
         if (IsPlayer == true)
         {

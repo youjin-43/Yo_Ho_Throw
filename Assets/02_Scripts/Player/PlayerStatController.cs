@@ -86,15 +86,11 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     public virtual void OnEnable()
     {
         Debug.Log("AddCallbackTarget");
-        Debug.Log("AddCallbackTarget");
-        Debug.Log("AddCallbackTarget");
 
         PhotonNetwork.AddCallbackTarget(this);
     }
     public void OnDisable()
     {
-        Debug.Log("RemoveCallbackTarget");
-        Debug.Log("RemoveCallbackTarget");
         Debug.Log("RemoveCallbackTarget");
 
         PhotonNetwork.RemoveCallbackTarget(this);
@@ -231,7 +227,6 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
             Debug.Log("cc꺼짐");
         
 
-        CursorController.Instance.CursorEnable();
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
         StartCoroutine(ApplyGravityAfterDeath());
 
@@ -337,7 +332,6 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
             isSettingColor = false;
         }
-        CursorController.Instance.CursorDisable();
     }
 
     
@@ -511,6 +505,8 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         Debug.Log("내 AN: " + ((int)data[1]).ToString() + " / 코인 갱신 수: " + (int)data[0]);
 
         int coin = (int)data[0];
+
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.Coin, transform.position);
 
         PlayerSpawnManager.Instance.coin = coin;
 

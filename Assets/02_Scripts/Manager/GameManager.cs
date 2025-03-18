@@ -56,8 +56,8 @@ public class GameManager : MonoBehaviour
     // 음량 세팅 저장
     private bool _isBgmOn = true;
     private bool _isSfxOn = true;
-    private float _bgmValue;
-    private float _sfxValue;
+    private float _bgmValue = 0.2f;
+    private float _sfxValue = 0.8f;
 
     public void StoreBgmCheckState(bool state)
     {

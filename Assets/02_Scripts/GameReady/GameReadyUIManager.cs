@@ -97,7 +97,7 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
         // Exit 팝업 기본 비활성화
         ExitPopup.SetActive(false);
-        CursorController.Instance.CursorDisable();
+
         // 버튼 클릭 리스너 설정
         goToTitleButton.onClick.AddListener(() => PhotonManager.Instance.LeaveRoomAndGoToTitle());
         stayButton.onClick.AddListener(ToggleExitPopup);

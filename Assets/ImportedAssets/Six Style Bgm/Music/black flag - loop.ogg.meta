@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: aea45ae220a2e7841bfcbc2c0799409d
+timeCreated: 1462785066
+licenseType: Store
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35941
+  packageName: Six Styles of BGM
+  packageVersion: 1.2
+  assetPath: Assets/Six Style/Music/black flag - loop.ogg
+  uploadId: 116899

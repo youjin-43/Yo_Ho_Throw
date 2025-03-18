@@ -216,7 +216,7 @@ namespace StarterAssets
             Vector2 look = new Vector2(horizontal, -vertical);
 
             // if there is an input and camera position is not fixed
-            if (look.sqrMagnitude >= _threshold && !LockCameraPosition)
+            if (!LockCameraPosition)
             {
                 _cinemachineTargetYaw += look.x * mouseSpeed;
                 _cinemachineTargetPitch += look.y * mouseSpeed;

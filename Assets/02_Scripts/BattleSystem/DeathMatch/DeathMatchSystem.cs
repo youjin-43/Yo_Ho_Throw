@@ -58,7 +58,7 @@ public class DeathMatchSystem : BattleSystem
         {
             revengeTargetDict[killerActorNumber] = -1;
 
-            ScoreManager.Instance.AddScore(killerActorNumber, victimActorNumber, REVENGE_BONUS_REWARD);
+            ScoreManager.Instance.AddScore(killerActorNumber, victimActorNumber, REVENGE_BONUS_REWARD, true);
 
             InGameUIManager.HidePlayerIcon(killerActorNumber, victimActorNumber, MinimapIconType.Other_Player);
         }

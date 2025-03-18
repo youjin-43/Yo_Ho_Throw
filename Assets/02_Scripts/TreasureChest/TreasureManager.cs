@@ -25,6 +25,7 @@ public class TreasureManager : MonoBehaviour
             StartCoroutine(ChangeTreasureChestPosition());
         }
     }
+
     private void OnEnable() => PhotonNetwork.NetworkingClient.EventReceived += OnEvent; // 이벤트 수신 
     private void OnDisable() => PhotonNetwork.NetworkingClient.EventReceived -= OnEvent; // 이벤트 수신 해제
 
@@ -96,25 +97,62 @@ public class TreasureManager : MonoBehaviour
     {
         usedPosition.Remove(position); // 사용된 위치에서 제거. 다시 스폰 가능
     }
+
     public void DestroyTreasureChest()
     {
         currChestCount--;
     }
-
-
-
+    
     [SerializeField] GameObject coinPrefab;
+
+    //포물선 운동을 위한 변수들
+    float maxDistance = 1.5f;
+    public float m_InitialAngle = 70f; // 처음 날라가는 각도
+    private Rigidbody coin_Rigidbody;
+    Vector3 offset_ = new Vector3(0, 1f, 0); //스포너 위쪽에서 배터리가 생성되도록
 
     public void SpawnCoins(int coinCount, Vector3 chestPosition)
     {
-        float radius = 1.0f; // 원하는 반지름
-
         for (int i = 0; i < coinCount; i++)
         {
-            Vector2 randomPoint = Random.insideUnitCircle * radius; // 랜덤한 점을 생성
-            Vector3 randomPosition = new Vector3(chestPosition.x + randomPoint.x, chestPosition.y + 0.5f, chestPosition.z + randomPoint.y);
+            // 스포너 근처의랜덤 위치를 가져옵니다.
+            Vector3 spawnPosition = transform.position + (Random.insideUnitSphere * maxDistance); //현재 위치에서 maxDistance 반경 랜덤으로 원형자리에 Vector3를 구함
+            Debug.Log(spawnPosition);
 
-            PhotonNetwork.Instantiate(coinPrefab.name, randomPosition, Quaternion.identity, 0); // 코인 생성
+            //Instantiate(원본,위치,회전); 
+            GameObject coin = PhotonNetwork.Instantiate(coinPrefab.name, chestPosition + offset_, transform.rotation);
+            //GameObject coin = Instantiate(coinPrefab, chestPosition + offset_, transform.rotation);
+
+            coin_Rigidbody = coin.GetComponent<Rigidbody>();
+            Vector3 velocity = GetVelocity(transform.position, spawnPosition, m_InitialAngle);
+            coin_Rigidbody.linearVelocity = velocity;
+
+            Debug.Log("coin is spawned");
         }
+    }
+
+    public Vector3 GetVelocity(Vector3 start_pos, Vector3 target_pos, float initialAngle)
+    {
+        float gravity = Physics.gravity.magnitude;
+        float angle = initialAngle * Mathf.Deg2Rad;
+
+        Vector3 planarTarget = new Vector3(target_pos.x, 0, target_pos.z);
+        Vector3 planarPosition = new Vector3(start_pos.x, 0, start_pos.z);
+
+        float distance = Vector3.Distance(planarTarget, planarPosition);
+        float yOffset = start_pos.y - target_pos.y;
+
+        float initialVelocity
+            = (1 / Mathf.Cos(angle)) * Mathf.Sqrt((0.5f * gravity * Mathf.Pow(distance, 2)) / (distance * Mathf.Tan(angle) + yOffset));
+
+        Vector3 velocity
+            = new Vector3(0f, initialVelocity * Mathf.Sin(angle), initialVelocity * Mathf.Cos(angle));
+
+        float angleBetweenObjects
+            = Vector3.Angle(Vector3.forward, planarTarget - planarPosition) * (target_pos.x > start_pos.x ? 1 : -1);
+        Vector3 finalVelocity
+            = Quaternion.AngleAxis(angleBetweenObjects, Vector3.up) * velocity;
+
+        return finalVelocity;
     }
 }
