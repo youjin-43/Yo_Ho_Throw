@@ -217,6 +217,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         else
         {
             Debug.Log("비밀번호가 설정되지 않은 방입니다. 바로 입장을 시도합니다");
+            CursorController.Instance.CursorDisable();
             PhotonNetwork.JoinRoom(room.Name);
         }
     }

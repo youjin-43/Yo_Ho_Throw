@@ -231,7 +231,6 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
             Debug.Log("cc꺼짐");
         
 
-        CursorController.Instance.CursorEnable();
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
         StartCoroutine(ApplyGravityAfterDeath());
 
@@ -337,7 +336,6 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
             isSettingColor = false;
         }
-        CursorController.Instance.CursorDisable();
     }
 
     

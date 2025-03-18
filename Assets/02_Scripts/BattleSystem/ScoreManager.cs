@@ -287,6 +287,12 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
             SceneManager.sceneLoaded -= SceneLoadedFunction;
         }
+        else
+        {
+            SceneManager.sceneLoaded -= SceneLoadedFunction;
+
+            Destroy(gameObject);
+        }
     }
     [SerializeField] PlayerScoreEntry playerScoreEntryPrefab;
     [SerializeField] Transform scoreboardParent;

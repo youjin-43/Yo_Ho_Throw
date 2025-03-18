@@ -290,7 +290,8 @@ public class TitleUIManager : MonoBehaviour
         options.CustomRoomPropertiesForLobby = new string[] {
             PhotonRoomProperties.password.ToString()
             //,PhotonRoomProperties.mode.ToString()
-        }; 
+        };
+        CursorController.Instance.CursorDisable();
 
         // 방 생성 요청
         PhotonManager.Instance.CreateRoom(roomNameInput.text, options);
@@ -322,6 +323,7 @@ public class TitleUIManager : MonoBehaviour
         if (passwordInput.text == roomPassword)
         {
             Debug.Log("비밀번호 일치! 방 입장 시도!");
+            CursorController.Instance.CursorDisable();
             passwordPromptPanel.SetActive(false);
             PhotonManager.Instance.JoinRoomByName(selectedRoomName);
         }
