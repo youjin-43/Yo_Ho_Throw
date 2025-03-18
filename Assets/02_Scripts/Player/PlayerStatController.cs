@@ -512,6 +512,8 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
         int coin = (int)data[0];
 
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.Coin, transform.position);
+
         PlayerSpawnManager.Instance.coin = coin;
 
         this.coin = coin;
