@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SettingManager : MonoBehaviour
@@ -188,6 +189,15 @@ public class SettingManager : MonoBehaviour
 
         GameManager.Instance.StoreSensitivity(clamp);
 
+        if(SceneManager.GetActiveScene().name == "MainUIScene")
+        {
+            CursorController.Instance.CursorEnable();
+        }
+        else
+        {
+            CursorController.Instance.CursorDisable();
+        }
+
 
         gameObject.SetActive(false); // 패널 비활성화
         GameManager.Instance.isPlayerStop = false;
@@ -208,6 +218,8 @@ public class SettingManager : MonoBehaviour
 
         //sensitivitySlider.value = sensitivity;
         sensitivitySlider.value = GameManager.Instance.GetSensitivity();
+
+
 
         gameObject.SetActive(false); // 패널 비활성화
     }
