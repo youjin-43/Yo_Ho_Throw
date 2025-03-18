@@ -8,6 +8,7 @@ public class Coin : MonoBehaviourPun
 {
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.gameObject.name);
         if (other.CompareTag("Player")) // 플레이어와 충돌 시
         {
             if (PhotonNetwork.IsMasterClient)
