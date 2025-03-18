@@ -287,7 +287,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
             SceneManager.sceneLoaded -= SceneLoadedFunction;
         }
-        else
+        else if (arg0.name == SceneList.MainUIScene.ToString())
         {
             SceneManager.sceneLoaded -= SceneLoadedFunction;
 
