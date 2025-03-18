@@ -316,13 +316,13 @@ public class PlayerController : ThirdPersonController
         //if (!photonView.IsMine) return;
         ExposeSetting();
         StartCoroutine(EnableCollider_RPC(meleeAttackColliderObject, 0.4f));
-        slashEffect.Play();
     }
 
     private IEnumerator EnableCollider_RPC(GameObject _meleeAttackColliderObject, float time)
     {
         _meleeAttackColliderObject.SetActive(true);
         yield return new WaitForSeconds(time);
+        slashEffect.Play();
         _meleeAttackColliderObject.SetActive(false);
     }
 
