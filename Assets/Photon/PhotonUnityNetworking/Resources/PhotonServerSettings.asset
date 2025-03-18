@@ -97,6 +97,7 @@ MonoBehaviour:
   - EditClientCoinRPC_2
   - EditHostCoinRPC_2
   - InitPlayerSound_RPC
+  - AddKillLog_ScoreVersion
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
