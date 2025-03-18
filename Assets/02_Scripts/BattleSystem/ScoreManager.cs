@@ -47,7 +47,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         DontDestroyOnLoad(gameObject);
     }
-    public void AddScore(int killerActorNumber, int victimActorNumber, int bonusReward = 0)
+    public void AddScore(int killerActorNumber, int victimActorNumber, int bonusReward = 0, bool isRevenge = false)
     {
         if (!isGameRunning) return;
 
@@ -91,7 +91,8 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 RpcTarget.All,
                 killerActorNumber,
                 victimActorNumber,
-                (KILL_SCORE_REWARD + bonusReward) * (isFinalMinute ? 2 : 1));
+                (KILL_SCORE_REWARD + bonusReward) * (isFinalMinute ? 2 : 1),
+                isRevenge ? 2 : 0);
 
             //KillLogPanelController.Instance.AddKillLog_ScoreVersion(killerActorNumber,
             //    victimActorNumber,

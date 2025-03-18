@@ -52,7 +52,7 @@ public class KillLogPanelController : MonoBehaviourPun
         back = killLogPanel;
     }
     [PunRPC]
-    public void AddKillLog_ScoreVersion(int killerActorNr, int victimActorNr, int addScore)
+    public void AddKillLog_ScoreVersion(int killerActorNr, int victimActorNr, int addScore, int iconIndex)
     {
         KillLogPanel killLogPanel = null;
 
@@ -70,7 +70,7 @@ public class KillLogPanelController : MonoBehaviourPun
         killLogPanel.SetText(
             PhotonNetwork.CurrentRoom.Players[killerActorNr].NickName,
             PhotonNetwork.CurrentRoom.Players[victimActorNr].NickName,
-            icons[0],
+            icons[iconIndex],
             addScore);
 
         killLogPanel.SetBack(back);
