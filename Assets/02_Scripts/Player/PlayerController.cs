@@ -63,17 +63,7 @@ public class PlayerController : ThirdPersonController
         
         if (isGameEnd) return;
 
-        
-
         base.Update();
-        
-
-        //float horizontalInput = Input.GetAxisRaw("Horizontal");
-        //float verticalInput = Input.GetAxisRaw("Vertical");
-        /* 오른쪽 마우스 확대 기능
-        if (input.aim) aimCam.gameObject.SetActive(true);
-        else aimCam.gameObject.SetActive(false);
-        */
         
         if (!isAlive) return;
 

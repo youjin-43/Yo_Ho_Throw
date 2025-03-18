@@ -15,9 +15,14 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     public int playerHp = MAX_HP;
     public int bulletCount = MAX_BULLET_COUNT;
     int coin = 0;
+
+
+    [Header("Player Status")]
     public bool isAlive = true;
     public bool isInLobby = true;
     protected bool isGameEnd = false;
+
+
     public float dashCoolTime = 5f;
     public Animator anim;
     //살아있을때 캐릭터 컨트롤러 offset
@@ -30,8 +35,9 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     float heightDeadOffset = 1.57f;
 
     private float lastDamageTime = 0f; // 마지막으로 데미지를 받은 시간
-    private float healDelay = 5f; // 체력 회복 시작까지의 지연 시간
-    private float healInterval = 1f; // 체력 회복 간격
+    //private float lastDamageTime = 0f; // 마지막으로 데미지를 받은 시간
+    //private float healDelay = 5f; // 체력 회복 시작까지의 지연 시간
+    //private float healInterval = 1f; // 체력 회복 간격
 
     private Coroutine healingCoroutine;
     private Coroutine bulletReloadCoroutine;
@@ -49,8 +55,6 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
                 if (bulletCount > value)
                 {
                     bulletCount = value;
-
-
 
                     InGameUIManager.Instance.SkillIndicator.RemoveDagger(bulletCount);
 
@@ -78,6 +82,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
             InGameUIManager.Instance.StatusIndicator.SetHealth(playerHp);
         }
     }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -85,38 +90,15 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     }
     public virtual void OnEnable()
     {
-        Debug.Log("AddCallbackTarget");
-        Debug.Log("AddCallbackTarget");
-        Debug.Log("AddCallbackTarget");
-
+        //Debug.Log("AddCallbackTarget");
         PhotonNetwork.AddCallbackTarget(this);
     }
     public void OnDisable()
     {
-        Debug.Log("RemoveCallbackTarget");
-        Debug.Log("RemoveCallbackTarget");
-        Debug.Log("RemoveCallbackTarget");
-
+        //Debug.Log("RemoveCallbackTarget");
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    // Update is called once per frame
-    public void Update()
-    {
-        // 자동 힐 안되도록 
-        //if (isAlive && !isInLobby && Time.time - lastDamageTime >= healDelay)
-        //{
-        //    if (healingCoroutine == null)
-        //    {
-        //        photonView.RPC("StartHeal_RPC", RpcTarget.All);
-        //    }
-        //}
-
-        if(photonView.IsMine && isAlive && !isInLobby && BulletCount<5 )
-        {
-            if(bulletReloadCoroutine == null)
-            {
-                bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
             }
         }
     }
@@ -127,18 +109,34 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         {
             healingCoroutine = StartCoroutine(HealOverTime());
         }
-    }
 
-    [PunRPC]
-    public void SyncLastDamageTime(float damageTime)
+    //[PunRPC]
+    //public void StartHeal_RPC()
+    //{
+    //    if (healingCoroutine == null) 
+    //    {
+    //        healingCoroutine = StartCoroutine(HealOverTime());
+    //    }
+    //}
+
+    //[PunRPC]
+    //public void SyncLastDamageTime(float damageTime)
+    //{
+    //    lastDamageTime = damageTime; //모든 클라이언트에서 lastDamageTime 동기화
+    //}
+
+    //[PunRPC]
+    //public void BulletReloadOverTime_RPC()
+    //{  
+    //        bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
+    //}
+
+    protected void RestoreBullet()
     {
-        lastDamageTime = damageTime; //모든 클라이언트에서 lastDamageTime 동기화
-    }
-
-    [PunRPC]
-    public void BulletReloadOverTime_RPC()
-    {  
+        if (bulletReloadCoroutine == null)
+        {
             bulletReloadCoroutine = StartCoroutine(BulletReloadOverTime());
+        }
     }
     
     IEnumerator BulletReloadOverTime()
@@ -149,8 +147,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
             BulletCount++;
             if (knifeObject.activeSelf==false)
             {
-                if(photonView.IsMine) 
-                    photonView.RPC("IsKnifeOn", RpcTarget.All,true);
+                if(photonView.IsMine) photonView.RPC("IsKnifeOn", RpcTarget.All,true);
             }
             
         }
@@ -158,14 +155,12 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     }
 
     //애니메이션,힐 코루틴 용도
-    public virtual void OnDamagedAnim()
+    public void OnDamagedAnim()
     {
-        if (isInLobby) return;
-
-        
-
         anim.SetTrigger("Hit");
-        lastDamageTime = Time.time;
+
+        if (isInLobby) return;
+        //lastDamageTime = Time.time;
 
         if (healingCoroutine != null)
         {
@@ -176,14 +171,13 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         {
             photonView.RPC("PlaySfxAtPosition_RPC", RpcTarget.All, (int)AudioManager.Sfx.PlayerHit, transform.position);
             //AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerHit, transform.position);
-
         }
         else
         {
             photonView.RPC("PlaySfxAtPosition_RPC", RpcTarget.All, (int)AudioManager.Sfx.PlayerDead, transform.position);
-
         }
     }
+
     [PunRPC]
     public void PlaySfxAtPosition_RPC(int sfx, Vector3 position  )
     {
@@ -193,111 +187,109 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     [PunRPC]
     public void ReceiveDamage(int attackerActorNr, int damage)
     {
-        if (isInLobby || !photonView.IsMine) return;
-        if(!isAlive) return;
+        if (isInLobby || !photonView.IsMine || !isAlive) return;
         if (PhotonNetwork.LocalPlayer.ActorNumber != photonView.OwnerActorNr) return;
         
         InGameUIManager.Instance.AddDamage(damage);
         Hp -= damage;
 
-        photonView.RPC("SyncLastDamageTime", RpcTarget.All, Time.time);
+        //photonView.RPC("SyncLastDamageTime", RpcTarget.All, Time.time);
 
         if (Hp <= 0)
         {
-            
-            photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
+            isAlive = false;
+            //photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
 
-        }
-        else
-        {
-            //AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerHit, transform.position);
+            //캐릭터 컨트롤러 오프셋 크기
+            //transform.GetComponent<CharacterController>().enabled = false;
+
+            BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, attackerActorNr, photonView.OwnerActorNr);
+            anim.SetTrigger("Dead");
+            StartCoroutine(ApplyGravityAfterDeath());
         }
     }
+
     [PunRPC]
     public virtual void HandleDeath(int killerActorNr)
     {
         
         if (!photonView.IsMine) return;
-        //AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerDead);
-        gameObject.name += Random.value.ToString();
-
-        // 이동 비활성화
-        
-        //캐릭터 컨트롤러 오프셋 크기
-        CharacterController cc = transform.GetComponent<CharacterController>();
-        if (cc == null) Debug.Log("aa");
-        
 
         CursorController.Instance.CursorEnable();
         BattleSystem.Instance.photonView.RPC("RegisterKillRPC", RpcTarget.All, killerActorNr, photonView.OwnerActorNr);
+        anim.SetTrigger("Dead");
         StartCoroutine(ApplyGravityAfterDeath());
 
-        photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
-
+        //photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
     }
     
     private IEnumerator ApplyGravityAfterDeath()
     {
         PlayerController pc = GetComponent<PlayerController>();
 
-        while (!transform.GetComponent<PlayerController>().Grounded)
+        while (!pc.Grounded)
         {
-            Debug.Log("여기");
             pc._controller.Move(new Vector3(0, -9.81f * Time.deltaTime, 0));
             yield return null;
         }
-       
 
-        isAlive = false;
-        photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
+        //photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
+        //anim.SetTrigger("Dead");
+
+    }
+
+    //[PunRPC]
+    //public void PlayDeathAnimation_RPC()
+    //{
+    //    StartCoroutine(PlayDeathAnimationCorutine());
         
-    }
-    [PunRPC]
-    public void PlayDeathAnimation_RPC()
-    {
-        StartCoroutine(PlayDeathAnimationCorutine());
-        
-    }
-    IEnumerator PlayDeathAnimationCorutine()
-    {
-        float duration = 1f;
-        float elapsedTime = 0f;
+    //}
 
-        while (elapsedTime < duration)
-        {
-            anim.SetTrigger("Dead"); 
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-    }
-    private IEnumerator HealOverTime()
-    {
-        //Debug.Log("회복");
-        while (Hp < MAX_HP)
-        {
+    //IEnumerator PlayDeathAnimationCorutine()
+    //{
+    //    float duration = 1f;
+    //    float elapsedTime = 0f;
 
-            InGameUIManager.Instance.AddHealth(1);
-            playerHp += 1; // 체력 1씩 회복
-            playerHp = Mathf.Min(Hp, MAX_HP); // 최대 체력 초과 방지
-            yield return new WaitForSeconds(healInterval);
-        }
-        healingCoroutine = null; // 체력 다 차면 종료
-    }
+    //    while (elapsedTime < duration)
+    //    {
+    //        anim.SetTrigger("Dead"); 
+    //        elapsedTime += Time.deltaTime;
+    //        yield return null;
+    //    }
+    //}
+
+    //private IEnumerator HealOverTime()
+    //{
+    //    //Debug.Log("회복");
+    //    while (Hp < MAX_HP)
+    //    {
+
+    //        InGameUIManager.Instance.AddHealth(1);
+    //        playerHp += 1; // 체력 1씩 회복
+    //        playerHp = Mathf.Min(Hp, MAX_HP); // 최대 체력 초과 방지
+    //        yield return new WaitForSeconds(healInterval);
+    //    }
+    //    healingCoroutine = null; // 체력 다 차면 종료
+    //}
     
-    
-    [PunRPC]
+    //[PunRPC]
     public void OnInLobby()
     {
         isInLobby = true;
     }
-    [PunRPC]
+
+    //[PunRPC]
     public void OnOutLobby()
     {
         isInLobby = false;
     }
+
     [PunRPC]
     public void InitPlayer()
     {
+
+        //transform.GetComponent<CharacterController>().enabled = true;
+
         //TODO 석진 플레이어 다시 살아나는 소리
         if (!photonView.IsMine) transform.gameObject.layer = LayerMask.NameToLayer("Ground");
         anim.Rebind();
@@ -318,8 +310,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         Vector3 cameraForward = camTransform.forward;
         cameraForward.y = 0; 
         transform.rotation = Quaternion.LookRotation(cameraForward);
-        if(photonView.IsMine)
-            photonView.RPC("IsKnifeOn", RpcTarget.All, true);
+        if(photonView.IsMine) photonView.RPC("IsKnifeOn", RpcTarget.All, true);
 
         // 현상금 타겟으로써 죽었을 경우 플레이어 메테리얼 기존 것으로 설정
         if (isSettingColor)
@@ -486,7 +477,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
         if (PhotonNetwork.LocalPlayer.ActorNumber != (int)data[1]) return;
 
-        Debug.Log("내 AN: " + ((int)data[1]).ToString() + " / 코인 갱신 수: " + (int)data[0]);
+        //Debug.Log("내 AN: " + ((int)data[1]).ToString() + " / 코인 갱신 수: " + (int)data[0]);
 
         int coin = (int)data[0];
 
@@ -500,17 +491,17 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
         if (photonView.OwnerActorNr != (int)data[1]) return;
 
-        Debug.Log("호스트. 적용 코인 : " + (int)data[0]);
+        //Debug.Log("호스트. 적용 코인 : " + (int)data[0]);
 
         coin = (int)data[0];
     }
     public void DeleteCoin(int _coin)
     {
-        Debug.Log("이전 코인 : " + coin.ToString());
+        //Debug.Log("이전 코인 : " + coin.ToString());
 
         if (coin - _coin >= 0) coin -= _coin;
 
-        Debug.Log("지불 후 코인 : " + coin.ToString());
+        //Debug.Log("지불 후 코인 : " + coin.ToString());
 
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.EditHostCoin,

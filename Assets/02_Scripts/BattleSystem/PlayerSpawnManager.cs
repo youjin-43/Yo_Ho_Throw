@@ -112,7 +112,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         //currPlayer.GetComponent<PlayerKnifeController>().dirTransform = camaraRoot;
         //currPlayer.GetComponent<PlayerKnifeController>().cameraTransform = world_followCam.transform;
 
-        currPlayer.GetComponent<PhotonView>().RPC("OnOutLobby", RpcTarget.All);
+        //currPlayer.GetComponent<PhotonView>().RPC("OnOutLobby", RpcTarget.All);
+        currPlayer.GetComponent<PlayerController>().OnOutLobby();
 
         world_followCam.Target.TrackingTarget = camaraRoot;
         world_followCam.Target.LookAtTarget = camaraRoot;
@@ -145,7 +146,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
         //currPlayer.GetComponent<PlayerKnifeController>().dirTransform = camaraRoot;
         //currPlayer.GetComponent<PlayerKnifeController>().cameraTransform = world_followCam.transform;
 
-        currPlayer.GetComponent<PhotonView>().RPC("OnOutLobby", RpcTarget.All);
+        //currPlayer.GetComponent<PhotonView>().RPC("OnOutLobby", RpcTarget.All);
+        currPlayer.GetComponent<PlayerController>().OnOutLobby();
 
         world_followCam.Target.TrackingTarget = camaraRoot;
         world_followCam.Target.LookAtTarget = camaraRoot;

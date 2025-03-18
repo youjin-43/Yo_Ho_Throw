@@ -165,8 +165,10 @@ namespace StarterAssets
 
         public void Update()
         {
-            base.Update();
-            _hasAnimator = TryGetComponent(out _animator);
+            if (photonView.IsMine && isAlive && !isInLobby && BulletCount < 5)
+            {
+                RestoreBullet();
+            }
             
             GroundedCheck();
             

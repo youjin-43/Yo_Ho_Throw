@@ -46,7 +46,8 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         // 카메라에 루트 셋팅 
         camaraRoot = player.GetComponent<PlayerController>().CinemachineCameraTarget.transform;
 
-        player.GetComponent<PhotonView>().RPC("OnInLobby", RpcTarget.All);
+        //player.GetComponent<PhotonView>().RPC("OnInLobby", RpcTarget.All);
+        player.GetComponent<PlayerController>().OnInLobby();
 
         world_followCam.Target.TrackingTarget = camaraRoot;
         world_followCam.Target.LookAtTarget = camaraRoot;

@@ -50,13 +50,13 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
     // Photon에서 플레이어 `CustomProperties`가 변경될 때 호출됨
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        Debug.Log("[PlayerReadyManager] OnPlayerPropertiesUpdate 호출됨");
+        //Debug.Log("[PlayerReadyManager] OnPlayerPropertiesUpdate 호출됨");
         string isReadyKey = PhotonPlayerProperties.IsReady.ToString();
 
         if (changedProps.ContainsKey(isReadyKey))
         {
             bool isReady = (bool)changedProps[isReadyKey]; 
-            Debug.Log($"플레이어 {targetPlayer.NickName} 레디 상태 업데이트됨! → {isReady}");
+            //Debug.Log($"플레이어 {targetPlayer.NickName} 레디 상태 업데이트됨! → {isReady}");
 
             // 이벤트 발생 → GameReadyUIManager에서 이걸 듣고 UI 업데이트!
             OnPlayerReadyChanged?.Invoke(targetPlayer.ActorNumber, isReady);
@@ -75,7 +75,7 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
 
         if (currentPlayers < maxPlayers)
         {
-            Debug.Log($"현재 인원({currentPlayers}/{maxPlayers})이 설정된 최대 인원보다 적음");
+            //Debug.Log($"현재 인원({currentPlayers}/{maxPlayers})이 설정된 최대 인원보다 적음");
             OnAllPlayersReadyChanged?.Invoke(false); // 버튼 비활성화 이벤트 호출
             return; // 설정된 최대 인원보다 적으면 게임 시작 불가능!
         }
@@ -90,20 +90,20 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
                 bool playerReady = (bool)player.CustomProperties[PhotonPlayerProperties.IsReady.ToString()];
                 if (!playerReady)
                 {
-                    Debug.Log($"{player.NickName}이(가) 레디를 해제함 → 게임 시작 불가!");
+                    //Debug.Log($"{player.NickName}이(가) 레디를 해제함 → 게임 시작 불가!");
                     allReady = false;
                     break;
                 }
             }
             else
             {
-                Debug.Log($"플레이어 {player.NickName} 레디 정보 없음 → 게임 시작 불가! ");
+                //Debug.Log($"플레이어 {player.NickName} 레디 정보 없음 → 게임 시작 불가! ");
                 allReady = false;
                 return; // 한 명이라도 레디 정보 없으면 게임 시작 불가능
             }
         }
 
-        Debug.Log($"모든 플레이어 레디 상태: {allReady}");
+        //Debug.Log($"모든 플레이어 레디 상태: {allReady}");
         OnAllPlayersReadyChanged?.Invoke(allReady); // UI 매니저에 이벤트 전달
     }
 
@@ -121,6 +121,6 @@ public class PlayerReadyManager : MonoBehaviourPunCallbacks
             player.SetCustomProperties(props);
         }
 
-        Debug.Log($"🔄 모든 플레이어의 레디 상태 초기화 완료!");
+        //Debug.Log($"🔄 모든 플레이어의 레디 상태 초기화 완료!");
     }
 }
