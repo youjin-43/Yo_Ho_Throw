@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
     }
 
     // 감도 저장
-    private float _sensitivity = 3f;
+    private float _sensitivity = 10f;
 
     public void StoreSensitivity(float sensitivity)
     {
