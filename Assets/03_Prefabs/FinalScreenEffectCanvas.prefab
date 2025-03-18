@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 375228943994660024}
   - component: {fileID: 4097941246928282259}
   - component: {fileID: 11684963007495472}
-  - component: {fileID: 4298910547109360065}
+  - component: {fileID: 6731217632006444725}
   m_Layer: 5
   m_Name: FinalScreenEffectCanvas
   m_TagString: Untagged
@@ -50,7 +50,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 0.10001
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -74,18 +74,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
---- !u!114 &4298910547109360065
+--- !u!114 &6731217632006444725
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,14 +94,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8010636867889421751}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Script: {fileID: 11500000, guid: 21267208f9c5fcd47a1768b2fc9b0c19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
+  finalScreenEffectMaterial: {fileID: 2100000, guid: fe410acf0cc4db44dba6d140a7d05bfb, type: 2}
 --- !u!1 &9069368218001707809
 GameObject:
   m_ObjectHideFlags: 0
