@@ -9,10 +9,10 @@ public class UI_SkillIndicator : UI_Base
 {
     #region VARIABLES
     // 스킬 활성화 이펙트
-    private GameObject _skill_Shift_ActiveEffect;
-    private GameObject _skill_LClick_ActiveEffect;
-    private GameObject _skill_RClick_ActiveEffect;
-    private GameObject _skill_Item_ActiveEffect;
+    //private GameObject _skill_Shift_ActiveEffect;
+    //private GameObject _skill_LClick_ActiveEffect;
+    //private GameObject _skill_RClick_ActiveEffect;
+    //private GameObject _skill_Item_ActiveEffect;
 
     // 스킬 쿨타임 이펙트
     private Image _skill_Shift_CooldownEffect;
@@ -83,12 +83,12 @@ public class UI_SkillIndicator : UI_Base
 
         // 활성화 이펙트
         {
-            _skill_Shift_ActiveEffect  = transform.GetChild(0).transform.GetChild(0).gameObject;
-            _skill_LClick_ActiveEffect = transform.GetChild(1).transform.GetChild(0).gameObject;
-            _skill_RClick_ActiveEffect = transform.GetChild(2).transform.GetChild(0).gameObject;
-            _skill_Item_ActiveEffect   = transform.GetChild(3).transform.GetChild(0).gameObject;
-
-            _skill_Item_ActiveEffect.gameObject.SetActive(false);
+            //_skill_Shift_ActiveEffect  = transform.GetChild(0).transform.GetChild(0).gameObject;
+            //_skill_LClick_ActiveEffect = transform.GetChild(1).transform.GetChild(0).gameObject;
+            //_skill_RClick_ActiveEffect = transform.GetChild(2).transform.GetChild(0).gameObject;
+            //_skill_Item_ActiveEffect   = transform.GetChild(3).transform.GetChild(0).gameObject;
+            //
+            //_skill_Item_ActiveEffect.gameObject.SetActive(false);
         }
         // 쿨타임 이펙트
         {
@@ -136,19 +136,19 @@ public class UI_SkillIndicator : UI_Base
         // Shift
         if (button == 2)
         {
-            StartCoroutine(CooldownEffect(_skill_Shift_ActiveEffect, _skill_Shift_CooldownEffect, cooldownTime));
+            StartCoroutine(CooldownEffect(null, _skill_Shift_CooldownEffect, cooldownTime));
         }
         // 좌클릭
         else if (button == 0)
         {
-            StartCoroutine(CooldownEffect(_skill_LClick_ActiveEffect, _skill_LClick_CooldownEffect, cooldownTime));
+            StartCoroutine(CooldownEffect(null, _skill_LClick_CooldownEffect, cooldownTime));
         }
         // 우클릭
         else if (button == 1)
         {
             if (_numOfDagger != 0)
             {
-                StartCoroutine(CooldownEffect(_skill_RClick_ActiveEffect, _skill_RClick_CooldownEffect, cooldownTime, true));
+                StartCoroutine(CooldownEffect(null, _skill_RClick_CooldownEffect, cooldownTime, true));
             }
         }
         // F(아이템 사용)
@@ -159,7 +159,7 @@ public class UI_SkillIndicator : UI_Base
             // 검은 배경은 키고
             _itemActivation.gameObject.SetActive(true);
             // 파티클은 끄고
-            _skill_Item_ActiveEffect.SetActive(false);
+            //_skill_Item_ActiveEffect.SetActive(false);
 
             // 이미지도 없에면 좋을듯
             _itemSlot.gameObject.SetActive(false);
@@ -168,7 +168,7 @@ public class UI_SkillIndicator : UI_Base
 
     private IEnumerator CooldownEffect(GameObject activeEffect, Image coolDownImage, float cooldownTime, bool isRClick = false)
     {
-        activeEffect.SetActive(false);
+        //activeEffect.SetActive(false);
         coolDownImage.gameObject.SetActive(true);
         coolDownImage.fillAmount = 1f;
 
@@ -185,12 +185,12 @@ public class UI_SkillIndicator : UI_Base
         {
             if(_numOfDagger != 0)
             {
-                activeEffect.SetActive(true);
+                //activeEffect.SetActive(true);
             }
         }
         else
         {
-            activeEffect.SetActive(true);
+            //activeEffect.SetActive(true);
         }
 
         coolDownImage.gameObject.SetActive(false);
@@ -202,7 +202,7 @@ public class UI_SkillIndicator : UI_Base
     {
         count = Mathf.Clamp(count, 1, 5);
 
-        _skill_RClick_ActiveEffect.SetActive(true);
+        //_skill_RClick_ActiveEffect.SetActive(true);
         _skillActivation.gameObject.SetActive(false);
 
         int addCounter = 0;
@@ -238,7 +238,7 @@ public class UI_SkillIndicator : UI_Base
 
         if (_numOfDagger == 0)
         {
-            _skill_RClick_ActiveEffect.SetActive(false);
+            //_skill_RClick_ActiveEffect.SetActive(false);
             _skillActivation.gameObject.SetActive(true);
         }
     }
@@ -248,13 +248,13 @@ public class UI_SkillIndicator : UI_Base
     public void SetItemSlotImage(Image image)
     {
         _itemSlot.gameObject.SetActive(true);
-        _skill_Item_ActiveEffect.gameObject.SetActive(true);
+        //_skill_Item_ActiveEffect.gameObject.SetActive(true);
         _itemSlot.sprite = image.sprite;
     }
     public void HideItemSlotImage()
     {
         _itemSlot.gameObject.SetActive(false);
-        _skill_Item_ActiveEffect.gameObject.SetActive(false);
+        //_skill_Item_ActiveEffect.gameObject.SetActive(false);
         _itemActivation.gameObject.SetActive(true);
     }
     #endregion

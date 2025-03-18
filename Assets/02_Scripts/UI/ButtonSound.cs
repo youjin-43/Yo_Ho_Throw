@@ -6,12 +6,11 @@ public class ButtonSound : MonoBehaviour
     // 버튼 클릭 시 이펙트 소리
     //public AudioClip clickSound; // 클릭 소리로 사용할 AudioClip
     //public AudioClip toggleSound; // 토글 소리로 사용할 AudioClip
-    private AudioSource audioSource;
 
     void Start()
     {
         // AudioSource 컴포넌트를 추가
-        audioSource = gameObject.AddComponent<AudioSource>();
+        //audioSource = gameObject.AddComponent<AudioSource>();
         //audioSource.clip = clickSound; // AudioClip을 AudioSource에 할당
 
         // 버튼에 리스너 추가 (시작 시 활성화 되어있는 애들)
@@ -26,7 +25,8 @@ public class ButtonSound : MonoBehaviour
         {
             if (button != null) 
             {
-                button.onClick.AddListener(PlayButtonSound);
+                button.onClick.RemoveAllListeners(); // 기존에 달려있던 리스너 제거
+                button.onClick.AddListener(PlayButtonSound); // 리스너 추가
             }
         }
     }

@@ -80,7 +80,7 @@ public class UI_ItemSelect : UI_Base
     [SerializeField] Image[] potionImages;
     public void ItemSelected(GameObject button, int index)
     {
-        Debug.Log(index + "번 아이템 선택");
+        //Debug.Log(index + "번 아이템 선택");
 
         if (isFirstItemSelect)
         {
@@ -97,7 +97,7 @@ public class UI_ItemSelect : UI_Base
     }
     public void ItemSelected(int index)
     {
-        Debug.Log(index + "번 아이템 선택");
+        //Debug.Log(index + "번 아이템 선택");
 
         if (isFirstItemSelect)
         {

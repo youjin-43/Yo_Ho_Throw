@@ -209,7 +209,8 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     [PunRPC]
     public void FullKnife()
     {
-        currPlayerPhotonView.RPC("FullKnife", RpcTarget.All);
+        if (currPlayerPhotonView != null)
+            currPlayerPhotonView.RPC("FullKnife", RpcTarget.All);
     }
     [PunRPC]
     public void KillSound(int actorNumber)

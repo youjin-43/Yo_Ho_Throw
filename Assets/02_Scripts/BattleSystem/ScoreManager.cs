@@ -47,7 +47,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         DontDestroyOnLoad(gameObject);
     }
-    public void AddScore(int killerActorNumber, int victimActorNumber, int bonusReward = 0)
+    public void AddScore(int killerActorNumber, int victimActorNumber, int bonusReward = 0, bool isRevenge = false)
     {
         if (!isGameRunning) return;
 
@@ -85,6 +85,18 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, -1);
                 bountyTargetActorNumber = -1;
             }
+
+            KillLogPanelController.Instance.photonView.RPC(
+                "AddKillLog_ScoreVersion",
+                RpcTarget.All,
+                killerActorNumber,
+                victimActorNumber,
+                (KILL_SCORE_REWARD + bonusReward) * (isFinalMinute ? 2 : 1),
+                isRevenge ? 2 : 0);
+
+            //KillLogPanelController.Instance.AddKillLog_ScoreVersion(killerActorNumber,
+            //    victimActorNumber,
+            //    (KILL_SCORE_REWARD + bonusReward) * (isFinalMinute ? 2 : 1));
 
             playerScoreEntryDict[killerActorNumber].SetScore(
             playerScoreEntryDict[killerActorNumber].Score +
@@ -286,6 +298,12 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
             ShowEndGameScoreBoard();
 
             SceneManager.sceneLoaded -= SceneLoadedFunction;
+        }
+        else if (arg0.name == SceneList.MainUIScene.ToString())
+        {
+            SceneManager.sceneLoaded -= SceneLoadedFunction;
+
+            Destroy(gameObject);
         }
     }
     [SerializeField] PlayerScoreEntry playerScoreEntryPrefab;

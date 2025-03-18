@@ -406,7 +406,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHp: 3
   bulletCount: 5
-  coin: 0
   isAlive: 1
   isInLobby: 1
   dashCoolTime: 5
@@ -454,7 +453,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8430071279321725386, guid: ef534139b75564f4da410b28c1d45740, type: 3}
   explosionBulletPrefab: {fileID: 8430071279321725386, guid: 118645d99db91a244924e7440b87535d, type: 3}
   bulletSpawnPoint: {fileID: 1625589534162421683}
-  bulletSpeed: 23
+  bulletSpeed: 30
   bulletArc: 5
   meleeAttackColliderObject: {fileID: 5727853010510017898}
   targetLayer:

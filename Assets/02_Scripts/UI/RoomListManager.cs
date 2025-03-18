@@ -25,8 +25,8 @@ public class RoomListManager : MonoBehaviour
     }
     public void OnGameOverButtonClick()
     {
-        //Application.Quit();
-        UnityEditor.EditorApplication.isPlaying = false;
+        Application.Quit();
+        //UnityEditor.EditorApplication.isPlaying = false;
     }
 
     public void OnSettingButtonClick()

@@ -91,7 +91,7 @@ public class TitleUIManager : MonoBehaviour
         createNewRoomButton.onClick.AddListener(ShowCreatRoomUI);
         ReloadingButton.onClick.AddListener(() =>
         {
-            Debug.Log("새로고침 버튼 클릭됨! 최신 방 목록 요청!");
+            //Debug.Log("새로고침 버튼 클릭됨! 최신 방 목록 요청!");
             PhotonManager.Instance.RequestRoomList(); // 최신 방 목록 요청
         });
         #endregion
@@ -142,7 +142,7 @@ public class TitleUIManager : MonoBehaviour
     void SetUserName()
     {
         GameManager.Instance.UserName = playerNameInput.text;
-        Debug.Log($"{GameManager.Instance.UserName} 로 이름 셋팅! ");
+        //Debug.Log($"{GameManager.Instance.UserName} 로 이름 셋팅! ");
     }
 
     // 로비에 입장하면 실행될 함수
@@ -155,7 +155,7 @@ public class TitleUIManager : MonoBehaviour
     // 방 목록이 변경될 때 실행할 함수 
     private void UpdateRoomList(List<RoomInfo> roomList)
     {
-        Debug.Log($"UI에서 방 목록 업데이트 실행! - 생성돼있는 룸 갯수 : {roomList.Count}");
+        //Debug.Log($"UI에서 방 목록 업데이트 실행! - 생성돼있는 룸 갯수 : {roomList.Count}");
 
         // 기존 방 목록 삭제
         foreach (Transform child in roomListContent) Destroy(child.gameObject);
@@ -290,7 +290,7 @@ public class TitleUIManager : MonoBehaviour
         options.CustomRoomPropertiesForLobby = new string[] {
             PhotonRoomProperties.password.ToString()
             //,PhotonRoomProperties.mode.ToString()
-        }; 
+        };
 
         // 방 생성 요청
         PhotonManager.Instance.CreateRoom(roomNameInput.text, options);
@@ -321,13 +321,14 @@ public class TitleUIManager : MonoBehaviour
     {
         if (passwordInput.text == roomPassword)
         {
-            Debug.Log("비밀번호 일치! 방 입장 시도!");
+            //Debug.Log("비밀번호 일치! 방 입장 시도!");
+            CursorController.Instance.CursorDisable();
             passwordPromptPanel.SetActive(false);
             PhotonManager.Instance.JoinRoomByName(selectedRoomName);
         }
         else
         {
-            Debug.LogWarning("비밀번호가 틀렸습니다!");
+            //Debug.LogWarning("비밀번호가 틀렸습니다!");
             passwordInput.text = "";
         }
     }

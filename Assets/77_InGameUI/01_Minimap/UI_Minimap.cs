@@ -16,8 +16,8 @@ public class UI_Minimap : UI_Base
     Dictionary<int, MinimapIndicator> playerIndicatorDict = new Dictionary<int, MinimapIndicator>();
 
     // 원래 부모, 인디케이터
-    ValueTuple<Transform, Transform> _playerIndicator;
-    List<ValueTuple<Transform, MinimapIndicator>> _otherIndicator = new List<(Transform, MinimapIndicator)>();
+    DoubleTransform _playerIndicator;
+    List<MapIndicatorInfo> _otherIndicator = new List<MapIndicatorInfo>();
 
     private Transform _playerAngle;
     private PhotonView photonView = null;
@@ -55,13 +55,15 @@ public class UI_Minimap : UI_Base
     }
     public void RemovePlayerTransform(int actorNumber)
     {
-        (Transform, MinimapIndicator) target = new();
+        MapIndicatorInfo target = new MapIndicatorInfo(null, null);
 
-        foreach (var kvp in _otherIndicator)
+        foreach (MapIndicatorInfo info in _otherIndicator)
         {
-            if (kvp.Item2.owner == actorNumber)
+            if (info.indicator.owner == actorNumber)
             {
-                target = kvp;
+                target = info;
+
+                break;
             }
         }
         _otherIndicator.Remove(target);
@@ -83,9 +85,9 @@ public class UI_Minimap : UI_Base
     void Start()
     {
         // Map+InGameUI_TestScene Scene 디버그용, 나중에 주석처리하셈
-        {
-            _playerTransform = InGameUIManager.Instance.PlayerTransform;
-        }
+        //{
+        //    _playerTransform = InGameUIManager.Instance.PlayerTransform;
+        //}
 
         _minimapCamera   = InGameUIManager.Instance.MinimapCamera;
 
@@ -114,12 +116,7 @@ public class UI_Minimap : UI_Base
     #region FUNCTION
     public void BindIndicator(int actorNumber, MinimapIndicator minimapIndicator, bool isPlayer)
     {
-        ValueTuple<Transform, MinimapIndicator> otherIndicator;
-        {
-            otherIndicator.Item1 = minimapIndicator.transform;
-            otherIndicator.Item2 = minimapIndicator;
-        }
-
+        MapIndicatorInfo otherIndicator = new MapIndicatorInfo(minimapIndicator.transform, minimapIndicator);
 
         if (isPlayer == true)
         {
@@ -218,30 +215,30 @@ public class UI_Minimap : UI_Base
             return;
         }
 
-        foreach(var indicator in _otherIndicator)
+        foreach(var info in _otherIndicator)
         {
             // 물체를 바라보는 Look
-            Vector3 look = (indicator.Item1.position - _playerIndicator.Item1.position).normalized;
+            Vector3 look = (info.transform.position - _playerIndicator.Item1.position).normalized;
 
             // 먼 거리에 있는 물체를 미니맵 가장자리에 그리게 하는 부분
-            if (Vector3.Distance(_playerIndicator.Item1.position, indicator.Item1.position) >= 9.9f)
+            if (Vector3.Distance(_playerIndicator.Item1.position, info.transform.position) >= 9.9f)
             {
                 // Adjust
-                indicator.Item2.indicator.transform.position = _playerIndicator.Item2.position + (look * 9.9f);
+                info.indicator.indicator.transform.position = _playerIndicator.Item2.position + (look * 9.9f);
             }
             else
             {
-                indicator.Item2.indicator.transform.position = new Vector3(indicator.Item1.position.x, 50f, indicator.Item1.position.z);
+                info.indicator.indicator.transform.position = new Vector3(info.transform.position.x, 50f, info.transform.position.z);
             }
 
             // 플레이어의 Look
             Vector3 playerLook = _playerTransform.transform.forward.normalized;
 
-            if (indicator.Item2.isAlwaysShow)
+            if (info.indicator.isAlwaysShow)
             {
-                if (!indicator.Item2.gameObject.activeSelf)
+                if (!info.indicator.gameObject.activeSelf)
                 {
-                    indicator.Item2.gameObject.SetActive(true);
+                    info.indicator.gameObject.SetActive(true);
                 }
             }
             else
@@ -249,16 +246,16 @@ public class UI_Minimap : UI_Base
                 // 플레이어 시야각에만 그려지도록 하는 부분
                 if (Vector3.Dot(look, playerLook) >= 0.7f)
                 {
-                    if (!indicator.Item2.gameObject.activeSelf)
+                    if (!info.indicator.gameObject.activeSelf)
                     {
-                        indicator.Item2.gameObject.SetActive(true);
+                        info.indicator.gameObject.SetActive(true);
                     }
                 }
                 else
                 {
-                    if (indicator.Item2.gameObject.activeSelf)
+                    if (info.indicator.gameObject.activeSelf)
                     {
-                        indicator.Item2.gameObject.SetActive(false);
+                        info.indicator.gameObject.SetActive(false);
                     }
                 }
             }
@@ -266,7 +263,22 @@ public class UI_Minimap : UI_Base
     }
     #endregion
 }
+public struct MapIndicatorInfo
+{
+    public Transform transform;
+    public MinimapIndicator indicator;
 
+    public MapIndicatorInfo(Transform transform, MinimapIndicator indicator)
+    {
+        this.transform = transform;
+        this.indicator = indicator;
+    }
+}
+public struct DoubleTransform
+{
+    public Transform Item1;
+    public Transform Item2;
+}
 public enum MinimapIconType
 {
     My_Player,

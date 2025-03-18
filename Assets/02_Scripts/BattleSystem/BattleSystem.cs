@@ -11,7 +11,7 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
 {
     public static BattleSystem Instance { get; private set; } = null;
 
-    int timeLimit =120;
+    int timeLimit = 300;
 
     int spawnedPlayerCount = 0;
 
@@ -41,7 +41,7 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     }
     protected virtual IEnumerator BattleSettingCoroutine()
     {
-        Debug.Log("배틀 셋팅 코루틴 함수");
+        //Debug.Log("배틀 셋팅 코루틴 함수");
 
         // 플레이어 스폰
         yield return PlayerSpawnManager.Instance.SpawnCoroutine();
@@ -50,11 +50,11 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
         // 모든 플레이어가 스폰되어 준비가 될 때까지 대기
         while (PhotonNetwork.CurrentRoom.PlayerCount != spawnedPlayerCount)
         {
-            Debug.Log("스폰 대기, 현재 스폰 수 : " + spawnedPlayerCount.ToString() + ", 대기 중 플레이어 수 : " + PhotonNetwork.CurrentRoom.PlayerCount.ToString());
+            //Debug.Log("스폰 대기, 현재 스폰 수 : " + spawnedPlayerCount.ToString() + ", 대기 중 플레이어 수 : " + PhotonNetwork.CurrentRoom.PlayerCount.ToString());
             yield return new WaitForSeconds(0.5f);
         }
 
-        Debug.Log("플레이어 스폰 완료");
+        //Debug.Log("플레이어 스폰 완료");
 
         // 화면 활성화 함
         ScreenTransition.FadeIn();
@@ -86,7 +86,7 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     public virtual void RegisterKill(int killerActorNumber, int victimActorNumber)
     {
         // 킬로그 발생
-        KillLogPanelController.Instance.AddKillLog(killerActorNumber, victimActorNumber);
+        //KillLogPanelController.Instance.AddKillLog(killerActorNumber, victimActorNumber);
 
         if (PhotonNetwork.LocalPlayer.ActorNumber == killerActorNumber)
         {
@@ -167,13 +167,13 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     }
     private void BattleStart()
     {
-        Debug.Log("배틀 스타트 함수 호출");
+        //Debug.Log("배틀 스타트 함수 호출");
 
         StartCoroutine(BattleCoroutine());
     }
     public static void SpawnCheck()
     {
-        Debug.Log("SpawnCheck Static 함수 호출");
+        //Debug.Log("SpawnCheck Static 함수 호출");
 
         Instance.photonView.RPC("SpawnCheckRPC", RpcTarget.All);
     }
@@ -181,11 +181,11 @@ public abstract class BattleSystem : MonoBehaviourPun, IOnEventCallback
     [PunRPC]
     public void SpawnCheckRPC()
     {
-        Debug.Log("SpawnCheckRPC RPC 함수 호출");
+        //Debug.Log("SpawnCheckRPC RPC 함수 호출");
 
         spawnedPlayerCount++;
 
-        Debug.Log("currentCount : " + spawnedPlayerCount);
+        //Debug.Log("currentCount : " + spawnedPlayerCount);
     }
     public static void FirstItemSelect()
     {

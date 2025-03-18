@@ -47,7 +47,7 @@ public class TitleManager : MonoBehaviour
 
     public void OnGameOverButtonClick()
     {
-        //Application.Quit();
-        UnityEditor.EditorApplication.isPlaying = false; 
+        Application.Quit();
+        //UnityEditor.EditorApplication.isPlaying = false; 
     }
 }

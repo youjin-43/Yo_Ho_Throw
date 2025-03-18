@@ -295,7 +295,7 @@ public class InGameUIManager : MonoBehaviour
     {
         ScoreBoard?.ShowScoreboardUI(isVisible);
 
-        Crosshair.gameObject.SetActive(!isVisible);
+        //Crosshair.gameObject.SetActive(!isVisible);
     }
 
     /// <summary>
@@ -413,7 +413,7 @@ public class InGameUIManager : MonoBehaviour
             Menu.ToggleUI();
         }
 
-        Crosshair.gameObject.SetActive(!Crosshair.gameObject.activeSelf);
+        //Crosshair.gameObject.SetActive(!Crosshair.gameObject.activeSelf);
 
         ToggleCursor(IsPopupUIOpen());
     }
@@ -434,7 +434,7 @@ public class InGameUIManager : MonoBehaviour
             Menu.ToggleUI();
         }
 
-        Setting.ToggleUI();
+        Setting.GetComponent<SettingManager>().ToggleSettingPanel();
 
         ToggleCursor(IsPopupUIOpen());
     }
@@ -473,6 +473,8 @@ public class InGameUIManager : MonoBehaviour
     /// <param name="coin">소지하고 있는 금화</param>
     public IEnumerator Death(float respawnTime, int coin = 0)
     {
+        Debug.Log("현재 코인 개수 확인 ::: " + coin.ToString());
+
         ToggleCrosshair(false);
         ToggleCursor(true);
         ItemStore.gameObject.SetActive(true);

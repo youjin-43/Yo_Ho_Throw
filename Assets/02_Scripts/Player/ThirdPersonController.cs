@@ -179,12 +179,11 @@ namespace StarterAssets
                 Move();
 
             }
-        }
 
-        public void FixedUpdate()
-        {
             CameraRotation();
         }
+
+        
 
         private void AssignAnimationIDs()
         {
@@ -211,13 +210,15 @@ namespace StarterAssets
 
         private void CameraRotation()
         {
+            if (GameManager.Instance.isPlayerStop) return;
+
             float horizontal = Input.GetAxis("Mouse X");
             float vertical = Input.GetAxis("Mouse Y");
 
             Vector2 look = new Vector2(horizontal, -vertical);
 
             // if there is an input and camera position is not fixed
-            if (look.sqrMagnitude >= _threshold && !LockCameraPosition)
+            if (!LockCameraPosition)
             {
                 _cinemachineTargetYaw += look.x * mouseSpeed;
                 _cinemachineTargetPitch += look.y * mouseSpeed;
@@ -438,16 +439,7 @@ namespace StarterAssets
 
             if (FootstepAudioClips.Length > 0)
             {
-
-                var index = Random.Range(0, FootstepAudioClips.Length);
-                AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
-                if (animationEvent.animatorClipInfo.weight == 0.5f)
-                {
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume/2);
-                }
-                else
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
-
+                AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerWalk, transform.TransformPoint(_controller.center));
             }
         
         }
