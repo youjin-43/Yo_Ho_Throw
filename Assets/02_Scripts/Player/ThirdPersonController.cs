@@ -177,12 +177,11 @@ namespace StarterAssets
                 Move();
 
             }
-        }
 
-        public void FixedUpdate()
-        {
             CameraRotation();
         }
+
+        
 
         private void AssignAnimationIDs()
         {
@@ -209,6 +208,8 @@ namespace StarterAssets
 
         private void CameraRotation()
         {
+            if (GameManager.Instance.isPlayerStop) return;
+
             float horizontal = Input.GetAxis("Mouse X");
             float vertical = Input.GetAxis("Mouse Y");
 

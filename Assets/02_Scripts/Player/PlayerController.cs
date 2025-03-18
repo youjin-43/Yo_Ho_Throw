@@ -107,16 +107,7 @@ public class PlayerController : ThirdPersonController
         }
     }
 
-    void FixedUpdate()
-    {
-        if (online && !photonView.IsMine) return;
-
-        if (isGameEnd) return;
-
-        if (GameManager.Instance.isPlayerStop) return;
-
-        base.FixedUpdate();
-    }
+    
 
     public override void OnEnable()
     {

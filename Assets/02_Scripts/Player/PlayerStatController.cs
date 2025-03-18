@@ -314,7 +314,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         if (!photonView.IsMine) return;
         //콜라이더 오프셋
 
-        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerRevive, transform.position);
+        
 
         playerHp = MAX_HP;
         InGameUIManager.Instance.StatusIndicator.SetHealth(playerHp);
@@ -338,6 +338,19 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
             isSettingColor = false;
         }
         CursorController.Instance.CursorDisable();
+    }
+
+    
+    public void InitPlayerSound()
+    {
+        if (@photonView.IsMine) return;
+        
+        photonView.RPC("InitPlayerSound_RPC", RpcTarget.All);
+    }
+    [PunRPC]
+    public void InitPlayerSound_RPC()
+    {
+        AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.PlayerRevive, transform.position);
     }
 
     [PunRPC]
