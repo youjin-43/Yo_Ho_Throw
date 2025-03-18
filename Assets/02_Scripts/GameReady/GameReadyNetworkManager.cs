@@ -78,6 +78,7 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
 
     public void GameStart()
     {
+        GameManager.Instance.isPlayerStop = false;
         OnGameStart?.Invoke(); // 게임 시작 이벤트 발생
 
         //룸 닫고
