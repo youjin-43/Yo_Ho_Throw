@@ -34,7 +34,6 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     float radiusDeadOffset = 0.28f;
     float heightDeadOffset = 1.57f;
 
-    private float lastDamageTime = 0f; // 마지막으로 데미지를 받은 시간
     //private float lastDamageTime = 0f; // 마지막으로 데미지를 받은 시간
     //private float healDelay = 5f; // 체력 회복 시작까지의 지연 시간
     //private float healInterval = 1f; // 체력 회복 간격
@@ -99,16 +98,6 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-            }
-        }
-    }
-    [PunRPC]
-    public void StartHeal_RPC()
-    {
-        if (healingCoroutine == null) 
-        {
-            healingCoroutine = StartCoroutine(HealOverTime());
-        }
 
     //[PunRPC]
     //public void StartHeal_RPC()
