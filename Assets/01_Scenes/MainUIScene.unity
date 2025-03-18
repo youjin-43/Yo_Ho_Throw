@@ -2334,7 +2334,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c0d8fa656d20fb4da57bca2e1d9419a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmClip: {fileID: 8300000, guid: 5374dfab708cd2e46ab1e9aded3b996d, type: 3}
+  bgmClip: {fileID: 8300000, guid: aea45ae220a2e7841bfcbc2c0799409d, type: 3}
   bgmVolume: 0.2
   sfxClips:
   - {fileID: 8300000, guid: 9d0113dd16699ce4ea3c58dd422fdc1f, type: 3}
