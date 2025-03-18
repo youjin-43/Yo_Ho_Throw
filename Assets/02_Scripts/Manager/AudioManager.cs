@@ -24,7 +24,7 @@ public class AudioManager : MonoBehaviourPun
 
         PlayerDead, PlayerKill, PlayerHit, PlayerAttack, PlayerMelee, PlayerWalk, PlayerJump, PlayerDash, PlayerRevive,
 
-        Knife, Block, Bounty, CountDown
+        Knife, Block, Bounty, Countdown_Low, Countdown_High
     }
 
     void Awake()

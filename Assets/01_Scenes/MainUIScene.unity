@@ -2343,7 +2343,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1454ceff822cf8142a638f7da1b08d26, type: 3}
   - {fileID: 8300000, guid: 37ca1055e23afe4408226342d60582f7, type: 3}
   - {fileID: 8300000, guid: 8e2e2c5ab6483fe46ab432a71bf0775f, type: 3}
-  - {fileID: 8300000, guid: 19e2b436d403fcf469e705d076184a15, type: 3}
+  - {fileID: 8300000, guid: e92296f9aa1d15c4ea61db084c30f98f, type: 3}
+  - {fileID: 8300000, guid: 105090702a801e84984cf7785f83f7c9, type: 3}
   sfxVolume: 1
   channels: 0
 --- !u!4 &2103043659
