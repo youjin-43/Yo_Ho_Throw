@@ -190,6 +190,7 @@ public class SettingManager : MonoBehaviour
 
 
         gameObject.SetActive(false); // 패널 비활성화
+        GameManager.Instance.isPlayerStop = false;
     }
 
     public void OnCloseButtonClick()
