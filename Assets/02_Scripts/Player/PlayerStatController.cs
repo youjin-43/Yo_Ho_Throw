@@ -225,7 +225,10 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         
         //캐릭터 컨트롤러 오프셋 크기
         CharacterController cc = transform.GetComponent<CharacterController>();
-        if (cc == null) Debug.Log("aa");
+        
+        cc.enabled=false;
+        if (cc.enabled == false)
+            Debug.Log("cc꺼짐");
         
 
         CursorController.Instance.CursorEnable();
@@ -299,7 +302,12 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     [PunRPC]
     public void InitPlayer()
     {
+        CharacterController cc = transform.GetComponent<CharacterController>();
+        cc.enabled = true;
+        if (cc.enabled == true)
+            Debug.Log("cc켜짐");
         //TODO 석진 플레이어 다시 살아나는 소리
+
         if (!photonView.IsMine) transform.gameObject.layer = LayerMask.NameToLayer("Ground");
         anim.Rebind();
         anim.Update(0f);
