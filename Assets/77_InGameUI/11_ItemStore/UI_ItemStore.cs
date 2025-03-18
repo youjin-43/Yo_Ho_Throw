@@ -61,7 +61,7 @@ public class UI_ItemStore : UI_Base
         // 맨 처음은 우선 구매를 제한함
         PurchaceDeActivation();
 
-        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
     #endregion
 
