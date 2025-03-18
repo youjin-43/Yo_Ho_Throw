@@ -27,7 +27,7 @@ public class SettingManager : MonoBehaviour
     [SerializeField] ButtonSound buttonSound;
 
     [SerializeField] PlayerController playerController;
-    [SerializeField] static float sensitivity = 3f; // 감도
+    [SerializeField] static float sensitivity = 10f; // 감도
     float clampedValue;
 
     private void Awake()
@@ -161,7 +161,7 @@ public class SettingManager : MonoBehaviour
     private void OnSensitivitySliderChanged(float value)
     {
         // 감도 값을 0.1에서 10 사이로 제한
-        clampedValue = Mathf.Clamp(value, 0.1f, 10f);
+        clampedValue = Mathf.Clamp(value, 0.1f, 20f);
 
         // 플레이어 마우스 감도 설정 
         //playerController.SetMouseSensitivity(clampedValue);
@@ -183,7 +183,7 @@ public class SettingManager : MonoBehaviour
         sensitivity = clampedValue;
         Debug.Log("Settings Saved");
 
-        float clamp = Mathf.Clamp(sensitivitySlider.value, 0.1f, 10f);
+        float clamp = Mathf.Clamp(sensitivitySlider.value, 0.1f, 20f);
 
 
         GameManager.Instance.StoreSensitivity(clamp);
