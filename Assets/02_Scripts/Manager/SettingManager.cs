@@ -231,17 +231,17 @@ public class SettingManager : MonoBehaviour
 
         //Debug.LogError("BgmValue : " + GameManager.Instance.GetBgmValue().ToString());
         //Debug.LogError("SfxValue : " + GameManager.Instance.GetSfxValue().ToString());
-        masterVolumeSlider.value = GameManager.Instance.GetBgmValue();
-        effectVolumeSlider.value = GameManager.Instance.GetSfxValue();
-        masterVolumeToggle.isOn = GameManager.Instance.GetBgmCheckState();
-        effectVolumeToggle.isOn = GameManager.Instance.GetSfxCheckState();
+       
         //masterVolumeSlider.interactable = GameManager.Instance.GetBgmCheckState();
         //effectVolumeSlider.interactable = GameManager.Instance.GetSfxCheckState();
     }
 
     public void OnEnable()
     {
-        
+        masterVolumeSlider.value = GameManager.Instance.GetBgmValue();
+        effectVolumeSlider.value = GameManager.Instance.GetSfxValue();
+        masterVolumeToggle.isOn = GameManager.Instance.GetBgmCheckState();
+        effectVolumeToggle.isOn = GameManager.Instance.GetSfxCheckState();
     }
 
     public bool IsOpened()
