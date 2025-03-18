@@ -297,6 +297,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.InRoom)
         {
             //Debug.Log("현재 포톤 룸에서 나가는 중...");
+            GameManager.Instance.isPlayerStop = false;
             PhotonNetwork.LeaveRoom(); // 현재 방 나가기 -> OnLeftRoom 호출됨 
         }
         else
