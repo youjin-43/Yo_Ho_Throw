@@ -185,6 +185,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             }
         }
 
+        CursorController.Instance.CursorDisable();
+
         // 중복이 없으면 정상적으로 방 생성
         //Debug.Log(
         //    $"방 생성 요청 - 이름: {roomName}, " +

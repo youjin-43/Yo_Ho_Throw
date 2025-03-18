@@ -291,7 +291,6 @@ public class TitleUIManager : MonoBehaviour
             PhotonRoomProperties.password.ToString()
             //,PhotonRoomProperties.mode.ToString()
         };
-        CursorController.Instance.CursorDisable();
 
         // 방 생성 요청
         PhotonManager.Instance.CreateRoom(roomNameInput.text, options);
