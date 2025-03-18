@@ -86,15 +86,11 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     public virtual void OnEnable()
     {
         Debug.Log("AddCallbackTarget");
-        Debug.Log("AddCallbackTarget");
-        Debug.Log("AddCallbackTarget");
 
         PhotonNetwork.AddCallbackTarget(this);
     }
     public void OnDisable()
     {
-        Debug.Log("RemoveCallbackTarget");
-        Debug.Log("RemoveCallbackTarget");
         Debug.Log("RemoveCallbackTarget");
 
         PhotonNetwork.RemoveCallbackTarget(this);

@@ -30,7 +30,7 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("[GameReadyNetworkManager] OnJoinedRoom 실행됨 ");
+        //Debug.Log("[GameReadyNetworkManager] OnJoinedRoom 실행됨 ");
         // 마스터 클라이언트는 여기 실행이 안됨 
         //OnJoinedRoom()은 방에 처음 입장할 때만 실행되는 콜백 함수 
         //마스터 클라이언트는 PhotonNetwork.LoadLevel을 통해 씬을 이동하지만, 이미 방에 들어와 있는 상태이므로 OnJoinedRoom()이 다시 호출되지 않음 .
@@ -41,7 +41,7 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
     private void SpawnPlayer()
     {
         player = PhotonNetwork.Instantiate(playerPrefab.name, GetRandomSpawnPosition(), Quaternion.identity);
-        Debug.Log($"{PhotonNetwork.NickName} 플레이어를 스폰했습니다");
+        //Debug.Log($"{PhotonNetwork.NickName} 플레이어를 스폰했습니다");
 
         // 카메라에 루트 셋팅 
         camaraRoot = player.GetComponent<PlayerController>().CinemachineCameraTarget.transform;
@@ -84,8 +84,8 @@ public class GameReadyNetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
 
-        Debug.Log("현재 방 오픈 여부: " + PhotonNetwork.CurrentRoom.IsOpen);
-        Debug.Log("게임 시작!");
+        //Debug.Log("현재 방 오픈 여부: " + PhotonNetwork.CurrentRoom.IsOpen);
+        //Debug.Log("게임 시작!");
 
         PhotonNetwork.LoadLevel(SceneList.Test_BattleSystem.ToString());
     }
