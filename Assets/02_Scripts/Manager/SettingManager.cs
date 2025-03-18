@@ -49,13 +49,13 @@ public class SettingManager : MonoBehaviour
         sensitivityText.text = sensitivitySlider.value.ToString();
 
         // 저장된 값으로 가져오기
-        masterVolume = AudioManager.Instance.bgmVolume;
-        effectVolume = AudioManager.Instance.sfxVolume;
-        masterVolumeSlider.value = AudioManager.Instance.bgmVolume;
-        effectVolumeSlider.value = AudioManager.Instance.sfxVolume;
-
-        GameManager.Instance.StoreBgmValue(masterVolume);
-        GameManager.Instance.StoreSfxValue(effectVolume);
+        // masterVolume = AudioManager.Instance.GetBgmVolume();
+        // effectVolume = AudioManager.Instance.GetSfxVolume();
+        // masterVolumeSlider.value = AudioManager.Instance.GetBgmVolume();
+        // effectVolumeSlider.value = AudioManager.Instance.GetSfxVolume();
+        //
+        // GameManager.Instance.StoreBgmValue(masterVolume);
+        // GameManager.Instance.StoreSfxValue(effectVolume);
 
         sensitivitySlider.value = GameManager.Instance.GetSensitivity();
 
@@ -92,7 +92,7 @@ public class SettingManager : MonoBehaviour
     {
         GameManager.Instance.StoreBgmCheckState(isOn);
 
-        masterVolumeSlider.interactable = isOn; // 슬라이더 활성화/비활성화
+        //masterVolumeSlider.interactable = isOn; // 슬라이더 활성화/비활성화
         if (!isOn)
         {
             //masterVolumeSlider.value = 0; // 체크 해제 시 0으로 설정
@@ -102,7 +102,7 @@ public class SettingManager : MonoBehaviour
         else
         {
             //masterVolumeSlider.value = masterVolume; // 체크 시 현재 볼륨으로 설정
-            AudioManager.Instance.SetBgmVolume(masterVolume); // BGM 볼륨 0으로 설정
+            AudioManager.Instance.SetBgmVolume(masterVolumeSlider.value); // BGM 볼륨 0으로 설정
         }
 
         GameManager.Instance.StoreBgmValue(masterVolume);
@@ -112,7 +112,7 @@ public class SettingManager : MonoBehaviour
     {
         GameManager.Instance.StoreSfxCheckState(isOn);
 
-        effectVolumeSlider.interactable = isOn; // 슬라이더 활성화/비활성화
+        //effectVolumeSlider.interactable = isOn; // 슬라이더 활성화/비활성화
         if (!isOn)
         {
             //effectVolumeSlider.value = 0; // 체크 해제 시 0으로 설정
@@ -122,7 +122,7 @@ public class SettingManager : MonoBehaviour
         else
         {
             //effectVolumeSlider.value = effectVolume; // 체크 시 현재 볼륨으로 설정
-            AudioManager.Instance.SetSfxVolume(effectVolume); // BGM 볼륨 0으로 설정
+            AudioManager.Instance.SetSfxVolume(effectVolumeSlider.value); // BGM 볼륨 0으로 설정
         }
 
         GameManager.Instance.StoreSfxValue(effectVolume);
@@ -132,12 +132,30 @@ public class SettingManager : MonoBehaviour
     {
         AudioManager.Instance.SetBgmVolume(value); // 슬라이더 값으로 변화
         GameManager.Instance.StoreBgmValue(value);
+
+        if(value <= float.Epsilon)
+        {
+            masterVolumeToggle.isOn = false;
+        }
+        else
+        {
+            masterVolumeToggle.isOn = true;
+        }
     }
 
     private void OnEffectVolumeSliderChanged(float value)
     {
         AudioManager.Instance.SetSfxVolume(value); // 슬라이더 값으로 변화
         GameManager.Instance.StoreSfxValue(value);
+
+        if (value <= float.Epsilon)
+        {
+            effectVolumeToggle.isOn = false;
+        }
+        else
+        {
+            effectVolumeToggle.isOn = true;
+        }
     }
 
     private void OnSensitivitySliderChanged(float value)
@@ -209,16 +227,20 @@ public class SettingManager : MonoBehaviour
             CursorController.Instance.CursorDisable();
             GameManager.Instance.PlayerStop(false);
         }
+
+        //Debug.LogError("BgmValue : " + GameManager.Instance.GetBgmValue().ToString());
+        //Debug.LogError("SfxValue : " + GameManager.Instance.GetSfxValue().ToString());
+        masterVolumeSlider.value = GameManager.Instance.GetBgmValue();
+        effectVolumeSlider.value = GameManager.Instance.GetSfxValue();
+        masterVolumeToggle.isOn = GameManager.Instance.GetBgmCheckState();
+        effectVolumeToggle.isOn = GameManager.Instance.GetSfxCheckState();
+        //masterVolumeSlider.interactable = GameManager.Instance.GetBgmCheckState();
+        //effectVolumeSlider.interactable = GameManager.Instance.GetSfxCheckState();
     }
 
     public void OnEnable()
     {
-        masterVolumeToggle.isOn = GameManager.Instance.GetBgmCheckState();
-        effectVolumeToggle.isOn = GameManager.Instance.GetSfxCheckState();
-        masterVolumeSlider.value = GameManager.Instance.GetBgmValue();
-        effectVolumeSlider.value = GameManager.Instance.GetSfxValue();
-        masterVolumeSlider.interactable = GameManager.Instance.GetBgmCheckState();
-        effectVolumeSlider.interactable = GameManager.Instance.GetSfxCheckState();
+        
     }
 
     public bool IsOpened()
