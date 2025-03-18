@@ -306,6 +306,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8691899595855282388, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -70.16699
+      objectReference: {fileID: 0}
     - target: {fileID: 8966115370912088653, guid: 326f31eaa6be7da4287639ca74c5e6b4, type: 3}
       propertyPath: titlePage
       value: 
@@ -766,7 +770,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 529181753175106850, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 529181753175106850, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -882,7 +886,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2364454582879356380, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 170
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2364454582879356380, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -914,11 +918,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2623181100325190157, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 192.13
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2623181100325190157, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5104103
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5493093148633072755, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: buttonSound
@@ -946,11 +950,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6860584860268112138, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 192.13
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6860584860268112138, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5104103
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432206374980111163, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_AnchorMax.y
@@ -962,11 +966,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432206374980111163, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 250
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432206374980111163, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432206374980111163, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -986,11 +990,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8814197137340769835, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8814197137340769835, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8814197137340769835, guid: b0716f695c1d16f4da1eafc8308a0358, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2339,7 +2343,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1454ceff822cf8142a638f7da1b08d26, type: 3}
   - {fileID: 8300000, guid: 37ca1055e23afe4408226342d60582f7, type: 3}
   - {fileID: 8300000, guid: 8e2e2c5ab6483fe46ab432a71bf0775f, type: 3}
-  - {fileID: 8300000, guid: 19e2b436d403fcf469e705d076184a15, type: 3}
+  - {fileID: 8300000, guid: e92296f9aa1d15c4ea61db084c30f98f, type: 3}
+  - {fileID: 8300000, guid: 105090702a801e84984cf7785f83f7c9, type: 3}
   sfxVolume: 1
   channels: 0
 --- !u!4 &2103043659
