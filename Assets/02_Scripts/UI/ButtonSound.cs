@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ButtonSound : MonoBehaviour
@@ -6,6 +7,7 @@ public class ButtonSound : MonoBehaviour
     // 버튼 클릭 시 이펙트 소리
     //public AudioClip clickSound; // 클릭 소리로 사용할 AudioClip
     //public AudioClip toggleSound; // 토글 소리로 사용할 AudioClip
+    private UnityAction playButtonSoundAction;
 
     void Start()
     {
@@ -25,7 +27,12 @@ public class ButtonSound : MonoBehaviour
         {
             if (button != null) 
             {
-                button.onClick.RemoveAllListeners(); // 기존에 달려있던 리스너 제거
+                // 기존의 리스너가 있는지 확인하고 제거
+                if (playButtonSoundAction == null)
+                {
+                    playButtonSoundAction = PlayButtonSound;
+                }
+                button.onClick.RemoveListener(playButtonSoundAction); // 특정 리스너 제거
                 button.onClick.AddListener(PlayButtonSound); // 리스너 추가
             }
         }
