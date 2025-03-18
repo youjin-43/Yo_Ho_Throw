@@ -295,7 +295,7 @@ public class InGameUIManager : MonoBehaviour
     {
         ScoreBoard?.ShowScoreboardUI(isVisible);
 
-        Crosshair.gameObject.SetActive(!isVisible);
+        //Crosshair.gameObject.SetActive(!isVisible);
     }
 
     /// <summary>
@@ -413,7 +413,7 @@ public class InGameUIManager : MonoBehaviour
             Menu.ToggleUI();
         }
 
-        Crosshair.gameObject.SetActive(!Crosshair.gameObject.activeSelf);
+        //Crosshair.gameObject.SetActive(!Crosshair.gameObject.activeSelf);
 
         ToggleCursor(IsPopupUIOpen());
     }
@@ -434,7 +434,7 @@ public class InGameUIManager : MonoBehaviour
             Menu.ToggleUI();
         }
 
-        Setting.ToggleUI();
+        Setting.GetComponent<SettingManager>().ToggleSettingPanel();
 
         ToggleCursor(IsPopupUIOpen());
     }

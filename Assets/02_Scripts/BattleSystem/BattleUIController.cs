@@ -296,13 +296,16 @@ public class BattleUIController : MonoBehaviourPun, IOnEventCallback
         switch (count)
         {
             case 2: readyTexts.SetActive(true);
+                AudioManager.Instance.PlaySfx(AudioManager.Sfx.Countdown_Low);
                 goTexts.SetActive(false); break;
 
             case 1:
+                AudioManager.Instance.PlaySfx(AudioManager.Sfx.Countdown_Low);
                 readyTexts.SetActive(false);
                 goTexts.SetActive(true); break;
 
             case 0:
+                AudioManager.Instance.PlaySfx(AudioManager.Sfx.Countdown_High);
                 readyTexts.SetActive(false);
                 goTexts.SetActive(false); break;
 
