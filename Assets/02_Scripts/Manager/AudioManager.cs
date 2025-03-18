@@ -29,7 +29,7 @@ public class AudioManager : MonoBehaviourPun
 
     void Awake()
     {
-        channels = 3;
+        channels = 20;
         Init();
 
         if (Instance == null)
