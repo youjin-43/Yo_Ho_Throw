@@ -338,7 +338,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     
     public void InitPlayerSound()
     {
-        if (@photonView.IsMine) return;
+        if (!photonView.IsMine) return;
         
         photonView.RPC("InitPlayerSound_RPC", RpcTarget.All);
     }
