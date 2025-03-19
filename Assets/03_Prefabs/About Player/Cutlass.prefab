@@ -399,7 +399,7 @@ MonoBehaviour:
   explosionCutlass: {fileID: 0}
   rotateSpeed: 1300
   dir: {x: 1, y: 0, z: 0}
-  gravityTime: 1
+  gravityTime: 0.2
   attackerActorNr: -1
 --- !u!1 &8430071279321725386
 GameObject:

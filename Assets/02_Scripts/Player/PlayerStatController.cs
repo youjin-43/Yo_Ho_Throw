@@ -14,6 +14,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     [Header("Player Info")]
     public int playerHp = MAX_HP;
     public int bulletCount = MAX_BULLET_COUNT;
+    public float throwSpeed = 1f;
     int coin = 0;
     public bool isAlive = true;
     public bool isInLobby = true;
@@ -54,7 +55,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
                     InGameUIManager.Instance.SkillIndicator.RemoveDagger(bulletCount);
 
-                    InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, 1f);
+                    InGameUIManager.Instance.SkillIndicator.StartCooldownEffect(1, throwSpeed);
 
                 }
                 else if (bulletCount < value)
@@ -337,7 +338,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     
     public void InitPlayerSound()
     {
-        if (@photonView.IsMine) return;
+        if (!photonView.IsMine) return;
         
         photonView.RPC("InitPlayerSound_RPC", RpcTarget.All);
     }
