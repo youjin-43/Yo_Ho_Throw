@@ -98,6 +98,7 @@ MonoBehaviour:
   - EditHostCoinRPC_2
   - InitPlayerSound_RPC
   - AddKillLog_ScoreVersion
+  - BountyKillReward
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
