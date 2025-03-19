@@ -219,7 +219,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         else
         {
             //Debug.Log("비밀번호가 설정되지 않은 방입니다. 바로 입장을 시도합니다");
-            CursorController.Instance.CursorDisable();
             PhotonNetwork.JoinRoom(room.Name);
         }
     }
@@ -233,6 +232,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     // 룸에 입장한 후 호출되는 콜백 함수
     public override void OnJoinedRoom()
     {
+        CursorController.Instance.CursorDisable();
         //UpdatePlayerSceneProperty(); // 클라이언트 마다 현재 어디 씬에 있는지 저장
 
         //내가 방장인지 확인
@@ -256,6 +256,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         //{
         //    Debug.Log($"{player.Value.NickName}, {player.Value.ActorNumber}"); //ActorNumber:몇번째로 들어왔냐 - 방장, 클라이언트 모두 실행됨 
         //}
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        base.OnJoinRoomFailed(returnCode, message);
+
+        CursorController.Instance.CursorEnable();
     }
 
     #endregion
