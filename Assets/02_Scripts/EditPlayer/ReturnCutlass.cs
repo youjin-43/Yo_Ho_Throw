@@ -27,6 +27,10 @@ public class ReturnCutlass : MonoBehaviour
         if (other.gameObject.GetInstanceID() ==
             transform.parent.gameObject.GetInstanceID()) return;
 
+
+        Vector3 hitPoint = other.ClosestPoint(transform.position);
+        EffectManager.Instance.Play(hitPoint, (hitPoint - transform.position).normalized, EffectType.ThrowKnifeHit);
+
         explosionCutlass?.ExplosionVFX();
         explosionCutlass?.Explosion();
 

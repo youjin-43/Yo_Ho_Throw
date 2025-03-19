@@ -344,7 +344,8 @@ PrefabInstance:
       propertyPath: ColorModule.gradient.maxGradient.key4.r
       value: 0.64482725
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6027392056908418160, guid: ea664eb6e5374444592347742b107aec, type: 3}
     m_RemovedGameObjects:
     - {fileID: 349721579289506599, guid: ea664eb6e5374444592347742b107aec, type: 3}
     m_AddedGameObjects: []

@@ -18,6 +18,23 @@ public class EffectManager : MonoBehaviour
     {
         if (effectDictionary.ContainsKey(effectType))
         {
+            effectDictionary[effectType].transform.rotation = Quaternion.identity;
+
+            effectDictionary[effectType].transform.position = pos;
+
+            effectDictionary[effectType].GetComponent<ParticleSystem>().Play();
+        }
+        else
+        {
+            Debug.LogWarning("재생하려는 이펙트가 설정되어 있지 않음 : " + effectType.ToString());
+        }
+    }
+    public void Play(Vector3 pos, Vector3 eulerAngle, EffectType effectType)
+    {
+        if (effectDictionary.ContainsKey(effectType))
+        {
+            effectDictionary[effectType].transform.rotation = Quaternion.Euler(eulerAngle);
+
             effectDictionary[effectType].transform.position = pos;
 
             effectDictionary[effectType].GetComponent<ParticleSystem>().Play();
@@ -45,5 +62,7 @@ public struct EffectKeyValuePair
 }
 public enum EffectType
 {
-    CutlassExplosion
+    CutlassExplosion,
+    BountyTargetDeath,
+    ThrowKnifeHit,
 }

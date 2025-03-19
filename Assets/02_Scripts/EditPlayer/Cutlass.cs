@@ -61,7 +61,16 @@ public class Cutlass : MonoBehaviour
 
             // TODO 찬규 : 공격 클라이언트를 누구 기준으로 할지
 
-            explosionCutlass?.ExplosionVFX();
+            if (explosionCutlass == null)
+            {
+                Vector3 hitPoint = other.ClosestPoint(transform.position);
+
+                EffectManager.Instance.Play(hitPoint, (hitPoint - transform.position).normalized, EffectType.ThrowKnifeHit);
+            }
+            else
+            {
+                explosionCutlass.ExplosionVFX();
+            }
 
             // 1번 호스트가 아닐 경우 제외
             if (!PhotonNetwork.IsMasterClient) return;

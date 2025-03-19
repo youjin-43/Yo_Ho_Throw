@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class MeleeAttackOnTrigger : MonoBehaviour
 {
+    [SerializeField] Transform centerPosition;
+
     const int MELEE_ATTACK_DAMAGE = 1;
 
     PhotonView photonView;
@@ -64,10 +66,17 @@ public class MeleeAttackOnTrigger : MonoBehaviour
             // 자신에 대한 공격일 경우 제외
             if (photonView.OwnerActorNr == playerPhotonView.OwnerActorNr) return;
 
-
             // TODO 찬규 : 플레이어가 칼에 부딪혔을 때 낼 효과 추가 부분
             // TODO 찬규 : 공격 클라이언트를 누구 기준으로 할지
 
+            Vector3 hitPoint = other.ClosestPoint(centerPosition.position);
+            Vector3 hitDirection = (hitPoint - transform.position).normalized;
+
+            // Y축 회전을 90도 추가
+            Quaternion rotation = Quaternion.Euler(0, 90, 0);
+            Vector3 adjustedDirection = rotation * hitDirection;
+
+            EffectManager.Instance.Play(hitPoint, adjustedDirection, EffectType.ThrowKnifeHit);
 
             // 1번 호스트가 아닐 경우 제외
             if (!PhotonNetwork.IsMasterClient) return;

@@ -59,10 +59,50 @@ PrefabInstance:
     - target: {fileID: 2150967500386247401, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 0ab14112d95c069419bd90ef39fba9b2, type: 2}
+      objectReference: {fileID: 2100000, guid: 9f106d30428d29141920b6ec13d13ebb, type: 2}
     - target: {fileID: 2150967500386247403, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
       propertyPath: m_Name
       value: CFXR2 Debris Hit (Unlit)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150967500386247406, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150967500386247406, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150967500386247406, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150967500386247406, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150967500386247406, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
+      propertyPath: InitialModule.startSpeed.minScalar
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150967500386247406, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.495283
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150967500386247406, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.90054834
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150967500386247406, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150967500386247406, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150967500386247406, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114687514215894760, guid: 12942baf24d16dd4281ffa4f2c8f5376, type: 3}
