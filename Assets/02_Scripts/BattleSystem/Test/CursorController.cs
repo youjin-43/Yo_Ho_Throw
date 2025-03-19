@@ -5,25 +5,30 @@ public class CursorController : MonoBehaviour
     public static CursorController Instance { get; private set; } = null;
     private void Awake()
     {
-        if (Instance != null) Destroy(gameObject);
-
-        Instance = this;
-
-        DontDestroyOnLoad(gameObject);
-    }
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Instance == null)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject);
         }
-        if (Input.GetKeyDown(KeyCode.O))
+        if (Instance != null)
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            Destroy(gameObject);
         }
     }
+    //void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.P))
+    //    {
+    //        Cursor.lockState = CursorLockMode.None;
+    //        Cursor.visible = true;
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.O))
+    //    {
+    //        Cursor.lockState = CursorLockMode.Locked;
+    //        Cursor.visible = false;
+    //    }
+    //}
     public void CursorEnable()
     {
         Cursor.lockState = CursorLockMode.None;
