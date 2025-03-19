@@ -23,6 +23,7 @@ public class PlayerController : ThirdPersonController
     public bool isAttacking = false;
 
     [Header("Bullet")]
+    
     public float bulletRange = 100f;
     public GameObject bulletPrefab;
     public GameObject explosionBulletPrefab;
@@ -96,7 +97,7 @@ public class PlayerController : ThirdPersonController
         {
             anim.SetTrigger("Shoot");
             
-            StartCoroutine(AttackCoroutine(1f));
+            StartCoroutine(AttackCoroutine(throwSpeed));
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse1)&& BulletCount > 0)
@@ -340,13 +341,16 @@ public class PlayerController : ThirdPersonController
         if (infinityKnifeBuffCoroutine != null) StopCoroutine(infinityKnifeBuffCoroutine);
 
         infinityKnifeBuffCoroutine = StartCoroutine(InfinityKnifeBuffCoroutine());
+        
     }
     IEnumerator InfinityKnifeBuffCoroutine()
     {
         isKnifeConsumed = false;
-
+        throwSpeed = 0.5f;
+        anim.SetFloat("ThrowSpeed", 2f);
         yield return new WaitForSeconds(10f);
-
+        throwSpeed = 1f;
+        anim.SetFloat("ThrowSpeed", 1f);
         isKnifeConsumed = true;
     }
     void ClearOnDeath()
@@ -354,6 +358,11 @@ public class PlayerController : ThirdPersonController
         if (explosionBuffCoroutine != null) StopCoroutine(explosionBuffCoroutine);
 
         if (infinityKnifeBuffCoroutine != null) StopCoroutine(infinityKnifeBuffCoroutine);
+        Debug.Log("clearOndeadth");
+
+        throwSpeed = 1f;
+        anim.SetFloat("ThrowSpeed", 1f);
+        isKnifeConsumed = true;
 
         isExplosionBuff = false;
     }

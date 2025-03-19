@@ -406,6 +406,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHp: 3
   bulletCount: 5
+  throwSpeed: 1
   isAlive: 1
   isInLobby: 1
   dashCoolTime: 5
