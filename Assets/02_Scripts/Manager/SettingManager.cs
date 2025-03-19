@@ -28,7 +28,7 @@ public class SettingManager : MonoBehaviour
     [SerializeField] ButtonSound buttonSound;
 
     [SerializeField] PlayerController playerController;
-    [SerializeField] static float sensitivity = 10f; // 감도
+    //static float sensitivity = 10f;
     float clampedValue;
 
     private void Awake()
@@ -169,8 +169,6 @@ public class SettingManager : MonoBehaviour
 
         GameManager.Instance.StoreSensitivity(clampedValue);
 
-
-
         sensitivityText.text = clampedValue.ToString("F1"); // 소수점 한자리까지 표시
     }
 
@@ -181,7 +179,7 @@ public class SettingManager : MonoBehaviour
         //AudioManager.Instance.sfxVolume = effectVolumeToggle.isOn ? effectVolumeSlider.value : 0;
 
         // 감도 저장
-        sensitivity = clampedValue;
+        //sensitivity = clampedValue;
         Debug.Log("Settings Saved");
 
         float clamp = Mathf.Clamp(sensitivitySlider.value, 0.1f, 20f);
@@ -203,7 +201,7 @@ public class SettingManager : MonoBehaviour
         GameManager.Instance.isPlayerStop = false;
     }
 
-    public void OnCloseButtonClick()
+    /*public void OnCloseButtonClick()
     {
         // 소리 & 키 정상화
         AudioManager.Instance.SetBgmVolume(AudioManager.Instance.bgmVolume);
@@ -219,10 +217,8 @@ public class SettingManager : MonoBehaviour
         //sensitivitySlider.value = sensitivity;
         sensitivitySlider.value = GameManager.Instance.GetSensitivity();
 
-
-
         gameObject.SetActive(false); // 패널 비활성화
-    }
+    }*/
 
     public void ToggleSettingPanel()
     {

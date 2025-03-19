@@ -90,6 +90,7 @@ public class DeathMatchSystem : BattleSystem
         {
             ScoreManager.Instance.SetIsFinalMinute(true);
             PlayerSpawnManager.Instance.SetIsFinalMinute();
+            FinalScreenEffectController.Instance.OnFinalScreen();
         }
 
         if (seconds % 60 == 0 && seconds != 0)  // TODO 찬규 : 1분마다 현상금 이벤트 발생
