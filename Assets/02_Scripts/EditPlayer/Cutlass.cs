@@ -14,7 +14,7 @@ public class Cutlass : MonoBehaviour
 
     [SerializeField] Vector3 dir;
 
-    [HideInInspector] public float gravityTime = 1f;
+    public float gravityTime = 0.25f;
 
     [HideInInspector] public int attackerActorNr = -1;
 

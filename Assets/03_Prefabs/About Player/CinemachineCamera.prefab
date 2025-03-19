@@ -94,7 +94,7 @@ MonoBehaviour:
   ShoulderOffset: {x: 0.35, y: -0.22, z: -2.14}
   VerticalArmLength: 0.03
   CameraSide: 1
-  CameraDistance: 2.13
+  CameraDistance: 1.39
   AvoidObstacles:
     Enabled: 0
     CollisionFilter:
@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e8b78ac948f05a46a6d8339a503172b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LookAtOffset: {x: 0.19, y: 0, z: 0}
+  LookAtOffset: {x: 0.35, y: -0.42, z: 0}
 --- !u!114 &3621821977639191287
 MonoBehaviour:
   m_ObjectHideFlags: 0
