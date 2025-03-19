@@ -77,9 +77,8 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 foreach (var kvp in PhotonNetwork.CurrentRoom.Players)
                 {
                     InGameUIManager.HidePlayerIcon(kvp.Key, targetActorNr, MinimapIconType.Other_Player);
-                    Debug.Log("숨기기 타겟 액터넘버 : " + targetActorNr.ToString());
                 }
-
+                PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.BountyKillReward.ToString(), killerActorNumber);
                 PlayerSpawnManager.Instance.ExecuteRPC(RaiseEventCode.ScheduleBountyTargetDeactivation.ToString(), bountyTargetActorNumber);
 
                 photonView.RPC("SetBountyTargetActorNumber", RpcTarget.Others, -1);
@@ -207,11 +206,15 @@ public class ScoreManager : MonoBehaviourPunCallbacks, IOnEventCallback
     }
     int GetTopScorerActorNumber()
     {
-        var sortedScores = new List<KeyValuePair<int, PlayerScoreEntryData>>(playerScoreEntryDict);
+        var playerList = PhotonNetwork.CurrentRoom.Players.Values.Select(p => p.ActorNumber).ToHashSet();
 
-        sortedScores.Sort((x, y) => y.Value.Score.CompareTo(x.Value.Score));
+        // 현재 방에 있는 플레이어만 필터링
+        var sortedScores = playerScoreEntryDict
+            .Where(entry => playerList.Contains(entry.Key)) // 방에 있는 플레이어만 선택
+            .OrderByDescending(entry => entry.Value.Score) // 점수 순으로 정렬
+            .ToList();
 
-        return sortedScores[0].Key;
+        return sortedScores.Count > 0 ? sortedScores[0].Key : default;
     }
     public void OnEvent(EventData photonEvent)
     {

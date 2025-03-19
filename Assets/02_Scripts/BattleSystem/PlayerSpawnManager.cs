@@ -166,8 +166,6 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     }
     IEnumerator RespawnPlayerCoroutine()
     {
-        Debug.Log("리스폰 코인 개수 : " + coin);
-
         yield return InGameUIManager.Instance.Death(isFinalMinute ? respawnTime * 0.5f : respawnTime, coin);
 
         BattleUIController.Instance.SetIsAlive(true);
@@ -203,6 +201,11 @@ public class PlayerSpawnManager : MonoBehaviourPun, IOnEventCallback
     public void ExecuteRPC(string functionName)
     {
         photonView.RPC(functionName, RpcTarget.All);
+    }
+    [PunRPC]
+    public void BountyKillReward()
+    {
+        currPlayer.GetComponent<PlayerController>().AddCoinIfClient(3);
     }
     [PunRPC]
     public void FullKnife()

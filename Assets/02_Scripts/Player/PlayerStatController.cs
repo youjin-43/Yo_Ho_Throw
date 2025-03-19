@@ -412,13 +412,16 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
             transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = bountyColorMaterial;
         }
     }
+
     [PunRPC]
     public void RespawnColorSetting()
     {
         isSettingColor = true;
-    }
-    Coroutine stealthCoroutine = null;
 
+        EffectManager.Instance.Play(transform.position, EffectType.BountyTargetDeath);
+    }
+
+    Coroutine stealthCoroutine = null;
     [PunRPC]
     public void StealthSetting()
     {
@@ -484,7 +487,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
                 EditHostCoin((object[])photonEvent.CustomData); break;
         }
     }
-    public void AddCoin(int _coin)
+    public void AddCoinIfMaster(int _coin)
     {
         coin += _coin;
 
@@ -494,6 +497,21 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
             new RaiseEventOptions { Receivers = ReceiverGroup.All, CachingOption = EventCaching.DoNotCache },
             SendOptions.SendReliable
             );
+
+        InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
+    }
+    public void AddCoinIfClient(int _coin)
+    {
+        coin += _coin;
+
+        PhotonNetwork.RaiseEvent(
+            (byte)RaiseEventCode.EditHostCoin,
+            new object[] { coin, photonView.OwnerActorNr },
+            new RaiseEventOptions { Receivers = ReceiverGroup.All, CachingOption = EventCaching.DoNotCache },
+            SendOptions.SendReliable
+            );
+
+        PlayerSpawnManager.Instance.coin = coin;
 
         InGameUIManager.Instance.SetGoldCoin(coin, photonView.OwnerActorNr);
     }
@@ -525,11 +543,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     }
     public void DeleteCoin(int _coin)
     {
-        Debug.Log("이전 코인 : " + coin.ToString());
-
         if (coin - _coin >= 0) coin -= _coin;
-
-        Debug.Log("지불 후 코인 : " + coin.ToString());
 
         PhotonNetwork.RaiseEvent(
             (byte)RaiseEventCode.EditHostCoin,

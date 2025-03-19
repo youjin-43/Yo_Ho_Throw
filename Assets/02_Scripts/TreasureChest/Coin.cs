@@ -19,7 +19,7 @@ public class Coin : MonoBehaviourPun
                 {
                     Debug.Log("Coin OnTriggerEnter - 코인획득");
 
-                    playerController.AddCoin(1); // 코인 추가
+                    playerController.AddCoinIfMaster(1); // 코인 추가
 
                     PhotonNetwork.Destroy(gameObject); // 소유자일 때, 코인 삭제
                 }

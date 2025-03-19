@@ -6,6 +6,7 @@ public enum RaiseEventCode
 
     EditClientCoin = 20,
     EditHostCoin = 21,
+    BountyKillReward = 22,
 
     #endregion
 

@@ -37,7 +37,9 @@ public class TreasureChest : MonoBehaviourPun
             attackCount++;
             if (attackCount >= 3)
             {
-                photonView.RPC("OpenChest", RpcTarget.All);
+                if (PhotonNetwork.IsMasterClient)
+                    photonView.RPC("OpenChest", RpcTarget.All);
+
                 //OpenChest();
             }
         }
@@ -46,7 +48,6 @@ public class TreasureChest : MonoBehaviourPun
     [PunRPC]
     private void OpenChest()
     {
-        Debug.Log("OpenChest");
         chestAnimator.SetTrigger("Open"); // 보물상자 여는 애니메이션 실행
         isOpen = true;
 
@@ -66,7 +67,6 @@ public class TreasureChest : MonoBehaviourPun
         treasureManager.RemovePosition(transform.position); // 위치를 다시 스폰 가능하게
 
         PhotonNetwork.Destroy(gameObject); // 마스터 클라이언트일때, 보물상자 삭제
-        //Destroy(gameObject);
     }
 
     //[PunRPC]
