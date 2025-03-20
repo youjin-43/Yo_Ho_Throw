@@ -33,7 +33,10 @@ public class TreasureChest : MonoBehaviourPun
     {
         if (!isOpen)
         {
-            chestAnimator.SetTrigger("Hit"); // 보물상자 덜컹이는 애니메이션 실행
+            // 보물상자 덜컹이는 애니메이션 실행
+            chestAnimator.SetTrigger("Hit"); 
+            AnimateTreasureChest();
+
             attackCount++;
             if (attackCount >= 3)
             {
@@ -67,6 +70,40 @@ public class TreasureChest : MonoBehaviourPun
         treasureManager.RemovePosition(transform.position); // 위치를 다시 스폰 가능하게
 
         PhotonNetwork.Destroy(gameObject); // 마스터 클라이언트일때, 보물상자 삭제
+    }
+
+    private void AnimateTreasureChest()
+    {
+        Quaternion originalRotation = gameObject.transform.rotation;
+        Quaternion[] rotations = new Quaternion[]
+        {
+        originalRotation * Quaternion.Euler(-4,0,-4), 
+        originalRotation * Quaternion.Euler(4,0,4),
+        originalRotation,
+        originalRotation * Quaternion.Euler(-2,0,2),
+        originalRotation * Quaternion.Euler(2,0,-2),
+        originalRotation // 원래 회전
+        };
+
+        StartCoroutine(RotateChest(rotations));
+    }
+
+    private IEnumerator RotateChest(Quaternion[] rotations)
+    {
+        float duration = 0.05f; // 회전 위치 변경 간격
+        for (int i = 0; i < rotations.Length; i++)
+        {
+            float elapsedTime = 0f;
+            Quaternion startingRot = gameObject.transform.rotation;
+
+            while (elapsedTime < duration) // 움직임 부드럽게
+            {
+                gameObject.transform.rotation = Quaternion.Lerp(startingRot, rotations[i], (elapsedTime / duration)); 
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            gameObject.transform.rotation = rotations[i]; // 설정한 시간에 정확한 회전값이 되도록
+        }
     }
 
     //[PunRPC]
