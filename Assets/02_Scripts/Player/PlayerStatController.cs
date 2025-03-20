@@ -411,6 +411,9 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     [PunRPC]
     public void RespawnColorSetting()
     {
+        isBountyAura = false;
+        bountyTargetAura.Stop();
+
         EffectManager.Instance.Play(transform.position, EffectType.BountyTargetDeath);
     }
 
