@@ -1,7 +1,9 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
+using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.Processors;
@@ -82,11 +84,15 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        selectDefaultIndex = GetMyMaterialIndex();
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterials[selectDefaultIndex];
+
         anim = GetComponent<Animator>();
     }
     public virtual void OnEnable()
     {
-        Debug.Log("AddCallbackTarget");
+        selectDefaultIndex = GetMyMaterialIndex();
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterials[selectDefaultIndex];
 
         PhotonNetwork.AddCallbackTarget(this);
     }
@@ -95,6 +101,22 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         Debug.Log("RemoveCallbackTarget");
 
         PhotonNetwork.RemoveCallbackTarget(this);
+    }
+
+    int GetMyMaterialIndex()
+    {
+        //return (int)GameManager.Instance.selectedSkinColor;
+
+        // 아이콘 설정 - 포톤 커스텀 프로퍼티에서 `Skin` 값 확인하여 Blue, Red, Yellow 아이콘 설정 
+        if (PhotonNetwork.CurrentRoom.Players[photonView.OwnerActorNr].CustomProperties.TryGetValue(PhotonPlayerProperties.Skin.ToString(), out object skinValue))
+        {
+            if (skinValue is string skinString && Enum.TryParse(skinString, out PlayerColor color))
+            {
+                return (int)color;
+            }
+        }
+
+        return -1;
     }
 
     // Update is called once per frame
@@ -214,7 +236,6 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         
         if (!photonView.IsMine) return;
         //AudioManager.Instance.PlaySfx(AudioManager.Sfx.PlayerDead);
-        gameObject.name += Random.value.ToString();
 
         // 이동 비활성화
         
@@ -305,6 +326,9 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         if (!photonView.IsMine) transform.gameObject.layer = LayerMask.NameToLayer("Ground");
         anim.Rebind();
         anim.Update(0f);
+
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterials[selectDefaultIndex];
+
         if (!photonView.IsMine) return;
         //콜라이더 오프셋
 
@@ -372,7 +396,9 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     bool isBountyAura = false;
     bool isStealthMaterial = false;
 
-    [SerializeField] Material defaultColorMaterial;
+    int selectDefaultIndex = -1;
+
+    [SerializeField] Material[] defaultColorMaterials;
     [SerializeField] Material bountyColorMaterial;
     [SerializeField] Material stealthMaterial;
 
@@ -386,7 +412,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
         if (!isStealthMaterial)
         {
-            transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+            transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterials[selectDefaultIndex];
         }
     }
     [PunRPC]
@@ -395,7 +421,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         isBountyAura = false;
         bountyTargetAura.Stop();
 
-        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterials[selectDefaultIndex];
     }
     [PunRPC]
     public void BountyColorSetting()
@@ -445,7 +471,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
             cutlass.material = cutlassDefaultMaterial;
 
-            transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+            transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterials[selectDefaultIndex];
         }
     }
     [SerializeField] MeshRenderer eyePatch;
@@ -482,7 +508,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         }
         isStealthMaterial = false;
 
-        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterials[selectDefaultIndex];
 
         eyePatch.material = eyePatchDefaultMaterial;
         cutlass.material = cutlassDefaultMaterial;

@@ -414,7 +414,10 @@ MonoBehaviour:
   anim: {fileID: 0}
   knifeObject: {fileID: 4168487119516495865}
   isEsc: 0
-  defaultColorMaterial: {fileID: 2100000, guid: adf31e9f4e0a76b478ab67dd8dfd7643, type: 2}
+  defaultColorMaterials:
+  - {fileID: 2100000, guid: 9118d47e18c5aef41ba50387012133ca, type: 2}
+  - {fileID: 2100000, guid: fb5a2ff8f60412f4094877485aedc39a, type: 2}
+  - {fileID: 2100000, guid: d192ba30f14f08448b08aa9141104626, type: 2}
   bountyColorMaterial: {fileID: 2100000, guid: 69243a0c6520b7c45b49f2f6e16ee476, type: 2}
   stealthMaterial: {fileID: 2100000, guid: ab69327dfc4119d499e46269795a395c, type: 2}
   bountyTargetAura: {fileID: 5500024007473099898}
