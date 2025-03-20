@@ -78,6 +78,8 @@ public class MeleeAttackOnTrigger : MonoBehaviour
 
             EffectManager.Instance.Play(hitPoint, adjustedDirection, EffectType.ThrowKnifeHit);
 
+            AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.MeleeKnifeHit, transform.position);
+
             // 1번 호스트가 아닐 경우 제외
             if (!PhotonNetwork.IsMasterClient) return;
 

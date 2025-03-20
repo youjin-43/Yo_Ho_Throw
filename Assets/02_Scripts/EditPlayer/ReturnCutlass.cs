@@ -31,9 +31,13 @@ public class ReturnCutlass : MonoBehaviour
         Vector3 hitPoint = other.ClosestPoint(transform.position);
         EffectManager.Instance.Play(hitPoint, (hitPoint - transform.position).normalized, EffectType.ThrowKnifeHit);
 
-        explosionCutlass?.ExplosionVFX();
-        explosionCutlass?.Explosion();
+        if (explosionCutlass != null)
+        {
+            explosionCutlass.ExplosionVFX();
+            explosionCutlass.Explosion();
 
+            AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.ExplosionHit, transform.position);
+        }
         DeactivateKnife();
     }
     public void DeactivateKnife()

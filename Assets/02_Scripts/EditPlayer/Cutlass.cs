@@ -65,10 +65,14 @@ public class Cutlass : MonoBehaviour
             {
                 Vector3 hitPoint = other.ClosestPoint(transform.position);
 
+                AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.ThrowKnifeHit, transform.position);
+
                 EffectManager.Instance.Play(hitPoint, (hitPoint - transform.position).normalized, EffectType.ThrowKnifeHit);
             }
             else
             {
+                AudioManager.Instance.PlaySfxAtPosition(AudioManager.Sfx.ExplosionHit, transform.position);
+
                 explosionCutlass.ExplosionVFX();
             }
 
