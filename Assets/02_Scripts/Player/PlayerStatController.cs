@@ -199,11 +199,9 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
         photonView.RPC("SyncLastDamageTime", RpcTarget.All, Time.time);
 
-        if (Hp <= 0)
+        if (Hp == 0)
         {
-            
             photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
-
         }
         else
         {
