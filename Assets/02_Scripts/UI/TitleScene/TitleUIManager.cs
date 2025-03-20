@@ -191,6 +191,15 @@ public class TitleUIManager : MonoBehaviour
 
             // 방 입장 버튼 설정
             roomItem.transform.GetChild((int)roomItemChilds.JoinButton).GetComponent<Button>().onClick.AddListener(() => PhotonManager.Instance.TryJoinRoom(room));
+
+            // 방이 가득찼다면 버튼을 숨김
+            // 방이 가득 찬걸 어떻게 알아요????
+            // room.PlayerCount이랑 room.MaxPlayers 비교하면 될듯?
+
+            if(room.PlayerCount == room.MaxPlayers)
+            {
+                roomItem.transform.GetChild((int)roomItemChilds.JoinButton).GetComponent<Button>().gameObject.SetActive(false);
+            }
         }
     }
 
