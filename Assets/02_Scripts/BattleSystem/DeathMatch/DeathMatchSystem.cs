@@ -102,6 +102,9 @@ public class DeathMatchSystem : BattleSystem
             }
         }
 
+        if (seconds == 2 || seconds == 1) AudioManager.Instance.PlaySfx(AudioManager.Sfx.Countdown_Low);
+        if (seconds == 0) AudioManager.Instance.PlaySfx(AudioManager.Sfx.Countdown_High);
+
         //if (seconds % 60 == 0 && seconds != 0) // TODO 찬규 : 1분마다 현상금 이벤트 발생
         //{
         //    if (PhotonNetwork.IsMasterClient)
@@ -116,13 +119,23 @@ public class DeathMatchSystem : BattleSystem
 
         WaitForSeconds wait = new WaitForSeconds(1f);
 
+        BattleUIController.Instance.SetBattleStartText(startDelay);
+
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.Countdown_Low);
+
+        yield return wait;
+
         BattleUIController.Instance.SetBattleStartText(startDelay--);
 
-        yield return new WaitForSeconds(1f);
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.Countdown_Low);
+
+        yield return wait;
 
         BattleUIController.Instance.SetBattleStartText(startDelay--);
 
-        yield return new WaitForSeconds(1f);
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.Countdown_High);
+
+        yield return wait;
 
         BattleUIController.Instance.SetBattleStartText(startDelay);
 
