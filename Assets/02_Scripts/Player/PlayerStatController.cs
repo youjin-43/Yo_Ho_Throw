@@ -324,13 +324,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         if(photonView.IsMine)
             photonView.RPC("IsKnifeOn", RpcTarget.All, true);
 
-        // 현상금 타겟으로써 죽었을 경우 플레이어 메테리얼 기존 것으로 설정
-        if (isSettingColor)
-        {
-            photonView.RPC("RespawnDefaultColorSetting", RpcTarget.All);
-
-            isSettingColor = false;
-        }
+        photonView.RPC("RespawnDefaultColorSetting", RpcTarget.All);
     }
 
     
@@ -375,18 +369,20 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
         }
     }
 
-    bool isSettingColor = false;
+    bool isBountyAura = false;
     bool isStealthMaterial = false;
-    int beforeColorSetting = 0; // 0 : default, 1 : bounty
 
     [SerializeField] Material defaultColorMaterial;
     [SerializeField] Material bountyColorMaterial;
     [SerializeField] Material stealthMaterial;
 
+    [SerializeField] ParticleSystem bountyTargetAura;
+
     [PunRPC]
     public void DefaultColorSetting()
     {
-        beforeColorSetting = 0;
+        isBountyAura = false;
+        bountyTargetAura.Stop();
 
         if (!isStealthMaterial)
         {
@@ -396,26 +392,25 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     [PunRPC]
     public void RespawnDefaultColorSetting()
     {
+        isBountyAura = false;
+        bountyTargetAura.Stop();
+
         transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
     }
     [PunRPC]
     public void BountyColorSetting()
     {
-        isSettingColor = false;
-
-        beforeColorSetting = 1;
+        isBountyAura = true;
 
         if (!isStealthMaterial)
         {
-            transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = bountyColorMaterial;
+            bountyTargetAura.Play();
         }
     }
 
     [PunRPC]
     public void RespawnColorSetting()
     {
-        isSettingColor = true;
-
         EffectManager.Instance.Play(transform.position, EffectType.BountyTargetDeath);
     }
 
@@ -432,6 +427,11 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     {
         if (isStealthMaterial)
         {
+            if (isBountyAura)
+            {
+                bountyTargetAura.Play();
+            }
+
             isStealthMaterial = false;
 
             if (stealthCoroutine != null)
@@ -442,7 +442,7 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
             cutlass.material = cutlassDefaultMaterial;
 
-            transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = beforeColorSetting == 0 ? defaultColorMaterial : bountyColorMaterial;
+            transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
         }
     }
     [SerializeField] MeshRenderer eyePatch;
@@ -451,18 +451,35 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
     [SerializeField] Material cutlassDefaultMaterial;
     IEnumerator StealthCoroutine()
     {
+        StealthOn();
+
+        yield return new WaitForSeconds(10f);
+
+        StealthOff();
+    }
+    void StealthOn()
+    {
+        if (isBountyAura)
+        {
+            bountyTargetAura.Stop();
+        }
+
         isStealthMaterial = true;
 
         transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = stealthMaterial;
 
         eyePatch.material = stealthMaterial;
         cutlass.material = stealthMaterial;
-
-        yield return new WaitForSeconds(10f);
-
+    }
+    void StealthOff()
+    {
+        if (isBountyAura)
+        {
+            bountyTargetAura.Play();
+        }
         isStealthMaterial = false;
 
-        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = beforeColorSetting == 0 ? defaultColorMaterial : bountyColorMaterial;
+        transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultColorMaterial;
 
         eyePatch.material = eyePatchDefaultMaterial;
         cutlass.material = cutlassDefaultMaterial;

@@ -178,6 +178,8 @@ public class PlayerController : ThirdPersonController
     {
         // 칼 오브젝트 생성 
 
+        ExposeSetting();
+
         GameObject projectile =
             PoolManager.Instance.Pop(isExplosionBuff ? explosionBulletPrefab : bulletPrefab);
 

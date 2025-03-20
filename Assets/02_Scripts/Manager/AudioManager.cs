@@ -95,6 +95,14 @@ public class AudioManager : MonoBehaviourPun
 
     public void PlaySfx(Sfx sfx)
     {
+        switch(sfx)
+        {
+            case Sfx.Countdown_Low:
+            case Sfx.Countdown_High:
+                Debug.Log("PlaySFX :" + sfx.ToString());
+                break;
+        }
+
         for (int index = 0; index < sfxPlayers.Length; index++)
         {
             //채널 인덱스는 마지막에 플레이된 클립이다
