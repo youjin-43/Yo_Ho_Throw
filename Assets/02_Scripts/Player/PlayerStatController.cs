@@ -5,6 +5,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.Processors;
+using UnityEngine.Splines;
 using UnityEngine.Windows;
 
 public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallback
@@ -201,9 +202,9 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
 
         if (Hp <= 0)
         {
-            
-            photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
+            isAlive = false;
 
+            photonView.RPC("HandleDeath", RpcTarget.All, attackerActorNr);
         }
         else
         {
@@ -246,8 +247,6 @@ public class PlayerStatController : MonoBehaviourPun, IDamagable, IOnEventCallba
             yield return null;
         }
        
-
-        isAlive = false;
         photonView.RPC("PlayDeathAnimation_RPC", RpcTarget.All);
         
     }

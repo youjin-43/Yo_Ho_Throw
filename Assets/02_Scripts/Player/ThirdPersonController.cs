@@ -393,7 +393,7 @@ namespace StarterAssets
                             _animator.SetBool(_animIDFreeFall, true);
                         else
                         {
-                            _animator.SetBool(_animIDFreeFall, false);
+                            //_animator.SetBool(_animIDFreeFall, false); TODO 찬규 : 공중 사망 판정 변경 부분
                             anim.SetTrigger("Dead");
                         }
                     }
