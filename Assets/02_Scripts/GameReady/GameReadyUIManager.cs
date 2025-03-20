@@ -160,6 +160,24 @@ public class GameReadyUIManager : MonoBehaviourPunCallbacks
 
             GameObject playerItem = Instantiate(PlayerInfoItemPrefab, PlayerInfoListContent);
 
+            // 아이콘 설정 - 포톤 커스텀 프로퍼티에서 `Skin` 값 확인하여 Blue, Red, Yellow 아이콘 설정 
+            if (player.Value.CustomProperties.TryGetValue(PhotonPlayerProperties.Skin.ToString(), out object skinValue))
+            {
+                if (skinValue is string skinString && Enum.TryParse(skinString, out PlayerColor color))
+                {
+                    // 해당 색상에 맞는 아이콘 활성화
+                    playerItem.transform.GetChild((int)PIChild.ProfileArea).GetChild((int)color).gameObject.SetActive(true);
+                }
+                else
+                {
+                    Debug.LogError($"Skin 프로퍼티 변환 실패: {skinValue}");
+                }
+            }
+            else
+            {
+                Debug.Log("Skin 프로퍼티가 없습니다 ");
+            }
+
             // 닉네임 설정 
             playerItem.transform.GetChild((int)PIChild.Name).GetComponentInChildren<TMP_Text>().text = player.Value.NickName;
 

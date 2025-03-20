@@ -1,6 +1,7 @@
 //포톤 네트워크를 이용하기 위해 아래 두개가 필수 
 using System;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using Photon.Pun; // Pun : 포톤 유니티 네트워크의 약자
 using Photon.Realtime; // 실시간 통신? 을 위해서
 using UnityEngine;
@@ -14,6 +15,7 @@ public enum PhotonRoomProperties
 
 public enum PhotonPlayerProperties
 {
+    Skin,
     IsReady,
     //CurrentScene //  각 플레이어가 현재 어떤 씬에 있는지
 }
@@ -99,6 +101,16 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
+    /// 선택한 색상을 포톤 커스텀 프로퍼티에 저장
+    /// </summary>
+    private void SaveColorToPhoton()
+    {
+        Hashtable playerProperties = new Hashtable();
+        playerProperties[PhotonPlayerProperties.Skin.ToString()] = GameManager.Instance.selectedSkinColor.ToString(); // enum을 string으로 변환해서 저장
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
+    }
+
+    /// <summary>
     /// 기존 연결이 끊어지면 자동으로 다시 연결
     /// </summary>
     public override void OnDisconnected(DisconnectCause cause)
@@ -114,6 +126,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         //print($"{PhotonNetwork.NickName} : 서버 접속 완료");
         //Debug.Log($"로비 입장 여부 = {PhotonNetwork.InLobby}"); // 로비 입장했는지 확인, False. 연결과 로비 입장은 다르기 때문에 False 가 정상.
+        SaveColorToPhoton();
         PhotonNetwork.JoinLobby(); //서버에 입장한 후 바로 로비로 입장 
     }
 

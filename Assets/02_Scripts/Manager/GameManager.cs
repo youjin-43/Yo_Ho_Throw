@@ -10,6 +10,13 @@ using UnityEngine.SceneManagement;
 //    ZombieMode
 //}
 
+public enum PlayerColor
+{
+    Blue,
+    Red,
+    Yellow
+}
+
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
@@ -29,6 +36,17 @@ public class GameManager : MonoBehaviour
             }
             return _instance;
         }
+    }
+
+    public PlayerColor selectedSkinColor = PlayerColor.Blue; // ??? ???? ?? ?? (???: ?? )
+
+    /// <summary>
+    /// ??? ??? ???? ??
+    /// </summary>
+    public void SelectColor(PlayerColor color)
+    {
+        selectedSkinColor = color;
+        Debug.Log($"??? ??: {selectedSkinColor}");
     }
 
     public bool isPlayerStop;
@@ -53,7 +71,7 @@ public class GameManager : MonoBehaviour
         CursorController.Instance.CursorEnable();
     }
 
-    // 음량 세팅 저장
+    // ???? ???? ????
     private bool _isBgmOn = true;
     private bool _isSfxOn = true;
     private float _bgmValue = 0.2f;
@@ -92,7 +110,7 @@ public class GameManager : MonoBehaviour
         return _sfxValue;
     }
 
-    // 감도 저장
+    // ???? ????
     private float _sensitivity = 10f;
 
     public void StoreSensitivity(float sensitivity)
@@ -113,7 +131,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 플레이어 저장
+    // ???????? ????
     private GameObject _player;
 
     public void StorePlayer(GameObject player)
