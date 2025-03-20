@@ -18,6 +18,13 @@ public class TitleUIManager : MonoBehaviour
     public TMP_InputField playerNameInput; // 플레이어 이름 입력 필드
     public Button connectButton; // 연결 버튼
 
+    [Header("Color Selection")]
+    public ToggleGroup colorToggleGroup; // 색상 선택을 위한 ToggleGroup
+
+    public Toggle blueToggle;
+    public Toggle redToggle;
+    public Toggle yellowToggle;
+
     [Header("RoomList")]
     public GameObject RoomListArea; // 방 목록을 표시하는 패널
     public GameObject roomListItemPrefab; // 방 목록 아이템 프리팹
@@ -76,6 +83,16 @@ public class TitleUIManager : MonoBehaviour
 
         #region PlayerNameInput
         PlayerNameInputArea.SetActive(false);
+
+        // 첫 번째 토글을 기본 선택
+        blueToggle.isOn = true;
+        GameManager.Instance.SelectColor(PlayerColor.Blue); // 기본 색상 설정
+
+        // 컬러 선택 토글 변경 이벤트 설정
+        blueToggle.onValueChanged.AddListener((isOn) => { if (isOn) GameManager.Instance.SelectColor(PlayerColor.Blue); });
+        redToggle.onValueChanged.AddListener((isOn) => { if (isOn) GameManager.Instance.SelectColor(PlayerColor.Red); });
+        yellowToggle.onValueChanged.AddListener((isOn) => { if (isOn) GameManager.Instance.SelectColor(PlayerColor.Yellow); });
+
         connectButton.onClick.AddListener(() =>
         {
             if (Check_playerNameInput_IsEmpty()) // 이름이 입력되었는지 확인
@@ -123,9 +140,10 @@ public class TitleUIManager : MonoBehaviour
     }
 
     #region PlayerNameInput + RoomList
+
     /// <summary>
-    /// 이름 입력란이 비었는지 화인 
-    /// </summary>
+     /// 이름 입력란이 비었는지 화인 
+     /// </summary>
     bool Check_playerNameInput_IsEmpty()
     {
         if (string.IsNullOrEmpty(playerNameInput.text))
